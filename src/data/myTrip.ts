@@ -1,5 +1,5 @@
 /**
- * The user's trip — past line, current location, declared future.
+ * The user's trip — past line, current location, and the friends they overlap with.
  *
  * Per Product Brief §"A note on locations":
  *   "Resolution is capped at the city, always. Never street-level.
@@ -10,16 +10,17 @@
  *  - Past trip waypoints are at NEIGHBORHOOD CENTROIDS (Rio's neighborhoods
  *    function as Tarmil's "city" unit since the whole metro is one city).
  *  - The user's present is at their neighborhood centroid (Copacabana center).
- *  - Friend overlap bubbles are at NEIGHBORHOOD/TOWN CENTROIDS — never at
+ *  - Friend overlap bubbles are at NEIGHBORHOOD/TOWN/CITY centroids — never at
  *    specific bars, beaches, or hostels. A soft halo around each bubble in
- *    RioMap.css visually communicates "approximately in this area."
- *  - The user's own declared future trip (Cristo) can use the landmark coord
- *    because that's the user's private intent, not something friends see.
+ *    TripMap.css visually communicates "approximately in this area."
+ *
+ * The user's declared future destinations live in plannedStops.ts now —
+ * those are full city/region planning units with exact dates.
  */
 
 export type LatLng = [number, number];
 
-/** Neighborhood / town centroids — used for friend overlap and own-trip waypoints. */
+/** Rio neighborhood centroids — used for past route + Rio friend overlaps. */
 export const zones = {
   gigAirport: [-22.815, -43.244] as LatLng,
   maracana: [-22.912, -43.230] as LatLng,
@@ -28,7 +29,15 @@ export const zones = {
   botafogo: [-22.952, -43.185] as LatLng,
   copacabana: [-22.974, -43.184] as LatLng,
   ipanema: [-22.984, -43.2] as LatLng,
+};
+
+/** International city centroids — used for planned stops + global friend overlaps. */
+export const globalZones = {
   buzios: [-22.747, -41.881] as LatLng,
+  bangkok: [13.7563, 100.5018] as LatLng,
+  chiangMai: [18.7883, 98.9853] as LatLng,
+  pai: [19.3585, 98.4439] as LatLng,
+  hanoi: [21.0285, 105.8542] as LatLng,
 };
 
 export const myTrip = {
@@ -42,33 +51,32 @@ export const myTrip = {
 
   /** Where the user is right now — Copacabana centroid, not a specific spot. */
   present: zones.copacabana,
-
-  /**
-   * Declared future. The user's own private intent — Cristo as a sightseeing
-   * destination is fine at landmark resolution since it's their plan, not
-   * a friend-visible field.
-   */
-  future: [
-    zones.copacabana,
-    [-22.9519, -43.2105] as LatLng, // Cristo Redentor (planned for tomorrow)
-  ] as LatLng[],
 };
 
 export type FriendOverlap = {
+  /** Stable id, referenced from PlannedStop.friendOverlapIds. */
+  id: string;
   friendName: string;
   friendInitial: string;
-  /** Centroid of the friend's neighborhood / town — never a specific place. */
+  /** Centroid of the friend's neighborhood / town / city — never a specific place. */
   lat: number;
   lng: number;
-  /** Hebrew zone label shown on the sheet (city/neighborhood, not place). */
+  /** Hebrew zone label shown on the sheet. */
   zoneLabel: string;
   status: 'present' | 'future';
   /** Hebrew detail line shown on tap. */
   detail: string;
+  /** Planned stop id this future overlap aligns with. */
+  destinationId?: string;
+  /** ISO yyyy-mm-dd — exact start of the overlap window. */
+  overlapStart?: string;
+  /** ISO yyyy-mm-dd — exact end of the overlap window. */
+  overlapEnd?: string;
 };
 
 export const friendOverlaps: FriendOverlap[] = [
   {
+    id: 'maya-ipanema',
     friendName: 'מאיה לוי',
     friendInitial: 'מ',
     lat: zones.ipanema[0],
@@ -78,6 +86,7 @@ export const friendOverlaps: FriendOverlap[] = [
     detail: 'באיפנמה כבר ארבעה ימים, יוצאת בסוף השבוע.',
   },
   {
+    id: 'yael-botafogo',
     friendName: 'יעל אברהם',
     friendInitial: 'י',
     lat: zones.botafogo[0],
@@ -87,21 +96,42 @@ export const friendOverlaps: FriendOverlap[] = [
     detail: 'בבוטפוגו הערב, בא לקפוץ אליה לבירה?',
   },
   {
-    friendName: 'דוד כהן',
-    friendInitial: 'ד',
-    lat: zones.centro[0],
-    lng: zones.centro[1],
-    zoneLabel: 'מרכז ריו',
-    status: 'future',
-    detail: 'הצהיר על מרכז ריו לשבוע הבא, חופף איתך יומיים.',
-  },
-  {
+    id: 'roi-buzios',
     friendName: 'רועי בן עמי',
     friendInitial: 'ר',
-    lat: zones.buzios[0],
-    lng: zones.buzios[1],
+    lat: globalZones.buzios[0],
+    lng: globalZones.buzios[1],
     zoneLabel: 'בוזיוס',
     status: 'future',
-    detail: 'מתכנן בוזיוס בעוד שבועיים, אם תהיה שם — תקפצו ביחד.',
+    detail: 'מתכנן בוזיוס סוף אוקטובר, יחפוף איתך 29–31.',
+    destinationId: 'buzios',
+    overlapStart: '2026-10-29',
+    overlapEnd: '2026-10-31',
+  },
+  {
+    id: 'noa-chiangmai',
+    friendName: 'נועה ברק',
+    friendInitial: 'נ',
+    lat: globalZones.chiangMai[0],
+    lng: globalZones.chiangMai[1],
+    zoneLabel: 'צ׳אנג מאי',
+    status: 'future',
+    detail: 'בצ׳אנג מאי לקורס בישול תאי בתחילת נובמבר.',
+    destinationId: 'chiang-mai',
+    overlapStart: '2026-11-08',
+    overlapEnd: '2026-11-10',
+  },
+  {
+    id: 'david-hanoi',
+    friendName: 'דוד כהן',
+    friendInitial: 'ד',
+    lat: globalZones.hanoi[0],
+    lng: globalZones.hanoi[1],
+    zoneLabel: 'האנוי',
+    status: 'future',
+    detail: 'מגיע להאנוי באמצע נובמבר, יהיה איתך בעיר 22–25.',
+    destinationId: 'hanoi',
+    overlapStart: '2026-11-22',
+    overlapEnd: '2026-11-25',
   },
 ];

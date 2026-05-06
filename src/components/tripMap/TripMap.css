@@ -193,3 +193,94 @@
     opacity: 0.4;
   }
 }
+
+/* ─── Planned stop markers ───────────────────────────────────────────── */
+/*
+ * Hollow copper rings drawn on a dashed line for the user's declared future
+ * route. Visually distinct from past dots (filled cocoa) and the present
+ * (pulsing copper). The active state (set when the planned-route sheet
+ * highlights a stop) gets a halo similar to friend bubbles.
+ */
+
+.tarmil-planned-marker {
+  pointer-events: auto;
+}
+
+.tarmil-planned-circle {
+  width: 14px;
+  height: 14px;
+  margin: 13px;
+  border-radius: 50%;
+  background: var(--ivory);
+  border: 2px solid var(--copper);
+  box-shadow:
+    0 0 0 4px rgba(199, 93, 36, 0.10),
+    0 1px 4px rgba(53, 40, 24, 0.30);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  cursor: pointer;
+}
+
+.tarmil-planned-circle:hover,
+.tarmil-planned-circle:active {
+  transform: scale(1.15);
+}
+
+.tarmil-planned-circle.is-active {
+  box-shadow:
+    0 0 0 6px rgba(199, 93, 36, 0.18),
+    0 0 0 14px rgba(199, 93, 36, 0.06),
+    0 1px 6px rgba(53, 40, 24, 0.40);
+}
+
+/* ─── Pick-on-map reticle ────────────────────────────────────────────── */
+/*
+ * Centered crosshair shown when the trip map is in pick mode. The map's
+ * center IS the picked location; the user pans to position. Pure visual
+ * overlay (pointer-events: none) — Leaflet still receives drag/pan.
+ */
+
+.tarmil-pick-reticle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: 2px dashed var(--copper);
+  background: rgba(199, 93, 36, 0.06);
+  pointer-events: none;
+  z-index: 1500;
+}
+
+.tarmil-pick-reticle::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--copper);
+  transform: translate(-50%, -50%);
+}
+
+/* ─── Filter chip rail ───────────────────────────────────────────────── */
+/* Hide the horizontal scrollbar on the chip rail above the map. */
+
+.tarmil-chip-rail {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.tarmil-chip-rail::-webkit-scrollbar {
+  display: none;
+}
+
+/* ─── Z-index map ────────────────────────────────────────────────────── */
+/*
+ *   chip rail (filters)         z-[400]
+ *   floaters (FAB, summary)     z-[800]   (hidden when a sheet is open)
+ *   bottom sheet                z-[1000]
+ *   pick reticle                z-[1500]
+ */
