@@ -93,13 +93,21 @@ export function convert(
   amount: number,
   from: CurrencyCode,
   to: CurrencyCode,
+  rates?: Partial<Record<CurrencyCode, number>>,
 ): number {
-  return (amount * getCurrency(from).toIls) / getCurrency(to).toIls;
+  const fromRate = rates?.[from] ?? getCurrency(from).toIls;
+  const toRate = rates?.[to] ?? getCurrency(to).toIls;
+  return (amount * fromRate) / toRate;
 }
 
 /** Convert any currency amount to ILS. Used by the Balance tool to net out. */
-export function toIls(amount: number, code: CurrencyCode): number {
-  return amount * getCurrency(code).toIls;
+export function toIls(
+  amount: number,
+  code: CurrencyCode,
+  rates?: Partial<Record<CurrencyCode, number>>,
+): number {
+  const rate = rates?.[code] ?? getCurrency(code).toIls;
+  return amount * rate;
 }
 
 /** "1,234.56" — Latin digits with thousands separator, two decimals. */

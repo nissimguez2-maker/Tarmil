@@ -4,6 +4,7 @@ import { Screen } from '../../components/Screen';
 import { TopBar } from '../../components/TopBar';
 import { SectionLabel } from '../../components/SectionLabel';
 import { usePersistentState } from '../../hooks/usePersistentState';
+import { useLiveRates } from '../../hooks/useLiveRates';
 import {
   CURRENCIES,
   RATES_LABEL,
@@ -24,6 +25,7 @@ const STORAGE_KEY = 'tarmil:currency:v1';
 
 export function CurrencyScreen() {
   const [state, setState] = usePersistentState<State>(STORAGE_KEY, INITIAL);
+  const live = useLiveRates();
 
   const amountNum = Number(state.amount);
   const valid = !Number.isNaN(amountNum) && state.amount.trim() !== '';
@@ -32,13 +34,13 @@ export function CurrencyScreen() {
 
   const result = useMemo(() => {
     if (!valid) return null;
-    return convert(amountNum, state.from, state.to);
-  }, [amountNum, state.from, state.to, valid]);
+    return convert(amountNum, state.from, state.to, live.rates ?? undefined);
+  }, [amountNum, state.from, state.to, valid, live.rates]);
 
   // 1 unit of FROM in ILS — for the transparency line ("1 USD = 3.70 ₪").
   const fromUnitInIls = useMemo(
-    () => convert(1, state.from, 'ILS'),
-    [state.from],
+    () => convert(1, state.from, 'ILS', live.rates ?? undefined),
+    [state.from, live.rates],
   );
 
   const swap = () =>
@@ -95,7 +97,11 @@ export function CurrencyScreen() {
         </div>
 
         <p className="text-[9pt] leading-snug text-cocoa-55">
-          {RATES_LABEL}. שערים לדוגמה — לפני המרה משמעותית בדוק שער עדכני.
+          {live.error
+            ? `${RATES_LABEL} (שערים סטטיים — לא הצלחנו למשוך עדכון חי).`
+            : live.fetchedDate
+              ? `שערים חיים, עודכנו ${live.fetchedDate}. לפני המרה משמעותית בדוק שער עדכני.`
+              : 'טוען שערים חיים…'}
         </p>
       </div>
     </Screen>

@@ -5,9 +5,15 @@ import { Screen } from '../../components/Screen';
 import { TopBar } from '../../components/TopBar';
 import { SectionLabel } from '../../components/SectionLabel';
 import { Button } from '../../components/Button';
+import {
+  FriendsPicker,
+  type FriendOption,
+} from '../../components/tools/FriendsPicker';
 import { usePersistentState } from '../../hooks/usePersistentState';
+import { useLiveRates, type LiveRates } from '../../hooks/useLiveRates';
 import {
   CURRENCIES,
+  convert,
   formatAmount,
   toIls,
   type CurrencyCode,
@@ -21,6 +27,11 @@ const FRIENDS: Array<{ id: string; name: string; initial: string }> = [
   { id: 'maya', name: 'מאיה לוי', initial: 'מ' },
   { id: 'roi', name: 'רועי בן עמי', initial: 'ר' },
   { id: 'shir', name: 'שיר כהן', initial: 'ש' },
+];
+
+const ALL_PEOPLE: FriendOption[] = [
+  { id: ME_ID, label: ME_LABEL },
+  ...FRIENDS.map((f) => ({ id: f.id, label: f.name })),
 ];
 
 type Expense = {
@@ -65,13 +76,17 @@ const SEED: Expense[] = [
 ];
 
 const STORAGE_KEY = 'tarmil:balance:v2';
+const FRIEND_CCY_KEY = 'tarmil:balance:friend-ccy:v1';
 
 /** Net balance in ILS per friend. Positive = friend owes you; negative = you owe friend. */
-function computeBalances(expenses: Expense[]): Record<string, number> {
+function computeBalances(
+  expenses: Expense[],
+  rates: LiveRates | null,
+): Record<string, number> {
   const balances: Record<string, number> = {};
   FRIENDS.forEach((f) => (balances[f.id] = 0));
   for (const exp of expenses) {
-    const amountIls = toIls(exp.amount, exp.currency);
+    const amountIls = toIls(exp.amount, exp.currency, rates ?? undefined);
     const share = amountIls / exp.splitWith.length;
     if (exp.paidBy === ME_ID) {
       for (const personId of exp.splitWith) {
@@ -80,7 +95,6 @@ function computeBalances(expenses: Expense[]): Record<string, number> {
         balances[personId] += share;
       }
     } else if (exp.paidBy in balances) {
-      // friend paid
       if (exp.splitWith.includes(ME_ID)) {
         balances[exp.paidBy] -= share;
       }
@@ -94,9 +108,17 @@ export function BalanceScreen() {
     STORAGE_KEY,
     SEED,
   );
+  const [friendCcy, setFriendCcy] = usePersistentState<
+    Record<string, CurrencyCode>
+  >(FRIEND_CCY_KEY, {});
   const [adding, setAdding] = useState(false);
 
-  const balances = useMemo(() => computeBalances(expenses), [expenses]);
+  const live = useLiveRates();
+
+  const balances = useMemo(
+    () => computeBalances(expenses, live.rates),
+    [expenses, live.rates],
+  );
   const totalNet = useMemo(
     () => Object.values(balances).reduce((s, n) => s + n, 0),
     [balances],
@@ -113,22 +135,30 @@ export function BalanceScreen() {
   };
 
   const settleFriend = (friendId: string) => {
-    const net = balances[friendId];
-    if (Math.abs(net) < 0.01) return;
-    // Synthetic settle: zero the running net by recording a counter-entry.
-    // Net positive (friend owes me) → settle as if friend paid me-share back.
-    // Net negative (I owe friend) → settle as if I paid friend-share back.
+    const netIls = balances[friendId];
+    if (Math.abs(netIls) < 0.01) return;
+    const ccy = friendCcy[friendId] ?? 'ILS';
+    const amountInCcy = convert(
+      Math.abs(netIls),
+      'ILS',
+      ccy,
+      live.rates ?? undefined,
+    );
     const settle: Expense = {
       id: `settle-${Date.now()}`,
       description: 'סגירת חוב',
-      amount: Math.abs(net),
-      currency: 'ILS',
-      paidBy: net > 0 ? friendId : ME_ID,
-      splitWith: net > 0 ? [ME_ID] : [friendId],
+      amount: round2(amountInCcy),
+      currency: ccy,
+      paidBy: netIls > 0 ? friendId : ME_ID,
+      splitWith: netIls > 0 ? [ME_ID] : [friendId],
       createdAt: new Date().toISOString().slice(0, 10),
       isSettlement: true,
     };
     setExpenses((cur) => [...cur, settle]);
+  };
+
+  const setFriendCurrency = (friendId: string, ccy: CurrencyCode) => {
+    setFriendCcy((cur) => ({ ...cur, [friendId]: ccy }));
   };
 
   return (
@@ -145,7 +175,10 @@ export function BalanceScreen() {
               <FriendCard
                 key={f.id}
                 friend={f}
-                net={balances[f.id]}
+                netIls={balances[f.id]}
+                displayCurrency={friendCcy[f.id] ?? 'ILS'}
+                rates={live.rates}
+                onChangeCurrency={(c) => setFriendCurrency(f.id, c)}
                 onSettle={() => settleFriend(f.id)}
               />
             ))}
@@ -173,11 +206,19 @@ export function BalanceScreen() {
         </section>
 
         <p className="text-[9pt] leading-snug text-cocoa-55">
-          חישוב היתרה ב־₪ לפי שערים מ־"ממיר מטבעות". המצב נשמר במכשיר שלך.
+          {live.error
+            ? 'שערים סטטיים — לא הצלחנו למשוך שערים חיים. החישוב עדיין עובד.'
+            : live.fetchedDate
+              ? `שערים חיים מ־${live.fetchedDate}. המצב נשמר במכשיר שלך.`
+              : 'טוען שערים חיים…'}
         </p>
       </div>
     </Screen>
   );
+}
+
+function round2(n: number): number {
+  return Math.round(n * 100) / 100;
 }
 
 function SummaryCard({ totalNet }: { totalNet: number }) {
@@ -219,50 +260,87 @@ function SummaryCard({ totalNet }: { totalNet: number }) {
 
 function FriendCard({
   friend,
-  net,
+  netIls,
+  displayCurrency,
+  rates,
+  onChangeCurrency,
   onSettle,
 }: {
   friend: { id: string; name: string; initial: string };
-  net: number;
+  netIls: number;
+  displayCurrency: CurrencyCode;
+  rates: LiveRates | null;
+  onChangeCurrency: (c: CurrencyCode) => void;
   onSettle: () => void;
 }) {
-  const abs = Math.abs(net);
-  const balanced = Math.abs(net) < 0.01;
+  const balanced = Math.abs(netIls) < 0.01;
+  const netInCcy = convert(
+    Math.abs(netIls),
+    'ILS',
+    displayCurrency,
+    rates ?? undefined,
+  );
+  const symbol = CURRENCIES.find((c) => c.code === displayCurrency)?.symbol ?? '';
+
   let line: string;
   if (balanced) line = 'אין חוב פתוח';
-  else if (net > 0) line = `חייב לך ${formatAmount(abs, 0)} ₪`;
-  else line = `אתה חייב ${formatAmount(abs, 0)} ₪`;
+  else if (netIls > 0)
+    line = `חייב לך ${formatAmount(netInCcy, netInCcy >= 100 ? 0 : 2)} ${symbol}`;
+  else
+    line = `אתה חייב ${formatAmount(netInCcy, netInCcy >= 100 ? 0 : 2)} ${symbol}`;
 
   return (
-    <div className="flex items-center gap-md rounded-md border border-cocoa-15 bg-sand p-md">
-      <span
-        className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-cocoa font-serif text-lede text-ivory"
-        aria-hidden
-      >
-        {friend.initial}
-      </span>
-      <div className="flex flex-1 flex-col">
-        <span className="font-serif text-lede leading-tight">
-          {friend.name}
-        </span>
+    <div className="flex flex-col gap-sm rounded-md border border-cocoa-15 bg-sand p-md">
+      <div className="flex items-center gap-md">
         <span
-          className={clsx(
-            'text-[10pt]',
-            balanced ? 'text-cocoa-55' : net > 0 ? 'text-cocoa' : 'text-copper',
-          )}
+          className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-cocoa font-serif text-lede text-ivory"
+          aria-hidden
         >
-          {line}
+          {friend.initial}
         </span>
+        <div className="flex flex-1 flex-col">
+          <span className="font-serif text-lede leading-tight">
+            {friend.name}
+          </span>
+          <span
+            className={clsx(
+              'text-[10pt]',
+              balanced
+                ? 'text-cocoa-55'
+                : netIls > 0
+                  ? 'text-cocoa'
+                  : 'text-copper',
+            )}
+          >
+            {line}
+          </span>
+        </div>
       </div>
-      {!balanced && (
-        <button
-          type="button"
-          onClick={onSettle}
-          className="inline-flex h-9 items-center justify-center rounded-full border border-cocoa-15 bg-ivory px-md text-[11pt] text-cocoa active:bg-cocoa-8"
-        >
-          סגור חוב
-        </button>
-      )}
+      <div className="flex items-center gap-sm">
+        <label className="flex flex-1 items-center gap-2 text-[10pt] text-cocoa-55">
+          <span>מטבע</span>
+          <select
+            value={displayCurrency}
+            onChange={(e) => onChangeCurrency(e.target.value as CurrencyCode)}
+            className="h-9 flex-1 rounded-full border border-cocoa-15 bg-ivory px-sm text-[11pt] text-cocoa focus:border-copper focus:outline-none"
+          >
+            {CURRENCIES.map((c) => (
+              <option key={c.code} value={c.code}>
+                {c.symbol} {c.code}
+              </option>
+            ))}
+          </select>
+        </label>
+        {!balanced && (
+          <button
+            type="button"
+            onClick={onSettle}
+            className="inline-flex h-9 items-center justify-center rounded-full border border-cocoa-15 bg-ivory px-md text-[11pt] text-cocoa active:bg-cocoa-8"
+          >
+            סגור חוב
+          </button>
+        )}
+      </div>
     </div>
   );
 }
@@ -275,7 +353,6 @@ function ExpenseList({ expenses }: { expenses: Expense[] }) {
       </p>
     );
   }
-  // Show newest first.
   const ordered = [...expenses].sort((a, b) =>
     b.createdAt.localeCompare(a.createdAt),
   );
@@ -335,12 +412,6 @@ function AddExpenseForm({
   const [currency, setCurrency] = useState<CurrencyCode>('BRL');
   const [paidBy, setPaidBy] = useState<string>(ME_ID);
   const [splitWith, setSplitWith] = useState<string[]>([ME_ID, 'maya']);
-
-  const toggleSplit = (id: string) => {
-    setSplitWith((cur) =>
-      cur.includes(id) ? cur.filter((x) => x !== id) : [...cur, id],
-    );
-  };
 
   const amountNum = Number(amount);
   const valid =
@@ -417,40 +488,23 @@ function AddExpenseForm({
 
       <div className="flex flex-col gap-1">
         <span className="meta-caps text-cocoa-55">מי שילם?</span>
-        <div className="flex flex-wrap gap-2">
-          <ChipRadio
-            label={ME_LABEL}
-            checked={paidBy === ME_ID}
-            onClick={() => setPaidBy(ME_ID)}
-          />
-          {FRIENDS.map((f) => (
-            <ChipRadio
-              key={f.id}
-              label={f.name}
-              checked={paidBy === f.id}
-              onClick={() => setPaidBy(f.id)}
-            />
-          ))}
-        </div>
+        <FriendsPicker
+          options={ALL_PEOPLE}
+          value={paidBy}
+          onChange={setPaidBy}
+          placeholder="בחר מי שילם"
+        />
       </div>
 
       <div className="flex flex-col gap-1">
         <span className="meta-caps text-cocoa-55">מי בחלוקה?</span>
-        <div className="flex flex-wrap gap-2">
-          <ChipToggle
-            label={ME_LABEL}
-            checked={splitWith.includes(ME_ID)}
-            onClick={() => toggleSplit(ME_ID)}
-          />
-          {FRIENDS.map((f) => (
-            <ChipToggle
-              key={f.id}
-              label={f.name}
-              checked={splitWith.includes(f.id)}
-              onClick={() => toggleSplit(f.id)}
-            />
-          ))}
-        </div>
+        <FriendsPicker
+          multi
+          options={ALL_PEOPLE}
+          value={splitWith}
+          onChange={setSplitWith}
+          placeholder="בחר מחלקים"
+        />
       </div>
 
       <div className="flex items-center gap-sm">
@@ -470,54 +524,3 @@ function AddExpenseForm({
     </div>
   );
 }
-
-function ChipRadio({
-  label,
-  checked,
-  onClick,
-}: {
-  label: string;
-  checked: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={clsx(
-        'inline-flex h-9 items-center rounded-full border px-md text-[11pt] leading-none transition-colors',
-        checked
-          ? 'border-cocoa bg-cocoa text-ivory'
-          : 'border-cocoa-15 bg-ivory text-cocoa',
-      )}
-    >
-      {label}
-    </button>
-  );
-}
-
-function ChipToggle({
-  label,
-  checked,
-  onClick,
-}: {
-  label: string;
-  checked: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={clsx(
-        'inline-flex h-9 items-center rounded-full border px-md text-[11pt] leading-none transition-colors',
-        checked
-          ? 'border-copper bg-copper text-ivory'
-          : 'border-cocoa-15 bg-ivory text-cocoa',
-      )}
-    >
-      {label}
-    </button>
-  );
-}
-
