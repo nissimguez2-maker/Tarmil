@@ -11,13 +11,18 @@
   font-family: 'Heebo', 'Google Sans Text', system-ui, sans-serif;
 }
 
-/* warm desert-paper tint — applied to tiles only, not overlays */
-.tarmil-map .leaflet-tile-pane {
+/* warm desert-paper tint — applied to TomTom's WebGL canvas only, so HTML
+ * markers (friend bubbles, present pin, planned-stop rings) keep their
+ * full-saturation brand colors. */
+.tarmil-map .mapboxgl-canvas {
   filter: sepia(0.18) saturate(0.85) hue-rotate(-10deg) brightness(1.03);
 }
 
-/* hide default Leaflet attribution flag (we set attributionControl:false) */
-.tarmil-map .leaflet-control-attribution {
+/* hide TomTom attribution flag in the bottom corner */
+.tarmil-map .mapboxgl-ctrl-attrib,
+.tarmil-map .mapboxgl-ctrl-logo,
+.tarmil-map .mapboxgl-ctrl-bottom-right,
+.tarmil-map .mapboxgl-ctrl-bottom-left {
   display: none;
 }
 

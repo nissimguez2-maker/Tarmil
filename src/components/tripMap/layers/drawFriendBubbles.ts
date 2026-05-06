@@ -1,35 +1,37 @@
-import L from 'leaflet';
+import tt from '@tomtom-international/web-sdk-maps';
 import type { FriendOverlap } from '../../../data/myTrip';
 
 /**
- * Friend overlap bubbles at neighborhood/town centroids. Soft halo (in CSS)
- * communicates "approximately in this area" — never street-level.
+ * Friend overlap bubbles at neighborhood/town/city centroids. Soft halo (in
+ * CSS) communicates "approximately in this area" — never street-level.
  */
 export function drawFriendBubbles(
-  map: L.Map,
+  map: tt.Map,
   friends: FriendOverlap[],
   onClickFriend: (friend: FriendOverlap) => void,
 ): () => void {
-  const markers: L.Marker[] = [];
+  const markers: tt.Marker[] = [];
+
   friends.forEach((friend) => {
-    const icon = L.divIcon({
-      className: 'tarmil-friend-bubble',
-      html: `<div class="tarmil-friend-circle ${
-        friend.status === 'present' ? 'is-present' : 'is-future'
-      }">${friend.friendInitial}</div>`,
-      iconSize: [56, 56],
-      iconAnchor: [28, 28],
+    const el = document.createElement('div');
+    el.className = 'tarmil-friend-bubble';
+    el.title = friend.friendName;
+    el.innerHTML = `<div class="tarmil-friend-circle ${
+      friend.status === 'present' ? 'is-present' : 'is-future'
+    }">${friend.friendInitial}</div>`;
+
+    el.addEventListener('click', (e) => {
+      e.stopPropagation();
+      onClickFriend(friend);
     });
-    const marker = L.marker([friend.lat, friend.lng], {
-      icon,
-      title: friend.friendName,
-      zIndexOffset: 500,
-    }).addTo(map);
-    marker.on('click', () => onClickFriend(friend));
+
+    const marker = new tt.Marker({ element: el, anchor: 'center' })
+      .setLngLat([friend.lng, friend.lat])
+      .addTo(map);
     markers.push(marker);
   });
 
   return () => {
-    markers.forEach((marker) => map.removeLayer(marker));
+    markers.forEach((m) => m.remove());
   };
 }

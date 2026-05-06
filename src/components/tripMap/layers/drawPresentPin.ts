@@ -1,20 +1,23 @@
-import L from 'leaflet';
+import tt from '@tomtom-international/web-sdk-maps';
 import type { LatLng } from '../../../data/myTrip';
 
-export function drawPresentPin(map: L.Map, latlng: LatLng): () => void {
-  const icon = L.divIcon({
-    className: 'tarmil-present-pin',
-    html: '<div class="tarmil-present-ring"></div><div class="tarmil-present-dot"></div>',
-    iconSize: [40, 40],
-    iconAnchor: [20, 20],
-  });
-  const marker = L.marker(latlng, {
-    icon,
-    zIndexOffset: 1000,
-    interactive: false,
-  }).addTo(map);
+/**
+ * Pulsing copper "you are here" pin. The element is the same `.tarmil-present-pin`
+ * markup the Leaflet version used; only the marker host changed.
+ */
+export function drawPresentPin(map: tt.Map, latlng: LatLng): () => void {
+  const el = document.createElement('div');
+  el.className = 'tarmil-present-pin';
+  el.style.pointerEvents = 'none';
+  el.innerHTML =
+    '<div class="tarmil-present-ring"></div><div class="tarmil-present-dot"></div>';
+
+  const [lat, lng] = latlng;
+  const marker = new tt.Marker({ element: el, anchor: 'center' })
+    .setLngLat([lng, lat])
+    .addTo(map);
 
   return () => {
-    map.removeLayer(marker);
+    marker.remove();
   };
 }

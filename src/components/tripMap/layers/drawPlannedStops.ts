@@ -1,60 +1,80 @@
-import L from 'leaflet';
+import tt from '@tomtom-international/web-sdk-maps';
 import { mapColors } from '../../../utils/mapColors';
 import type { LatLng } from '../../../data/myTrip';
 import type { PlannedStop } from '../../../data/plannedStops';
 
+const SOURCE_FUTURE = 'tarmil-future-line';
+const LAYER_FUTURE = 'tarmil-future-line-layer';
+
 /**
- * Hollow copper rings at each planned stop, plus the dashed connector
- * present → stop[0] → stop[1] → … → stop[N]. The active stop (when the
- * planned-route sheet highlights one) gets a halo via .is-active.
- *
- * Returns a cleanup that removes everything from the map.
+ * Hollow copper rings at each planned stop, plus a dashed connector
+ * present → stop[0] → … → stop[N]. The active stop (when the planned-route
+ * sheet highlights one) gets a halo via .is-active CSS.
  */
 export function drawPlannedStops(
-  map: L.Map,
+  map: tt.Map,
   present: LatLng,
   stops: PlannedStop[],
   activeStopId: string | undefined,
   onClickStop: (stop: PlannedStop) => void,
 ): () => void {
-  const layers: L.Layer[] = [];
+  const markers: tt.Marker[] = [];
 
+  // Dashed connector from present through every stop (in date order).
   if (stops.length > 0) {
-    const lineCoords: LatLng[] = [
-      present,
-      ...stops.map((s): LatLng => [s.lat, s.lng]),
+    const lineCoords: [number, number][] = [
+      [present[1], present[0]],
+      ...stops.map((s): [number, number] => [s.lng, s.lat]),
     ];
-    layers.push(
-      L.polyline(lineCoords, {
-        color: mapColors.cocoa,
-        weight: 1.5,
-        opacity: 0.35,
-        dashArray: '3 5',
-        lineCap: 'round',
-      }).addTo(map),
-    );
+    map.addSource(SOURCE_FUTURE, {
+      type: 'geojson',
+      data: {
+        type: 'Feature',
+        geometry: { type: 'LineString', coordinates: lineCoords },
+        properties: {},
+      },
+    });
+    map.addLayer({
+      id: LAYER_FUTURE,
+      type: 'line',
+      source: SOURCE_FUTURE,
+      layout: {
+        'line-cap': 'round',
+        'line-join': 'round',
+      },
+      paint: {
+        'line-color': mapColors.cocoa,
+        'line-width': 1.5,
+        'line-opacity': 0.35,
+        'line-dasharray': [2, 3],
+      },
+    });
   }
 
+  // Hollow ring marker per stop — HTMLElement marker so existing CSS reuses.
   stops.forEach((stop) => {
     const isActive = stop.id === activeStopId;
-    const icon = L.divIcon({
-      className: 'tarmil-planned-marker',
-      html: `<div class="tarmil-planned-circle${
-        isActive ? ' is-active' : ''
-      }"></div>`,
-      iconSize: [40, 40],
-      iconAnchor: [20, 20],
+    const el = document.createElement('div');
+    el.className = 'tarmil-planned-marker';
+    el.title = stop.nameEn;
+    el.innerHTML = `<div class="tarmil-planned-circle${
+      isActive ? ' is-active' : ''
+    }"></div>`;
+
+    el.addEventListener('click', (e) => {
+      e.stopPropagation();
+      onClickStop(stop);
     });
-    const marker = L.marker([stop.lat, stop.lng], {
-      icon,
-      title: stop.nameEn,
-      zIndexOffset: 400,
-    }).addTo(map);
-    marker.on('click', () => onClickStop(stop));
-    layers.push(marker);
+
+    const marker = new tt.Marker({ element: el, anchor: 'center' })
+      .setLngLat([stop.lng, stop.lat])
+      .addTo(map);
+    markers.push(marker);
   });
 
   return () => {
-    layers.forEach((layer) => map.removeLayer(layer));
+    markers.forEach((m) => m.remove());
+    if (map.getLayer(LAYER_FUTURE)) map.removeLayer(LAYER_FUTURE);
+    if (map.getSource(SOURCE_FUTURE)) map.removeSource(SOURCE_FUTURE);
   };
 }
