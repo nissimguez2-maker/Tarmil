@@ -18,16 +18,16 @@ export function ArrivalConfirmSheet({ stop, onConfirm, onDismiss }: Props) {
     <div className="flex flex-col gap-md p-md">
       <div className="flex items-start justify-between gap-sm">
         <div className="flex flex-col">
-          <span className="meta-caps text-copper">בדיקה עדינה</span>
-          <h3 className="font-serif text-lede leading-tight">
+          <span className="meta-caps text-cocoa-70">בדיקה עדינה</span>
+          <h2 className="font-serif text-lede leading-tight">
             הגעת ל{stop.nameHe}?
-          </h3>
+          </h2>
         </div>
         <button
           type="button"
           aria-label="סגור"
           onClick={onDismiss}
-          className="inline-flex h-8 w-8 items-center justify-center rounded-full text-cocoa-55 hover:bg-cocoa-8 active:bg-cocoa-15"
+          className="inline-flex h-11 w-11 items-center justify-center rounded-full text-cocoa-55 hover:bg-cocoa-8 active:bg-cocoa-15"
         >
           <X className="h-4 w-4" aria-hidden />
         </button>
@@ -47,7 +47,7 @@ export function ArrivalConfirmSheet({ stop, onConfirm, onDismiss }: Props) {
         </Button>
       </div>
 
-      <p className="text-[9pt] leading-snug text-cocoa-55">
+      <p className="text-small leading-snug text-cocoa-55">
         תמיד פרטי. תרמיל לעולם לא מסיק את התנועה שלך אוטומטית.
       </p>
     </div>

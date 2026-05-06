@@ -81,16 +81,16 @@ export function SearchDestinationSheet({
     <div className="flex max-h-[60dvh] flex-col gap-md p-md">
       <div className="flex items-start justify-between gap-sm">
         <div className="flex flex-col">
-          <span className="meta-caps text-copper">הוסף יעד למסע</span>
-          <h3 className="font-serif text-lede leading-tight">
+          <span className="meta-caps text-cocoa-70">הוסף יעד למסע</span>
+          <h2 className="font-serif text-lede leading-tight">
             לאן רוצה להגיע?
-          </h3>
+          </h2>
         </div>
         <button
           type="button"
           aria-label="סגור"
           onClick={onClose}
-          className="inline-flex h-8 w-8 items-center justify-center rounded-full text-cocoa-55 hover:bg-cocoa-8 active:bg-cocoa-15"
+          className="inline-flex h-11 w-11 items-center justify-center rounded-full text-cocoa-55 hover:bg-cocoa-8 active:bg-cocoa-15"
         >
           <X className="h-4 w-4" aria-hidden />
         </button>
@@ -110,7 +110,7 @@ export function SearchDestinationSheet({
           autoCorrect="off"
           spellCheck={false}
           dir="rtl"
-          className="h-10 w-full rounded-full border border-cocoa-15 bg-sand pe-lg ps-md text-body text-cocoa placeholder:text-cocoa-55 focus:border-copper focus:outline-none"
+          className="h-11 w-full rounded-full border border-cocoa-15 bg-sand pe-lg ps-md text-body text-cocoa placeholder:text-cocoa-55 focus:border-copper focus:outline-none"
         />
       </div>
 
@@ -129,9 +129,9 @@ export function SearchDestinationSheet({
           >
             <div className="flex flex-col">
               <span className="text-body text-cocoa">{s.nameHe}</span>
-              <span className="text-[10pt] text-cocoa-55">{s.kindHe}</span>
+              <span className="text-small text-cocoa-55">{s.kindHe}</span>
             </div>
-            <span className="text-[10pt] text-cocoa-55 ltr">{s.nameEn}</span>
+            <span className="text-small text-cocoa-55 ltr">{s.nameEn}</span>
           </button>
         ))}
         {!q && RECENT.length > 0 && (
@@ -148,9 +148,9 @@ export function SearchDestinationSheet({
               >
                 <div className="flex flex-col">
                   <span className="text-body text-cocoa">{s.nameHe}</span>
-                  <span className="text-[10pt] text-cocoa-55">{s.kindHe}</span>
+                  <span className="text-small text-cocoa-55">{s.kindHe}</span>
                 </div>
-                <span className="text-[10pt] text-cocoa-55 ltr">
+                <span className="text-small text-cocoa-55 ltr">
                   {s.nameEn}
                 </span>
               </button>
@@ -162,7 +162,7 @@ export function SearchDestinationSheet({
       <button
         type="button"
         onClick={onPickOnMap}
-        className="inline-flex items-center gap-2 self-start rounded-full border border-cocoa-15 px-md py-2 text-[11pt] text-cocoa active:bg-cocoa-8"
+        className="inline-flex items-center gap-2 self-start rounded-full border border-cocoa-15 px-md py-2 text-body text-cocoa active:bg-cocoa-8"
       >
         <MapPin className="h-4 w-4 text-copper" aria-hidden />
         <span>בחר מיקום במפה</span>

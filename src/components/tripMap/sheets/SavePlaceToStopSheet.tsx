@@ -26,16 +26,16 @@ export function SavePlaceToStopSheet({
     <div className="flex max-h-[60dvh] flex-col gap-md p-md">
       <div className="flex items-start justify-between gap-sm">
         <div className="flex flex-col">
-          <span className="meta-caps text-copper">שמור ליעד</span>
-          <h3 className="font-serif text-lede leading-tight">
+          <span className="meta-caps text-cocoa-70">שמור ליעד</span>
+          <h2 className="font-serif text-lede leading-tight">
             {place.hebrewName}
-          </h3>
+          </h2>
         </div>
         <button
           type="button"
           aria-label="סגור"
           onClick={onClose}
-          className="inline-flex h-8 w-8 items-center justify-center rounded-full text-cocoa-55 hover:bg-cocoa-8 active:bg-cocoa-15"
+          className="inline-flex h-11 w-11 items-center justify-center rounded-full text-cocoa-55 hover:bg-cocoa-8 active:bg-cocoa-15"
         >
           <X className="h-4 w-4" aria-hidden />
         </button>
@@ -59,12 +59,12 @@ export function SavePlaceToStopSheet({
             >
               <div className="flex flex-col">
                 <span className="text-body text-cocoa">{stop.nameHe}</span>
-                <span className="text-[10pt] text-cocoa-55">
+                <span className="text-small text-cocoa-55">
                   {formatDateRange(stop.arrivalDate, stop.departureDate)}
                 </span>
               </div>
               {alreadySaved && (
-                <span className="meta-caps text-copper">כבר שמור</span>
+                <span className="meta-caps text-cocoa-70">כבר שמור</span>
               )}
             </button>
           );

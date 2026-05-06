@@ -25,14 +25,14 @@ export function PlannedRouteSheet({
     <div className="flex max-h-[70dvh] flex-col gap-md p-md">
       <div className="flex items-start justify-between gap-sm">
         <div className="flex flex-col">
-          <span className="meta-caps text-copper">המסע שלך</span>
-          <h3 className="font-serif text-lede leading-tight">התוכנית הקרובה</h3>
+          <span className="meta-caps text-cocoa-70">המסע שלך</span>
+          <h2 className="font-serif text-lede leading-tight">התוכנית הקרובה</h2>
         </div>
         <button
           type="button"
           aria-label="סגור"
           onClick={onClose}
-          className="inline-flex h-8 w-8 items-center justify-center rounded-full text-cocoa-55 hover:bg-cocoa-8 active:bg-cocoa-15"
+          className="inline-flex h-11 w-11 items-center justify-center rounded-full text-cocoa-55 hover:bg-cocoa-8 active:bg-cocoa-15"
         >
           <X className="h-4 w-4" aria-hidden />
         </button>
@@ -60,12 +60,12 @@ export function PlannedRouteSheet({
                 <span className="font-serif text-lede leading-tight">
                   {stop.nameHe}
                 </span>
-                <span className="text-[10pt] text-cocoa-70">
+                <span className="text-small text-cocoa-70">
                   {formatDateRange(stop.arrivalDate, stop.departureDate)} ·{' '}
                   <span className="tnum">{stop.nights}</span> לילות
                 </span>
                 {overlapCount > 0 && (
-                  <span className="text-[10pt] text-copper">
+                  <span className="text-small font-medium text-cocoa-70">
                     <span className="tnum">{overlapCount}</span>{' '}
                     {overlapCount === 1 ? 'חבר חופף' : 'חברים חופפים'}
                   </span>

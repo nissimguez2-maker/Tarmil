@@ -205,7 +205,7 @@ export function BalanceScreen() {
           <ExpenseList expenses={expenses} />
         </section>
 
-        <p className="text-[9pt] leading-snug text-cocoa-55">
+        <p className="text-small leading-snug text-cocoa-55">
           {live.error
             ? 'שערים סטטיים — לא הצלחנו למשוך שערים חיים. החישוב עדיין עובד.'
             : live.fetchedDate
@@ -253,7 +253,7 @@ function SummaryCard({ totalNet }: { totalNet: number }) {
       >
         {title}
       </span>
-      <span className="text-[10pt] text-cocoa-70">{sub}</span>
+      <span className="text-small text-cocoa-70">{sub}</span>
     </div>
   );
 }
@@ -304,12 +304,12 @@ function FriendCard({
           </span>
           <span
             className={clsx(
-              'text-[10pt]',
+              'text-small',
               balanced
                 ? 'text-cocoa-55'
                 : netIls > 0
-                  ? 'text-cocoa'
-                  : 'text-copper',
+                  ? 'text-cocoa font-medium'
+                  : 'text-cocoa font-medium italic',
             )}
           >
             {line}
@@ -317,12 +317,12 @@ function FriendCard({
         </div>
       </div>
       <div className="flex items-center gap-sm">
-        <label className="flex flex-1 items-center gap-2 text-[10pt] text-cocoa-55">
+        <label className="flex flex-1 items-center gap-2 text-small text-cocoa-55">
           <span>מטבע</span>
           <select
             value={displayCurrency}
             onChange={(e) => onChangeCurrency(e.target.value as CurrencyCode)}
-            className="h-9 flex-1 rounded-full border border-cocoa-15 bg-ivory px-sm text-[11pt] text-cocoa focus:border-copper focus:outline-none"
+            className="h-11 flex-1 rounded-full border border-cocoa-15 bg-ivory px-sm text-body text-cocoa focus:border-copper focus:outline-none"
           >
             {CURRENCIES.map((c) => (
               <option key={c.code} value={c.code}>
@@ -335,7 +335,7 @@ function FriendCard({
           <button
             type="button"
             onClick={onSettle}
-            className="inline-flex h-9 items-center justify-center rounded-full border border-cocoa-15 bg-ivory px-md text-[11pt] text-cocoa active:bg-cocoa-8"
+            className="inline-flex h-11 items-center justify-center rounded-full border border-cocoa-15 bg-ivory px-md text-body text-cocoa active:bg-cocoa-8"
           >
             סגור חוב
           </button>
@@ -367,12 +367,12 @@ function ExpenseList({ expenses }: { expenses: Expense[] }) {
             <span
               className={clsx(
                 'text-body',
-                exp.isSettlement ? 'text-copper' : 'text-cocoa',
+                exp.isSettlement ? 'text-cocoa italic' : 'text-cocoa',
               )}
             >
               {exp.description}
             </span>
-            <span className="text-[10pt] text-cocoa-55">
+            <span className="text-small text-cocoa-55">
               {personLabel(exp.paidBy)} שילם · חולק עם{' '}
               {exp.splitWith
                 .filter((p) => p !== exp.paidBy)
@@ -385,7 +385,7 @@ function ExpenseList({ expenses }: { expenses: Expense[] }) {
               {formatAmount(exp.amount, exp.amount % 1 === 0 ? 0 : 2)}{' '}
               <span className="ltr text-cocoa-70">{exp.currency}</span>
             </span>
-            <span className="text-[10pt] text-cocoa-55">
+            <span className="text-small text-cocoa-55">
               {formatDateChip(exp.createdAt)}
             </span>
           </div>
@@ -434,12 +434,12 @@ function AddExpenseForm({
   return (
     <div className="flex flex-col gap-md rounded-md border border-rope bg-sand p-md">
       <div className="flex items-start justify-between">
-        <span className="meta-caps text-copper">הוצאה חדשה</span>
+        <span className="meta-caps text-cocoa-70">הוצאה חדשה</span>
         <button
           type="button"
           aria-label="סגור"
           onClick={onCancel}
-          className="inline-flex h-8 w-8 items-center justify-center rounded-full text-cocoa-55 hover:bg-cocoa-8 active:bg-cocoa-15"
+          className="inline-flex h-11 w-11 items-center justify-center rounded-full text-cocoa-55 hover:bg-cocoa-8 active:bg-cocoa-15"
         >
           <X className="h-4 w-4" aria-hidden />
         </button>
@@ -453,7 +453,7 @@ function AddExpenseForm({
           onChange={(e) => setDescription(e.target.value)}
           dir="rtl"
           placeholder="לדוגמה: ארוחת ערב באיפנמה"
-          className="h-10 rounded-full border border-cocoa-15 bg-ivory px-md text-body text-cocoa placeholder:text-cocoa-55 focus:border-copper focus:outline-none"
+          className="h-11 rounded-full border border-cocoa-15 bg-ivory px-md text-body text-cocoa placeholder:text-cocoa-55 focus:border-copper focus:outline-none"
         />
       </label>
 
@@ -467,7 +467,7 @@ function AddExpenseForm({
             onChange={(e) => setAmount(e.target.value)}
             dir="ltr"
             placeholder="0"
-            className="tnum h-10 rounded-full border border-cocoa-15 bg-ivory px-md text-body text-cocoa focus:border-copper focus:outline-none"
+            className="tnum h-11 rounded-full border border-cocoa-15 bg-ivory px-md text-body text-cocoa focus:border-copper focus:outline-none"
           />
         </label>
         <label className="flex flex-col gap-1">
@@ -475,7 +475,7 @@ function AddExpenseForm({
           <select
             value={currency}
             onChange={(e) => setCurrency(e.target.value as CurrencyCode)}
-            className="h-10 rounded-full border border-cocoa-15 bg-ivory px-md text-body text-cocoa focus:border-copper focus:outline-none"
+            className="h-11 rounded-full border border-cocoa-15 bg-ivory px-md text-body text-cocoa focus:border-copper focus:outline-none"
           >
             {CURRENCIES.map((c) => (
               <option key={c.code} value={c.code}>
@@ -517,7 +517,7 @@ function AddExpenseForm({
       </div>
 
       {!valid && (description.length > 0 || amount.length > 0) && (
-        <span className="text-[10pt] text-cocoa-55">
+        <span className="text-small text-cocoa-55">
           מלא תיאור, סכום חיובי ולפחות אדם אחד בחלוקה.
         </span>
       )}

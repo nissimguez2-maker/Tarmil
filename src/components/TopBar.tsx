@@ -39,7 +39,7 @@ export function TopBar({ title, eyebrow, back, end, className }: Props) {
           aria-label="חזרה"
           onClick={() => navigate(-1)}
           className={clsx(
-            'absolute start-md inline-flex h-9 w-9 items-center justify-center',
+            'absolute start-md inline-flex h-11 w-11 items-center justify-center',
             'rounded-full text-cocoa hover:bg-cocoa-8 active:bg-cocoa-15',
           )}
         >
@@ -49,7 +49,7 @@ export function TopBar({ title, eyebrow, back, end, className }: Props) {
 
       <div className="flex flex-col items-center">
         {eyebrow && (
-          <span className="meta-caps text-copper">{eyebrow}</span>
+          <span className="meta-caps text-cocoa-70">{eyebrow}</span>
         )}
         {title && (
           <h1 className="font-serif text-lede leading-none">{title}</h1>

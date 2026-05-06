@@ -34,7 +34,7 @@ export function PrivacyRadios({ value, onChange }: Props) {
             />
             <div className="flex flex-col">
               <span className="text-body text-cocoa">{opt.label}</span>
-              <span className="text-[10pt] text-cocoa-55">{opt.hint}</span>
+              <span className="text-small text-cocoa-55">{opt.hint}</span>
             </div>
           </label>
         ))}

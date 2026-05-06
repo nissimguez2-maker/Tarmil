@@ -89,14 +89,14 @@ export function CurrencyScreen() {
           ) : (
             <span className="text-body text-cocoa-55">הזן סכום תקין</span>
           )}
-          <span className="text-[10pt] text-cocoa-55">
+          <span className="text-small text-cocoa-55">
             <span className="ltr">
               1 {from.code} = {formatAmount(fromUnitInIls, 4)} ₪
             </span>
           </span>
         </div>
 
-        <p className="text-[9pt] leading-snug text-cocoa-55">
+        <p className="text-small leading-snug text-cocoa-55">
           {live.error
             ? `${RATES_LABEL} (שערים סטטיים — לא הצלחנו למשוך עדכון חי).`
             : live.fetchedDate
@@ -128,7 +128,7 @@ function CurrencyRow({
         type="button"
         onClick={onSwap}
         aria-label="החלף מטבעות"
-        className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-cocoa-15 bg-ivory text-copper active:bg-cocoa-8"
+        className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-cocoa-15 bg-ivory text-copper active:bg-cocoa-8"
       >
         <ArrowDownUp className="h-4 w-4" aria-hidden />
       </button>

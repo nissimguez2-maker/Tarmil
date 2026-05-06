@@ -32,7 +32,7 @@ export function Button({
       className={clsx(
         // base
         'inline-flex h-lg items-center justify-center gap-2 rounded-full px-md',
-        'font-sans text-[11pt] font-medium leading-none',
+        'font-sans text-body font-medium leading-none',
         'transition-colors disabled:opacity-30 disabled:pointer-events-none',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory',
         // variants

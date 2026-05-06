@@ -41,7 +41,7 @@ export class ErrorBoundary extends Component<Props, State> {
           <button
             type="button"
             onClick={this.reset}
-            className="inline-flex h-12 items-center justify-center rounded-full bg-cocoa px-md text-[11pt] font-medium text-ivory active:bg-cocoa-70"
+            className="inline-flex h-12 items-center justify-center rounded-full bg-cocoa px-md text-body font-medium text-ivory active:bg-cocoa-70"
           >
             נסה שוב
           </button>

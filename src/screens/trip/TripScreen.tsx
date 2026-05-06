@@ -1,11 +1,17 @@
-import { useReducer, useMemo, useRef } from 'react';
+import { lazy, Suspense, useReducer, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Screen } from '../../components/Screen';
 import { TopBar } from '../../components/TopBar';
-import {
-  TripMap,
-  type TripMapHandle,
-} from '../../components/tripMap/TripMap';
+import type { TripMapHandle } from '../../components/tripMap/TripMap';
+
+// Lazy-load the TomTom map so non-Trip tabs (Tools, Friends, Profile) don't
+// fetch the ~400KB-gzip Mapbox-GL fork. The Suspense fallback below renders
+// while the chunk is in flight on first /trip mount.
+const TripMap = lazy(() =>
+  import('../../components/tripMap/TripMap').then((m) => ({
+    default: m.TripMap,
+  })),
+);
 import { CategoryFilterRail } from '../../components/tripMap/ui/CategoryFilterRail';
 import { TravelMomentCard } from '../../components/tripMap/ui/TravelMomentCard';
 import { AddDestinationFab } from '../../components/tripMap/ui/AddDestinationFab';
@@ -100,17 +106,25 @@ export function TripScreen() {
       <div className="flex h-full flex-col">
         <TopBar eyebrow="Tarmil" title="המסע שלך" />
         <div className="relative flex-1 overflow-hidden">
-          <TripMap
-            ref={tripMapRef}
-            mode={state.mode}
-            activeFilters={state.activeFilters}
-            plannedStops={state.plannedStops}
-            activeStopId={
-              sheet?.kind === 'plannedStop' ? sheet.stopId : undefined
+          <Suspense
+            fallback={
+              <div className="flex h-full w-full items-center justify-center bg-ivory">
+                <span className="text-small text-cocoa-55">טוען מפה…</span>
+              </div>
             }
-            onOpenSheet={(s) => dispatch({ type: 'OPEN_SHEET', sheet: s })}
-            onCloseSheet={() => dispatch({ type: 'CLOSE_SHEET' })}
-          />
+          >
+            <TripMap
+              ref={tripMapRef}
+              mode={state.mode}
+              activeFilters={state.activeFilters}
+              plannedStops={state.plannedStops}
+              activeStopId={
+                sheet?.kind === 'plannedStop' ? sheet.stopId : undefined
+              }
+              onOpenSheet={(s) => dispatch({ type: 'OPEN_SHEET', sheet: s })}
+              onCloseSheet={() => dispatch({ type: 'CLOSE_SHEET' })}
+            />
+          </Suspense>
 
           {floatersVisible && (
             <>

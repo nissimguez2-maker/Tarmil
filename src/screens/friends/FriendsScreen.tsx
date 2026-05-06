@@ -52,15 +52,15 @@ export function FriendsScreen() {
                     <span className="font-serif text-lede leading-tight">
                       {friend.friendName}
                     </span>
-                    <span className="meta-caps text-copper">
+                    <span className="meta-caps text-cocoa-70">
                       {isPresent ? 'איתך כאן' : 'חופף בעתיד'}
                     </span>
                   </span>
-                  <span className="text-[10pt] text-cocoa-70">
+                  <span className="text-small text-cocoa-70">
                     <span className="text-cocoa">{friend.zoneLabel}</span>
                     {dates && <span className="text-cocoa-55"> · {dates}</span>}
                   </span>
-                  <span className="text-[10pt] text-cocoa-55">
+                  <span className="text-small text-cocoa-55">
                     {friend.detail}
                   </span>
                 </span>
@@ -69,7 +69,7 @@ export function FriendsScreen() {
           })}
         </ul>
 
-        <p className="text-[9pt] leading-snug text-cocoa-55">
+        <p className="text-small leading-snug text-cocoa-55">
           מיקום ברמת עיר בלבד. תרמיל לעולם לא חושף לחברים את הכתובת המדויקת
           שלך — חפיפות מוצגות ברמת עיר בלבד.
         </p>

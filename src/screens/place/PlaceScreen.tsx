@@ -37,11 +37,11 @@ export function PlaceScreen() {
           <div className="flex items-baseline justify-between gap-sm">
             <h1 className="font-serif text-sub leading-tight">{place.hebrewName}</h1>
             {place.tarmilPick && (
-              <span className="meta-caps text-copper">בחירת תרמיל</span>
+              <span className="meta-caps text-cocoa-70">בחירת תרמיל</span>
             )}
           </div>
 
-          <span className="text-[10pt] text-cocoa-55 ltr">
+          <span className="text-small text-cocoa-55 ltr">
             {place.englishName}
           </span>
 
@@ -148,7 +148,7 @@ function ReviewCard({
   return (
     <article className="flex flex-col gap-1.5 rounded-sm border border-cocoa-15 bg-sand p-sm">
       <div className="flex items-center justify-between">
-        <span className="text-[10pt] font-medium text-cocoa">{reviewer}</span>
+        <span className="text-small font-medium text-cocoa">{reviewer}</span>
         <span aria-label={`${stars} כוכבים`} className="flex gap-0.5">
           {Array.from({ length: 5 }).map((_, i) => (
             <Star
@@ -164,7 +164,7 @@ function ReviewCard({
           ))}
         </span>
       </div>
-      <p className="text-[11pt] leading-relaxed text-cocoa-70 allow-select">
+      <p className="text-body leading-relaxed text-cocoa-70 allow-select">
         {text}
       </p>
     </article>

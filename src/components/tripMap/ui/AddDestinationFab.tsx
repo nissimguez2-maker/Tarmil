@@ -18,7 +18,7 @@ export function AddDestinationFab({ onClick }: Props) {
       style={{ boxShadow: '0 6px 20px -6px rgba(199, 93, 36, 0.50)' }}
     >
       <Plus className="h-5 w-5" aria-hidden strokeWidth={2.5} />
-      <span className="text-[11pt] font-medium">הוסף יעד</span>
+      <span className="text-body font-medium">הוסף יעד</span>
     </button>
   );
 }

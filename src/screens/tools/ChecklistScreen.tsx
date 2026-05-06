@@ -45,6 +45,7 @@ function sectionNumber(i: number): string {
 
 export function ChecklistScreen() {
   const [state, setState] = usePersistentState<State>(STORAGE_KEY, fromTemplate());
+  const [confirmRestore, setConfirmRestore] = useState(false);
 
   const totalItems = useMemo(
     () => state.sections.reduce((n, s) => n + s.items.length, 0),
@@ -174,24 +175,43 @@ export function ChecklistScreen() {
           <Button variant="ghost" onClick={resetChecks} fullWidth>
             אפס סימונים
           </Button>
-          <button
-            type="button"
-            onClick={() => {
-              if (
-                window.confirm(
-                  'להחזיר את הצ׳ק ליסט לתבנית ברירת המחדל? כל ההוספות והמחיקות שלך ייעלמו.',
-                )
-              ) {
-                restoreTemplate();
-              }
-            }}
-            className="inline-flex h-9 items-center justify-center text-[10pt] text-cocoa-55 underline-offset-4 hover:text-cocoa hover:underline"
-          >
-            החזר לתבנית
-          </button>
+          {confirmRestore ? (
+            <div className="flex flex-col gap-sm rounded-md border border-copper-70 bg-sand p-md">
+              <p className="text-body text-cocoa">
+                להחזיר את הצ׳ק ליסט לתבנית ברירת המחדל? כל ההוספות והמחיקות
+                שלך ייעלמו.
+              </p>
+              <div className="flex items-center gap-sm">
+                <Button
+                  variant="ghost"
+                  onClick={() => setConfirmRestore(false)}
+                >
+                  ביטול
+                </Button>
+                <Button
+                  variant="accent"
+                  onClick={() => {
+                    restoreTemplate();
+                    setConfirmRestore(false);
+                  }}
+                  fullWidth
+                >
+                  החזר לתבנית
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setConfirmRestore(true)}
+              className="inline-flex h-11 items-center justify-center text-small text-cocoa-55 underline-offset-4 hover:text-cocoa hover:underline"
+            >
+              החזר לתבנית
+            </button>
+          )}
         </div>
 
-        <p className="text-[9pt] leading-snug text-cocoa-55">
+        <p className="text-small leading-snug text-cocoa-55">
           המצב נשמר אצלך במכשיר. רענון לא יאפס.
         </p>
       </div>
@@ -217,6 +237,7 @@ function SectionBlock({
   onDeleteSection: () => void;
 }) {
   const [draft, setDraft] = useState('');
+  const [confirmDelete, setConfirmDelete] = useState(false);
   const sectionDone = section.items.filter((i) => i.checked).length;
 
   const handleAddItem = () => {
@@ -224,6 +245,34 @@ function SectionBlock({
     onAddItem(draft);
     setDraft('');
   };
+
+  if (confirmDelete) {
+    return (
+      <section className="flex flex-col gap-sm rounded-md border border-copper-70 bg-sand p-sm">
+        <p className="text-body text-cocoa">
+          למחוק את הקטגוריה "{section.label}"? כל הפריטים בתוכה יימחקו.
+        </p>
+        <div className="flex items-center gap-sm">
+          <Button
+            variant="ghost"
+            onClick={() => setConfirmDelete(false)}
+          >
+            ביטול
+          </Button>
+          <Button
+            variant="accent"
+            onClick={() => {
+              onDeleteSection();
+              setConfirmDelete(false);
+            }}
+            fullWidth
+          >
+            מחק קטגוריה
+          </Button>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="flex flex-col gap-sm">
@@ -246,22 +295,16 @@ function SectionBlock({
               <span className="tnum me-1">{number}</span>
               <span className="mid-title text-cocoa">{section.label}</span>
             </span>
-            <span className="tnum text-[10pt] text-cocoa-55">
+            <span className="tnum text-small text-cocoa-55">
               {sectionDone}/{section.items.length}
             </span>
           </div>
         </button>
         <button
           type="button"
-          onClick={() => {
-            if (
-              window.confirm(`למחוק את הקטגוריה "${section.label}"?`)
-            ) {
-              onDeleteSection();
-            }
-          }}
+          onClick={() => setConfirmDelete(true)}
           aria-label={`מחק את ${section.label}`}
-          className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-cocoa-30 hover:bg-cocoa-08 hover:text-cocoa-55"
+          className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-cocoa-55 hover:bg-cocoa-08 hover:text-cocoa"
         >
           <X className="h-4 w-4" aria-hidden />
         </button>
@@ -271,7 +314,7 @@ function SectionBlock({
       {!section.collapsed && (
         <>
           {section.items.length === 0 ? (
-            <p className="text-[10pt] text-cocoa-55">
+            <p className="text-small text-cocoa-55">
               אין פריטים בקטגוריה הזו עדיין.
             </p>
           ) : (
@@ -303,7 +346,7 @@ function SectionBlock({
                     type="button"
                     onClick={() => onDeleteItem(item.id)}
                     aria-label={`מחק ${item.label}`}
-                    className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-cocoa-30 hover:bg-cocoa-08 hover:text-cocoa-55"
+                    className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-cocoa-55 hover:bg-cocoa-08 hover:text-cocoa"
                   >
                     <X className="h-4 w-4" aria-hidden />
                   </button>
@@ -346,13 +389,13 @@ function AddItemRow({
         onChange={(e) => onChange(e.target.value)}
         dir="rtl"
         placeholder="הוסף פריט…"
-        className="h-9 flex-1 rounded-full border border-cocoa-15 bg-ivory px-md text-[11pt] text-cocoa placeholder:text-cocoa-55 focus:border-copper focus:outline-none"
+        className="h-11 flex-1 rounded-full border border-cocoa-15 bg-ivory px-md text-body text-cocoa placeholder:text-cocoa-55 focus:border-copper focus:outline-none"
       />
       <button
         type="submit"
         aria-label="הוסף"
         disabled={!value.trim()}
-        className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-cocoa text-ivory disabled:bg-cocoa-30 active:bg-cocoa-70"
+        className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-cocoa text-ivory disabled:bg-cocoa-30 active:bg-cocoa-70"
       >
         <Plus className="h-4 w-4" aria-hidden strokeWidth={2.5} />
       </button>
@@ -369,7 +412,7 @@ function AddSectionRow({ onAdd }: { onAdd: (label: string) => void }) {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="inline-flex h-10 items-center justify-center gap-2 self-start rounded-full border border-cocoa-15 px-md text-[11pt] text-cocoa active:bg-cocoa-08"
+        className="inline-flex h-11 items-center justify-center gap-2 self-start rounded-full border border-cocoa-15 px-md text-body text-cocoa active:bg-cocoa-08"
       >
         <Plus className="h-4 w-4" aria-hidden strokeWidth={2.5} />
         <span>הוסף קטגוריה</span>
@@ -399,12 +442,12 @@ function AddSectionRow({ onAdd }: { onAdd: (label: string) => void }) {
         onChange={(e) => setDraft(e.target.value)}
         dir="rtl"
         placeholder="שם הקטגוריה…"
-        className="h-9 flex-1 rounded-full border border-cocoa-15 bg-ivory px-md text-[11pt] text-cocoa placeholder:text-cocoa-55 focus:border-copper focus:outline-none"
+        className="h-11 flex-1 rounded-full border border-cocoa-15 bg-ivory px-md text-body text-cocoa placeholder:text-cocoa-55 focus:border-copper focus:outline-none"
       />
       <button
         type="submit"
         disabled={!draft.trim()}
-        className="inline-flex h-9 items-center justify-center rounded-full bg-copper px-md text-[11pt] font-medium text-ivory disabled:opacity-50 active:bg-copper-85"
+        className="inline-flex h-11 items-center justify-center rounded-full bg-copper px-md text-body font-medium text-ivory disabled:opacity-50 active:bg-copper-85"
       >
         שמור
       </button>
@@ -415,7 +458,7 @@ function AddSectionRow({ onAdd }: { onAdd: (label: string) => void }) {
           setDraft('');
         }}
         aria-label="ביטול"
-        className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-cocoa-55 active:bg-cocoa-08"
+        className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-cocoa-55 active:bg-cocoa-08"
       >
         <X className="h-4 w-4" aria-hidden />
       </button>

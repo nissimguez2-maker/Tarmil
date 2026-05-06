@@ -36,7 +36,7 @@ export function TravelMomentCard({
         <ChevronLeft className="h-4 w-4 text-cocoa-55" aria-hidden />
       </div>
       {next && (
-        <span className="text-[10pt] text-cocoa-70">
+        <span className="text-small text-cocoa-70">
           הבא:{' '}
           <span className="text-cocoa">{next.nameHe}</span> ·{' '}
           {formatDateRange(next.arrivalDate, next.departureDate)} ·{' '}
@@ -44,7 +44,7 @@ export function TravelMomentCard({
         </span>
       )}
       {(friendCount > 0 || picksCount > 0) && (
-        <div className="flex flex-wrap items-center gap-x-md gap-y-1 text-[10pt] text-cocoa-55">
+        <div className="flex flex-wrap items-center gap-x-md gap-y-1 text-small text-cocoa-55">
           {friendCount > 0 && (
             <span>
               <span className="tnum">{friendCount}</span> חברים חופפים

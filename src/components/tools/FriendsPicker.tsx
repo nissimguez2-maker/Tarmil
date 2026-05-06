@@ -127,12 +127,12 @@ export function FriendsPicker(props: Props) {
               placeholder="חפש חבר…"
               autoComplete="off"
               dir="rtl"
-              className="h-9 w-full rounded-full border border-cocoa-15 bg-sand pe-lg ps-md text-body text-cocoa placeholder:text-cocoa-55 focus:border-copper focus:outline-none"
+              className="h-11 w-full rounded-full border border-cocoa-15 bg-sand pe-lg ps-md text-body text-cocoa placeholder:text-cocoa-55 focus:border-copper focus:outline-none"
             />
           </div>
           <div className="flex flex-col overflow-y-auto">
             {filtered.length === 0 && (
-              <span className="px-sm py-2 text-[10pt] text-cocoa-55">
+              <span className="px-sm py-2 text-small text-cocoa-55">
                 אין חברים תואמים
               </span>
             )}
@@ -176,7 +176,7 @@ export function FriendsPicker(props: Props) {
             <button
               type="button"
               onClick={() => setOpen(false)}
-              className="mt-1 inline-flex h-9 items-center justify-center rounded-full bg-cocoa text-[11pt] font-medium text-ivory active:bg-cocoa-70"
+              className="mt-1 inline-flex h-11 items-center justify-center rounded-full bg-cocoa text-body font-medium text-ivory active:bg-cocoa-70"
             >
               סיום
             </button>

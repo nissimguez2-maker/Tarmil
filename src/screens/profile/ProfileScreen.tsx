@@ -27,7 +27,7 @@ export function ProfileScreen() {
           <button
             type="button"
             aria-label="הגדרות"
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full text-cocoa hover:bg-cocoa-8"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-full text-cocoa hover:bg-cocoa-8"
           >
             <Settings className="h-5 w-5" aria-hidden />
           </button>
@@ -44,7 +44,7 @@ export function ProfileScreen() {
           </span>
           <div className="flex flex-col">
             <span className="font-serif text-sub leading-tight">נסים גז</span>
-            <span className="text-[10pt] text-cocoa-55">מטייל מאז מאי 2026</span>
+            <span className="text-small text-cocoa-55">מטייל מאז מאי 2026</span>
           </div>
         </div>
 
@@ -59,7 +59,7 @@ export function ProfileScreen() {
               }`}
             >
               <span className="text-body text-cocoa">{label}</span>
-              <span className="flex items-center gap-2 text-[10pt] text-cocoa-55">
+              <span className="flex items-center gap-2 text-small text-cocoa-55">
                 {value}
                 <ChevronLeft className="h-4 w-4" aria-hidden />
               </span>

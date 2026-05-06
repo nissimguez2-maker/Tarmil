@@ -64,18 +64,18 @@ export function ConfirmDestinationSheet({
     <div className="flex max-h-[80dvh] flex-col gap-md overflow-y-auto p-md">
       <div className="flex items-start justify-between gap-sm">
         <div className="flex flex-col">
-          <span className="meta-caps text-copper">
+          <span className="meta-caps text-cocoa-70">
             {isEditing ? 'ערוך יעד' : 'יעד חדש'}
           </span>
-          <h3 className="font-serif text-lede leading-tight">
+          <h2 className="font-serif text-lede leading-tight">
             פרטי היעד
-          </h3>
+          </h2>
         </div>
         <button
           type="button"
           aria-label="סגור"
           onClick={onClose}
-          className="inline-flex h-8 w-8 items-center justify-center rounded-full text-cocoa-55 hover:bg-cocoa-8 active:bg-cocoa-15"
+          className="inline-flex h-11 w-11 items-center justify-center rounded-full text-cocoa-55 hover:bg-cocoa-8 active:bg-cocoa-15"
         >
           <X className="h-4 w-4" aria-hidden />
         </button>
@@ -88,7 +88,7 @@ export function ConfirmDestinationSheet({
           value={name}
           onChange={(e) => setName(e.target.value)}
           dir="rtl"
-          className="h-10 w-full rounded-full border border-cocoa-15 bg-sand px-md text-body text-cocoa focus:border-copper focus:outline-none"
+          className="h-11 w-full rounded-full border border-cocoa-15 bg-sand px-md text-body text-cocoa focus:border-copper focus:outline-none"
         />
       </div>
 
@@ -106,7 +106,7 @@ export function ConfirmDestinationSheet({
             onChange={setDepartureDate}
           />
         </div>
-        <span className="text-[10pt] text-cocoa-70">
+        <span className="text-small text-cocoa-70">
           <span className="tnum">{nights}</span> לילות
         </span>
       </div>
@@ -142,8 +142,8 @@ function DateField({
   onChange: (v: string) => void;
 }) {
   return (
-    <label className="flex h-10 cursor-pointer items-center justify-between gap-sm rounded-full border border-rope bg-sand px-md text-cocoa focus-within:border-copper">
-      <span className="text-[10pt] text-cocoa-55">{label}</span>
+    <label className="flex h-11 cursor-pointer items-center justify-between gap-sm rounded-full border border-rope bg-sand px-md text-cocoa focus-within:border-copper">
+      <span className="text-small text-cocoa-55">{label}</span>
       <input
         type="date"
         value={value}

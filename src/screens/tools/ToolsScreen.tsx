@@ -109,9 +109,9 @@ function ToolBody({
       <span className="flex flex-1 flex-col">
         <span className="flex items-center gap-2">
           <span className="font-serif text-lede leading-tight">{name}</span>
-          {comingSoon && <span className="meta-caps text-copper">בקרוב</span>}
+          {comingSoon && <span className="meta-caps text-cocoa-70">בקרוב</span>}
         </span>
-        <span className="text-[10pt] text-cocoa-55">{meta}</span>
+        <span className="text-small text-cocoa-55">{meta}</span>
       </span>
     </>
   );

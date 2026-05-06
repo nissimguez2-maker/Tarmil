@@ -16,8 +16,8 @@ export function PickOnMapBar({ onCancel, onConfirm }: Props) {
       className="absolute inset-x-md bottom-md z-[800] flex flex-col gap-sm rounded-md border border-rope bg-ivory p-md"
       style={{ boxShadow: '0 -10px 30px -10px rgba(53, 40, 24, 0.20)' }}
     >
-      <span className="meta-caps text-copper">בחירת יעד במפה</span>
-      <p className="text-[10pt] leading-snug text-cocoa-70">
+      <span className="meta-caps text-cocoa-70">בחירת יעד במפה</span>
+      <p className="text-small leading-snug text-cocoa-70">
         גרור את המפה כך שהסיכה תהיה במרכז היעד שלך.
       </p>
       <div className="flex items-center gap-sm">

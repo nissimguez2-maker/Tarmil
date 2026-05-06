@@ -60,8 +60,8 @@ export function PlannedStopSheet({
             <ChevronRight className="h-3 w-3" aria-hidden />
             <span>לתוכנית שלך</span>
           </button>
-          <h3 className="font-serif text-sub leading-tight">{stop.nameHe}</h3>
-          <span className="text-[10pt] text-cocoa-70">
+          <h2 className="font-serif text-sub leading-tight">{stop.nameHe}</h2>
+          <span className="text-small text-cocoa-70">
             {formatDateRange(stop.arrivalDate, stop.departureDate)} ·{' '}
             <span className="tnum">{stop.nights}</span> לילות ·{' '}
             <span className="text-cocoa-55">
@@ -73,7 +73,7 @@ export function PlannedStopSheet({
           type="button"
           aria-label="סגור"
           onClick={onClose}
-          className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-cocoa-55 hover:bg-cocoa-8 active:bg-cocoa-15"
+          className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-cocoa-55 hover:bg-cocoa-8 active:bg-cocoa-15"
         >
           <X className="h-4 w-4" aria-hidden />
         </button>
@@ -102,12 +102,12 @@ export function PlannedStopSheet({
                   <div className="flex flex-col">
                     <span className="text-body text-cocoa">{f.friendName}</span>
                     {f.overlapStart && f.overlapEnd && (
-                      <span className="text-[10pt] text-copper">
+                      <span className="text-small font-medium text-cocoa">
                         {f.zoneLabel} ·{' '}
                         {formatDateRange(f.overlapStart, f.overlapEnd)}
                       </span>
                     )}
-                    <span className="text-[10pt] leading-snug text-cocoa-55">
+                    <span className="text-small leading-snug text-cocoa-55">
                       {f.detail}
                     </span>
                   </div>
@@ -136,7 +136,7 @@ export function PlannedStopSheet({
         )}
 
         {sections.length === 0 && (
-          <p className="text-[10pt] text-cocoa-55">
+          <p className="text-small text-cocoa-55">
             עדיין אין מקומות מומלצים ליעד הזה. אפשר לשמור מהמפה.
           </p>
         )}
@@ -155,7 +155,7 @@ export function PlannedStopSheet({
           )}
         </div>
 
-        <p className="text-[9pt] leading-snug text-cocoa-55">
+        <p className="text-small leading-snug text-cocoa-55">
           התאריכים שלך פרטיים. תרמיל לעולם לא חושף לחברים את הכתובת המדויקת
           שלך — חפיפות מוצגות ברמת עיר בלבד.
         </p>
@@ -214,10 +214,10 @@ function PlaceRow({
         <div className="flex items-baseline gap-2">
           <span className="text-body text-cocoa">{place.hebrewName}</span>
           {place.tarmilPick && (
-            <span className="meta-caps text-copper">בחירה</span>
+            <span className="meta-caps text-cocoa-70">בחירה</span>
           )}
         </div>
-        <span className="inline-flex items-center gap-2 text-[10pt] text-cocoa-55">
+        <span className="inline-flex items-center gap-2 text-small text-cocoa-55">
           <span>{categoryLabel(place.category)}</span>
           <span className="inline-flex items-center gap-1">
             <Star
@@ -235,7 +235,7 @@ function PlaceRow({
         </span>
       </div>
       {saved && (
-        <span className="meta-caps mt-1 shrink-0 text-copper">נשמר</span>
+        <span className="meta-caps mt-1 shrink-0 text-cocoa-70">נשמר</span>
       )}
     </button>
   );

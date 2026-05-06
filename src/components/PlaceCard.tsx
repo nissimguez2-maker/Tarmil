@@ -46,16 +46,16 @@ export function PlaceCard({
       <div className="flex items-baseline justify-between gap-sm">
         <h3 className="font-serif text-lede leading-tight">{name}</h3>
         {tarmilPick && (
-          <span className="meta-caps shrink-0 text-copper">בחירת תרמיל</span>
+          <span className="meta-caps shrink-0 text-cocoa-70">בחירת תרמיל</span>
         )}
       </div>
 
-      {meta && <p className="text-[10pt] text-cocoa-55">{meta}</p>}
+      {meta && <p className="text-small text-cocoa-55">{meta}</p>}
 
       {(rating !== undefined || friendsKnow !== undefined) && (
         <div className="mt-xs flex items-center gap-md">
           {rating !== undefined && (
-            <span className="inline-flex items-center gap-1 text-[10pt] text-cocoa">
+            <span className="inline-flex items-center gap-1 text-small text-cocoa">
               <Star
                 className="h-3.5 w-3.5 fill-copper text-copper"
                 strokeWidth={0}
@@ -65,7 +65,7 @@ export function PlaceCard({
             </span>
           )}
           {friendsKnow !== undefined && friendsKnow > 0 && (
-            <span className="text-[10pt] text-cocoa-70">
+            <span className="text-small text-cocoa-70">
               <span className="tnum">{friendsKnow}</span> חברים מכירים
             </span>
           )}

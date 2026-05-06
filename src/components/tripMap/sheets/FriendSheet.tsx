@@ -28,10 +28,10 @@ export function FriendSheet({ friend, onClose }: Props) {
             {friend.friendInitial}
           </span>
           <div className="flex flex-col">
-            <h3 className="font-serif text-lede leading-tight">
+            <h2 className="font-serif text-lede leading-tight">
               {friend.friendName}
-            </h3>
-            <span className="meta-caps text-copper">
+            </h2>
+            <span className="meta-caps text-cocoa-70">
               {friend.status === 'present' ? 'איתך כאן' : 'חופף בעתיד'}
               <span className="ms-2 text-cocoa-55">
                 · {friend.zoneLabel}
@@ -43,14 +43,14 @@ export function FriendSheet({ friend, onClose }: Props) {
           type="button"
           aria-label="סגור"
           onClick={onClose}
-          className="inline-flex h-8 w-8 items-center justify-center rounded-full text-cocoa-55 hover:bg-cocoa-8 active:bg-cocoa-15"
+          className="inline-flex h-11 w-11 items-center justify-center rounded-full text-cocoa-55 hover:bg-cocoa-8 active:bg-cocoa-15"
         >
           <X className="h-4 w-4" aria-hidden />
         </button>
       </div>
 
       {hasExactOverlap && (
-        <p className="text-[11pt] text-copper">
+        <p className="text-body font-medium text-cocoa">
           {friend.zoneLabel} ·{' '}
           {formatDateRange(friend.overlapStart!, friend.overlapEnd!)}
         </p>
@@ -58,7 +58,7 @@ export function FriendSheet({ friend, onClose }: Props) {
 
       <p className="text-body text-cocoa-70">{friend.detail}</p>
 
-      <p className="text-[9pt] leading-snug text-cocoa-55">
+      <p className="text-small leading-snug text-cocoa-55">
         מיקום ברמת עיר בלבד. תרמיל לעולם לא מציג את המיקום המדויק של חבר.
       </p>
     </div>

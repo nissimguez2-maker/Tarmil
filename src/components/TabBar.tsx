@@ -51,7 +51,7 @@ export function TabBar() {
                 strokeWidth={isActive ? 2 : 1.5}
                 aria-hidden
               />
-              <span className="text-[9pt] font-medium">{label}</span>
+              <span className="text-small font-medium">{label}</span>
               {isActive && (
                 <span
                   aria-hidden
