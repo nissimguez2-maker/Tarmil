@@ -21,62 +21,78 @@
   display: none;
 }
 
-/* place marker dots — small cocoa circles sitting on the map */
+/* ─── Place markers ──────────────────────────────────────────────────── */
+
 .tarmil-place-marker {
   pointer-events: auto;
 }
 
 .tarmil-place-dot {
-  width: 14px;
-  height: 14px;
+  width: 17px;
+  height: 17px;
   border-radius: 50%;
   background: var(--cocoa);
-  border: 2px solid var(--ivory);
+  border: 2.5px solid var(--ivory);
   box-shadow: 0 1px 4px rgba(53, 40, 24, 0.35);
-  margin: 5px;
+  margin: 5.5px;
   transition: transform 0.15s ease;
   cursor: pointer;
 }
 
 .tarmil-place-dot:hover,
 .tarmil-place-dot:active {
-  transform: scale(1.25);
+  transform: scale(1.2);
 }
 
-/* category accents */
-.tarmil-place-beach,
-.tarmil-place-landmark {
-  background: var(--cocoa);
-}
-
-.tarmil-place-cafe,
-.tarmil-place-restaurant {
-  background: var(--cocoa);
-  box-shadow: 0 0 0 2px var(--ivory), 0 1px 4px rgba(53, 40, 24, 0.35);
-}
-
-.tarmil-place-bar,
-.tarmil-place-club {
-  background: var(--cocoa);
-}
-
-.tarmil-place-hostel {
-  background: var(--cocoa);
-}
-
-.tarmil-place-chabad,
-.tarmil-place-kosher {
-  background: var(--cocoa);
-}
-
-/* Tarmil pick — copper outer ring */
+/* category accents — mostly cocoa for visual unity, copper only for picks */
 .tarmil-place-pick {
   background: var(--copper);
-  border-color: var(--ivory);
   box-shadow: 0 0 0 1px var(--copper-70), 0 1px 4px rgba(53, 40, 24, 0.35);
 }
 
-/* friend overlap bubbles — bigger, with the friend's initial */
+/* ─── Cluster icons (place markers grouped at low zoom) ───────────────── */
+
+.tarmil-cluster {
+  pointer-events: auto;
+}
+
+.tarmil-cluster-dot {
+  width: 36px;
+  height: 36px;
+  margin: 1px;
+  border-radius: 50%;
+  background: var(--cocoa);
+  color: var(--ivory);
+  border: 2.5px solid var(--ivory);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Heebo', 'Google Sans Text', system-ui, sans-serif;
+  font-weight: 700;
+  font-size: 11pt;
+  box-shadow: 0 2px 6px rgba(53, 40, 24, 0.32);
+  transition: transform 0.15s ease;
+  cursor: pointer;
+}
+
+.tarmil-cluster-dot:hover,
+.tarmil-cluster-dot:active {
+  transform: scale(1.08);
+}
+
+/* override leaflet.markercluster's default animation styles to keep our look */
+.leaflet-cluster-anim .leaflet-marker-icon,
+.leaflet-cluster-anim .leaflet-marker-shadow {
+  transition: transform 0.3s ease-out, opacity 0.3s ease-in;
+}
+
+/* ─── Friend overlap bubbles ─────────────────────────────────────────── */
+/*
+ * Soft halo around each bubble — visually communicates "approximately in
+ * this neighborhood" rather than "pinned to a building." Reinforces the
+ * Tarmil brand commitment that friend resolution is city-level only.
+ */
+
 .tarmil-friend-bubble {
   pointer-events: auto;
 }
@@ -84,6 +100,7 @@
 .tarmil-friend-circle {
   width: 32px;
   height: 32px;
+  margin: 12px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -91,10 +108,28 @@
   font-family: 'Frank Ruhl Libre', 'Fraunces', serif;
   font-weight: 700;
   font-size: 14pt;
-  margin: 4px;
   cursor: pointer;
   transition: transform 0.15s ease;
-  box-shadow: 0 2px 8px rgba(53, 40, 24, 0.25);
+}
+
+.tarmil-friend-circle.is-present {
+  background: var(--copper);
+  color: var(--ivory);
+  border: 2px solid var(--ivory);
+  box-shadow:
+    0 0 0 6px rgba(199, 93, 36, 0.18),
+    0 0 0 14px rgba(199, 93, 36, 0.06),
+    0 2px 10px rgba(53, 40, 24, 0.22);
+}
+
+.tarmil-friend-circle.is-future {
+  background: var(--ivory);
+  color: var(--copper);
+  border: 2px dashed var(--copper);
+  box-shadow:
+    0 0 0 6px rgba(199, 93, 36, 0.12),
+    0 0 0 14px rgba(199, 93, 36, 0.04),
+    0 2px 10px rgba(53, 40, 24, 0.18);
 }
 
 .tarmil-friend-circle:hover,
@@ -102,19 +137,8 @@
   transform: scale(1.08);
 }
 
-.tarmil-friend-circle.is-present {
-  background: var(--copper);
-  color: var(--ivory);
-  border: 2px solid var(--ivory);
-}
+/* ─── "You are here" — pulsing copper pin ────────────────────────────── */
 
-.tarmil-friend-circle.is-future {
-  background: var(--ivory);
-  color: var(--copper);
-  border: 2px dashed var(--copper);
-}
-
-/* "you are here" — pulsing copper pin */
 .tarmil-present-pin {
   pointer-events: none;
 }

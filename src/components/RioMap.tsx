@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
+import 'leaflet.markercluster';
 import { useNavigate } from 'react-router-dom';
 import { Star, X, ChevronLeft } from 'lucide-react';
 import clsx from 'clsx';
 import 'leaflet/dist/leaflet.css';
+import 'leaflet.markercluster/dist/MarkerCluster.css';
 import './RioMap.css';
 
 import { rioPlaces, type RioPlace } from '../data/rioPlaces';
@@ -14,9 +16,7 @@ import {
 } from '../data/myTrip';
 import { mapColors } from '../utils/mapColors';
 
-const RIO_CENTER: L.LatLngTuple = [-22.95, -43.18];
-// Bounds expanded east to include Búzios (-22.77, -41.95) and west to include
-// Grumari (-23.05, -43.53). User can pan within this range; can't pan to Antarctica.
+// Bounds expanded east to include Búzios and west to include Grumari.
 const RIO_BOUNDS = L.latLngBounds([-23.2, -44.0], [-22.55, -41.7]);
 
 type SheetTarget =
@@ -25,12 +25,21 @@ type SheetTarget =
   | null;
 
 /**
- * Rio de Janeiro map. CartoDB Positron tiles styled with a warm Tarmil tint
- * via CSS filter, custom cocoa/copper markers, and a slide-up bottom sheet
- * for tap-to-preview before drilling into the full place detail.
+ * Rio de Janeiro map.
  *
- * Pan and zoom work natively — finger drag + pinch on phone, mouse drag +
- * scroll wheel on desktop. View is bounded to the Rio metro area.
+ * Core decisions:
+ *  - CartoDB Positron tiles + warm Tarmil tint via CSS filter.
+ *  - fitBounds on initial load to frame the user's whole trip in one shot —
+ *    investor sees the past + future arc immediately.
+ *  - Place markers clustered (leaflet.markercluster) so the Lapa-area density
+ *    reads as one disc with a count rather than a pile-up. Clusters explode
+ *    above zoom 14.
+ *  - Friend bubbles at neighborhood / town centroids (not specific places)
+ *    with a soft halo — visually enforces the brand commitment that
+ *    resolution is city-level, never street-level.
+ *  - Trip line drawn thin (2px past, 1.5px future) at reduced opacity with
+ *    waypoint circles at each city stop — reads as a travel diary trail
+ *    rather than a highway.
  */
 export function RioMap() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -42,12 +51,10 @@ export function RioMap() {
     if (!containerRef.current || mapRef.current) return;
 
     const map = L.map(containerRef.current, {
-      center: RIO_CENTER,
-      zoom: 12,
-      minZoom: 10,
-      maxZoom: 17,
       maxBounds: RIO_BOUNDS,
       maxBoundsViscosity: 1.0,
+      minZoom: 10,
+      maxZoom: 17,
       zoomControl: false,
       attributionControl: false,
       doubleClickZoom: false,
@@ -65,50 +72,96 @@ export function RioMap() {
       },
     ).addTo(map);
 
-    // Trip line — past (solid cocoa)
+    // ─── Trip line — past ──────────────────────────────────────────────
     L.polyline(myTrip.past, {
       color: mapColors.cocoa,
-      weight: 4,
-      opacity: 0.9,
+      weight: 2,
+      opacity: 0.6,
       lineCap: 'round',
       lineJoin: 'round',
     }).addTo(map);
 
-    // Trip line — future (dashed cocoa-30)
+    // Past waypoint dots (each city stop) — small filled cocoa circles
+    myTrip.past.forEach((point, i) => {
+      // Skip the last point (it's the present, which gets its own pulsing pin)
+      if (i === myTrip.past.length - 1) return;
+      L.circleMarker(point, {
+        radius: 4,
+        fillColor: mapColors.cocoa,
+        fillOpacity: 0.9,
+        color: mapColors.ivory,
+        weight: 1.5,
+        interactive: false,
+      }).addTo(map);
+    });
+
+    // ─── Trip line — future ─────────────────────────────────────────────
     L.polyline(myTrip.future, {
       color: mapColors.cocoa,
-      weight: 3,
-      opacity: 0.55,
-      dashArray: '4 6',
+      weight: 1.5,
+      opacity: 0.35,
+      dashArray: '3 5',
       lineCap: 'round',
     }).addTo(map);
 
-    // Place markers
+    // Future waypoint (the Cristo destination) — hollow circle for "not yet"
+    L.circleMarker(myTrip.future[myTrip.future.length - 1], {
+      radius: 4,
+      fillColor: mapColors.ivory,
+      fillOpacity: 1,
+      color: mapColors.cocoa,
+      weight: 1.5,
+      opacity: 0.5,
+      interactive: false,
+    }).addTo(map);
+
+    // ─── Place markers (clustered) ──────────────────────────────────────
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const clusterGroup = (L as any).markerClusterGroup({
+      showCoverageOnHover: false,
+      spiderfyOnMaxZoom: true,
+      zoomToBoundsOnClick: true,
+      disableClusteringAtZoom: 14,
+      maxClusterRadius: 45,
+      iconCreateFunction: (cluster: L.MarkerCluster) => {
+        const count = cluster.getChildCount();
+        return L.divIcon({
+          className: 'tarmil-cluster',
+          html: `<div class="tarmil-cluster-dot">${count}</div>`,
+          iconSize: [38, 38],
+          iconAnchor: [19, 19],
+        });
+      },
+    });
+
     rioPlaces.forEach((place) => {
       const icon = L.divIcon({
         className: 'tarmil-place-marker',
         html: `<div class="tarmil-place-dot tarmil-place-${place.category}${
           place.tarmilPick ? ' tarmil-place-pick' : ''
         }"></div>`,
-        iconSize: [24, 24],
-        iconAnchor: [12, 12],
+        iconSize: [28, 28],
+        iconAnchor: [14, 14],
       });
       const marker = L.marker([place.lat, place.lng], {
         icon,
         title: place.englishName,
-      }).addTo(map);
+      });
       marker.on('click', () => setTarget({ kind: 'place', place }));
+      clusterGroup.addLayer(marker);
     });
 
-    // Friend overlap bubbles
+    clusterGroup.addTo(map);
+
+    // ─── Friend overlap bubbles (always visible, never clustered) ───────
     friendOverlaps.forEach((friend) => {
       const icon = L.divIcon({
         className: 'tarmil-friend-bubble',
         html: `<div class="tarmil-friend-circle ${
           friend.status === 'present' ? 'is-present' : 'is-future'
         }">${friend.friendInitial}</div>`,
-        iconSize: [40, 40],
-        iconAnchor: [20, 20],
+        iconSize: [56, 56],
+        iconAnchor: [28, 28],
       });
       const marker = L.marker([friend.lat, friend.lng], {
         icon,
@@ -118,7 +171,7 @@ export function RioMap() {
       marker.on('click', () => setTarget({ kind: 'friend', friend }));
     });
 
-    // Present pin — pulsing copper
+    // ─── Present pin (pulsing copper) ───────────────────────────────────
     const presentIcon = L.divIcon({
       className: 'tarmil-present-pin',
       html: '<div class="tarmil-present-ring"></div><div class="tarmil-present-dot"></div>',
@@ -130,6 +183,17 @@ export function RioMap() {
       zIndexOffset: 1000,
       interactive: false,
     }).addTo(map);
+
+    // ─── Frame the trip in one shot ─────────────────────────────────────
+    // fitBounds on past + future so the user's whole arc is visible immediately.
+    const tripBounds = L.latLngBounds([
+      ...myTrip.past,
+      ...myTrip.future,
+    ]);
+    map.fitBounds(tripBounds, {
+      padding: [60, 60],
+      maxZoom: 13,
+    });
 
     mapRef.current = map;
 
@@ -145,13 +209,6 @@ export function RioMap() {
   return (
     <div className="relative h-full w-full overflow-hidden">
       <div ref={containerRef} className="tarmil-map h-full w-full" />
-
-      {/* legend pill — top-end */}
-      <div className="pointer-events-none absolute top-md end-md z-[400] flex flex-col gap-1.5">
-        <LegendPill swatch="cocoa" label="עבר" />
-        <LegendPill swatch="copper" label="כאן עכשיו" />
-        <LegendPill swatch="dashed" label="מתוכנן" />
-      </div>
 
       {/* bottom sheet */}
       <div
@@ -178,30 +235,6 @@ export function RioMap() {
           />
         )}
       </div>
-    </div>
-  );
-}
-
-function LegendPill({
-  swatch,
-  label,
-}: {
-  swatch: 'cocoa' | 'copper' | 'dashed';
-  label: string;
-}) {
-  return (
-    <div className="flex items-center gap-2 rounded-full border border-cocoa-15 bg-ivory px-3 py-1 text-[9pt] text-cocoa-70 shadow-sm">
-      <span
-        aria-hidden
-        className={clsx(
-          'h-2 w-4 rounded-full',
-          swatch === 'cocoa' && 'bg-cocoa',
-          swatch === 'copper' && 'bg-copper',
-          swatch === 'dashed' &&
-            'border-t border-dashed border-cocoa bg-transparent',
-        )}
-      />
-      <span>{label}</span>
     </div>
   );
 }
@@ -299,6 +332,7 @@ function FriendSheet({
             </h3>
             <span className="meta-caps text-copper">
               {friend.status === 'present' ? 'איתך כאן' : 'חופף בעתיד'}
+              <span className="ms-2 text-cocoa-55">· {friend.zoneLabel}</span>
             </span>
           </div>
         </div>
@@ -313,6 +347,10 @@ function FriendSheet({
       </div>
 
       <p className="text-body text-cocoa-70">{friend.detail}</p>
+
+      <p className="text-[9pt] text-cocoa-55 leading-snug">
+        מיקום ברמת עיר בלבד. תרמיל לעולם לא מציג את המיקום המדויק של חבר.
+      </p>
     </div>
   );
 }
