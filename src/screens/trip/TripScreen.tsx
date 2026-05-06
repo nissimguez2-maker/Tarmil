@@ -31,7 +31,7 @@ import {
 } from '../../data/plannedStops';
 import { friendOverlaps } from '../../data/myTrip';
 import { rioPlaces } from '../../data/rioPlaces';
-import { ALL_FILTERS } from '../../components/tripMap/utils/categoryLabel';
+import { CATEGORY_FILTER_IDS } from '../../components/tripMap/utils/categoryLabel';
 
 /**
  * Trip tab — the app's hero.
@@ -120,7 +120,7 @@ export function TripScreen() {
                 onSetAll={() =>
                   dispatch({
                     type: 'SET_FILTERS',
-                    filters: new Set(ALL_FILTERS),
+                    filters: new Set(CATEGORY_FILTER_IDS),
                   })
                 }
               />

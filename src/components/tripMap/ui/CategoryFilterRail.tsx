@@ -29,7 +29,7 @@ export function CategoryFilterRail({ active, onToggle, onSetAll }: Props) {
         <Chip
           key={id}
           label={filterLabel(id)}
-          active={!all && active.has(id)}
+          active={active.has(id)}
           onClick={() => onToggle(id)}
         />
       ))}

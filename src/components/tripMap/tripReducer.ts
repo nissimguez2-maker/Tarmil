@@ -3,7 +3,7 @@ import type { GlobalPlace } from '../../data/globalPlaces';
 import type { FriendOverlap } from '../../data/myTrip';
 import type { PlannedStop } from '../../data/plannedStops';
 import {
-  ALL_FILTERS,
+  CATEGORY_FILTER_IDS,
   DEFAULT_ACTIVE_FILTERS,
   type FilterId,
 } from './utils/categoryLabel';
@@ -119,6 +119,14 @@ export function tripReducer(state: TripState, action: TripAction): TripState {
   }
 }
 
+/**
+ * "All" = every category chip on, modifiers (picks/friends) off. Tapping the
+ * "הכל" chip should clear modifiers and turn on all categories.
+ */
 export function isAllFiltersActive(filters: Set<FilterId>): boolean {
-  return filters.size === ALL_FILTERS.length;
+  return (
+    CATEGORY_FILTER_IDS.every((c) => filters.has(c)) &&
+    !filters.has('picks') &&
+    !filters.has('friends')
+  );
 }

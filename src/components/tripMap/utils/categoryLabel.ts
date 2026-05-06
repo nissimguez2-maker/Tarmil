@@ -66,24 +66,43 @@ export function filterLabel(id: FilterId): string {
   }
 }
 
-/** A place passes when ANY active filter matches it. Empty set = nothing matches. */
+/** Category chips (hostels/food/etc) — visibility is OR'd among these. */
+export const CATEGORY_FILTER_IDS: Array<Exclude<FilterId, 'picks' | 'friends'>> = [
+  'hostels',
+  'food',
+  'beaches',
+  'nightlife',
+  'kosher',
+  'chabad',
+];
+
+/**
+ * A place passes when:
+ *  - It's a landmark (always visible — sights aren't category-tagged), OR its
+ *    category matches at least one active category chip,
+ *  - AND if "picks" is active, the place is a Tarmil Pick,
+ *  - AND if "friends" is active, the place has friendsKnow > 0.
+ */
 export function placeMatchesFilters(
   place: { category: RioPlaceCategory; tarmilPick?: boolean; friendsKnow: number },
   active: Set<FilterId>,
 ): boolean {
-  for (const id of active) {
-    if (id === 'picks') {
-      if (place.tarmilPick) return true;
-      continue;
+  if (place.category !== 'landmark') {
+    let matchesCategory = false;
+    for (const cat of CATEGORY_FILTER_IDS) {
+      if (!active.has(cat)) continue;
+      if (FILTER_TO_CATEGORIES[cat].includes(place.category)) {
+        matchesCategory = true;
+        break;
+      }
     }
-    if (id === 'friends') {
-      if (place.friendsKnow > 0) return true;
-      continue;
-    }
-    const cats = FILTER_TO_CATEGORIES[id];
-    if (cats.includes(place.category)) return true;
+    if (!matchesCategory) return false;
   }
-  return false;
+
+  if (active.has('picks') && !place.tarmilPick) return false;
+  if (active.has('friends') && place.friendsKnow === 0) return false;
+
+  return true;
 }
 
 export const ALL_FILTERS: FilterId[] = [
@@ -97,12 +116,10 @@ export const ALL_FILTERS: FilterId[] = [
   'chabad',
 ];
 
-/** Default-active filter set on cold load — kosher and chabad excluded. */
+/** Default-active filter set on cold load — kosher and chabad off; modifiers off. */
 export const DEFAULT_ACTIVE_FILTERS: ReadonlySet<FilterId> = new Set<FilterId>([
   'hostels',
   'food',
   'beaches',
   'nightlife',
-  'picks',
-  'friends',
 ]);

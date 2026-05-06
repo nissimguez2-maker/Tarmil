@@ -158,8 +158,17 @@ export const TripMap = forwardRef<TripMapHandle, Props>(function TripMap(
     mapRef.current = map;
 
     return () => {
-      map.off('click', handleMapClick);
-      map.remove();
+      // Defensive: TomTom v6 (Mapbox-GL 1.13 under the hood) sometimes throws
+      // during teardown if the WebGL context was lost or a tile request was
+      // mid-flight. Swallow the error so route changes never crash the React
+      // tree.
+      try {
+        map.off('click', handleMapClick);
+        map.remove();
+      } catch (e) {
+        // eslint-disable-next-line no-console
+        console.warn('[TripMap] cleanup threw, continuing:', e);
+      }
       mapRef.current = null;
       setMapReady(false);
     };
