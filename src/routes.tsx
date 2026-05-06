@@ -2,6 +2,9 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import { AppLayout } from './layouts/AppLayout';
 import { TripScreen } from './screens/trip/TripScreen';
 import { ToolsScreen } from './screens/tools/ToolsScreen';
+import { CurrencyScreen } from './screens/tools/CurrencyScreen';
+import { ChecklistScreen } from './screens/tools/ChecklistScreen';
+import { BalanceScreen } from './screens/tools/BalanceScreen';
 import { FriendsScreen } from './screens/friends/FriendsScreen';
 import { ProfileScreen } from './screens/profile/ProfileScreen';
 import { PlaceScreen } from './screens/place/PlaceScreen';
@@ -20,6 +23,9 @@ export function AppRoutes() {
         <Route path="/trip" element={<TripScreen />} />
         <Route path="/place/:id" element={<PlaceScreen />} />
         <Route path="/tools" element={<ToolsScreen />} />
+        <Route path="/tools/currency" element={<CurrencyScreen />} />
+        <Route path="/tools/checklist" element={<ChecklistScreen />} />
+        <Route path="/tools/balance" element={<BalanceScreen />} />
         <Route path="/friends" element={<FriendsScreen />} />
         <Route path="/profile" element={<ProfileScreen />} />
         <Route path="*" element={<Navigate to="/trip" replace />} />

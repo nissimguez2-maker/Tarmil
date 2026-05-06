@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { Screen } from '../../components/Screen';
 import { TopBar } from '../../components/TopBar';
 import { SectionLabel } from '../../components/SectionLabel';
@@ -8,30 +9,47 @@ import {
   ScanText,
   Wallet,
   Smartphone,
+  ChevronLeft,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
+import clsx from 'clsx';
 
 type Tool = {
   name: string;
   meta: string;
   Icon: LucideIcon;
+  /** When set, the row navigates to this route. Otherwise it renders dimmed with "בקרוב". */
+  to?: string;
 };
 
 const TOOLS: Tool[] = [
-  { name: 'ממיר מטבעות', meta: 'עובד גם בלי רשת', Icon: Coins },
-  { name: 'צ׳ק ליסט לפני יציאה', meta: 'ויזה, חיסונים, ביטוח', Icon: ListChecks },
+  {
+    name: 'ממיר מטבעות',
+    meta: 'עובד גם בלי רשת',
+    Icon: Coins,
+    to: '/tools/currency',
+  },
+  {
+    name: 'צ׳ק ליסט לפני יציאה',
+    meta: 'ויזה, חיסונים, ביטוח',
+    Icon: ListChecks,
+    to: '/tools/checklist',
+  },
+  {
+    name: 'יתרות בין חברים',
+    meta: 'מחשב חוב פתוח, מטבעות מעורבים',
+    Icon: Wallet,
+    to: '/tools/balance',
+  },
   { name: 'מתרגם קולי', meta: 'דיבור-לדיבור, תרגום מיידי', Icon: Languages },
-  { name: 'מתרגם תפריט ושלטים', meta: 'סורק, מתרגם, מסמן רכיבים', Icon: ScanText },
-  { name: 'יתרות בין חברים', meta: 'חוב פתוח בין שני חברים', Icon: Wallet },
+  {
+    name: 'מתרגם תפריט ושלטים',
+    meta: 'סורק, מתרגם, מסמן רכיבים',
+    Icon: ScanText,
+  },
   { name: 'eSIM וחבילות גלישה', meta: 'תמיכה בעברית בחו״ל', Icon: Smartphone },
 ];
 
-/**
- * Placeholder for the Tools tab.
- *
- * Final design (later PR): each tool taps into its own sub-screen.
- * Currency converter is the natural first one to build out.
- */
 export function ToolsScreen() {
   return (
     <Screen>
@@ -45,22 +63,56 @@ export function ToolsScreen() {
         </p>
 
         <ul className="flex flex-col gap-sm">
-          {TOOLS.map(({ name, meta, Icon }) => (
-            <li
-              key={name}
-              className="flex items-center gap-md rounded-sm border border-cocoa-15 bg-sand p-md"
-            >
-              <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-cocoa text-ivory">
-                <Icon className="h-5 w-5" strokeWidth={1.5} aria-hidden />
-              </span>
-              <span className="flex flex-col">
-                <span className="font-serif text-lede leading-tight">{name}</span>
-                <span className="text-[10pt] text-cocoa-55">{meta}</span>
-              </span>
-            </li>
-          ))}
+          {TOOLS.map((tool) =>
+            tool.to ? (
+              <li key={tool.name}>
+                <Link
+                  to={tool.to}
+                  className="flex items-center gap-md rounded-sm border border-cocoa-15 bg-sand p-md active:bg-cocoa-08"
+                >
+                  <ToolBody {...tool} />
+                  <ChevronLeft
+                    className="h-4 w-4 shrink-0 text-cocoa-55"
+                    aria-hidden
+                  />
+                </Link>
+              </li>
+            ) : (
+              <li
+                key={tool.name}
+                className={clsx(
+                  'flex items-center gap-md rounded-sm border border-cocoa-15 bg-sand p-md',
+                  'opacity-60',
+                )}
+              >
+                <ToolBody {...tool} comingSoon />
+              </li>
+            ),
+          )}
         </ul>
       </div>
     </Screen>
+  );
+}
+
+function ToolBody({
+  name,
+  meta,
+  Icon,
+  comingSoon,
+}: Tool & { comingSoon?: boolean }) {
+  return (
+    <>
+      <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-cocoa text-ivory">
+        <Icon className="h-5 w-5" strokeWidth={1.5} aria-hidden />
+      </span>
+      <span className="flex flex-1 flex-col">
+        <span className="flex items-center gap-2">
+          <span className="font-serif text-lede leading-tight">{name}</span>
+          {comingSoon && <span className="meta-caps text-copper">בקרוב</span>}
+        </span>
+        <span className="text-[10pt] text-cocoa-55">{meta}</span>
+      </span>
+    </>
   );
 }
