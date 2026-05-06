@@ -124,14 +124,18 @@ export function TripScreen() {
                   })
                 }
               />
-              <TravelMomentCard
-                hereLabel="אתה בריו"
-                next={nextStop}
-                friendCount={presentFriendCount}
-                picksCount={picksNearbyCount}
-                onTap={openPlannedRoute}
-              />
-              <AddDestinationFab onClick={openSearch} />
+              <div className="absolute inset-x-md bottom-md z-[800] flex flex-col items-stretch gap-sm">
+                <div className="self-end">
+                  <AddDestinationFab onClick={openSearch} />
+                </div>
+                <TravelMomentCard
+                  hereLabel="אתה בריו"
+                  next={nextStop}
+                  friendCount={presentFriendCount}
+                  picksCount={picksNearbyCount}
+                  onTap={openPlannedRoute}
+                />
+              </div>
             </>
           )}
 

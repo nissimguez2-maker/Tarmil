@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { X } from 'lucide-react';
 import { Button } from '../../Button';
 import { PrivacyRadios } from '../ui/PrivacyRadios';
-import { formatDateChip } from '../utils/formatDateRange';
 import { nightsBetween } from '../utils/nightsBetween';
 import type {
   PlannedStop,
@@ -27,10 +26,10 @@ export function ConfirmDestinationSheet({
   onClose,
 }: Props) {
   const [name, setName] = useState(editingStop?.nameHe ?? candidate.nameHe);
-  const [arrivalDate] = useState(
+  const [arrivalDate, setArrivalDate] = useState(
     editingStop?.arrivalDate ?? DEFAULT_ARRIVAL,
   );
-  const [departureDate] = useState(
+  const [departureDate, setDepartureDate] = useState(
     editingStop?.departureDate ?? DEFAULT_DEPARTURE,
   );
   const [privacy, setPrivacy] = useState<PlannedStopPrivacy>(
@@ -96,8 +95,16 @@ export function ConfirmDestinationSheet({
       <div className="flex flex-col gap-sm">
         <span className="meta-caps text-cocoa-55">מתי תהיה שם?</span>
         <div className="flex flex-col gap-2">
-          <DateChip label="תאריך הגעה" value={arrivalDate} />
-          <DateChip label="תאריך יציאה" value={departureDate} />
+          <DateField
+            label="תאריך הגעה"
+            value={arrivalDate}
+            onChange={setArrivalDate}
+          />
+          <DateField
+            label="תאריך יציאה"
+            value={departureDate}
+            onChange={setDepartureDate}
+          />
         </div>
         <span className="text-[10pt] text-cocoa-70">
           <span className="tnum">{nights}</span> לילות
@@ -125,18 +132,26 @@ export function ConfirmDestinationSheet({
   );
 }
 
-function DateChip({ label, value }: { label: string; value: string }) {
+function DateField({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+}) {
   return (
-    <button
-      type="button"
-      onClick={() => {
-        // Stub — a date picker would open here. Mockup uses fixed defaults.
-      }}
-      aria-haspopup="dialog"
-      className="inline-flex h-10 items-center justify-between gap-sm rounded-full border border-rope bg-sand px-md text-cocoa active:bg-cocoa-08"
-    >
+    <label className="flex h-10 cursor-pointer items-center justify-between gap-sm rounded-full border border-rope bg-sand px-md text-cocoa focus-within:border-copper">
       <span className="text-[10pt] text-cocoa-55">{label}</span>
-      <span className="tnum text-body text-cocoa">{formatDateChip(value)}</span>
-    </button>
+      <input
+        type="date"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        dir="ltr"
+        aria-label={label}
+        className="tnum cursor-pointer border-none bg-transparent text-body text-cocoa focus:outline-none"
+      />
+    </label>
   );
 }

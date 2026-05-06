@@ -24,7 +24,7 @@ export type LatLng = [number, number];
 export const zones = {
   gigAirport: [-22.815, -43.244] as LatLng,
   maracana: [-22.912, -43.230] as LatLng,
-  centro: [-22.91, -43.18] as LatLng, // Centro / Lapa area
+  centro: [-22.91, -43.18] as LatLng,
   santaTeresa: [-22.928, -43.187] as LatLng,
   botafogo: [-22.952, -43.185] as LatLng,
   copacabana: [-22.974, -43.184] as LatLng,
@@ -34,10 +34,9 @@ export const zones = {
 /** International city centroids — used for planned stops + global friend overlaps. */
 export const globalZones = {
   buzios: [-22.747, -41.881] as LatLng,
-  bangkok: [13.7563, 100.5018] as LatLng,
-  chiangMai: [18.7883, 98.9853] as LatLng,
-  pai: [19.3585, 98.4439] as LatLng,
-  hanoi: [21.0285, 105.8542] as LatLng,
+  saoPaulo: [-23.5505, -46.6333] as LatLng,
+  jericoacoara: [-2.7959, -40.5125] as LatLng,
+  buenosAires: [-34.6037, -58.3816] as LatLng,
 };
 
 export const myTrip = {
@@ -74,6 +73,10 @@ export type FriendOverlap = {
   overlapEnd?: string;
 };
 
+/**
+ * Single source of truth for friend overlaps. The Friends tab and the trip
+ * map both read this list — keep them in sync by editing here only.
+ */
 export const friendOverlaps: FriendOverlap[] = [
   {
     id: 'maya-ipanema',
@@ -109,29 +112,42 @@ export const friendOverlaps: FriendOverlap[] = [
     overlapEnd: '2026-10-31',
   },
   {
-    id: 'noa-chiangmai',
-    friendName: 'נועה ברק',
-    friendInitial: 'נ',
-    lat: globalZones.chiangMai[0],
-    lng: globalZones.chiangMai[1],
-    zoneLabel: 'צ׳אנג מאי',
+    id: 'shir-saopaulo',
+    friendName: 'שיר כהן',
+    friendInitial: 'ש',
+    lat: globalZones.saoPaulo[0],
+    lng: globalZones.saoPaulo[1],
+    zoneLabel: 'סאו פאולו',
     status: 'future',
-    detail: 'בצ׳אנג מאי לקורס בישול תאי בתחילת נובמבר.',
-    destinationId: 'chiang-mai',
-    overlapStart: '2026-11-08',
-    overlapEnd: '2026-11-10',
+    detail: 'בסאו פאולו לסוף שבוע ארוך, מכוונת לוילה מדלנה.',
+    destinationId: 'sao-paulo',
+    overlapStart: '2026-11-03',
+    overlapEnd: '2026-11-05',
   },
   {
-    id: 'david-hanoi',
-    friendName: 'דוד כהן',
-    friendInitial: 'ד',
-    lat: globalZones.hanoi[0],
-    lng: globalZones.hanoi[1],
-    zoneLabel: 'האנוי',
+    id: 'yotam-jericoacoara',
+    friendName: 'יותם הררי',
+    friendInitial: 'ה',
+    lat: globalZones.jericoacoara[0],
+    lng: globalZones.jericoacoara[1],
+    zoneLabel: 'ז׳ריקואקוארה',
     status: 'future',
-    detail: 'מגיע להאנוי באמצע נובמבר, יהיה איתך בעיר 22–25.',
-    destinationId: 'hanoi',
-    overlapStart: '2026-11-22',
-    overlapEnd: '2026-11-25',
+    detail: 'בז׳רי לקייטסרף, מחפש שותף לדיונות ושקיעה.',
+    destinationId: 'jericoacoara',
+    overlapStart: '2026-11-10',
+    overlapEnd: '2026-11-13',
+  },
+  {
+    id: 'tom-buenosaires',
+    friendName: 'תום פרידמן',
+    friendInitial: 'ת',
+    lat: globalZones.buenosAires[0],
+    lng: globalZones.buenosAires[1],
+    zoneLabel: 'בואנוס איירס',
+    status: 'future',
+    detail: 'בבואנוס לחודש, גר בפאלרמו, יודע איפה האסאדו הכי טוב.',
+    destinationId: 'buenos-aires',
+    overlapStart: '2026-11-18',
+    overlapEnd: '2026-11-22',
   },
 ];
