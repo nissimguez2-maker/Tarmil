@@ -45,13 +45,14 @@ export function DeviceFrame({ children }: Props) {
         />
 
         {/* status bar mock — desktop only.
-            forced LTR because iOS clock/indicators are LTR even in Hebrew. */}
+            forced LTR because iOS clock/indicators are LTR even in Hebrew.
+            top padding clears the 54px corner radius; px-9 clears the start curve. */}
         <div
           aria-hidden
           dir="ltr"
           className={clsx(
-            'absolute top-0 inset-x-0 z-20 flex items-center justify-between',
-            'h-[44px] px-7 text-cocoa text-[10pt] font-medium tnum',
+            'absolute top-0 inset-x-0 z-20 flex items-start justify-between',
+            'h-[44px] pt-3 px-9 text-cocoa text-[10pt] font-medium tnum',
             'hidden md:flex',
           )}
         >
