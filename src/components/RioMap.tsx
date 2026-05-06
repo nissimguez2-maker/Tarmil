@@ -15,7 +15,9 @@ import {
 import { mapColors } from '../utils/mapColors';
 
 const RIO_CENTER: L.LatLngTuple = [-22.95, -43.18];
-const RIO_BOUNDS = L.latLngBounds([-23.1, -43.85], [-22.65, -42.95]);
+// Bounds expanded east to include Búzios (-22.77, -41.95) and west to include
+// Grumari (-23.05, -43.53). User can pan within this range; can't pan to Antarctica.
+const RIO_BOUNDS = L.latLngBounds([-23.2, -44.0], [-22.55, -41.7]);
 
 type SheetTarget =
   | { kind: 'place'; place: RioPlace }
