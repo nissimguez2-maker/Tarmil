@@ -4,6 +4,7 @@ import { TripScreen } from './screens/trip/TripScreen';
 import { ToolsScreen } from './screens/tools/ToolsScreen';
 import { FriendsScreen } from './screens/friends/FriendsScreen';
 import { ProfileScreen } from './screens/profile/ProfileScreen';
+import { PlaceScreen } from './screens/place/PlaceScreen';
 
 /**
  * Route table.
@@ -17,6 +18,7 @@ export function AppRoutes() {
       <Route element={<AppLayout />}>
         <Route index element={<Navigate to="/trip" replace />} />
         <Route path="/trip" element={<TripScreen />} />
+        <Route path="/place/:id" element={<PlaceScreen />} />
         <Route path="/tools" element={<ToolsScreen />} />
         <Route path="/friends" element={<FriendsScreen />} />
         <Route path="/profile" element={<ProfileScreen />} />
