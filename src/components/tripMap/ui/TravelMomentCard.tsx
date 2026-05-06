@@ -12,10 +12,10 @@ type Props = {
 
 /**
  * Bottom summary card — investor headline. Shows where the user is, what's
- * next on the planned route, and the social/curated counts. Tapping opens the
- * planned-route sheet (state #7).
+ * next on the planned route, and the social/curated counts. Tapping opens
+ * the planned-route sheet.
  *
- * Has end-padding to leave room for the FAB which overlays its end corner.
+ * Layout is owned by the parent; this is just the card shape.
  */
 export function TravelMomentCard({
   hereLabel,
@@ -28,7 +28,7 @@ export function TravelMomentCard({
     <button
       type="button"
       onClick={onTap}
-      className="absolute inset-x-md bottom-md z-[800] flex flex-col gap-1 rounded-md border border-rope bg-ivory p-md pe-xl text-start active:bg-cocoa-08"
+      className="flex w-full flex-col gap-1 rounded-md border border-rope bg-ivory p-md text-start active:bg-cocoa-08"
       style={{ boxShadow: '0 -10px 30px -10px rgba(53, 40, 24, 0.20)' }}
     >
       <div className="flex items-center justify-between gap-sm">
@@ -37,13 +37,14 @@ export function TravelMomentCard({
       </div>
       {next && (
         <span className="text-[10pt] text-cocoa-70">
-          הבא: <span className="text-cocoa">{next.nameHe}</span> ·{' '}
+          הבא:{' '}
+          <span className="text-cocoa">{next.nameHe}</span> ·{' '}
           {formatDateRange(next.arrivalDate, next.departureDate)} ·{' '}
           <span className="tnum">{next.nights}</span> לילות
         </span>
       )}
       {(friendCount > 0 || picksCount > 0) && (
-        <div className="flex items-center gap-md text-[10pt] text-cocoa-55">
+        <div className="flex flex-wrap items-center gap-x-md gap-y-1 text-[10pt] text-cocoa-55">
           {friendCount > 0 && (
             <span>
               <span className="tnum">{friendCount}</span> חברים חופפים
