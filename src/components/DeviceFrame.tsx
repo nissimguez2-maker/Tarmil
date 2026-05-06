@@ -1,0 +1,115 @@
+import type { ReactNode } from 'react';
+import clsx from 'clsx';
+
+type Props = {
+  children: ReactNode;
+};
+
+/**
+ * iPhone 15 Pro frame.
+ *
+ * Below md (≤767px): renders children full-bleed at 100dvh.
+ * At md+ (≥768px): renders children inside a 390×844 rounded shell with a notch
+ * and a mock iOS status bar, sitting on a cocoa-15 page background.
+ *
+ * The visibility switch is pure CSS (Tailwind responsive utilities) — no JS,
+ * no flash on load.
+ */
+export function DeviceFrame({ children }: Props) {
+  return (
+    <div
+      className={clsx(
+        // mobile: full-bleed ivory
+        'h-dvh w-full bg-ivory',
+        // desktop: cream-shadow stage
+        'md:flex md:h-dvh md:items-center md:justify-center md:bg-cocoa-15 md:p-md',
+      )}
+    >
+      <div
+        className={clsx(
+          'relative h-full w-full bg-ivory overflow-hidden',
+          // device shell on desktop
+          'md:h-[844px] md:w-[390px] md:max-h-[calc(100dvh-32px)]',
+          'md:rounded-device md:shadow-device',
+          'md:ring-1 md:ring-cocoa-15',
+        )}
+      >
+        {/* notch — desktop only */}
+        <div
+          aria-hidden
+          className={clsx(
+            'pointer-events-none absolute top-0 left-1/2 -translate-x-1/2',
+            'h-[28px] w-[120px] rounded-b-notch bg-cocoa z-30',
+            'hidden md:block',
+          )}
+        />
+
+        {/* status bar mock — desktop only.
+            forced LTR because iOS clock/indicators are LTR even in Hebrew. */}
+        <div
+          aria-hidden
+          dir="ltr"
+          className={clsx(
+            'absolute top-0 inset-x-0 z-20 flex items-center justify-between',
+            'h-[44px] px-7 text-cocoa text-[10pt] font-medium tnum',
+            'hidden md:flex',
+          )}
+        >
+          <span>9:41</span>
+          <span className="flex items-center gap-1.5">
+            <SignalGlyph />
+            <WifiGlyph />
+            <BatteryGlyph />
+          </span>
+        </div>
+
+        {/* content area — leaves room for the notch/status bar on desktop */}
+        <div className="absolute inset-0 md:top-[44px] flex flex-col">
+          {children}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SignalGlyph() {
+  return (
+    <svg width="16" height="10" viewBox="0 0 16 10" fill="currentColor" aria-hidden>
+      <rect x="0" y="6" width="3" height="4" rx="0.5" />
+      <rect x="4.5" y="4" width="3" height="6" rx="0.5" />
+      <rect x="9" y="2" width="3" height="8" rx="0.5" />
+      <rect x="13.5" y="0" width="3" height="10" rx="0.5" />
+    </svg>
+  );
+}
+
+function WifiGlyph() {
+  return (
+    <svg width="14" height="10" viewBox="0 0 14 10" fill="none" aria-hidden>
+      <path
+        d="M1 3a9 9 0 0 1 12 0M3 5.5a6 6 0 0 1 8 0M5 8a3 3 0 0 1 4 0"
+        stroke="currentColor"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function BatteryGlyph() {
+  return (
+    <svg width="22" height="10" viewBox="0 0 22 10" fill="none" aria-hidden>
+      <rect
+        x="0.5"
+        y="0.5"
+        width="18"
+        height="9"
+        rx="2"
+        stroke="currentColor"
+        strokeWidth="1"
+      />
+      <rect x="2" y="2" width="14" height="6" rx="1" fill="currentColor" />
+      <rect x="20" y="3.5" width="1.5" height="3" rx="0.5" fill="currentColor" />
+    </svg>
+  );
+}
