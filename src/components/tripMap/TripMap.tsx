@@ -22,7 +22,6 @@ import { placeMatchesFilters, type FilterId } from './utils/categoryLabel';
 import type { SheetState } from './tripReducer';
 
 const TOMTOM_API_KEY = import.meta.env.VITE_TOMTOM_API_KEY;
-const MAP_STYLE = 'tomtom://vector/1/basic-main';
 
 export type TripMapHandle = {
   /** Current map center as [lat, lng]. Returns null before init. */
@@ -118,10 +117,12 @@ export const TripMap = forwardRef<TripMapHandle, Props>(function TripMap(
     }
 
     const initialCenter: LatLng = myTrip.present;
+    // Style is left to the SDK default — TomTom v6 builds the right URL with
+    // the API key. Passing an explicit `tomtom://...` value caused tiles to
+    // never resolve in the deployed build.
     const map = tt.map({
       key: TOMTOM_API_KEY,
       container: containerRef.current,
-      style: MAP_STYLE,
       center: [initialCenter[1], initialCenter[0]],
       zoom: 4,
       dragRotate: false,
@@ -131,6 +132,11 @@ export const TripMap = forwardRef<TripMapHandle, Props>(function TripMap(
 
     const handleMapClick = () => handlersRef.current.onCloseSheet();
     map.on('click', handleMapClick);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    map.on('error' as any, (ev: any) => {
+      // eslint-disable-next-line no-console
+      console.error('[TripMap] TomTom map error:', ev?.error ?? ev);
+    });
 
     const handleLoad = () => {
       const allCoords: LatLng[] = [
