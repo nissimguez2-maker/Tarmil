@@ -1,0 +1,171 @@
+/*
+ * Tarmil-styled overrides for Leaflet.
+ *
+ * Strategy: take CartoDB Positron's neutral, Google-Maps-like base and apply
+ * a subtle warm tint via a CSS filter on the tile pane only — markers and
+ * overlays stay full-saturation so the brand cocoa / copper pop.
+ */
+
+.tarmil-map {
+  background: var(--ivory);
+  font-family: 'Heebo', 'Google Sans Text', system-ui, sans-serif;
+}
+
+/* warm desert-paper tint — applied to tiles only, not overlays */
+.tarmil-map .leaflet-tile-pane {
+  filter: sepia(0.18) saturate(0.85) hue-rotate(-10deg) brightness(1.03);
+}
+
+/* hide default Leaflet attribution flag (we set attributionControl:false) */
+.tarmil-map .leaflet-control-attribution {
+  display: none;
+}
+
+/* place marker dots — small cocoa circles sitting on the map */
+.tarmil-place-marker {
+  pointer-events: auto;
+}
+
+.tarmil-place-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--cocoa);
+  border: 2px solid var(--ivory);
+  box-shadow: 0 1px 4px rgba(53, 40, 24, 0.35);
+  margin: 5px;
+  transition: transform 0.15s ease;
+  cursor: pointer;
+}
+
+.tarmil-place-dot:hover,
+.tarmil-place-dot:active {
+  transform: scale(1.25);
+}
+
+/* category accents */
+.tarmil-place-beach,
+.tarmil-place-landmark {
+  background: var(--cocoa);
+}
+
+.tarmil-place-cafe,
+.tarmil-place-restaurant {
+  background: var(--cocoa);
+  box-shadow: 0 0 0 2px var(--ivory), 0 1px 4px rgba(53, 40, 24, 0.35);
+}
+
+.tarmil-place-bar,
+.tarmil-place-club {
+  background: var(--cocoa);
+}
+
+.tarmil-place-hostel {
+  background: var(--cocoa);
+}
+
+.tarmil-place-chabad,
+.tarmil-place-kosher {
+  background: var(--cocoa);
+}
+
+/* Tarmil pick — copper outer ring */
+.tarmil-place-pick {
+  background: var(--copper);
+  border-color: var(--ivory);
+  box-shadow: 0 0 0 1px var(--copper-70), 0 1px 4px rgba(53, 40, 24, 0.35);
+}
+
+/* friend overlap bubbles — bigger, with the friend's initial */
+.tarmil-friend-bubble {
+  pointer-events: auto;
+}
+
+.tarmil-friend-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Frank Ruhl Libre', 'Fraunces', serif;
+  font-weight: 700;
+  font-size: 14pt;
+  margin: 4px;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+  box-shadow: 0 2px 8px rgba(53, 40, 24, 0.25);
+}
+
+.tarmil-friend-circle:hover,
+.tarmil-friend-circle:active {
+  transform: scale(1.08);
+}
+
+.tarmil-friend-circle.is-present {
+  background: var(--copper);
+  color: var(--ivory);
+  border: 2px solid var(--ivory);
+}
+
+.tarmil-friend-circle.is-future {
+  background: var(--ivory);
+  color: var(--copper);
+  border: 2px dashed var(--copper);
+}
+
+/* "you are here" — pulsing copper pin */
+.tarmil-present-pin {
+  pointer-events: none;
+}
+
+.tarmil-present-dot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--copper);
+  border: 3px solid var(--ivory);
+  transform: translate(-50%, -50%);
+  z-index: 2;
+  box-shadow: 0 1px 6px rgba(53, 40, 24, 0.45);
+}
+
+.tarmil-present-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--copper);
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  animation: tarmil-pulse 2.4s ease-out infinite;
+  opacity: 0.7;
+}
+
+@keyframes tarmil-pulse {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.7;
+  }
+  70% {
+    transform: translate(-50%, -50%) scale(2.8);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2.8);
+    opacity: 0;
+  }
+}
+
+/* respect reduced-motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .tarmil-present-ring {
+    animation: none;
+    opacity: 0.4;
+  }
+}

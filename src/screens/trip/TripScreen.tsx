@@ -1,55 +1,22 @@
 import { Screen } from '../../components/Screen';
 import { TopBar } from '../../components/TopBar';
-import { SectionLabel } from '../../components/SectionLabel';
-import { PlaceCard } from '../../components/PlaceCard';
-import { Dunes } from '../../components/Dunes';
+import { RioMap } from '../../components/RioMap';
 
 /**
- * Placeholder for the Trip tab — the app's hero.
+ * Trip tab — the app's hero.
  *
- * Final design (later PR): continent-scale stylized SVG map with the user's
- * trip line (solid past / bright present / dashed future), curated places
- * hugging the line, friend overlap bubbles where trips touch.
+ * Hosts the Rio de Janeiro map full-bleed below the TopBar. The user's trip
+ * line is drawn on the map; tapping a place or friend overlay slides up a
+ * preview sheet, with a "פרטים מלאים" button into the full place detail.
  */
 export function TripScreen() {
   return (
-    <Screen>
-      <TopBar eyebrow="Tarmil" title="המסע שלך" />
-
-      <div className="flex flex-col gap-lg p-md">
-        <SectionLabel number="01" label="Where you've been." />
-
-        <p className="max-w-lede font-serif text-lede leading-snug text-cocoa">
-          המסע שלך נמתח על פני יבשת — הקו שמאחוריך, המקום שאתה בו עכשיו,
-          והמקומות שתכננת קדימה.
-        </p>
-
-        <p className="max-w-body text-body text-cocoa-70">
-          המפה המאוירת המלאה תיבנה בגרסה הבאה. בינתיים זה הבסיס: צבעים, גופנים,
-          מסגרת iPhone, ניווט RTL, רכיבי בסיס.
-        </p>
-
-        <SectionLabel number="02" label="Curated places." />
-
-        <div className="flex flex-col gap-sm">
-          <PlaceCard
-            name="קפה גדעון"
-            meta="קפה · בנגקוק"
-            rating={4.6}
-            friendsKnow={3}
-            tarmilPick
-          />
-          <PlaceCard
-            name="הוסטל פנגיה"
-            meta="הוסטל · קסול"
-            rating={4.3}
-            friendsKnow={7}
-          />
+    <Screen noScroll>
+      <div className="flex h-full flex-col">
+        <TopBar eyebrow="Tarmil" title="המסע שלך" />
+        <div className="relative flex-1">
+          <RioMap />
         </div>
-      </div>
-
-      <div className="mt-lg h-[64px] w-full">
-        <Dunes />
       </div>
     </Screen>
   );
