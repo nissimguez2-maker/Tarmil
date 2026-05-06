@@ -233,7 +233,19 @@ export const TripMap = forwardRef<TripMapHandle, Props>(function TripMap(
     cleanups.push(drawPresentPin(map, myTrip.present));
 
     return () => {
-      cleanups.reverse().forEach((fn) => fn());
+      // Each layer cleanup is isolated so one bad teardown can't take the
+      // others down — and importantly can't take the React tree down on
+      // route changes. Mapbox-GL 1.13 (under TomTom v6) sometimes throws
+      // during removeLayer / removeSource if the style is in an in-between
+      // state, e.g., an in-flight tile request canceling at the same time.
+      cleanups.reverse().forEach((fn) => {
+        try {
+          fn();
+        } catch (e) {
+          // eslint-disable-next-line no-console
+          console.warn('[TripMap] layer cleanup threw:', e);
+        }
+      });
     };
   }, [mapReady, mode, activeFilters, plannedStops, activeStopId]);
 
