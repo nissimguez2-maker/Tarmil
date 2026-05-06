@@ -18,7 +18,21 @@ Success: an Israeli traveler installs the app pre-trip, uses the checklist, plan
 
 ## Brand Personality
 
-Editorial, warm, restrained. Voice is post-army-honest: short Hebrew sentences (cap 28 words, prefer ~14), active voice, no buzzwords (no "synergy", no "leverage" as a verb, no "ecosystem", no "play" as a noun, no "moat-y"). The visual register is desert-paper warmth: ivory and sand surfaces, cocoa serif headlines, copper as the only vibrant accent (capped at ~10% of any screen, never below 70% opacity).
+**Concept:** *Editorial warmth, desert quiet — a fil conducteur for everything Tarmil ships.*
+
+A printed-journal sensibility applied to a digital-era brand. The work feels read, not scrolled — paced like a small-press travel book, not a startup deck. Premium through restraint. Confident, soft-spoken, unhurried.
+
+**References.** Aesop. Cereal Magazine. Early Kinfolk. Vintage Penguin Classics. Levantine and Mediterranean hospitality brands — riads, boutique guesthouses, natural-wine importers.
+
+**Tensions to hold simultaneously** — the system breaks the moment one side wins:
+
+- Warm but disciplined.
+- Romantic but precise.
+- Nostalgic but contemporary.
+- Israeli in soul, universal in form.
+- Crafted but not crafty.
+
+Voice is post-army-honest: short Hebrew sentences (cap 28 words, prefer ~14), active voice, no buzzwords (no "synergy", no "leverage" as a verb, no "ecosystem", no "play" as a noun, no "moat-y"). Contractions allowed in EN; neutral register in FR (no *tu*, no *moi je*).
 
 3-word personality: warm, editorial, restrained.
 
@@ -31,15 +45,31 @@ Editorial, warm, restrained. Voice is post-army-honest: short Hebrew sentences (
 - **Anything that looks AI-generated.** AI palettes, generic Inter, dark-mode-with-purple, "modern but boring" defaults.
 - **"Translated from English" Hebrew.** Awkward Hebrew, English-shaped clauses, calque buzzwords. Native-feeling Hebrew or nothing.
 - **Friend-tracking density.** Apps that show a friend's exact location, real-time movement, full history. Tarmil shows only city-level overlap, only when both parties declared it.
+- **Crafty over crafted.** Hand-drawn marks where the algorithm should run. The dunes signature is algorithmic, three-layer Bezier; hand-drawing is forbidden.
 
 ## Design Principles
 
 1. **City-level privacy is architectural, not UI flourish.** Friend resolution caps at neighborhood / town centroid. There is no street-level data path. The map's halos, the FriendSheet's privacy line, the Hebrew copy ("מיקום ברמת עיר בלבד") all enforce the same commitment.
-2. **Hebrew RTL is first-class.** Logical Tailwind utilities only (`ps`, `pe`, `start`, `end`, `ms`, `me`, `border-s`, `border-e`, `rounded-s`, `rounded-e`). Latin inside Hebrew uses `<bdi>` or the `.ltr` utility. Directional utilities (`pl`, `pr`, `ml`, `mr`, `left`, `right`, `border-l`, `border-r`, `rounded-l`, `rounded-r`) are forbidden, full stop.
+2. **Hebrew RTL is first-class.** Logical Tailwind utilities only (`ps`, `pe`, `start`, `end`, `ms`, `me`, `border-s`, `border-e`, `rounded-s`, `rounded-e`). Latin inside Hebrew uses `<bdi>` or the `.ltr` utility. Directional utilities (`pl`, `pr`, `ml`, `mr`, `left`, `right`, `border-l`, `border-r`, `rounded-l`, `rounded-r`) are forbidden.
 3. **Brand tokens only.** No hex literals leak into components. The DA v0.2 palette is locked. If a value isn't on the list, stop and ask, don't invent.
 4. **Editorial voice in copy.** Active voice, ~14 words per sentence, no buzzwords. Hebrew reads like a 22-year-old post-army backpacker, not like a marketing department.
-5. **Restrained accent.** Copper is rare; cocoa carries the typographic weight. Copper appears on Tarmil Picks, the present pin, the "הוסף יעד" FAB, "Accent" CTAs, and a few badge highlights. Anywhere copper takes more than ~10% of a screen, the design needs reworking.
+5. **Restrained accent.** Copper is rare; cocoa carries the typographic weight. Copper appears on Tarmil Picks, the present pin, the "הוסף יעד" FAB, structural marks (section numbers, header rules), focus rings, and accent CTAs. Anywhere copper takes more than ~10% of a screen, the design needs reworking.
 
 ## Accessibility & Inclusion
 
-WCAG AA target. Hebrew RTL is the primary direction; the entire app runs in `<html dir="rtl" lang="he">`. Touch targets are at least 44 by 44 pixels (most CTAs are `h-lg` = 14mm). Native form controls (checkbox, radio, select) carry `accent-copper` so OS-painted indicators inherit the brand color. `<bdi>` and `.ltr` handle direction-mixed content. The reduced-motion media query disables the present-pin pulse animation. Single light theme by design: DA is single-palette warm, dark mode is explicitly out of scope.
+WCAG AA target. Hebrew RTL is the primary direction; the entire app runs in `<html dir="rtl" lang="he">`. Touch targets are at least 44 by 44 pixels (most CTAs are `h-lg` = 14mm). Native form controls (checkbox, radio, select) carry `accent-copper` so OS-painted indicators inherit brand color. `<bdi>` and `.ltr` handle direction-mixed content. The reduced-motion media query disables the present-pin pulse animation. Single light theme by design: DA is single-palette warm, dark mode is explicitly out of scope.
+
+Errors use copper, never red. The DA is explicit on this point: red breaks the warm desert palette and signals a register the brand doesn't share.
+
+## Open / Deferred (DA v0.2 §Open)
+
+These are pending decisions before broader app launch. Flag-don't-solve:
+
+- Hebrew typography pair: Frank Ruhl Libre (display) + Heebo (body) is proposed, pending Hebrew typographer validation. The codebase already ships these.
+- Photography rules (color treatment, captions). Travel app cannot ship without this.
+- Logo / wordmark. Currently the word "Tarmil" set in Fraunces 700.
+- Hebrew wordmark (טרמיל) for App Store listing.
+- App icon (PNG variants for iOS / Android / maskable).
+- Custom iconography for tab bar and place markers.
+- Motion vocabulary (durations, easing). Currently only the present-pin pulse and sheet slide-up are specified.
+- Loading / empty / error states (beyond the "errors use copper" rule).
