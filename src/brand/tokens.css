@@ -1,0 +1,35 @@
+/*
+ * Tarmil — Direction Artistique v0.2 (May 2026)
+ * Source of truth: Tarmil_DA.md (Drive)
+ * Tailwind theme references these variables — never hex literals in source.
+ */
+
+:root {
+  /* surface scale */
+  --ivory: #f4ebd5;
+  --sand: #ead8c0;
+  --rope: #d1bb9e;
+  --stone: #a79277;
+
+  /* type & structure */
+  --cocoa: #352818;
+  --cocoa-70: #352818b3;
+  --cocoa-55: #3528188c;
+  --cocoa-30: #3528184d;
+  --cocoa-15: #35281826;
+  --cocoa-08: #35281814;
+
+  /* vibrant accent — never below 70% opacity */
+  --copper: #c75d24;
+  --copper-85: #c75d24d9;
+  --copper-70: #c75d24b3;
+
+  /* device frame surface (page background when iPhone frame is shown) */
+  --page-bg: var(--cocoa-15);
+
+  /* safe area helpers */
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-start: env(safe-area-inset-left, 0px);
+  --safe-end: env(safe-area-inset-right, 0px);
+}
