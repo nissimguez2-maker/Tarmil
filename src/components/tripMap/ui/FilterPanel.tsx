@@ -10,6 +10,10 @@ import {
 type Props = {
   active: Set<FilterId>;
   onToggle: (id: FilterId) => void;
+  /** Notify the parent when the dropdown opens / closes so it can dim or
+   * hide neighboring UI (the trip-map FAB and travel-moment card hide
+   * while this is open so the panel doesn't overlap them). */
+  onOpenChange?: (open: boolean) => void;
 };
 
 /** Filters grouped for the drop-down. Order is the same as the legacy chip
@@ -30,9 +34,17 @@ const LAYERS: FilterId[] = ['friendBubbles'];
  * Z-index: button + panel both sit at z-[400] so they layer above the map
  * but below floaters (z-[800]) and bottom sheets (z-[1000]).
  */
-export function FilterPanel({ active, onToggle }: Props) {
-  const [open, setOpen] = useState(false);
+export function FilterPanel({ active, onToggle, onOpenChange }: Props) {
+  const [open, setOpenState] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const setOpen = (next: boolean | ((cur: boolean) => boolean)) => {
+    setOpenState((cur) => {
+      const resolved = typeof next === 'function' ? next(cur) : next;
+      onOpenChange?.(resolved);
+      return resolved;
+    });
+  };
 
   // Tap-outside to close. Mousedown so the close fires before any focus
   // shift on a downstream control.

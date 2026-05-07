@@ -1,4 +1,4 @@
-import { lazy, Suspense, useReducer, useMemo, useRef } from 'react';
+import { lazy, Suspense, useReducer, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Screen } from '../../components/Screen';
 import { TopBar } from '../../components/TopBar';
@@ -68,6 +68,10 @@ export function TripScreen() {
   const sheet = state.sheet;
   const nextStop = state.plannedStops[0];
   const floatersVisible = sheet === null && state.mode === 'default';
+  // When the filter panel is open we hide the FAB + travel-moment card so
+  // the panel can drop down without overlapping bottom UI. The FilterPanel
+  // itself stays mounted (we still need the trigger pill).
+  const [filterOpen, setFilterOpen] = useState(false);
   const isTallSheet = sheet?.kind === 'plannedStop';
 
   const handleConfirmPick = () => {
@@ -130,19 +134,22 @@ export function TripScreen() {
               <FilterPanel
                 active={state.activeFilters}
                 onToggle={(id) => dispatch({ type: 'TOGGLE_FILTER', id })}
+                onOpenChange={setFilterOpen}
               />
-              <div className="absolute inset-x-md bottom-md z-[800] flex flex-col items-stretch gap-sm">
-                <div className="self-end">
-                  <AddDestinationFab onClick={openSearch} />
+              {!filterOpen && (
+                <div className="absolute inset-x-md bottom-md z-[800] flex flex-col items-stretch gap-sm">
+                  <div className="self-end">
+                    <AddDestinationFab onClick={openSearch} />
+                  </div>
+                  <TravelMomentCard
+                    hereLabel="אתה בריו"
+                    next={nextStop}
+                    friendCount={presentFriendCount}
+                    picksCount={picksNearbyCount}
+                    onTap={openPlannedRoute}
+                  />
                 </div>
-                <TravelMomentCard
-                  hereLabel="אתה בריו"
-                  next={nextStop}
-                  friendCount={presentFriendCount}
-                  picksCount={picksNearbyCount}
-                  onTap={openPlannedRoute}
-                />
-              </div>
+              )}
             </>
           )}
 

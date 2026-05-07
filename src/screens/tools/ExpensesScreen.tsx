@@ -389,9 +389,12 @@ function AddExpenseForm({
   };
 
   return (
-    <div className="flex flex-col gap-md rounded-md border border-rope bg-sand p-md">
-      <div className="flex items-start justify-between">
-        <span className="meta-caps text-cocoa-70">הוצאה חדשה</span>
+    <div className="flex flex-col gap-lg rounded-md border border-rope bg-sand p-md">
+      {/* Header — title + close. */}
+      <div className="flex items-center justify-between">
+        <span className="font-serif text-lede leading-tight text-cocoa">
+          הוצאה חדשה
+        </span>
         <button
           type="button"
           aria-label="סגור"
@@ -402,41 +405,44 @@ function AddExpenseForm({
         </button>
       </div>
 
-      <div className="flex items-end gap-sm">
-        <label className="flex flex-1 flex-col gap-1">
-          <span className="meta-caps text-cocoa-55">סכום</span>
-          <input
-            type="number"
-            inputMode="decimal"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            dir="ltr"
-            placeholder="0"
-            className="tnum h-11 rounded-full border border-cocoa-15 bg-white px-md text-body text-cocoa focus:border-copper focus:outline-none"
-          />
-        </label>
-        <label className="flex flex-col gap-1">
-          <span className="meta-caps text-cocoa-55">מטבע</span>
-          <select
-            value={currency}
-            onChange={(e) => setCurrency(e.target.value as CurrencyCode)}
-            className="h-11 rounded-full border border-cocoa-15 bg-white px-md text-body text-cocoa focus:border-copper focus:outline-none"
-          >
-            {CURRENCIES.map((c) => (
-              <option key={c.code} value={c.code}>
-                {c.symbol} {c.code}
-              </option>
-            ))}
-          </select>
-        </label>
+      {/* Amount hero — large centered display input with currency
+        * selector underneath, full width. Mirrors the Currency tool's
+        * input-card pattern so the "what's the number?" question is the
+        * visual focus, not buried in a row of small fields. */}
+      <div className="flex flex-col items-stretch gap-sm rounded-md border border-cocoa-15 bg-ivory p-md">
+        <span className="meta-caps text-center text-cocoa-55">סכום</span>
+        <input
+          type="number"
+          inputMode="decimal"
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+          dir="ltr"
+          placeholder="0"
+          aria-label="סכום"
+          className="tnum w-full border-none bg-transparent text-center text-display leading-none text-cocoa focus:outline-none"
+        />
+        <select
+          value={currency}
+          onChange={(e) => setCurrency(e.target.value as CurrencyCode)}
+          aria-label="מטבע"
+          className="h-11 w-full rounded-full border border-cocoa-15 bg-white px-md text-body text-cocoa focus:border-copper focus:outline-none"
+        >
+          {CURRENCIES.map((c) => (
+            <option key={c.code} value={c.code}>
+              {c.symbol} {c.code} — {c.englishName}
+            </option>
+          ))}
+        </select>
       </div>
 
-      <div className="flex flex-col gap-1">
+      {/* Category — 2-col chip grid (shared component). */}
+      <div className="flex flex-col gap-sm">
         <span className="meta-caps text-cocoa-55">קטגוריה</span>
         <CategoryPicker value={category} onChange={setCategory} />
       </div>
 
-      <label className="flex flex-col gap-1">
+      {/* Note — optional, full width. */}
+      <label className="flex flex-col gap-sm">
         <span className="meta-caps text-cocoa-55">הערה (לא חובה)</span>
         <input
           type="text"
@@ -448,7 +454,8 @@ function AddExpenseForm({
         />
       </label>
 
-      <label className="flex flex-col gap-1">
+      {/* Date — full width. */}
+      <label className="flex flex-col gap-sm">
         <span className="meta-caps text-cocoa-55">תאריך</span>
         <input
           type="date"
@@ -460,6 +467,13 @@ function AddExpenseForm({
         />
       </label>
 
+      {!valid && amount.length > 0 && (
+        <span className="text-small text-cocoa-55">
+          הזן סכום חיובי תקין.
+        </span>
+      )}
+
+      {/* Action row — full-width primary save, ghost cancel. */}
       <div className="flex items-center gap-sm">
         <Button variant="ghost" onClick={onCancel}>
           ביטול
@@ -468,12 +482,6 @@ function AddExpenseForm({
           שמור
         </Button>
       </div>
-
-      {!valid && amount.length > 0 && (
-        <span className="text-small text-cocoa-55">
-          הזן סכום חיובי תקין.
-        </span>
-      )}
     </div>
   );
 }

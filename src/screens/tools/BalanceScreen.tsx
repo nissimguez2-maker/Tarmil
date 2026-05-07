@@ -427,9 +427,12 @@ function AddExpenseForm({
   };
 
   return (
-    <div className="flex flex-col gap-md rounded-md border border-rope bg-sand p-md">
-      <div className="flex items-start justify-between">
-        <span className="meta-caps text-cocoa-70">הוצאה חדשה</span>
+    <div className="flex flex-col gap-lg rounded-md border border-rope bg-sand p-md">
+      {/* Header — title + close. */}
+      <div className="flex items-center justify-between">
+        <span className="font-serif text-lede leading-tight text-cocoa">
+          הוצאה חדשה
+        </span>
         <button
           type="button"
           aria-label="סגור"
@@ -440,7 +443,37 @@ function AddExpenseForm({
         </button>
       </div>
 
-      <label className="flex flex-col gap-1">
+      {/* Amount hero — same pattern as the Currency tool and the personal
+        * Expense Tracker form. Big centered display number with the
+        * currency selector full-width below. */}
+      <div className="flex flex-col items-stretch gap-sm rounded-md border border-cocoa-15 bg-ivory p-md">
+        <span className="meta-caps text-center text-cocoa-55">סכום</span>
+        <input
+          type="number"
+          inputMode="decimal"
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+          dir="ltr"
+          placeholder="0"
+          aria-label="סכום"
+          className="tnum w-full border-none bg-transparent text-center text-display leading-none text-cocoa focus:outline-none"
+        />
+        <select
+          value={currency}
+          onChange={(e) => setCurrency(e.target.value as CurrencyCode)}
+          aria-label="מטבע"
+          className="h-11 w-full rounded-full border border-cocoa-15 bg-white px-md text-body text-cocoa focus:border-copper focus:outline-none"
+        >
+          {CURRENCIES.map((c) => (
+            <option key={c.code} value={c.code}>
+              {c.symbol} {c.code} — {c.englishName}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Description — full width. */}
+      <label className="flex flex-col gap-sm">
         <span className="meta-caps text-cocoa-55">תיאור</span>
         <input
           type="text"
@@ -452,41 +485,14 @@ function AddExpenseForm({
         />
       </label>
 
-      <div className="flex items-end gap-sm">
-        <label className="flex flex-1 flex-col gap-1">
-          <span className="meta-caps text-cocoa-55">סכום</span>
-          <input
-            type="number"
-            inputMode="decimal"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            dir="ltr"
-            placeholder="0"
-            className="tnum h-11 rounded-full border border-cocoa-15 bg-white px-md text-body text-cocoa focus:border-copper focus:outline-none"
-          />
-        </label>
-        <label className="flex flex-col gap-1">
-          <span className="meta-caps text-cocoa-55">מטבע</span>
-          <select
-            value={currency}
-            onChange={(e) => setCurrency(e.target.value as CurrencyCode)}
-            className="h-11 rounded-full border border-cocoa-15 bg-white px-md text-body text-cocoa focus:border-copper focus:outline-none"
-          >
-            {CURRENCIES.map((c) => (
-              <option key={c.code} value={c.code}>
-                {c.symbol} {c.code}
-              </option>
-            ))}
-          </select>
-        </label>
-      </div>
-
-      <div className="flex flex-col gap-1">
+      {/* Category — 2-col chip grid (shared component). */}
+      <div className="flex flex-col gap-sm">
         <span className="meta-caps text-cocoa-55">קטגוריה</span>
         <CategoryPicker value={category} onChange={setCategory} />
       </div>
 
-      <div className="flex flex-col gap-1">
+      {/* Who paid + who split with. */}
+      <div className="flex flex-col gap-sm">
         <span className="meta-caps text-cocoa-55">מי שילם?</span>
         <FriendsPicker
           options={ALL_PEOPLE}
@@ -496,7 +502,7 @@ function AddExpenseForm({
         />
       </div>
 
-      <div className="flex flex-col gap-1">
+      <div className="flex flex-col gap-sm">
         <span className="meta-caps text-cocoa-55">מי בחלוקה?</span>
         <FriendsPicker
           multi
@@ -507,6 +513,12 @@ function AddExpenseForm({
         />
       </div>
 
+      {!valid && (description.length > 0 || amount.length > 0) && (
+        <span className="text-small text-cocoa-55">
+          מלא תיאור, סכום חיובי ולפחות אדם אחד בחלוקה.
+        </span>
+      )}
+
       <div className="flex items-center gap-sm">
         <Button variant="ghost" onClick={onCancel}>
           ביטול
@@ -515,12 +527,6 @@ function AddExpenseForm({
           שמור
         </Button>
       </div>
-
-      {!valid && (description.length > 0 || amount.length > 0) && (
-        <span className="text-small text-cocoa-55">
-          מלא תיאור, סכום חיובי ולפחות אדם אחד בחלוקה.
-        </span>
-      )}
     </div>
   );
 }
