@@ -1,21 +1,18 @@
 /**
- * Global curated places — used for planned destinations outside Rio.
+ * Curated places outside the user's current city — for planned destinations.
  *
- * SEED ONLY. Runtime data is read from the `places` table in Supabase
- * (region = 'global'). The array below is the source of truth for
- * `scripts/seed-supabase.ts`; nothing in `src/` imports it at runtime.
+ * SEED ONLY. Runtime data is read from the `places` table in Supabase. This
+ * array feeds `scripts/seed-supabase.ts`; nothing in `src/` imports it at
+ * runtime.
  *
- * Schema mirrors RioPlace with an added destinationId pointing into
- * plannedStops.ts. Coordinates verified against Google Maps.
+ * Each entry's `destinationId` points to a `planned_stops.id`. Coordinates
+ * verified against Google Maps. Kept as a separate file from rioPlaces.ts
+ * for curator convenience — runtime treats them as one unified `places` set.
  */
 
-import type { RioPlace } from './rioPlaces';
+import type { Place } from './places';
 
-export type GlobalPlace = RioPlace & {
-  destinationId: string;
-};
-
-export const globalPlaces: GlobalPlace[] = [
+export const globalPlaces: Place[] = [
   // ─── Búzios ─────────────────────────────────────────────────────────
   {
     id: 'buzios-ferradura',

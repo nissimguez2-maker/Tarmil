@@ -59,7 +59,7 @@ export type Database = {
       places: {
         Row: {
           category: string
-          destination_id: string | null
+          destination_id: string
           english_description: string
           english_name: string
           friends_know: number
@@ -69,12 +69,11 @@ export type Database = {
           lat: number
           lng: number
           rating: number
-          region: string
           tarmil_pick: boolean
         }
         Insert: {
           category: string
-          destination_id?: string | null
+          destination_id: string
           english_description: string
           english_name: string
           friends_know?: number
@@ -84,12 +83,11 @@ export type Database = {
           lat: number
           lng: number
           rating: number
-          region: string
           tarmil_pick?: boolean
         }
         Update: {
           category?: string
-          destination_id?: string | null
+          destination_id?: string
           english_description?: string
           english_name?: string
           friends_know?: number
@@ -99,7 +97,6 @@ export type Database = {
           lat?: number
           lng?: number
           rating?: number
-          region?: string
           tarmil_pick?: boolean
         }
         Relationships: []

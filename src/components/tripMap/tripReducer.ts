@@ -1,5 +1,4 @@
-import type { RioPlace } from '../../data/rioPlaces';
-import type { GlobalPlace } from '../../data/globalPlaces';
+import type { Place } from '../../data/places';
 import type { FriendOverlap } from '../../data/myTrip';
 import {
   ALL_FILTERS,
@@ -8,7 +7,7 @@ import {
 } from './utils/categoryLabel';
 
 export type SheetState =
-  | { kind: 'place'; place: RioPlace | GlobalPlace }
+  | { kind: 'place'; place: Place | Place }
   | { kind: 'friend'; friend: FriendOverlap }
   | { kind: 'searchDest' }
   | {
@@ -18,7 +17,7 @@ export type SheetState =
     }
   | { kind: 'plannedRoute' }
   | { kind: 'plannedStop'; stopId: string }
-  | { kind: 'savePlaceToStop'; place: RioPlace | GlobalPlace }
+  | { kind: 'savePlaceToStop'; place: Place | Place }
   | { kind: 'arrivalConfirm'; stopId: string };
 
 // UI state only. Persisted data (planned_stops) lives in Supabase and is

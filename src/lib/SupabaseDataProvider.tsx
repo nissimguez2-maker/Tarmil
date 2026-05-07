@@ -9,14 +9,12 @@ import {
 } from 'react';
 import { supabase } from './supabase';
 import type { Tables, TablesInsert } from './database.types';
-import type { RioPlace, RioPlaceCategory } from '../data/rioPlaces';
-import type { GlobalPlace } from '../data/globalPlaces';
+import type { Place, PlaceCategory } from '../data/places';
 import type { FriendOverlap, LatLng } from '../data/myTrip';
 import type { PlannedStop, PlannedStopPrivacy } from '../data/plannedStops';
 
 export type TripData = {
-  rioPlaces: RioPlace[];
-  globalPlaces: GlobalPlace[];
+  places: Place[];
   friendOverlaps: FriendOverlap[];
   myTrip: { past: LatLng[]; present: LatLng };
   plannedStops: PlannedStop[];
@@ -37,11 +35,12 @@ type ContextValue = {
 
 const Context = createContext<ContextValue | null>(null);
 
-const placeRowToRio = (r: Tables<'places'>): RioPlace => ({
+const placeRowToPlace = (r: Tables<'places'>): Place => ({
   id: r.id,
+  destinationId: r.destination_id,
   hebrewName: r.hebrew_name,
   englishName: r.english_name,
-  category: r.category as RioPlaceCategory,
+  category: r.category as PlaceCategory,
   lat: r.lat,
   lng: r.lng,
   hebrewDescription: r.hebrew_description,
@@ -49,11 +48,6 @@ const placeRowToRio = (r: Tables<'places'>): RioPlace => ({
   rating: r.rating,
   friendsKnow: r.friends_know,
   tarmilPick: r.tarmil_pick || undefined,
-});
-
-const placeRowToGlobal = (r: Tables<'places'>): GlobalPlace => ({
-  ...placeRowToRio(r),
-  destinationId: r.destination_id ?? '',
 });
 
 const friendRowToOverlap = (r: Tables<'friend_overlaps'>): FriendOverlap => ({
@@ -144,12 +138,7 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
         if (waypointsRes.error) throw waypointsRes.error;
         if (stopsRes.error) throw stopsRes.error;
 
-        const rioPlaces = placesRes.data
-          .filter((p) => p.region === 'rio')
-          .map(placeRowToRio);
-        const globalPlaces = placesRes.data
-          .filter((p) => p.region === 'global')
-          .map(placeRowToGlobal);
+        const places = placesRes.data.map(placeRowToPlace);
         const friendOverlaps = friendsRes.data.map(friendRowToOverlap);
         const past: LatLng[] = waypointsRes.data
           .filter((w) => w.kind === 'past')
@@ -162,8 +151,7 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
 
         if (!cancelled) {
           setData({
-            rioPlaces,
-            globalPlaces,
+            places,
             friendOverlaps,
             myTrip: { past, present },
             plannedStops,

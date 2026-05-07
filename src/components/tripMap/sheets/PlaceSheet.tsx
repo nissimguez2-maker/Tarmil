@@ -1,11 +1,11 @@
 import { Star, X, ChevronLeft, Bookmark } from 'lucide-react';
 import clsx from 'clsx';
-import type { RioPlace } from '../../../data/rioPlaces';
+import type { Place } from '../../../data/places';
 import { categoryLabel } from '../utils/categoryLabel';
 import { deriveFriendVisits } from '../utils/deriveFriendVisits';
 
 type Props = {
-  place: RioPlace;
+  place: Place;
   onClose: () => void;
   onOpen: () => void;
   /** When provided, shows the "שמור ליעד" CTA; tapping opens the stop picker. */

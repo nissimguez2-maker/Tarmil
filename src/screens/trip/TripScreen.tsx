@@ -29,6 +29,10 @@ import { ALL_FILTERS } from '../../components/tripMap/utils/categoryLabel';
 import { useSupabaseData } from '../../lib/SupabaseDataProvider';
 import { LoadingPanel, ErrorPanel } from '../../components/DataState';
 
+// The user's current destination. Hardcoded for the mockup; later this comes
+// from session / "where am I" detection.
+const CURRENT_DESTINATION_ID = 'rio-de-janeiro';
+
 /**
  * Trip tab — the app's hero.
  *
@@ -58,7 +62,10 @@ export function TripScreen() {
     [data],
   );
   const picksNearbyCount = useMemo(
-    () => data?.rioPlaces.filter((p) => p.tarmilPick).length ?? 0,
+    () =>
+      data?.places.filter(
+        (p) => p.destinationId === CURRENT_DESTINATION_ID && p.tarmilPick,
+      ).length ?? 0,
     [data],
   );
 
@@ -137,8 +144,7 @@ export function TripScreen() {
             ref={tripMapRef}
             mode={state.mode}
             activeFilters={state.activeFilters}
-            rioPlaces={data.rioPlaces}
-            globalPlaces={data.globalPlaces}
+            places={data.places}
             friendOverlaps={data.friendOverlaps}
             pastTrip={data.myTrip.past}
             presentLocation={data.myTrip.present}
@@ -249,7 +255,7 @@ export function TripScreen() {
               (() => {
                 const stop = resolveStop(sheet.stopId);
                 if (!stop) return null;
-                const stopPlaces = data.globalPlaces.filter(
+                const stopPlaces = data.places.filter(
                   (p) => p.destinationId === stop.id,
                 );
                 const overlapIds = new Set(stop.friendOverlapIds ?? []);

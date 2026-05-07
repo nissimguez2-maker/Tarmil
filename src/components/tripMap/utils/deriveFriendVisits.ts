@@ -1,4 +1,4 @@
-import type { RioPlace, RioPlaceCategory } from '../../../data/rioPlaces';
+import type { Place, PlaceCategory } from '../../../data/places';
 
 export type FriendVisit = {
   friendName: string;
@@ -21,7 +21,7 @@ const POOL: Array<{ name: string; initial: string }> = [
   { name: 'דניאל לוי', initial: 'ד' },
 ];
 
-const COMMENTS: Record<RioPlaceCategory, string[]> = {
+const COMMENTS: Record<PlaceCategory, string[]> = {
   beach: [
     'חוף בלי גמר, חבר׳ה, וים שמרגיש כאילו הוא רק שלך.',
     'הגענו עם מטקות, יצאנו עם שקיעה ועוד שני חברים חדשים.',
@@ -93,7 +93,7 @@ function hashStr(s: string): number {
  */
 export function deriveFriendVisits(place: {
   id: string;
-  category: RioPlaceCategory;
+  category: PlaceCategory;
   friendsKnow: number;
 }): FriendVisit[] {
   if (place.friendsKnow <= 0) return [];
@@ -119,4 +119,4 @@ export function deriveFriendVisits(place: {
 }
 
 /** Friendly export so PlaceSheet can call this without re-importing the type. */
-export type { RioPlace };
+export type { Place };

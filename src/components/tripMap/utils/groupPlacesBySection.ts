@@ -1,9 +1,9 @@
-import type { RioPlace, RioPlaceCategory } from '../../../data/rioPlaces';
+import type { Place, PlaceCategory } from '../../../data/places';
 
 export type PlaceSection = {
   id: string;
   labelHe: string;
-  places: RioPlace[];
+  places: Place[];
 };
 
 const SECTION_ORDER = [
@@ -26,7 +26,7 @@ const SECTION_LABELS: Record<(typeof SECTION_ORDER)[number], string> = {
   other: 'נוסף',
 };
 
-function sectionFor(c: RioPlaceCategory): (typeof SECTION_ORDER)[number] {
+function sectionFor(c: PlaceCategory): (typeof SECTION_ORDER)[number] {
   switch (c) {
     case 'hostel':
       return 'hotels';
@@ -48,8 +48,8 @@ function sectionFor(c: RioPlaceCategory): (typeof SECTION_ORDER)[number] {
 }
 
 /** Groups curated places into the planned-stop sheet's collapsible sections. */
-export function groupPlacesBySection(places: RioPlace[]): PlaceSection[] {
-  const buckets: Record<(typeof SECTION_ORDER)[number], RioPlace[]> = {
+export function groupPlacesBySection(places: Place[]): PlaceSection[] {
+  const buckets: Record<(typeof SECTION_ORDER)[number], Place[]> = {
     hotels: [],
     food: [],
     beaches: [],

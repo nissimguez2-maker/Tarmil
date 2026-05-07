@@ -7,7 +7,7 @@ import { Button } from '../../components/Button';
 import { Dunes } from '../../components/Dunes';
 import { useSupabaseData } from '../../lib/SupabaseDataProvider';
 import { LoadingPanel, ErrorPanel } from '../../components/DataState';
-import type { RioPlaceCategory } from '../../data/rioPlaces';
+import type { PlaceCategory } from '../../data/places';
 
 /**
  * Place detail — the drill-down view for a single place from the Trip map.
@@ -19,10 +19,7 @@ export function PlaceScreen() {
   if (loading) return <LoadingPanel />;
   if (error || !data) return <ErrorPanel error={error} />;
 
-  const place =
-    (id && data.rioPlaces.find((p) => p.id === id)) ||
-    (id && data.globalPlaces.find((p) => p.id === id)) ||
-    undefined;
+  const place = id ? data.places.find((p) => p.id === id) : undefined;
 
   if (!place) {
     return <Navigate to="/trip" replace />;
@@ -175,7 +172,7 @@ function ReviewCard({
   );
 }
 
-function categoryLabel(c: RioPlaceCategory): string {
+function categoryLabel(c: PlaceCategory): string {
   switch (c) {
     case 'beach':
       return 'חוף';

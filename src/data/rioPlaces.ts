@@ -1,48 +1,21 @@
 /**
  * Rio de Janeiro places — curated set for the investor demo.
  *
- * SEED ONLY. Runtime data is read from the `places` table in Supabase
- * (region = 'rio'). The `rioPlaces` array below is the source of truth for
- * `scripts/seed-supabase.ts`; nothing in `src/` imports it at runtime.
- * Edit here, then re-run the seed script (or update the dashboard directly).
+ * SEED ONLY. Runtime data is read from the `places` table in Supabase. This
+ * array feeds `scripts/seed-supabase.ts`; nothing in `src/` imports it at
+ * runtime. Edit here, re-run the seed (or edit via the dashboard).
  *
  * Hebrew copy in the natural voice of a 22-year-old post-army backpacker
  * (sentence cap ~14 words). Coordinates verified against Google Maps.
- * Categories drive marker styling in RioMap.css.
  */
 
-export type RioPlaceCategory =
-  | 'beach'
-  | 'hostel'
-  | 'cafe'
-  | 'restaurant'
-  | 'bar'
-  | 'club'
-  | 'chabad'
-  | 'kosher'
-  | 'landmark';
+import type { Place } from './places';
 
-export type RioPlace = {
-  id: string;
-  hebrewName: string;
-  englishName: string;
-  category: RioPlaceCategory;
-  lat: number;
-  lng: number;
-  hebrewDescription: string;
-  englishDescription: string;
-  /** Tarmil community rating, 1–5. */
-  rating: number;
-  /** Friends of the user who've been here. */
-  friendsKnow: number;
-  /** Hand-picked Tarmil recommendation badge. */
-  tarmilPick?: boolean;
-};
-
-export const rioPlaces: RioPlace[] = [
+export const rioPlaces: Place[] = [
   // ─── Beaches ──────────────────────────────────────────────────────────
   {
     id: 'copa-beach',
+    destinationId: 'rio-de-janeiro',
     hebrewName: 'חוף קופקבנה',
     englishName: 'Copacabana Beach',
     category: 'beach',
@@ -57,6 +30,7 @@ export const rioPlaces: RioPlace[] = [
   },
   {
     id: 'ipanema-beach',
+    destinationId: 'rio-de-janeiro',
     hebrewName: 'חוף איפנמה',
     englishName: 'Ipanema Beach',
     category: 'beach',
@@ -72,6 +46,7 @@ export const rioPlaces: RioPlace[] = [
   },
   {
     id: 'leblon-beach',
+    destinationId: 'rio-de-janeiro',
     hebrewName: 'חוף לבלאון',
     englishName: 'Leblon Beach',
     category: 'beach',
@@ -86,6 +61,7 @@ export const rioPlaces: RioPlace[] = [
   },
   {
     id: 'barra-beach',
+    destinationId: 'rio-de-janeiro',
     hebrewName: 'חוף ברה דה טיז׳וקה',
     englishName: 'Barra da Tijuca Beach',
     category: 'beach',
@@ -100,6 +76,7 @@ export const rioPlaces: RioPlace[] = [
   },
   {
     id: 'praia-vermelha',
+    destinationId: 'rio-de-janeiro',
     hebrewName: 'חוף ורמליה',
     englishName: 'Praia Vermelha',
     category: 'beach',
@@ -114,6 +91,7 @@ export const rioPlaces: RioPlace[] = [
   },
   {
     id: 'arpoador-beach',
+    destinationId: 'rio-de-janeiro',
     hebrewName: 'חוף ארפואדור',
     englishName: 'Arpoador Beach',
     category: 'beach',
@@ -129,6 +107,7 @@ export const rioPlaces: RioPlace[] = [
   },
   {
     id: 'botafogo-beach',
+    destinationId: 'rio-de-janeiro',
     hebrewName: 'חוף בוטפוגו',
     englishName: 'Botafogo Beach',
     category: 'beach',
@@ -143,6 +122,7 @@ export const rioPlaces: RioPlace[] = [
   },
   {
     id: 'flamengo-beach',
+    destinationId: 'rio-de-janeiro',
     hebrewName: 'חוף פלמנגו',
     englishName: 'Praia do Flamengo',
     category: 'beach',
@@ -157,6 +137,7 @@ export const rioPlaces: RioPlace[] = [
   },
   {
     id: 'grumari-beach',
+    destinationId: 'rio-de-janeiro',
     hebrewName: 'חוף גרומארי',
     englishName: 'Praia de Grumari',
     category: 'beach',
@@ -172,6 +153,7 @@ export const rioPlaces: RioPlace[] = [
   },
   {
     id: 'joatinga-beach',
+    destinationId: 'rio-de-janeiro',
     hebrewName: 'חוף ז׳ואטינגה',
     englishName: 'Praia da Joatinga',
     category: 'beach',
@@ -186,6 +168,7 @@ export const rioPlaces: RioPlace[] = [
   },
   {
     id: 'niteroi-icarai',
+    destinationId: 'rio-de-janeiro',
     hebrewName: 'חוף איקראי ניטרוי',
     englishName: 'Praia de Icaraí',
     category: 'beach',
@@ -200,6 +183,7 @@ export const rioPlaces: RioPlace[] = [
   },
   {
     id: 'buzios-geriba-beach',
+    destinationId: 'buzios',
     hebrewName: 'חוף ז׳ריבה בוזיוס',
     englishName: 'Praia de Geribá',
     category: 'beach',
@@ -217,6 +201,7 @@ export const rioPlaces: RioPlace[] = [
   // ─── Hostels ──────────────────────────────────────────────────────────
   {
     id: 'discovery-hostel',
+    destinationId: 'rio-de-janeiro',
     hebrewName: 'דיסקאברי הוסטל',
     englishName: 'Discovery Hostel',
     category: 'hostel',
@@ -232,6 +217,7 @@ export const rioPlaces: RioPlace[] = [
   },
   {
     id: 'lemix-hostel',
+    destinationId: 'rio-de-janeiro',
     hebrewName: 'למיקס הוסטל',
     englishName: 'Lemix Hostel',
     category: 'hostel',
@@ -246,6 +232,7 @@ export const rioPlaces: RioPlace[] = [
   },
   {
     id: 'cabana-copa',
+    destinationId: 'rio-de-janeiro',
     hebrewName: 'קבנה קופה הוסטל',
     englishName: 'CabanaCopa Hostel',
     category: 'hostel',
@@ -261,6 +248,7 @@ export const rioPlaces: RioPlace[] = [
   },
   {
     id: 'leblon-beach-hostel',
+    destinationId: 'rio-de-janeiro',
     hebrewName: 'לבלאון ביץ׳ הוסטל',
     englishName: 'Leblon Beach Hostel',
     category: 'hostel',
@@ -275,6 +263,7 @@ export const rioPlaces: RioPlace[] = [
   },
   {
     id: 'mojo-hostel',
+    destinationId: 'rio-de-janeiro',
     hebrewName: 'מוג׳ו הוסטל ריו',
     englishName: 'Mojo Hostel & Lounge',
     category: 'hostel',
@@ -289,6 +278,7 @@ export const rioPlaces: RioPlace[] = [
   },
   {
     id: 'walk-on-beach',
+    destinationId: 'rio-de-janeiro',
     hebrewName: 'ווק און דה ביץ׳',
     englishName: 'Walk On The Beach Hostel',
     category: 'hostel',
@@ -305,6 +295,7 @@ export const rioPlaces: RioPlace[] = [
   // ─── Cafés ────────────────────────────────────────────────────────────
   {
     id: 'confeitaria-colombo',
+    destinationId: 'rio-de-janeiro',
     hebrewName: 'קונפייטריה קולומבו',
     englishName: 'Confeitaria Colombo',
     category: 'cafe',
@@ -320,6 +311,7 @@ export const rioPlaces: RioPlace[] = [
   },
   {
     id: 'cafe-seu-jorge',
+    destinationId: 'rio-de-janeiro',
     hebrewName: 'קפה דו סאו ז׳ורז׳',
     englishName: 'Café do Seu Jorge Santa Teresa',
     category: 'cafe',
@@ -334,6 +326,7 @@ export const rioPlaces: RioPlace[] = [
   },
   {
     id: 'curto-cafe',
+    destinationId: 'rio-de-janeiro',
     hebrewName: 'קורטו קפה',
     englishName: 'Curto Café',
     category: 'cafe',
@@ -349,6 +342,7 @@ export const rioPlaces: RioPlace[] = [
   },
   {
     id: 'cafe-seleto-lapa',
+    destinationId: 'rio-de-janeiro',
     hebrewName: 'קפה סלייטו לאפה',
     englishName: 'Café Seleto Lapa',
     category: 'cafe',
@@ -363,6 +357,7 @@ export const rioPlaces: RioPlace[] = [
   },
   {
     id: 'brooklyn-cafe',
+    destinationId: 'rio-de-janeiro',
     hebrewName: 'ברוקלין קפה ריו',
     englishName: 'Brooklyn Café',
     category: 'cafe',
@@ -377,6 +372,7 @@ export const rioPlaces: RioPlace[] = [
   },
   {
     id: 'bibi-sucos',
+    destinationId: 'rio-de-janeiro',
     hebrewName: 'ביבי סוקוס',
     englishName: 'Bibi Sucos Copacabana',
     category: 'cafe',
@@ -393,6 +389,7 @@ export const rioPlaces: RioPlace[] = [
   // ─── Restaurants ──────────────────────────────────────────────────────
   {
     id: 'cafe-lamas',
+    destinationId: 'rio-de-janeiro',
     hebrewName: 'קפה לאמס',
     englishName: 'Café Lamas',
     category: 'restaurant',
@@ -407,6 +404,7 @@ export const rioPlaces: RioPlace[] = [
   },
   {
     id: 'boteco-belmonte',
+    destinationId: 'rio-de-janeiro',
     hebrewName: 'בוטקו בלמונטה',
     englishName: 'Boteco Belmonte Flamengo',
     category: 'restaurant',
@@ -423,6 +421,7 @@ export const rioPlaces: RioPlace[] = [
   // ─── Bars ─────────────────────────────────────────────────────────────
   {
     id: 'sindicato-chopp',
+    destinationId: 'rio-de-janeiro',
     hebrewName: 'סינדיקטו דו צ׳ופ',
     englishName: 'Sindicato do Chopp Ipanema',
     category: 'bar',
@@ -437,6 +436,7 @@ export const rioPlaces: RioPlace[] = [
   },
   {
     id: 'bar-astor-ipanema',
+    destinationId: 'rio-de-janeiro',
     hebrewName: 'בר אסטור איפנמה',
     englishName: 'Bar Astor Ipanema',
     category: 'bar',
@@ -451,6 +451,7 @@ export const rioPlaces: RioPlace[] = [
   },
   {
     id: 'lapa-steps-bar',
+    destinationId: 'rio-de-janeiro',
     hebrewName: 'בר המדרגות בלפה',
     englishName: 'Bar da Boa Lapa',
     category: 'bar',
@@ -465,6 +466,7 @@ export const rioPlaces: RioPlace[] = [
   },
   {
     id: 'leviano-bar',
+    destinationId: 'rio-de-janeiro',
     hebrewName: 'לביאנו בר',
     englishName: 'Leviano Bar',
     category: 'bar',
@@ -479,6 +481,7 @@ export const rioPlaces: RioPlace[] = [
   },
   {
     id: 'mureta-urca',
+    destinationId: 'rio-de-janeiro',
     hebrewName: 'מורטה דה אורקה',
     englishName: 'Mureta da Urca',
     category: 'bar',
@@ -494,6 +497,7 @@ export const rioPlaces: RioPlace[] = [
   },
   {
     id: 'canastra-bar',
+    destinationId: 'rio-de-janeiro',
     hebrewName: 'קנסטרא בר',
     englishName: 'Canastra Bar',
     category: 'bar',
@@ -511,6 +515,7 @@ export const rioPlaces: RioPlace[] = [
   // ─── Clubs ────────────────────────────────────────────────────────────
   {
     id: 'rio-scenarium',
+    destinationId: 'rio-de-janeiro',
     hebrewName: 'ריו סצנריום',
     englishName: 'Rio Scenarium',
     category: 'club',
@@ -526,6 +531,7 @@ export const rioPlaces: RioPlace[] = [
   },
   {
     id: 'circo-voador',
+    destinationId: 'rio-de-janeiro',
     hebrewName: 'סרקו וואדור',
     englishName: 'Circo Voador',
     category: 'club',
@@ -540,6 +546,7 @@ export const rioPlaces: RioPlace[] = [
   },
   {
     id: 'fundicao-progresso',
+    destinationId: 'rio-de-janeiro',
     hebrewName: 'פונדיסאו פרוגרסו',
     englishName: 'Fundição Progresso',
     category: 'club',
@@ -554,6 +561,7 @@ export const rioPlaces: RioPlace[] = [
   },
   {
     id: 'fosfobox',
+    destinationId: 'rio-de-janeiro',
     hebrewName: 'פוספובוקס קלאב',
     englishName: 'Fosfobox',
     category: 'club',
@@ -570,6 +578,7 @@ export const rioPlaces: RioPlace[] = [
   // ─── Chabad ───────────────────────────────────────────────────────────
   {
     id: 'chabad-leblon',
+    destinationId: 'rio-de-janeiro',
     hebrewName: 'חב״ד לבלאון',
     englishName: 'Beit Lubavitch Chabad Rio De Janeiro',
     category: 'chabad',
@@ -585,6 +594,7 @@ export const rioPlaces: RioPlace[] = [
   },
   {
     id: 'chabad-copa',
+    destinationId: 'rio-de-janeiro',
     hebrewName: 'חב״ד קופקבנה',
     englishName: 'Beit Lubavitch Copacabana',
     category: 'chabad',
@@ -601,6 +611,7 @@ export const rioPlaces: RioPlace[] = [
   // ─── Kosher ───────────────────────────────────────────────────────────
   {
     id: 'shaq-shuq',
+    destinationId: 'rio-de-janeiro',
     hebrewName: 'שק שוק',
     englishName: 'Shaq Shuq',
     category: 'kosher',
@@ -616,6 +627,7 @@ export const rioPlaces: RioPlace[] = [
   },
   {
     id: 'cib-kosher-bistro',
+    destinationId: 'rio-de-janeiro',
     hebrewName: 'ביסטרו כשר סי איי בי',
     englishName: 'CIB Kosher Bistro',
     category: 'kosher',
@@ -632,6 +644,7 @@ export const rioPlaces: RioPlace[] = [
   // ─── Landmarks ────────────────────────────────────────────────────────
   {
     id: 'cristo-redentor',
+    destinationId: 'rio-de-janeiro',
     hebrewName: 'ישו הגואל',
     englishName: 'Christ the Redeemer',
     category: 'landmark',
@@ -647,6 +660,7 @@ export const rioPlaces: RioPlace[] = [
   },
   {
     id: 'sugarloaf',
+    destinationId: 'rio-de-janeiro',
     hebrewName: 'שוגרלוף',
     englishName: 'Sugarloaf Mountain',
     category: 'landmark',
@@ -661,6 +675,7 @@ export const rioPlaces: RioPlace[] = [
   },
   {
     id: 'lapa-arches',
+    destinationId: 'rio-de-janeiro',
     hebrewName: 'קשתות לפה',
     englishName: 'Arcos da Lapa',
     category: 'landmark',
@@ -675,6 +690,7 @@ export const rioPlaces: RioPlace[] = [
   },
   {
     id: 'selaron-steps',
+    destinationId: 'rio-de-janeiro',
     hebrewName: 'מדרגות סלרון',
     englishName: 'Escadaria Selarón',
     category: 'landmark',
@@ -690,6 +706,7 @@ export const rioPlaces: RioPlace[] = [
   },
   {
     id: 'parque-lage',
+    destinationId: 'rio-de-janeiro',
     hebrewName: 'פארקי לאז׳י',
     englishName: 'Parque Lage',
     category: 'landmark',
@@ -704,6 +721,7 @@ export const rioPlaces: RioPlace[] = [
   },
   {
     id: 'pedra-gavea',
+    destinationId: 'rio-de-janeiro',
     hebrewName: 'פדרה דה גאבה',
     englishName: 'Pedra da Gávea',
     category: 'landmark',
@@ -718,6 +736,7 @@ export const rioPlaces: RioPlace[] = [
   },
   {
     id: 'dois-irmaos',
+    destinationId: 'rio-de-janeiro',
     hebrewName: 'מורו דויס אירמאוס',
     englishName: 'Morro Dois Irmãos',
     category: 'landmark',
@@ -732,6 +751,7 @@ export const rioPlaces: RioPlace[] = [
   },
   {
     id: 'santa-teresa',
+    destinationId: 'rio-de-janeiro',
     hebrewName: 'שכונת סנטה תרזה',
     englishName: 'Santa Teresa neighborhood',
     category: 'landmark',
@@ -746,6 +766,7 @@ export const rioPlaces: RioPlace[] = [
   },
   {
     id: 'museu-amanha',
+    destinationId: 'rio-de-janeiro',
     hebrewName: 'מוזיאון המחר',
     englishName: 'Museu do Amanhã',
     category: 'landmark',
@@ -760,6 +781,7 @@ export const rioPlaces: RioPlace[] = [
   },
   {
     id: 'mac-niteroi',
+    destinationId: 'rio-de-janeiro',
     hebrewName: 'מוזיאון ניטרוי',
     englishName: 'MAC Niterói',
     category: 'landmark',
@@ -774,6 +796,7 @@ export const rioPlaces: RioPlace[] = [
   },
   {
     id: 'mirante-dona-marta',
+    destinationId: 'rio-de-janeiro',
     hebrewName: 'מירנטה דונה מרטה',
     englishName: 'Mirante Dona Marta',
     category: 'landmark',
@@ -788,6 +811,7 @@ export const rioPlaces: RioPlace[] = [
   },
   {
     id: 'pedra-telegrafo',
+    destinationId: 'rio-de-janeiro',
     hebrewName: 'פדרה דו טלגרפו',
     englishName: 'Pedra do Telégrafo',
     category: 'landmark',

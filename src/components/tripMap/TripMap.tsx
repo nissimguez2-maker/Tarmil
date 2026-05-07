@@ -9,8 +9,7 @@ import 'leaflet/dist/leaflet.css';
 import 'leaflet.markercluster/dist/MarkerCluster.css';
 import './TripMap.css';
 
-import type { RioPlace } from '../../data/rioPlaces';
-import type { GlobalPlace } from '../../data/globalPlaces';
+import type { Place } from '../../data/places';
 import type { FriendOverlap, LatLng } from '../../data/myTrip';
 import type { PlannedStop } from '../../data/plannedStops';
 import { drawTripLine } from './layers/drawTripLine';
@@ -29,8 +28,7 @@ export type TripMapHandle = {
 type Props = {
   mode: 'default' | 'pick';
   activeFilters: Set<FilterId>;
-  rioPlaces: RioPlace[];
-  globalPlaces: GlobalPlace[];
+  places: Place[];
   friendOverlaps: FriendOverlap[];
   pastTrip: LatLng[];
   presentLocation: LatLng;
@@ -49,8 +47,7 @@ export const TripMap = forwardRef<TripMapHandle, Props>(function TripMap(
   {
     mode,
     activeFilters,
-    rioPlaces,
-    globalPlaces,
+    places,
     friendOverlaps,
     pastTrip,
     presentLocation,
@@ -157,10 +154,9 @@ export const TripMap = forwardRef<TripMapHandle, Props>(function TripMap(
       ),
     );
 
-    const visiblePlaces: (RioPlace | GlobalPlace)[] = [
-      ...rioPlaces,
-      ...globalPlaces,
-    ].filter((p) => placeMatchesFilters(p, activeFilters));
+    const visiblePlaces = places.filter((p) =>
+      placeMatchesFilters(p, activeFilters),
+    );
     cleanups.push(
       drawPlaceMarkers(
         map,
@@ -191,8 +187,7 @@ export const TripMap = forwardRef<TripMapHandle, Props>(function TripMap(
   }, [
     mode,
     activeFilters,
-    rioPlaces,
-    globalPlaces,
+    places,
     friendOverlaps,
     pastTrip,
     presentLocation,

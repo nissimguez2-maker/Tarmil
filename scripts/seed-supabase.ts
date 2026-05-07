@@ -4,9 +4,10 @@
  *
  * Run:  npx tsx --env-file=.env.local scripts/seed-supabase.ts
  *
- * Requires VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in env. Must be run
- * BEFORE the RLS migration is applied (anon role can only write planned_stops
- * once RLS is on; the reference tables are seed-only after that).
+ * Requires VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in env. Reference
+ * tables (places, friend_overlaps, trip_waypoints) became read-only to anon
+ * after migration 0002 — re-seeding them now requires running this with the
+ * service role key, OR via the Supabase dashboard / MCP execute_sql.
  */
 
 import { createClient } from '@supabase/supabase-js';
@@ -27,38 +28,20 @@ const supabase = createClient(url, anonKey);
 
 async function main() {
   console.log('Seeding places...');
-  const places = [
-    ...rioPlaces.map((p) => ({
-      id: p.id,
-      region: 'rio',
-      destination_id: null,
-      hebrew_name: p.hebrewName,
-      english_name: p.englishName,
-      category: p.category,
-      lat: p.lat,
-      lng: p.lng,
-      hebrew_description: p.hebrewDescription,
-      english_description: p.englishDescription,
-      rating: p.rating,
-      friends_know: p.friendsKnow,
-      tarmil_pick: p.tarmilPick ?? false,
-    })),
-    ...globalPlaces.map((p) => ({
-      id: p.id,
-      region: 'global',
-      destination_id: p.destinationId,
-      hebrew_name: p.hebrewName,
-      english_name: p.englishName,
-      category: p.category,
-      lat: p.lat,
-      lng: p.lng,
-      hebrew_description: p.hebrewDescription,
-      english_description: p.englishDescription,
-      rating: p.rating,
-      friends_know: p.friendsKnow,
-      tarmil_pick: p.tarmilPick ?? false,
-    })),
-  ];
+  const places = [...rioPlaces, ...globalPlaces].map((p) => ({
+    id: p.id,
+    destination_id: p.destinationId,
+    hebrew_name: p.hebrewName,
+    english_name: p.englishName,
+    category: p.category,
+    lat: p.lat,
+    lng: p.lng,
+    hebrew_description: p.hebrewDescription,
+    english_description: p.englishDescription,
+    rating: p.rating,
+    friends_know: p.friendsKnow,
+    tarmil_pick: p.tarmilPick ?? false,
+  }));
 
   const { error: placesErr } = await supabase.from('places').upsert(places);
   if (placesErr) throw placesErr;
