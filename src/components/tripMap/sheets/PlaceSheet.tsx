@@ -66,11 +66,11 @@ export function PlaceSheet({ place, onClose, onOpen, onSaveToStop }: Props) {
             {visits.map((v, i) => (
               <div key={i} className="flex items-start gap-sm">
                 <span
-                  className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-cocoa font-serif text-body text-ivory"
-                  aria-hidden
-                >
-                  {v.friendInitial}
-                </span>
+                  className="inline-block h-9 w-9 shrink-0 rounded-full border border-cocoa-15 bg-cover bg-center bg-no-repeat"
+                  style={{ backgroundImage: `url('${v.photoUrl}')` }}
+                  role="img"
+                  aria-label={v.friendName}
+                />
                 <div className="flex flex-1 flex-col gap-1">
                   <div className="flex items-center justify-between gap-sm">
                     <span className="text-body text-cocoa">{v.friendName}</span>

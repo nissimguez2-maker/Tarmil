@@ -12,7 +12,7 @@ const TripMap = lazy(() =>
     default: m.TripMap,
   })),
 );
-import { CategoryFilterRail } from '../../components/tripMap/ui/CategoryFilterRail';
+import { FilterPanel } from '../../components/tripMap/ui/FilterPanel';
 import { TravelMomentCard } from '../../components/tripMap/ui/TravelMomentCard';
 import { AddDestinationFab } from '../../components/tripMap/ui/AddDestinationFab';
 import { PickReticle } from '../../components/tripMap/ui/PickReticle';
@@ -37,7 +37,6 @@ import {
 } from '../../data/plannedStops';
 import { friendOverlaps } from '../../data/myTrip';
 import { rioPlaces } from '../../data/rioPlaces';
-import { CATEGORY_FILTER_IDS } from '../../components/tripMap/utils/categoryLabel';
 
 /**
  * Trip tab — the app's hero.
@@ -128,15 +127,9 @@ export function TripScreen() {
 
           {floatersVisible && (
             <>
-              <CategoryFilterRail
+              <FilterPanel
                 active={state.activeFilters}
                 onToggle={(id) => dispatch({ type: 'TOGGLE_FILTER', id })}
-                onSetAll={() =>
-                  dispatch({
-                    type: 'SET_FILTERS',
-                    filters: new Set(CATEGORY_FILTER_IDS),
-                  })
-                }
               />
               <div className="absolute inset-x-md bottom-md z-[800] flex flex-col items-stretch gap-sm">
                 <div className="self-end">

@@ -94,11 +94,11 @@ export function PlannedStopSheet({
                   className="flex items-start gap-sm rounded-md border border-cocoa-08 bg-sand p-sm"
                 >
                   <span
-                    className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 border-dashed border-copper bg-ivory font-serif text-body text-copper"
-                    aria-hidden
-                  >
-                    {f.friendInitial}
-                  </span>
+                    className="inline-block h-9 w-9 shrink-0 rounded-full border-2 border-dashed border-copper bg-cover bg-center bg-no-repeat"
+                    style={{ backgroundImage: `url('${f.photoUrl}')` }}
+                    role="img"
+                    aria-label={f.friendName}
+                  />
                   <div className="flex flex-col">
                     <span className="text-body text-cocoa">{f.friendName}</span>
                     {f.overlapStart && f.overlapEnd && (

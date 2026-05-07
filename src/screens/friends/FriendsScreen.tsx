@@ -38,15 +38,15 @@ export function FriendsScreen() {
               >
                 <span
                   className={clsx(
-                    'inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full font-serif text-lede',
+                    'inline-block h-11 w-11 shrink-0 rounded-full bg-cover bg-center bg-no-repeat',
                     isPresent
-                      ? 'bg-copper text-ivory'
-                      : 'border-2 border-dashed border-copper bg-ivory text-copper',
+                      ? 'border-2 border-solid border-copper'
+                      : 'border-2 border-dashed border-copper',
                   )}
-                  aria-hidden
-                >
-                  {friend.friendInitial}
-                </span>
+                  style={{ backgroundImage: `url('${friend.photoUrl}')` }}
+                  role="img"
+                  aria-label={friend.friendName}
+                />
                 <span className="flex flex-1 flex-col gap-1">
                   <span className="flex flex-wrap items-center gap-2">
                     <span className="font-serif text-lede leading-tight">

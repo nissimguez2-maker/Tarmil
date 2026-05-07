@@ -8,7 +8,7 @@
 
 .tarmil-map {
   background: var(--ivory);
-  font-family: 'Heebo', 'Google Sans Text', system-ui, sans-serif;
+  font-family: 'Google Sans Text', 'Assistant', 'Heebo', system-ui, sans-serif;
 }
 
 /* warm desert-paper tint — applied to TomTom's WebGL canvas only, so HTML
@@ -80,7 +80,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Heebo', 'Google Sans Text', system-ui, sans-serif;
+  font-family: 'Google Sans Text', 'Assistant', 'Heebo', system-ui, sans-serif;
   font-weight: 700;
   font-size: 11pt;
   box-shadow: 0 2px 6px rgba(53, 40, 24, 0.32);
@@ -111,19 +111,29 @@
 }
 
 .tarmil-friend-circle {
-  width: 32px;
-  height: 32px;
-  margin: 12px;
+  width: 36px;
+  height: 36px;
+  margin: 10px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Frank Ruhl Libre', 'Fraunces', serif;
+  font-family: 'Rubik', 'Frank Ruhl Libre', 'Fraunces', serif;
   font-weight: 700;
-  font-size: 14pt;
+  font-size: 13pt;
   cursor: pointer;
   transition: transform 200ms cubic-bezier(0.165, 0.84, 0.44, 1);
   animation: tarmil-pop-in 280ms cubic-bezier(0.165, 0.84, 0.44, 1) both;
+  /* Photo cover; the initial sits behind as a fallback before paint. */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  /* Hide initial when photo paints. The text-indent + overflow trick lets the
+   * letter render (for `alt`-style fallback if bg-image fails) but pushes it
+   * outside the visible 36×36 area once the photo loads. */
+  color: transparent;
+  text-indent: -999em;
+  overflow: hidden;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -133,10 +143,12 @@
   }
 }
 
+/* Photo bubbles. Background-image is set inline by drawFriendBubbles. The
+ * border style — solid for present, dashed for future — is what carries
+ * the temporal cue. The halo (box-shadow) is the spatial cue
+ * ("approximately in this neighborhood"). */
 .tarmil-friend-circle.is-present {
-  background: var(--copper);
-  color: var(--ivory);
-  border: 2px solid var(--ivory);
+  border: 3px solid var(--copper);
   box-shadow:
     0 0 0 6px rgba(166, 75, 41, 0.18),
     0 0 0 14px rgba(166, 75, 41, 0.06),
@@ -144,9 +156,7 @@
 }
 
 .tarmil-friend-circle.is-future {
-  background: var(--ivory);
-  color: var(--copper);
-  border: 2px dashed var(--copper);
+  border: 3px dashed var(--copper);
   box-shadow:
     0 0 0 6px rgba(166, 75, 41, 0.12),
     0 0 0 14px rgba(166, 75, 41, 0.04),

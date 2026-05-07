@@ -31,10 +31,11 @@ export type FilterId =
   | 'kosher'
   | 'chabad'
   | 'picks'
-  | 'friends';
+  | 'friends'
+  | 'friendBubbles';
 
 const FILTER_TO_CATEGORIES: Record<
-  Exclude<FilterId, 'picks' | 'friends'>,
+  Exclude<FilterId, 'picks' | 'friends' | 'friendBubbles'>,
   RioPlaceCategory[]
 > = {
   hostels: ['hostel'],
@@ -63,18 +64,15 @@ export function filterLabel(id: FilterId): string {
       return 'בחירות תרמיל';
     case 'friends':
       return 'חברים מכירים';
+    case 'friendBubbles':
+      return 'חברים על המפה';
   }
 }
 
 /** Category chips (hostels/food/etc) — visibility is OR'd among these. */
-export const CATEGORY_FILTER_IDS: Array<Exclude<FilterId, 'picks' | 'friends'>> = [
-  'hostels',
-  'food',
-  'beaches',
-  'nightlife',
-  'kosher',
-  'chabad',
-];
+export const CATEGORY_FILTER_IDS: Array<
+  Exclude<FilterId, 'picks' | 'friends' | 'friendBubbles'>
+> = ['hostels', 'food', 'beaches', 'nightlife', 'kosher', 'chabad'];
 
 /**
  * A place passes when:
@@ -112,14 +110,18 @@ export const ALL_FILTERS: FilterId[] = [
   'nightlife',
   'picks',
   'friends',
+  'friendBubbles',
   'kosher',
   'chabad',
 ];
 
-/** Default-active filter set on cold load — kosher and chabad off; modifiers off. */
+/** Default-active filter set on cold load — kosher and chabad off; modifiers
+ * (picks, friends-know) off. Friend bubbles ON by default — they're the
+ * social value the app exists to surface. */
 export const DEFAULT_ACTIVE_FILTERS: ReadonlySet<FilterId> = new Set<FilterId>([
   'hostels',
   'food',
   'beaches',
   'nightlife',
+  'friendBubbles',
 ]);

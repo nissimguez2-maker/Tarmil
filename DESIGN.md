@@ -17,40 +17,40 @@ colors:
   copper-70: "#a64b29b3"
 typography:
   meta:
-    fontFamily: "Heebo, Google Sans Text, Roboto Flex, Inter, system-ui, sans-serif"
+    fontFamily: "Google Sans Text, Assistant, Heebo, Roboto Flex, Inter, system-ui, sans-serif"
     fontSize: "8pt"
-    fontWeight: 500
+    fontWeight: 600
     lineHeight: 1.5
     letterSpacing: "0.18em"
   small:
-    fontFamily: "Heebo, Google Sans Text, Roboto Flex, Inter, system-ui, sans-serif"
+    fontFamily: "Google Sans Text, Assistant, Heebo, Roboto Flex, Inter, system-ui, sans-serif"
     fontSize: "10pt"
     fontWeight: 400
     lineHeight: 1.45
   body:
-    fontFamily: "Heebo, Google Sans Text, Roboto Flex, Inter, system-ui, sans-serif"
+    fontFamily: "Google Sans Text, Assistant, Heebo, Roboto Flex, Inter, system-ui, sans-serif"
     fontSize: "11pt"
     fontWeight: 400
     lineHeight: 1.55
   lede:
-    fontFamily: "Fraunces, Frank Ruhl Libre, Times New Roman, serif"
+    fontFamily: "Fraunces, Rubik, Frank Ruhl Libre, Times New Roman, serif"
     fontSize: "14pt"
     fontWeight: 700
     lineHeight: 1.4
   sub:
-    fontFamily: "Fraunces, Frank Ruhl Libre, Times New Roman, serif"
+    fontFamily: "Fraunces, Rubik, Frank Ruhl Libre, Times New Roman, serif"
     fontSize: "22pt"
     fontWeight: 700
     lineHeight: 1.15
     letterSpacing: "-0.018em"
   display:
-    fontFamily: "Fraunces, Frank Ruhl Libre, Times New Roman, serif"
+    fontFamily: "Fraunces, Rubik, Frank Ruhl Libre, Times New Roman, serif"
     fontSize: "44pt"
     fontWeight: 700
     lineHeight: 0.94
     letterSpacing: "-0.035em"
   hero:
-    fontFamily: "Fraunces, Frank Ruhl Libre, Times New Roman, serif"
+    fontFamily: "Fraunces, Rubik, Frank Ruhl Libre, Times New Roman, serif"
     fontSize: "92pt"
     fontWeight: 700
     lineHeight: 0.92
@@ -150,7 +150,7 @@ The system explicitly rejects: Booking.com / TripAdvisor density, Google-Maps co
 **Key Characteristics:**
 
 - Light, single-theme, warm desert-paper neutrals.
-- Editorial serif (Fraunces) for headlines + sans (Google Sans Text Latin / Heebo Hebrew) for body. No third typeface.
+- Editorial serif (Fraunces Latin / Rubik Hebrew) for headlines + sans (Google Sans Text Latin / Assistant Hebrew) for body. Numbers always Fraunces.
 - Copper as a rare, vibrant accent — never below 70% opacity, max ~10% of any screen.
 - Logical RTL utilities only; the entire app runs in `<html dir="rtl">`.
 - Brand tokens only; hex literals never leak into components.
@@ -205,12 +205,14 @@ A four-step neutral surface scale, a six-step cocoa text scale, and one vibrant 
 
 ## 3. Typography
 
-**Display Font:** Fraunces 700 with `SOFT` axis at 100, `opsz` matched (Frank Ruhl Libre fallback for Hebrew display, Times New Roman as last resort).
+**Display Font (Latin):** Fraunces 700 with `SOFT` axis at 100, `opsz` matched.
+**Display Font (Hebrew):** Rubik 700 — geometric warm sans, modern Israeli editorial feel. Frank Ruhl Libre kept as a deeper-serif fallback; Times New Roman as last resort.
 **Body Font (Latin):** Google Sans Text 400 with `GRAD` axis at -20 (Roboto Flex, Inter, system-ui as fallbacks).
-**Body Font (Hebrew):** Heebo, weights 400 / 500 / 700 to mirror Google Sans Text. Pending Hebrew typographer validation per DA §Open.
-**Label / Eyebrow:** Google Sans Text 500 / Heebo 500 at 8pt, 0.18em tracking, uppercase, exposed via the `.meta-caps` utility in `src/index.css`.
+**Body Font (Hebrew):** Assistant 400 — humanist Hebrew sans tuned for screen text, weights 400 / 500 / 600 / 700. Heebo kept as a legacy fallback.
+**Numbers:** Fraunces 700 with `tnum` ON, exposed via the `.tnum` utility. Numbers always render as figures — across Hebrew and Latin contexts both.
+**Label / Eyebrow:** Google Sans Text 600 / Assistant 600 at 8pt, 0.18em tracking, uppercase, exposed via the `.meta-caps` utility in `src/index.css`. The 600 weight (vs body's 400) keeps section eyebrows distinguishable from body when both render in Hebrew Assistant.
 
-**Character:** Fraunces is editorial-warm with the SOFT axis maxed (rounded terminals, the warmest editorial feel). It pairs with Google Sans Text (Latin) and Heebo (Hebrew) — workhorses that disappear so the serif can speak. No third typeface.
+**Character:** Fraunces is editorial-warm with the SOFT axis maxed (rounded terminals, the warmest editorial feel). For Hebrew, Rubik supplies the same warm-geometric register at headline sizes; Assistant covers body. No third typeface enters the system at any sizes.
 
 ### Hierarchy
 - **Hero** (700, 92pt, 0.92 lh, -0.04em tracking): Governing principle hero ("WARMER."). Reserved; not used in any current screen.
@@ -224,7 +226,7 @@ A four-step neutral surface scale, a six-step cocoa text scale, and one vibrant 
 ### Italic Rules
 - **Mid-titles** ("01 Concept" lab pattern): Fraunces italic 500, sentence case. The number "01" stays upright in Google Sans Text 700, copper.
 - **Pull quotes, taglines, rare emphasis:** Fraunces italic 400.
-- **Body italic:** Google Sans Text italic 400 / Heebo italic 400. Used inline for emphasis, technical terms, foreign words.
+- **Body italic:** Google Sans Text italic 400 / Assistant italic 400. Used inline for emphasis, technical terms, foreign words.
 - **Never** mix Fraunces italic into body paragraphs. Keeps the serif italic precious for editorial moments.
 
 ### Numbers
@@ -235,11 +237,15 @@ A four-step neutral surface scale, a six-step cocoa text scale, and one vibrant 
 
 ### Named Rules
 
-**The Two-Family Rule.** Fraunces for headlines, Google Sans Text (Latin) / Heebo (Hebrew) for body. No third typeface enters the system without DA approval.
+**The Two-Family-Per-Script Rule.** Latin runs Fraunces (headlines) + Google Sans Text (body). Hebrew runs Rubik (headlines) + Assistant (body). No third family enters either lane without DA approval.
 
 **The Locked Scale Rule.** Type sizes are exactly the seven steps above. No `text-[12pt]` shortcuts. If the value is not on the scale, stop and ask.
 
-**The Precious Italic Rule.** Body italic is always Google Sans Text / Heebo italic 400. Fraunces italic is reserved for mid-titles (500), pull quotes / taglines (400), and rare display-size emphasis. Do not pollute body paragraphs with Fraunces italic.
+**The Numbers-Are-Figures Rule.** All digits in tabular contexts render in Fraunces (`tnum` ON) regardless of surrounding script. Use the `.tnum` utility, or wrap the digit run in a `<span class="tnum">`. Currency symbols (₪, $, €, R$) follow the surrounding text.
+
+**The Precious Italic Rule.** Body italic is always Google Sans Text / Assistant italic 400. Fraunces italic is reserved for mid-titles (500), pull quotes / taglines (400), and rare display-size emphasis. Do not pollute body paragraphs with Fraunces italic.
+
+**The Eyebrow-Differentiation Rule.** `.meta-caps` (eyebrows / section labels / pill chips) renders in 600 weight. Body renders in 400. Both can land on Hebrew Assistant in the same screen — the weight gap (plus uppercase + 0.18em tracking) is what keeps them distinct.
 
 ## 4. Elevation
 
@@ -270,7 +276,7 @@ The `<Button>` primitive in `src/components/Button.tsx` is the canonical CTA. Th
 ### Section Labels
 The `<SectionLabel number="01" label="Concept" />` primitive in `src/components/SectionLabel.tsx` is the canonical editorial pattern, lifted from the DA's "01 Concept" lab spec.
 
-- **Number** (`01`): Google Sans Text / Heebo 700, 8pt, copper, uppercase, 0.18em tracking. Stays upright; not italic.
+- **Number** (`01`): Fraunces 700, 8pt, copper, uppercase, 0.18em tracking. Stays upright; not italic. (Digits-as-figures rule — even at meta size, numbers run Fraunces.)
 - **Label** (`Concept`): Fraunces italic 500, 14pt, cocoa, sentence case. **Never all-caps.**
 - **Gap** between number and label: 8mm.
 - **Padding-bottom** above the rule: 2mm.
@@ -284,8 +290,8 @@ The `<SectionLabel number="01" label="Concept" />` primitive in `src/components/
 - **Background:** Sand (`bg-sand`).
 - **Border:** Rope hairline (`border border-rope`). Defines the card without a shadow.
 - **Internal Padding:** 8mm (`p-md`).
-- **Title:** Fraunces lede in cocoa.
-- **Meta:** Heebo / Google Sans Text small in cocoa-55.
+- **Title:** Fraunces / Rubik lede in cocoa.
+- **Meta:** Google Sans Text / Assistant small in cocoa-55.
 
 ### Bottom Sheet
 - **Shape:** `rounded-md` (6px), full-width with 8mm side margin, anchored to the bottom of the trip area.
@@ -310,8 +316,8 @@ The `<SectionLabel number="01" label="Concept" />` primitive in `src/components/
 ### Tables
 Lifted directly from the DA's print spec. Apply when rendering data lists in Tools (Balance expense list, Currency rate panel, future tables).
 
-- **Header row:** Google Sans Text / Heebo 500, 8pt, uppercase, `cocoa-55`, 0.18em tracking.
-- **Cell body:** Google Sans Text / Heebo 400, 10pt, `cocoa`, `tnum` mandatory.
+- **Header row:** Google Sans Text / Assistant 600, 8pt, uppercase, `cocoa-55`, 0.18em tracking (matches `.meta-caps`).
+- **Cell body:** Google Sans Text / Assistant 400, 10pt, `cocoa`. Numbers run Fraunces via `tnum` — mandatory in tables.
 - **Row separator:** 0.3pt solid `cocoa-15`.
 - **Header underline:** 0.5pt solid `cocoa-30`.
 - **Total row:** 0.5pt solid `cocoa` above, 700 weight, no separator below.
@@ -320,7 +326,7 @@ Lifted directly from the DA's print spec. Apply when rendering data lists in Too
 
 ### Lists
 - **Bulleted:** hanging indent, 2pt `cocoa-30` dot, never icons.
-- **Numbered (editorial / channel lists):** leading-zero `01.` in `copper`, Google Sans Text / Heebo 500, 8pt, in a 12mm hanging-indent column. Body of item in 11pt `cocoa`.
+- **Numbered (editorial / channel lists):** leading-zero `01.` in `copper`, Fraunces 700, 8pt (digits-as-figures rule), in a 12mm hanging-indent column. Body of item in 11pt `cocoa`.
 - **Dashed lists:** forbidden.
 
 ### Dividers
@@ -422,7 +428,7 @@ For maps and density visualisations.
 - **Don't** use copper on body text any size, table data cells, background fills wider than ~30% of a composition, or the logo / wordmark.
 - **Don't** use copper as a full-width rule. Editorial copper rules are 14–18mm only.
 - **Don't** use red anywhere. Errors use copper, paired with explicit text.
-- **Don't** mix Fraunces italic into body paragraphs. Body italic is Google Sans Text italic 400 / Heebo italic 400.
+- **Don't** mix Fraunces italic into body paragraphs. Body italic is Google Sans Text italic 400 / Assistant italic 400.
 - **Don't** use Fraunces italic in all-caps for mid-titles. Sentence case only.
 - **Don't** use ASCII straight quotes (`"`, `'`). Smart quotes only.
 - **Don't** use a hyphen (`-`) for negative values. Use the real minus sign (U+2212).

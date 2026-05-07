@@ -27,10 +27,21 @@ export default {
       },
     },
     fontFamily: {
-      serif: ['Fraunces', 'Frank Ruhl Libre', 'Times New Roman', 'serif'],
+      // Latin headlines stay Fraunces; Hebrew headlines fall through to Rubik.
+      // Frank Ruhl Libre kept as a deeper Hebrew serif fallback.
+      serif: [
+        'Fraunces',
+        'Rubik',
+        'Frank Ruhl Libre',
+        'Times New Roman',
+        'serif',
+      ],
+      // Latin body stays Google Sans Text; Hebrew body falls through to Assistant.
+      // Heebo kept as a fallback for older caches.
       sans: [
-        'Heebo',
         'Google Sans Text',
+        'Assistant',
+        'Heebo',
         'Roboto Flex',
         'Inter',
         'system-ui',

@@ -3,6 +3,8 @@ import type { RioPlace, RioPlaceCategory } from '../../../data/rioPlaces';
 export type FriendVisit = {
   friendName: string;
   friendInitial: string;
+  /** Pravatar URL (200×200, deterministic). */
+  photoUrl: string;
   /** 1–5. */
   rating: number;
   /** Single line of Hebrew. */
@@ -10,15 +12,43 @@ export type FriendVisit = {
 };
 
 /** Friend pool for deterministic place reviews — overlaps the friendOverlaps roster. */
-const POOL: Array<{ name: string; initial: string }> = [
-  { name: 'מאיה לוי', initial: 'מ' },
-  { name: 'יעל אברהם', initial: 'י' },
-  { name: 'רועי בן עמי', initial: 'ר' },
-  { name: 'שיר כהן', initial: 'ש' },
-  { name: 'יותם הררי', initial: 'ה' },
-  { name: 'תום פרידמן', initial: 'ת' },
-  { name: 'אביב גוטמן', initial: 'א' },
-  { name: 'דניאל לוי', initial: 'ד' },
+const POOL: Array<{ name: string; initial: string; photoUrl: string }> = [
+  {
+    name: 'מאיה לוי',
+    initial: 'מ',
+    photoUrl: 'https://i.pravatar.cc/200?img=47',
+  },
+  {
+    name: 'יעל אברהם',
+    initial: 'י',
+    photoUrl: 'https://i.pravatar.cc/200?img=44',
+  },
+  {
+    name: 'רועי בן עמי',
+    initial: 'ר',
+    photoUrl: 'https://i.pravatar.cc/200?img=33',
+  },
+  { name: 'שיר כהן', initial: 'ש', photoUrl: 'https://i.pravatar.cc/200?img=49' },
+  {
+    name: 'יותם הררי',
+    initial: 'ה',
+    photoUrl: 'https://i.pravatar.cc/200?img=68',
+  },
+  {
+    name: 'משה פרידמן',
+    initial: 'מ',
+    photoUrl: 'https://i.pravatar.cc/200?img=51',
+  },
+  {
+    name: 'אביב גוטמן',
+    initial: 'א',
+    photoUrl: 'https://i.pravatar.cc/200?img=12',
+  },
+  {
+    name: 'דניאל לוי',
+    initial: 'ד',
+    photoUrl: 'https://i.pravatar.cc/200?img=53',
+  },
 ];
 
 const COMMENTS: Record<RioPlaceCategory, string[]> = {
@@ -111,6 +141,7 @@ export function deriveFriendVisits(place: {
     out.push({
       friendName: POOL[friendIdx].name,
       friendInitial: POOL[friendIdx].initial,
+      photoUrl: POOL[friendIdx].photoUrl,
       rating,
       comment: comments[commentIdx],
     });

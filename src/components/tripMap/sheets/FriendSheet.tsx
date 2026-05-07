@@ -1,5 +1,4 @@
 import { X } from 'lucide-react';
-import clsx from 'clsx';
 import type { FriendOverlap } from '../../../data/myTrip';
 import { formatDateRange } from '../utils/formatDateRange';
 
@@ -17,16 +16,15 @@ export function FriendSheet({ friend, onClose }: Props) {
       <div className="flex items-start justify-between gap-sm">
         <div className="flex items-center gap-md">
           <span
-            className={clsx(
-              'inline-flex h-12 w-12 items-center justify-center rounded-full font-serif text-lede',
+            className={
               friend.status === 'present'
-                ? 'bg-copper text-ivory'
-                : 'border-2 border-dashed border-copper bg-ivory text-copper',
-            )}
-            aria-hidden
-          >
-            {friend.friendInitial}
-          </span>
+                ? 'inline-block h-12 w-12 shrink-0 rounded-full border-2 border-solid border-copper bg-cover bg-center bg-no-repeat'
+                : 'inline-block h-12 w-12 shrink-0 rounded-full border-2 border-dashed border-copper bg-cover bg-center bg-no-repeat'
+            }
+            style={{ backgroundImage: `url('${friend.photoUrl}')` }}
+            role="img"
+            aria-label={friend.friendName}
+          />
           <div className="flex flex-col">
             <h2 className="font-serif text-lede leading-tight">
               {friend.friendName}

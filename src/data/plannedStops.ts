@@ -89,7 +89,7 @@ export const plannedStops: PlannedStop[] = [
     nights: 9,
     privacy: 'friends',
     note: 'פאלרמו, סן תלמו, טנגו ואסאדו עד חצות.',
-    friendOverlapIds: ['tom-buenosaires'],
+    friendOverlapIds: ['moshe-buenosaires'],
   },
 ];
 

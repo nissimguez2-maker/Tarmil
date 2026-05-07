@@ -15,7 +15,9 @@
   body {
     margin: 0;
     color: var(--cocoa);
-    font-family: 'Heebo', 'Google Sans Text', system-ui, sans-serif;
+    /* Latin Google Sans Text first; Hebrew falls through to Assistant 400. */
+    font-family: 'Google Sans Text', 'Assistant', 'Heebo', system-ui, sans-serif;
+    font-weight: 400;
     font-size: 11pt;
     line-height: 1.55;
     font-feature-settings: 'tnum' 0;
@@ -32,12 +34,14 @@
     touch-action: manipulation;
   }
 
-  /* serif headlines default to Fraunces with the SOFT axis maxed */
+  /* Headlines: Latin Fraunces (with SOFT axis maxed); Hebrew falls through to
+   * Rubik 700, then Frank Ruhl Libre as a last resort. */
   h1,
   h2,
   h3,
   h4 {
-    font-family: 'Fraunces', 'Frank Ruhl Libre', 'Times New Roman', serif;
+    font-family: 'Fraunces', 'Rubik', 'Frank Ruhl Libre', 'Times New Roman',
+      serif;
     font-weight: 700;
     font-variation-settings: 'SOFT' 100, 'opsz' 144;
     color: var(--cocoa);
@@ -61,18 +65,26 @@
     color: var(--cocoa);
   }
 
-  /* metadata caps per DA: Heebo 500 uppercase 0.18em tracking copper or cocoa */
+  /* metadata caps per DA: section labels / eyebrows / pill chips.
+   * Hebrew renders in Assistant; differentiated from body by weight (600 vs
+   * body 400) and the locked uppercase + tracking. Latin falls through to
+   * Google Sans Text for parity with body context. */
   .meta-caps {
-    font-family: 'Heebo', 'Google Sans Text', system-ui, sans-serif;
-    font-weight: 500;
+    font-family: 'Google Sans Text', 'Assistant', 'Heebo', system-ui,
+      sans-serif;
+    font-weight: 600;
     font-size: 8pt;
     text-transform: uppercase;
     letter-spacing: 0.18em;
   }
 
-  /* tabular numerals for ledger/data contexts */
+  /* tabular numerals for ledger/data contexts.
+   * Numbers ALWAYS render in Fraunces — across Hebrew and Latin both. This is
+   * an editorial choice: digits read as figures, not text. */
   .tnum {
+    font-family: 'Fraunces', 'Frank Ruhl Libre', 'Times New Roman', serif;
     font-feature-settings: 'tnum' 1;
+    font-variation-settings: 'opsz' 144;
   }
 
   /* mixed-direction inline override (Latin inside Hebrew) */

@@ -16,9 +16,14 @@ export function drawFriendBubbles(
     const el = document.createElement('div');
     el.className = 'tarmil-friend-bubble';
     el.title = friend.friendName;
+    // Photo background fills the circle; the initial sits underneath as a
+    // fallback for slow networks or pravatar 404s. Browser shows the text
+    // until the bg-image paints, then covers it.
     el.innerHTML = `<div class="tarmil-friend-circle ${
       friend.status === 'present' ? 'is-present' : 'is-future'
-    }">${friend.friendInitial}</div>`;
+    }" style="background-image: url('${friend.photoUrl}')">${
+      friend.friendInitial
+    }</div>`;
 
     el.addEventListener('click', (e) => {
       e.stopPropagation();

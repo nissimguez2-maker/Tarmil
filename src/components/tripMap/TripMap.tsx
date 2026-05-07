@@ -219,16 +219,18 @@ export const TripMap = forwardRef<TripMapHandle, Props>(function TripMap(
       ),
     );
 
-    cleanups.push(
-      drawFriendBubbles(
-        map,
-        friendOverlaps,
-        isPick
-          ? noopFriend
-          : (friend) =>
-              handlersRef.current.onOpenSheet({ kind: 'friend', friend }),
-      ),
-    );
+    if (activeFilters.has('friendBubbles')) {
+      cleanups.push(
+        drawFriendBubbles(
+          map,
+          friendOverlaps,
+          isPick
+            ? noopFriend
+            : (friend) =>
+                handlersRef.current.onOpenSheet({ kind: 'friend', friend }),
+        ),
+      );
+    }
 
     cleanups.push(drawPresentPin(map, myTrip.present));
 
