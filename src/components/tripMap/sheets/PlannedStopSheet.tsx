@@ -166,7 +166,7 @@ export function PlannedStopSheet({
 
 function CollapsibleSection({
   label,
-  defaultOpen = true,
+  defaultOpen = false,
   children,
 }: {
   label: string;
