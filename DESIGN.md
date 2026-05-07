@@ -12,9 +12,9 @@ colors:
   cocoa-30: "#3528184d"
   cocoa-15: "#35281826"
   cocoa-08: "#35281814"
-  copper: "#c75d24"
-  copper-85: "#c75d24d9"
-  copper-70: "#c75d24b3"
+  copper: "#a64b29"
+  copper-85: "#a64b29d9"
+  copper-70: "#a64b29b3"
 typography:
   meta:
     fontFamily: "Heebo, Google Sans Text, Roboto Flex, Inter, system-ui, sans-serif"
@@ -166,9 +166,9 @@ A four-step neutral surface scale, a six-step cocoa text scale, and one vibrant 
 - **Cocoa 70 / 55 / 30 / 15 / 08** (`#352818` at 70 / 55 / 30 / 15 / 8% opacity): Body emphasis tiers, hairline rules, dividers, hover micro-fills, low-emphasis text, table separators.
 
 ### Secondary (vibrant accent)
-- **Copper** (`#c75d24`): Vibrant accent. Structural marks (section numbers, header rules, divider accents, chart accent line, seasonality bands), rare type emphasis, focus rings, primary actions in app (Tarmil Picks badge, present pin, "הוסף יעד" FAB, accent CTAs).
-- **Copper 85** (`#c75d24` at 85% opacity): Hover state for accent buttons.
-- **Copper 70** (`#c75d24` at 70% opacity): Focus rings, friend-bubble haloes, halo glow on the active planned-stop ring, chart annotation bands.
+- **Copper** (`#a64b29`): Vibrant accent. Structural marks (section numbers, header rules, divider accents, chart accent line, seasonality bands), rare type emphasis, focus rings, primary actions in app (Tarmil Picks badge, present pin, "הוסף יעד" FAB, accent CTAs).
+- **Copper 85** (`#a64b29` at 85% opacity): Hover state for accent buttons.
+- **Copper 70** (`#a64b29` at 70% opacity): Focus rings, friend-bubble haloes, halo glow on the active planned-stop ring, chart annotation bands.
 
 ### Neutral (surface scale)
 - **Ivory** (`#f4ebd5`): Default surface. The "paper". Background of every Screen wrapper, BottomSheet, TopBar.
@@ -248,7 +248,7 @@ Mostly flat. Surfaces gain depth from `border-rope` hairlines plus a `bg-sand` s
 ### Shadow Vocabulary
 - **Sheet lift** (`box-shadow: 0 -10px 30px -10px rgba(53, 40, 24, 0.25)`): BottomSheet upward cast. Signals the sheet sits above the map.
 - **Card lift** (`box-shadow: 0 -10px 30px -10px rgba(53, 40, 24, 0.20)`): Travel-moment card. A lighter version of sheet lift.
-- **FAB ground** (`box-shadow: 0 6px 20px -6px rgba(199, 93, 36, 0.50)`): Copper-tinted shadow under the floating "הוסף יעד" action.
+- **FAB ground** (`box-shadow: 0 6px 20px -6px rgba(166, 75, 41, 0.50)`): Copper-tinted shadow under the floating "הוסף יעד" action.
 - **Filter rail rim** (`box-shadow: 0 2px 10px -4px rgba(53, 40, 24, 0.15)`): Soft cocoa cast under the chip rail at the top of the map.
 - **Device frame** (`shadow-device` = `0 30px 80px -20px rgba(53, 40, 24, 0.4)`): Desktop iPhone shell only. Never used inside the app shell itself.
 

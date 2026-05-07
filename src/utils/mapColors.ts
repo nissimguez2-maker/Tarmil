@@ -14,7 +14,7 @@ export const mapColors = {
   cocoa55: 'rgba(53, 40, 24, 0.55)',
   cocoa30: 'rgba(53, 40, 24, 0.30)',
   cocoa15: 'rgba(53, 40, 24, 0.15)',
-  copper: '#C75D24',
-  copper85: 'rgba(199, 93, 36, 0.85)',
-  copper70: 'rgba(199, 93, 36, 0.70)',
+  copper: '#A64B29',
+  copper85: 'rgba(166, 75, 41, 0.85)',
+  copper70: 'rgba(166, 75, 41, 0.70)',
 } as const;

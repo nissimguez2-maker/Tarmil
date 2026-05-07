@@ -20,9 +20,9 @@
   --cocoa-08: #35281814;
 
   /* vibrant accent — never below 70% opacity */
-  --copper: #c75d24;
-  --copper-85: #c75d24d9;
-  --copper-70: #c75d24b3;
+  --copper: #a64b29;
+  --copper-85: #a64b29d9;
+  --copper-70: #a64b29b3;
 
   /* device frame surface (page background when iPhone frame is shown) */
   --page-bg: var(--cocoa-15);
