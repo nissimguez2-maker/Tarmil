@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import clsx from 'clsx';
-import { Plus, Trash2, X } from 'lucide-react';
+import { Pencil, Plus, Trash2, X } from 'lucide-react';
 import { Screen } from '../../components/Screen';
 import { TopBar } from '../../components/TopBar';
 import { Button } from '../../components/Button';
@@ -76,6 +76,7 @@ export function ExpensesScreen() {
   );
   const [range, setRange] = useState<DateRange>('month');
   const [adding, setAdding] = useState(false);
+  const [editingId, setEditingId] = useState<string | null>(null);
   const [confirmDelete, setConfirmDelete] =
     useState<PersonalExpense | null>(null);
 
@@ -118,6 +119,19 @@ export function ExpensesScreen() {
     setAdding(false);
   };
 
+  const updateExpense = (id: string, patch: Omit<PersonalExpense, 'id'>) => {
+    setExpenses((cur) =>
+      cur.map((e) =>
+        e.id === id
+          ? // Preserve sourceBalanceId — that link to the Balance tool
+            // shouldn't change when the user edits a free-form field.
+            { ...patch, id, sourceBalanceId: e.sourceBalanceId }
+          : e,
+      ),
+    );
+    setEditingId(null);
+  };
+
   const deleteExpense = (id: string) => {
     setExpenses((cur) => cur.filter((e) => e.id !== id));
   };
@@ -139,14 +153,18 @@ export function ExpensesScreen() {
         />
 
         {adding ? (
-          <AddExpenseForm
-            onSave={addExpense}
+          <ExpenseForm
+            mode="add"
+            onSave={(e) => addExpense(e)}
             onCancel={() => setAdding(false)}
           />
         ) : (
           <Button
             variant="primary"
-            onClick={() => setAdding(true)}
+            onClick={() => {
+              setAdding(true);
+              setEditingId(null);
+            }}
             fullWidth
           >
             <Plus className="h-4 w-4" aria-hidden />
@@ -166,13 +184,28 @@ export function ExpensesScreen() {
                   {formatDateChip(day.date)}
                 </span>
                 <ul className="flex flex-col rounded-md border border-rope bg-ivory">
-                  {day.entries.map((exp) => (
-                    <ExpenseRow
-                      key={exp.id}
-                      expense={exp}
-                      onDelete={() => setConfirmDelete(exp)}
-                    />
-                  ))}
+                  {day.entries.map((exp) =>
+                    editingId === exp.id ? (
+                      <li key={exp.id} className="p-sm">
+                        <ExpenseForm
+                          mode="edit"
+                          initial={exp}
+                          onSave={(patch) => updateExpense(exp.id, patch)}
+                          onCancel={() => setEditingId(null)}
+                        />
+                      </li>
+                    ) : (
+                      <ExpenseRow
+                        key={exp.id}
+                        expense={exp}
+                        onEdit={() => {
+                          setEditingId(exp.id);
+                          setAdding(false);
+                        }}
+                        onDelete={() => setConfirmDelete(exp)}
+                      />
+                    ),
+                  )}
                 </ul>
               </div>
             ))}
@@ -311,12 +344,15 @@ function SummaryCard({
 
 function ExpenseRow({
   expense,
+  onEdit,
   onDelete,
 }: {
   expense: PersonalExpense;
+  onEdit: () => void;
   onDelete: () => void;
 }) {
   const Icon = CATEGORY_ICONS[expense.category];
+  const label = expense.note ?? CATEGORY_LABELS[expense.category];
   return (
     <li className="flex items-start gap-sm border-b border-cocoa-08 p-md last:border-b-0">
       <span
@@ -327,9 +363,7 @@ function ExpenseRow({
       </span>
       <div className="flex flex-1 flex-col gap-1">
         <div className="flex items-baseline gap-2">
-          <span className="text-body text-cocoa">
-            {expense.note ?? CATEGORY_LABELS[expense.category]}
-          </span>
+          <span className="text-body text-cocoa">{label}</span>
           {expense.note && (
             <span className="text-small text-cocoa-55">
               {CATEGORY_LABELS[expense.category]}
@@ -347,32 +381,59 @@ function ExpenseRow({
           {formatAmount(expense.amount, expense.amount % 1 === 0 ? 0 : 2)}{' '}
           <span className="ltr text-cocoa-70">{expense.currency}</span>
         </span>
-        <button
-          type="button"
-          onClick={onDelete}
-          aria-label={`מחק ${expense.note ?? CATEGORY_LABELS[expense.category]}`}
-          className="inline-flex h-9 w-9 items-center justify-center rounded-full text-cocoa-55 hover:bg-cocoa-08 hover:text-cocoa active:bg-cocoa-15"
-        >
-          <Trash2 className="h-4 w-4" strokeWidth={1.5} aria-hidden />
-        </button>
+        <div className="flex items-center gap-1">
+          {/* Edit is disabled for entries that mirror a Balance expense —
+            * those should be edited from the Balance tool so the linked
+            * pair stays consistent. */}
+          {!expense.sourceBalanceId && (
+            <button
+              type="button"
+              onClick={onEdit}
+              aria-label={`ערוך ${label}`}
+              className="inline-flex h-9 w-9 items-center justify-center rounded-full text-cocoa-55 hover:bg-cocoa-08 hover:text-cocoa active:bg-cocoa-15"
+            >
+              <Pencil className="h-4 w-4" strokeWidth={1.5} aria-hidden />
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={onDelete}
+            aria-label={`מחק ${label}`}
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full text-cocoa-55 hover:bg-cocoa-08 hover:text-cocoa active:bg-cocoa-15"
+          >
+            <Trash2 className="h-4 w-4" strokeWidth={1.5} aria-hidden />
+          </button>
+        </div>
       </div>
     </li>
   );
 }
 
-function AddExpenseForm({
+function ExpenseForm({
+  mode,
+  initial,
   onSave,
   onCancel,
 }: {
+  mode: 'add' | 'edit';
+  initial?: PersonalExpense;
   onSave: (e: Omit<PersonalExpense, 'id'>) => void;
   onCancel: () => void;
 }) {
   const today = new Date().toISOString().slice(0, 10);
-  const [date, setDate] = useState(today);
-  const [amount, setAmount] = useState('');
-  const [currency, setCurrency] = useState<CurrencyCode>('BRL');
-  const [category, setCategory] = useState<ExpenseCategory>('food');
-  const [note, setNote] = useState('');
+  const [date, setDate] = useState(initial?.date ?? today);
+  const [amount, setAmount] = useState(
+    initial ? String(initial.amount) : '',
+  );
+  const [currency, setCurrency] = useState<CurrencyCode>(
+    initial?.currency ?? 'BRL',
+  );
+  const [category, setCategory] = useState<ExpenseCategory>(
+    initial?.category ?? 'food',
+  );
+  const [note, setNote] = useState(initial?.note ?? '');
+  const titleText = mode === 'edit' ? 'עריכת הוצאה' : 'הוצאה חדשה';
+  const saveLabel = mode === 'edit' ? 'שמור שינויים' : 'שמור';
 
   const amountNum = Number(amount);
   const valid = !Number.isNaN(amountNum) && amountNum > 0;
@@ -393,7 +454,7 @@ function AddExpenseForm({
       {/* Header — title + close. */}
       <div className="flex items-center justify-between">
         <span className="font-serif text-lede leading-tight text-cocoa">
-          הוצאה חדשה
+          {titleText}
         </span>
         <button
           type="button"
@@ -479,7 +540,7 @@ function AddExpenseForm({
           ביטול
         </Button>
         <Button variant="accent" onClick={save} fullWidth>
-          שמור
+          {saveLabel}
         </Button>
       </div>
     </div>
