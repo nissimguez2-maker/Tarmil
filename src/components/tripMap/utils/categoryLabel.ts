@@ -1,6 +1,6 @@
-import type { RioPlace, RioPlaceCategory } from '../../../data/rioPlaces';
+import type { Place, PlaceCategory } from '../../../data/places';
 
-export function categoryLabel(c: RioPlace['category']): string {
+export function categoryLabel(c: Place['category']): string {
   switch (c) {
     case 'beach':
       return 'חוף';
@@ -35,7 +35,7 @@ export type FilterId =
 
 const FILTER_TO_CATEGORIES: Record<
   Exclude<FilterId, 'picks' | 'friends'>,
-  RioPlaceCategory[]
+  PlaceCategory[]
 > = {
   hostels: ['hostel'],
   food: ['restaurant', 'cafe'],
@@ -68,7 +68,7 @@ export function filterLabel(id: FilterId): string {
 
 /** A place passes when ANY active filter matches it. Empty set = nothing matches. */
 export function placeMatchesFilters(
-  place: { category: RioPlaceCategory; tarmilPick?: boolean; friendsKnow: number },
+  place: { category: PlaceCategory; tarmilPick?: boolean; friendsKnow: number },
   active: Set<FilterId>,
 ): boolean {
   for (const id of active) {

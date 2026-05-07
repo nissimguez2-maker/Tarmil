@@ -9,9 +9,8 @@ import 'leaflet/dist/leaflet.css';
 import 'leaflet.markercluster/dist/MarkerCluster.css';
 import './TripMap.css';
 
-import { rioPlaces, type RioPlace } from '../../data/rioPlaces';
-import { globalPlaces, type GlobalPlace } from '../../data/globalPlaces';
-import { myTrip, friendOverlaps } from '../../data/myTrip';
+import type { Place } from '../../data/places';
+import type { FriendOverlap, LatLng } from '../../data/myTrip';
 import type { PlannedStop } from '../../data/plannedStops';
 import { drawTripLine } from './layers/drawTripLine';
 import { drawPlaceMarkers } from './layers/drawPlaceMarkers';
@@ -29,6 +28,10 @@ export type TripMapHandle = {
 type Props = {
   mode: 'default' | 'pick';
   activeFilters: Set<FilterId>;
+  places: Place[];
+  friendOverlaps: FriendOverlap[];
+  pastTrip: LatLng[];
+  presentLocation: LatLng;
   plannedStops: PlannedStop[];
   activeStopId?: string;
   onOpenSheet: (sheet: SheetState) => void;
@@ -36,24 +39,18 @@ type Props = {
 };
 
 /**
- * Trip map — pure controlled component. All state lives in TripScreen and
- * arrives through props. Sheets and floaters are siblings rendered by the
+ * Trip map — pure controlled component. All state and data lives in TripScreen
+ * and arrives through props. Sheets and floaters are siblings rendered by the
  * parent, not by this component.
- *
- * Two effects:
- *   - one-time map init (creates L.Map, fits initial bounds, attaches click)
- *   - layer-redraw on [mode, activeFilters, plannedStops, activeStopId]
- *     (clears layers and re-runs the pure draw functions)
- *
- * Click handlers reach the parent through a ref so the redraw effect doesn't
- * have to depend on potentially unstable callback identities. The map's
- * center is exposed imperatively so PickOnMapBar in the parent can read it
- * on confirm.
  */
 export const TripMap = forwardRef<TripMapHandle, Props>(function TripMap(
   {
     mode,
     activeFilters,
+    places,
+    friendOverlaps,
+    pastTrip,
+    presentLocation,
     plannedStops,
     activeStopId,
     onOpenSheet,
@@ -80,7 +77,9 @@ export const TripMap = forwardRef<TripMapHandle, Props>(function TripMap(
     [],
   );
 
-  // One-time map init.
+  // One-time map init. Initial bounds use the data available at first render
+  // — subsequent stop add/remove won't auto-refit, by design (jarring on a
+  // shared real-time demo).
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
 
@@ -104,11 +103,9 @@ export const TripMap = forwardRef<TripMapHandle, Props>(function TripMap(
       },
     ).addTo(map);
 
-    // Frame past + present + planned stops in one shot — global arc.
-    // Extra top padding leaves room for the chip rail.
     const allCoords: [number, number][] = [
-      ...myTrip.past,
-      myTrip.present,
+      ...pastTrip,
+      presentLocation,
       ...plannedStops.map((s): [number, number] => [s.lat, s.lng]),
     ];
     map.fitBounds(L.latLngBounds(allCoords), {
@@ -129,8 +126,7 @@ export const TripMap = forwardRef<TripMapHandle, Props>(function TripMap(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Re-run draw layers when state changes. Marker click handlers are no-ops
-  // in pick mode so taps go through the map instead of opening sheets.
+  // Re-run draw layers when state or data changes.
   useEffect(() => {
     if (!mapRef.current) return;
     const map = mapRef.current;
@@ -141,11 +137,11 @@ export const TripMap = forwardRef<TripMapHandle, Props>(function TripMap(
     const noopFriend = () => {};
     const noopStop = () => {};
 
-    cleanups.push(drawTripLine(map, myTrip.past));
+    cleanups.push(drawTripLine(map, pastTrip));
     cleanups.push(
       drawPlannedStops(
         map,
-        myTrip.present,
+        presentLocation,
         plannedStops,
         activeStopId,
         isPick
@@ -158,10 +154,9 @@ export const TripMap = forwardRef<TripMapHandle, Props>(function TripMap(
       ),
     );
 
-    const visiblePlaces: (RioPlace | GlobalPlace)[] = [
-      ...rioPlaces,
-      ...globalPlaces,
-    ].filter((p) => placeMatchesFilters(p, activeFilters));
+    const visiblePlaces = places.filter((p) =>
+      placeMatchesFilters(p, activeFilters),
+    );
     cleanups.push(
       drawPlaceMarkers(
         map,
@@ -184,12 +179,21 @@ export const TripMap = forwardRef<TripMapHandle, Props>(function TripMap(
       ),
     );
 
-    cleanups.push(drawPresentPin(map, myTrip.present));
+    cleanups.push(drawPresentPin(map, presentLocation));
 
     return () => {
       cleanups.reverse().forEach((fn) => fn());
     };
-  }, [mode, activeFilters, plannedStops, activeStopId]);
+  }, [
+    mode,
+    activeFilters,
+    places,
+    friendOverlaps,
+    pastTrip,
+    presentLocation,
+    plannedStops,
+    activeStopId,
+  ]);
 
   return <div ref={containerRef} className="tarmil-map h-full w-full" />;
 });

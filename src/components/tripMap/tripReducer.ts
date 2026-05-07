@@ -1,7 +1,5 @@
-import type { RioPlace } from '../../data/rioPlaces';
-import type { GlobalPlace } from '../../data/globalPlaces';
+import type { Place } from '../../data/places';
 import type { FriendOverlap } from '../../data/myTrip';
-import type { PlannedStop } from '../../data/plannedStops';
 import {
   ALL_FILTERS,
   DEFAULT_ACTIVE_FILTERS,
@@ -9,7 +7,7 @@ import {
 } from './utils/categoryLabel';
 
 export type SheetState =
-  | { kind: 'place'; place: RioPlace | GlobalPlace }
+  | { kind: 'place'; place: Place | Place }
   | { kind: 'friend'; friend: FriendOverlap }
   | { kind: 'searchDest' }
   | {
@@ -19,15 +17,16 @@ export type SheetState =
     }
   | { kind: 'plannedRoute' }
   | { kind: 'plannedStop'; stopId: string }
-  | { kind: 'savePlaceToStop'; place: RioPlace | GlobalPlace }
+  | { kind: 'savePlaceToStop'; place: Place | Place }
   | { kind: 'arrivalConfirm'; stopId: string };
 
+// UI state only. Persisted data (planned_stops) lives in Supabase and is
+// fetched by SupabaseDataProvider; mutators on that hook handle add/edit/
+// remove. This reducer covers only ephemeral session state.
 export type TripState = {
   mode: 'default' | 'pick';
   activeFilters: Set<FilterId>;
-  plannedStops: PlannedStop[];
   sheet: SheetState | null;
-  /** Pre-filled name when entering pick mode from a search row. */
   pickPrefillName?: string;
   arrivalDismissed: boolean;
 };
@@ -40,16 +39,12 @@ export type TripAction =
   | { type: 'START_PICK'; nameHe?: string }
   | { type: 'CANCEL_PICK' }
   | { type: 'CONFIRM_PICK'; latlng: [number, number] }
-  | { type: 'SAVE_STOP'; stop: PlannedStop }
-  | { type: 'REMOVE_STOP'; stopId: string }
-  | { type: 'SAVE_PLACE_TO_STOP'; placeId: string; stopId: string }
   | { type: 'DISMISS_ARRIVAL' };
 
-export function makeInitialTripState(stops: PlannedStop[]): TripState {
+export function makeInitialTripState(): TripState {
   return {
     mode: 'default',
     activeFilters: new Set(DEFAULT_ACTIVE_FILTERS),
-    plannedStops: stops,
     sheet: null,
     arrivalDismissed: false,
   };
@@ -91,29 +86,6 @@ export function tripReducer(state: TripState, action: TripAction): TripState {
           },
         },
       };
-    case 'SAVE_STOP': {
-      const idx = state.plannedStops.findIndex((s) => s.id === action.stop.id);
-      const next = [...state.plannedStops];
-      if (idx >= 0) next[idx] = action.stop;
-      else next.push(action.stop);
-      next.sort((a, b) => a.arrivalDate.localeCompare(b.arrivalDate));
-      return { ...state, plannedStops: next, sheet: null };
-    }
-    case 'REMOVE_STOP':
-      return {
-        ...state,
-        plannedStops: state.plannedStops.filter((s) => s.id !== action.stopId),
-        sheet: null,
-      };
-    case 'SAVE_PLACE_TO_STOP': {
-      const next = state.plannedStops.map((s) => {
-        if (s.id !== action.stopId) return s;
-        const existing = s.savedPlaceIds ?? [];
-        if (existing.includes(action.placeId)) return s;
-        return { ...s, savedPlaceIds: [...existing, action.placeId] };
-      });
-      return { ...state, plannedStops: next, sheet: null };
-    }
     case 'DISMISS_ARRIVAL':
       return { ...state, sheet: null, arrivalDismissed: true };
   }

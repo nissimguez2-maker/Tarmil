@@ -15,6 +15,7 @@ This is the **foundation** — brand tokens, RTL, fonts, iPhone frame, 4 tab rou
 
 ```bash
 npm install
+cp .env.example .env.local   # then fill in VITE_SUPABASE_URL + VITE_SUPABASE_ANON_KEY
 npm run dev      # http://localhost:5173
 npm run build    # → dist/
 npm run preview  # serves dist/ at http://localhost:4173
@@ -25,6 +26,16 @@ Open in two browser shapes to see both modes:
 
 - A **desktop window** ≥768px wide → iPhone frame appears.
 - **DevTools → device preset → iPhone 15 Pro** → full-bleed mobile view.
+
+### Supabase
+
+Backed by a Supabase project (`tarmil-mockup`, PolyGuez org, `eu-central-1`). Values for `.env.local` come from **Project Settings → API** in the dashboard. The anon key is safe in the browser when RLS is on; never commit `.env.local` (it's gitignored). For Netlify, add the same two vars under **Site settings → Environment variables**.
+
+**Schema** lives in `supabase/migrations/` (4 tables: `places`, `friend_overlaps`, `trip_waypoints`, `planned_stops`). RLS is on everywhere: `anon` reads everything, `anon` has full CRUD on `planned_stops` only.
+
+**Seed**: edit the arrays in `src/data/*.ts`, then re-run `npx tsx --env-file=.env.local scripts/seed-supabase.ts`. Idempotent (upsert).
+
+**Demo model**: shared global state. Every viewer sees the same `planned_stops`, edits broadcast in real time via Supabase Realtime. Between investor demos, hit the **Reset demo state** button on the Profile screen to restore the canonical 4-stop seed (RPC: `reset_demo_state`).
 
 ---
 

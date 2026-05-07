@@ -1,8 +1,10 @@
+import { useState } from 'react';
 import { Screen } from '../../components/Screen';
 import { TopBar } from '../../components/TopBar';
 import { SectionLabel } from '../../components/SectionLabel';
 import { Button } from '../../components/Button';
-import { Settings, ChevronLeft } from 'lucide-react';
+import { Settings, ChevronLeft, RotateCcw } from 'lucide-react';
+import { useSupabaseData } from '../../lib/SupabaseDataProvider';
 
 const SETTINGS = [
   { label: 'שפה', value: 'עברית' },
@@ -18,6 +20,23 @@ const SETTINGS = [
  * under a gear icon, language/notifications/privacy controls, off-grid toggle.
  */
 export function ProfileScreen() {
+  const { resetDemo } = useSupabaseData();
+  const [resetting, setResetting] = useState(false);
+  const [resetMessage, setResetMessage] = useState<string | null>(null);
+
+  const handleReset = async () => {
+    setResetting(true);
+    setResetMessage(null);
+    try {
+      await resetDemo();
+      setResetMessage('מצב ההדגמה אופס.');
+    } catch (e) {
+      setResetMessage(e instanceof Error ? e.message : 'נכשל לאפס.');
+    } finally {
+      setResetting(false);
+    }
+  };
+
   return (
     <Screen>
       <TopBar
@@ -66,6 +85,24 @@ export function ProfileScreen() {
             </li>
           ))}
         </ul>
+
+        <SectionLabel number="02" label="Demo controls." />
+        <div className="flex flex-col gap-sm rounded-md border border-cocoa-15 bg-sand p-md">
+          <p className="text-[10pt] text-cocoa-70">
+            מאפס את היעדים המתוכננים למצב הדגמה (4 ערים: בוזיוס, סאו פאולו, ז׳רי, בואנוס איירס). שימוש בין הדגמות למשקיעים.
+          </p>
+          <Button
+            variant="ghost"
+            onClick={handleReset}
+            disabled={resetting}
+          >
+            <RotateCcw className="h-4 w-4" aria-hidden />
+            {resetting ? 'מאפס…' : 'אפס מצב הדגמה'}
+          </Button>
+          {resetMessage && (
+            <p className="text-[10pt] text-cocoa-55">{resetMessage}</p>
+          )}
+        </div>
 
         <Button variant="ghost" fullWidth>
           התנתקות

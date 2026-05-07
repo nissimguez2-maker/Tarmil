@@ -1,11 +1,10 @@
+import type { Place } from '../../../data/places';
 import { X } from 'lucide-react';
-import type { RioPlace } from '../../../data/rioPlaces';
-import type { GlobalPlace } from '../../../data/globalPlaces';
 import type { PlannedStop } from '../../../data/plannedStops';
 import { formatDateRange } from '../utils/formatDateRange';
 
 type Props = {
-  place: RioPlace | GlobalPlace;
+  place: Place | Place;
   stops: PlannedStop[];
   onSave: (stopId: string) => void;
   onClose: () => void;

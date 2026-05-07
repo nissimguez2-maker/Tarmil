@@ -5,23 +5,21 @@ import { TopBar } from '../../components/TopBar';
 import { SectionLabel } from '../../components/SectionLabel';
 import { Button } from '../../components/Button';
 import { Dunes } from '../../components/Dunes';
-import { getPlaceById } from '../../data/rioPlaces';
+import { useSupabaseData } from '../../lib/SupabaseDataProvider';
+import { LoadingPanel, ErrorPanel } from '../../components/DataState';
+import type { PlaceCategory } from '../../data/places';
 
 /**
  * Place detail — the drill-down view for a single place from the Trip map.
- *
- * Layout:
- *  - TopBar with back chevron and the place's Hebrew name
- *  - Hero strip with category, Tarmil rating, friends-who-know
- *  - Description in Hebrew
- *  - Mock review excerpts
- *  - Primary "directions" CTA → would deep-link to Waze / Apple Maps / Google
- *    Maps in the real app (Technical Brief §Navigation: action sheet)
- *  - Dunes signature at the foot
+ * Looks up across both Rio and global places by id.
  */
 export function PlaceScreen() {
   const { id } = useParams<{ id: string }>();
-  const place = id ? getPlaceById(id) : undefined;
+  const { data, loading, error } = useSupabaseData();
+  if (loading) return <LoadingPanel />;
+  if (error || !data) return <ErrorPanel error={error} />;
+
+  const place = id ? data.places.find((p) => p.id === id) : undefined;
 
   if (!place) {
     return <Navigate to="/trip" replace />;
@@ -29,10 +27,13 @@ export function PlaceScreen() {
 
   return (
     <Screen>
-      <TopBar back title={place.hebrewName} eyebrow={categoryLabel(place.category)} />
+      <TopBar
+        back
+        title={place.hebrewName}
+        eyebrow={categoryLabel(place.category)}
+      />
 
       <div className="flex flex-col gap-lg p-md pb-xl">
-        {/* hero strip */}
         <div className="flex flex-col gap-sm rounded-md border border-rope bg-sand p-md">
           <div className="flex items-baseline justify-between gap-sm">
             <h1 className="font-serif text-sub leading-tight">{place.hebrewName}</h1>
@@ -171,13 +172,7 @@ function ReviewCard({
   );
 }
 
-function categoryLabel(
-  c: ReturnType<typeof getPlaceById> extends infer P
-    ? P extends { category: infer C }
-      ? C
-      : never
-    : never,
-): string {
+function categoryLabel(c: PlaceCategory): string {
   switch (c) {
     case 'beach':
       return 'חוף';

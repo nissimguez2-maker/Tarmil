@@ -1,19 +1,18 @@
 /**
- * Global curated places — used for planned destinations outside Rio.
- * Schema mirrors RioPlace with an added destinationId pointing into
- * plannedStops.ts.
+ * Curated places outside the user's current city — for planned destinations.
  *
- * Coordinates verified against Google Maps. Hebrew copy in the natural
- * voice of a 22-year-old post-army backpacker (sentence cap ~14 words).
+ * SEED ONLY. Runtime data is read from the `places` table in Supabase. This
+ * array feeds `scripts/seed-supabase.ts`; nothing in `src/` imports it at
+ * runtime.
+ *
+ * Each entry's `destinationId` points to a `planned_stops.id`. Coordinates
+ * verified against Google Maps. Kept as a separate file from rioPlaces.ts
+ * for curator convenience — runtime treats them as one unified `places` set.
  */
 
-import type { RioPlace } from './rioPlaces';
+import type { Place } from './places';
 
-export type GlobalPlace = RioPlace & {
-  destinationId: string;
-};
-
-export const globalPlaces: GlobalPlace[] = [
+export const globalPlaces: Place[] = [
   // ─── Búzios ─────────────────────────────────────────────────────────
   {
     id: 'buzios-ferradura',
@@ -31,7 +30,7 @@ export const globalPlaces: GlobalPlace[] = [
     tarmilPick: true,
   },
   {
-    id: 'buzios-geriba',
+    id: 'buzios-geriba-hostel',
     destinationId: 'buzios',
     hebrewName: 'Geribá Beach Hostel',
     englishName: 'Geribá Beach Hostel',
@@ -1224,7 +1223,3 @@ export const globalPlaces: GlobalPlace[] = [
     friendsKnow: 2,
   },
 ];
-
-export function getPlacesByDestinationId(destinationId: string): GlobalPlace[] {
-  return globalPlaces.filter((p) => p.destinationId === destinationId);
-}

@@ -1,6 +1,6 @@
 import L from 'leaflet';
 import 'leaflet.markercluster';
-import type { RioPlace } from '../../../data/rioPlaces';
+import type { Place } from '../../../data/places';
 
 /**
  * Clustered place markers. Tapping a marker invokes onClickPlace.
@@ -10,8 +10,8 @@ import type { RioPlace } from '../../../data/rioPlaces';
  */
 export function drawPlaceMarkers(
   map: L.Map,
-  places: RioPlace[],
-  onClickPlace: (place: RioPlace) => void,
+  places: Place[],
+  onClickPlace: (place: Place) => void,
 ): () => void {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const clusterGroup = (L as any).markerClusterGroup({

@@ -2,16 +2,21 @@ import clsx from 'clsx';
 import { Screen } from '../../components/Screen';
 import { TopBar } from '../../components/TopBar';
 import { SectionLabel } from '../../components/SectionLabel';
-import { friendOverlaps } from '../../data/myTrip';
 import { formatDateRange } from '../../components/tripMap/utils/formatDateRange';
+import { useSupabaseData } from '../../lib/SupabaseDataProvider';
+import { LoadingPanel, ErrorPanel } from '../../components/DataState';
 
 /**
- * Friends tab — fed by the same `friendOverlaps` array the trip map uses.
+ * Friends tab — fed by the same `friendOverlaps` table the trip map uses.
  * The list reflects every friend whose declared trip touches the user's:
  * present-status friends are tagged "איתך כאן", future-status friends show
  * the city + exact overlap dates.
  */
 export function FriendsScreen() {
+  const { data, loading, error } = useSupabaseData();
+  if (loading) return <LoadingPanel />;
+  if (error || !data) return <ErrorPanel error={error} />;
+
   return (
     <Screen>
       <TopBar eyebrow="Tarmil" title="חברים" />
@@ -25,7 +30,7 @@ export function FriendsScreen() {
         </p>
 
         <ul className="flex flex-col gap-sm">
-          {friendOverlaps.map((friend) => {
+          {data.friendOverlaps.map((friend) => {
             const isPresent = friend.status === 'present';
             const dates =
               friend.overlapStart && friend.overlapEnd

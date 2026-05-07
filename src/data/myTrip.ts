@@ -1,6 +1,12 @@
 /**
  * The user's trip — past line, current location, and the friends they overlap with.
  *
+ * SEED ONLY. Runtime data is read from `trip_waypoints` (past + present) and
+ * `friend_overlaps` in Supabase via SupabaseDataProvider. The arrays below
+ * feed `scripts/seed-supabase.ts`; nothing in `src/` imports them at runtime.
+ * The `zones` / `globalZones` constants stay client-side as map geometry —
+ * they're not user data, they're centroid coordinates the seeds reference.
+ *
  * Per Product Brief §"A note on locations":
  *   "Resolution is capped at the city, always. Never street-level.
  *    The system cannot see further than that, by design and by architecture."
@@ -13,9 +19,6 @@
  *  - Friend overlap bubbles are at NEIGHBORHOOD/TOWN/CITY centroids — never at
  *    specific bars, beaches, or hostels. A soft halo around each bubble in
  *    TripMap.css visually communicates "approximately in this area."
- *
- * The user's declared future destinations live in plannedStops.ts now —
- * those are full city/region planning units with exact dates.
  */
 
 export type LatLng = [number, number];
