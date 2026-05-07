@@ -15,6 +15,7 @@ This is the **foundation** — brand tokens, RTL, fonts, iPhone frame, 4 tab rou
 
 ```bash
 npm install
+cp .env.example .env.local   # then fill in VITE_SUPABASE_URL + VITE_SUPABASE_ANON_KEY
 npm run dev      # http://localhost:5173
 npm run build    # → dist/
 npm run preview  # serves dist/ at http://localhost:4173
@@ -25,6 +26,10 @@ Open in two browser shapes to see both modes:
 
 - A **desktop window** ≥768px wide → iPhone frame appears.
 - **DevTools → device preset → iPhone 15 Pro** → full-bleed mobile view.
+
+### Supabase
+
+Backed by a Supabase project in the PolyGuez org (`eu-central-1`). The client singleton lives at `src/lib/supabase.ts`. Values for `.env.local` come from **Project Settings → API** in the Supabase dashboard. The anon key is safe in the browser when RLS is on; never commit `.env.local` (it's gitignored). For Netlify, add the same two vars under **Site settings → Environment variables**.
 
 ---
 

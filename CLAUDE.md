@@ -12,6 +12,7 @@ A Hebrew-RTL click-through mockup of the Tarmil mobile app, served as a static S
 - Tailwind CSS **3.4+** (required for native logical-property utilities).
 - React Router 6 with a single `AppLayout` route.
 - `clsx` for class composition. `lucide-react` for icons.
+- Supabase via `@supabase/supabase-js` — client singleton at `src/lib/supabase.ts`. Reads `VITE_SUPABASE_URL` + `VITE_SUPABASE_ANON_KEY` from `.env.local` (see `.env.example`). Project lives in the PolyGuez org, region `eu-central-1`.
 - No state management library. No animation library. No i18n framework. No tests yet.
 
 ## Hard rules — do not violate without asking
@@ -85,7 +86,7 @@ If a task touches any of these, point it out and ask the founder to escalate to 
 
 ## Deferred until later PRs
 
-- Real authentication, Supabase, any DB.
+- Real authentication. Supabase client is wired (see Stack) but no schema or DB-backed screens yet — all data still lives in `src/data/`.
 - Real translation / OCR / Google Maps / Mapbox.
 - `react-i18next` — Hebrew-only mockup, hardcode strings.
 - Animation libraries.
