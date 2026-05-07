@@ -4,6 +4,12 @@
   command = "npm run build"
   publish = "dist"
 
+# Pin Node so the build env stays consistent with local. Without this,
+# Netlify's default Node version (currently 18) drifts and tsc-b can disagree
+# with a Node 22 local build over lib defaults.
+[build.environment]
+  NODE_VERSION = "22.22.2"
+
 # SPA fallback — every path serves index.html so client-side routes work.
 [[redirects]]
   from = "/*"
