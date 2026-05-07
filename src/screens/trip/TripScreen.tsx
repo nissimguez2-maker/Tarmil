@@ -24,44 +24,49 @@ import {
   tripReducer,
   makeInitialTripState,
 } from '../../components/tripMap/tripReducer';
-import {
-  plannedStops as seedStops,
-  getPlannedStopById,
-  type PlannedStop,
-} from '../../data/plannedStops';
-import { friendOverlaps } from '../../data/myTrip';
-import { rioPlaces } from '../../data/rioPlaces';
+import type { PlannedStop } from '../../data/plannedStops';
 import { ALL_FILTERS } from '../../components/tripMap/utils/categoryLabel';
+import { useSupabaseData } from '../../lib/SupabaseDataProvider';
+import { LoadingPanel, ErrorPanel } from '../../components/DataState';
 
 /**
  * Trip tab — the app's hero.
  *
- * Owns map state via useReducer; the map and floaters (filter rail, travel
- * moment card, FAB, pick UI) are siblings. The bottom sheet is a single
- * overlay whose content swaps by sheet.kind. Floaters hide whenever a sheet
- * is open or the map is in pick mode.
- *
- * Place taps from inside PlannedStopSheet navigate to /place/:id; the trip
- * sheet state is lost on that navigation (mockup limitation).
+ * Owns ephemeral UI state via useReducer; planned stops + reference data come
+ * from SupabaseDataProvider. Mutations (add/edit/remove stop, save place to
+ * stop) are async hook calls; the reducer handles only sheet open/close,
+ * filters, and pick mode.
  */
 export function TripScreen() {
+  const {
+    data,
+    loading,
+    error,
+    saveStop,
+    removeStop,
+    savePlaceToStop,
+  } = useSupabaseData();
   const [state, dispatch] = useReducer(tripReducer, undefined, () =>
-    makeInitialTripState(seedStops),
+    makeInitialTripState(),
   );
   const navigate = useNavigate();
   const tripMapRef = useRef<TripMapHandle>(null);
 
   const presentFriendCount = useMemo(
-    () => friendOverlaps.filter((f) => f.status === 'present').length,
-    [],
+    () =>
+      data?.friendOverlaps.filter((f) => f.status === 'present').length ?? 0,
+    [data],
   );
   const picksNearbyCount = useMemo(
-    () => rioPlaces.filter((p) => p.tarmilPick).length,
-    [],
+    () => data?.rioPlaces.filter((p) => p.tarmilPick).length ?? 0,
+    [data],
   );
 
+  if (loading) return <LoadingPanel />;
+  if (error || !data) return <ErrorPanel error={error} />;
+
   const sheet = state.sheet;
-  const nextStop = state.plannedStops[0];
+  const nextStop = data.plannedStops[0];
   const floatersVisible = sheet === null && state.mode === 'default';
   const isTallSheet = sheet?.kind === 'plannedStop';
 
@@ -90,10 +95,38 @@ export function TripScreen() {
   const openSearch = () =>
     dispatch({ type: 'OPEN_SHEET', sheet: { kind: 'searchDest' } });
 
-  // Resolve the live stop from state.plannedStops so the planned-stop sheet
-  // re-renders when the user edits dates or saves a place to it.
   const resolveStop = (id: string): PlannedStop | undefined =>
-    state.plannedStops.find((s) => s.id === id) ?? getPlannedStopById(id);
+    data.plannedStops.find((s) => s.id === id);
+
+  const handleSaveStop = async (stop: PlannedStop) => {
+    try {
+      await saveStop(stop);
+    } catch (e) {
+      console.error('Failed to save stop:', e);
+    } finally {
+      dispatch({ type: 'CLOSE_SHEET' });
+    }
+  };
+
+  const handleRemoveStop = async (stopId: string) => {
+    try {
+      await removeStop(stopId);
+    } catch (e) {
+      console.error('Failed to remove stop:', e);
+    } finally {
+      dispatch({ type: 'CLOSE_SHEET' });
+    }
+  };
+
+  const handleSavePlaceToStop = async (placeId: string, stopId: string) => {
+    try {
+      await savePlaceToStop(placeId, stopId);
+    } catch (e) {
+      console.error('Failed to save place to stop:', e);
+    } finally {
+      dispatch({ type: 'CLOSE_SHEET' });
+    }
+  };
 
   return (
     <Screen noScroll>
@@ -104,7 +137,12 @@ export function TripScreen() {
             ref={tripMapRef}
             mode={state.mode}
             activeFilters={state.activeFilters}
-            plannedStops={state.plannedStops}
+            rioPlaces={data.rioPlaces}
+            globalPlaces={data.globalPlaces}
+            friendOverlaps={data.friendOverlaps}
+            pastTrip={data.myTrip.past}
+            presentLocation={data.myTrip.present}
+            plannedStops={data.plannedStops}
             activeStopId={
               sheet?.kind === 'plannedStop' ? sheet.stopId : undefined
             }
@@ -159,7 +197,7 @@ export function TripScreen() {
                 onClose={() => dispatch({ type: 'CLOSE_SHEET' })}
                 onOpen={() => navigate(`/place/${sheet.place.id}`)}
                 onSaveToStop={
-                  state.plannedStops.length > 0
+                  data.plannedStops.length > 0
                     ? () =>
                         dispatch({
                           type: 'OPEN_SHEET',
@@ -195,13 +233,13 @@ export function TripScreen() {
                     ? resolveStop(sheet.editingStopId)
                     : undefined
                 }
-                onSave={(stop) => dispatch({ type: 'SAVE_STOP', stop })}
+                onSave={handleSaveStop}
                 onClose={() => dispatch({ type: 'CLOSE_SHEET' })}
               />
             )}
             {sheet?.kind === 'plannedRoute' && (
               <PlannedRouteSheet
-                stops={state.plannedStops}
+                stops={data.plannedStops}
                 onPickStop={openPlannedStop}
                 onAdd={openSearch}
                 onClose={() => dispatch({ type: 'CLOSE_SHEET' })}
@@ -211,15 +249,22 @@ export function TripScreen() {
               (() => {
                 const stop = resolveStop(sheet.stopId);
                 if (!stop) return null;
+                const stopPlaces = data.globalPlaces.filter(
+                  (p) => p.destinationId === stop.id,
+                );
+                const overlapIds = new Set(stop.friendOverlapIds ?? []);
+                const stopOverlaps = data.friendOverlaps.filter((f) =>
+                  overlapIds.has(f.id),
+                );
                 return (
                   <PlannedStopSheet
                     stop={stop}
+                    places={stopPlaces}
+                    overlaps={stopOverlaps}
                     onClose={() => dispatch({ type: 'CLOSE_SHEET' })}
                     onBack={openPlannedRoute}
                     onEdit={() => openEditStop(stop)}
-                    onRemove={() =>
-                      dispatch({ type: 'REMOVE_STOP', stopId: stop.id })
-                    }
+                    onRemove={() => handleRemoveStop(stop.id)}
                     onOpenPlace={(placeId) => navigate(`/place/${placeId}`)}
                     onMarkArrived={
                       state.arrivalDismissed
@@ -239,13 +284,9 @@ export function TripScreen() {
             {sheet?.kind === 'savePlaceToStop' && (
               <SavePlaceToStopSheet
                 place={sheet.place}
-                stops={state.plannedStops}
+                stops={data.plannedStops}
                 onSave={(stopId) =>
-                  dispatch({
-                    type: 'SAVE_PLACE_TO_STOP',
-                    placeId: sheet.place.id,
-                    stopId,
-                  })
+                  handleSavePlaceToStop(sheet.place.id, stopId)
                 }
                 onClose={() => dispatch({ type: 'CLOSE_SHEET' })}
               />

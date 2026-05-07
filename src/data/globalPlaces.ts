@@ -1,10 +1,12 @@
 /**
  * Global curated places — used for planned destinations outside Rio.
- * Schema mirrors RioPlace with an added destinationId pointing into
- * plannedStops.ts.
  *
- * Coordinates verified against Google Maps. Hebrew copy in the natural
- * voice of a 22-year-old post-army backpacker (sentence cap ~14 words).
+ * SEED ONLY. Runtime data is read from the `places` table in Supabase
+ * (region = 'global'). The array below is the source of truth for
+ * `scripts/seed-supabase.ts`; nothing in `src/` imports it at runtime.
+ *
+ * Schema mirrors RioPlace with an added destinationId pointing into
+ * plannedStops.ts. Coordinates verified against Google Maps.
  */
 
 import type { RioPlace } from './rioPlaces';
@@ -31,7 +33,7 @@ export const globalPlaces: GlobalPlace[] = [
     tarmilPick: true,
   },
   {
-    id: 'buzios-geriba',
+    id: 'buzios-geriba-hostel',
     destinationId: 'buzios',
     hebrewName: 'Geribá Beach Hostel',
     englishName: 'Geribá Beach Hostel',
@@ -1224,7 +1226,3 @@ export const globalPlaces: GlobalPlace[] = [
     friendsKnow: 2,
   },
 ];
-
-export function getPlacesByDestinationId(destinationId: string): GlobalPlace[] {
-  return globalPlaces.filter((p) => p.destinationId === destinationId);
-}

@@ -29,7 +29,13 @@ Open in two browser shapes to see both modes:
 
 ### Supabase
 
-Backed by a Supabase project in the PolyGuez org (`eu-central-1`). The client singleton lives at `src/lib/supabase.ts`. Values for `.env.local` come from **Project Settings → API** in the Supabase dashboard. The anon key is safe in the browser when RLS is on; never commit `.env.local` (it's gitignored). For Netlify, add the same two vars under **Site settings → Environment variables**.
+Backed by a Supabase project (`tarmil-mockup`, PolyGuez org, `eu-central-1`). Values for `.env.local` come from **Project Settings → API** in the dashboard. The anon key is safe in the browser when RLS is on; never commit `.env.local` (it's gitignored). For Netlify, add the same two vars under **Site settings → Environment variables**.
+
+**Schema** lives in `supabase/migrations/` (4 tables: `places`, `friend_overlaps`, `trip_waypoints`, `planned_stops`). RLS is on everywhere: `anon` reads everything, `anon` has full CRUD on `planned_stops` only.
+
+**Seed**: edit the arrays in `src/data/*.ts`, then re-run `npx tsx --env-file=.env.local scripts/seed-supabase.ts`. Idempotent (upsert).
+
+**Demo model**: shared global state. Every viewer sees the same `planned_stops`, edits broadcast in real time via Supabase Realtime. Between investor demos, hit the **Reset demo state** button on the Profile screen to restore the canonical 4-stop seed (RPC: `reset_demo_state`).
 
 ---
 

@@ -12,7 +12,8 @@ A Hebrew-RTL click-through mockup of the Tarmil mobile app, served as a static S
 - Tailwind CSS **3.4+** (required for native logical-property utilities).
 - React Router 6 with a single `AppLayout` route.
 - `clsx` for class composition. `lucide-react` for icons.
-- Supabase via `@supabase/supabase-js` — client singleton at `src/lib/supabase.ts`. Reads `VITE_SUPABASE_URL` + `VITE_SUPABASE_ANON_KEY` from `.env.local` (see `.env.example`). Project lives in the PolyGuez org, region `eu-central-1`.
+- Supabase backend via `@supabase/supabase-js` — typed singleton at `src/lib/supabase.ts`. Schema in `supabase/migrations/`. App-wide `SupabaseDataProvider` (in `src/lib/`) wraps the router and exposes `useSupabaseData()` — the only sanctioned way to read or mutate trip data at runtime. Realtime is on for `planned_stops` so multiple viewers stay in sync during a shared demo.
+- Seed source-of-truth: `src/data/*.ts` arrays. `scripts/seed-supabase.ts` (run with `npx tsx --env-file=.env.local scripts/seed-supabase.ts`) imports them and upserts via supabase-js. Edit a TS file → re-run the seed → DB matches.
 - No state management library. No animation library. No i18n framework. No tests yet.
 
 ## Hard rules — do not violate without asking
@@ -56,6 +57,15 @@ Use `h-dvh`, `h-full`, or `min-h-dvh`. Plain `100vh` is wrong on mobile Safari (
 2. Use `<Screen>` + `<TopBar>` + base components.
 3. Add a route in `src/routes.tsx` under the layout route.
 4. For drill-downs, set `back` on `<TopBar>`.
+5. If the screen reads or mutates trip data, call `useSupabaseData()` and gate render on `loading` / `error` with `<LoadingPanel />` / `<ErrorPanel />` (in `src/components/DataState.tsx`). Don't import from `src/data/` at runtime — those arrays are seed-only now.
+
+### Add a new mutation
+
+1. Add the SQL change in a new migration file under `supabase/migrations/` (numbered after `0002`).
+2. Apply it (locally via Supabase CLI or via the Supabase MCP `apply_migration`).
+3. Regenerate types: re-run `generate_typescript_types` and overwrite `src/lib/database.types.ts`.
+4. Add a mutator method on `SupabaseDataProvider` (camelCase, async, refetches on success).
+5. Surface the mutator from `useSupabaseData()` and call it from the relevant screen.
 
 ### Style a new component
 
@@ -86,7 +96,7 @@ If a task touches any of these, point it out and ask the founder to escalate to 
 
 ## Deferred until later PRs
 
-- Real authentication. Supabase client is wired (see Stack) but no schema or DB-backed screens yet — all data still lives in `src/data/`.
+- Real authentication. The current Supabase model is shared global demo state with public anon CRUD on `planned_stops` and a `reset_demo_state()` RPC (Profile → Demo controls) to restore the seed between investor demos. Per-user auth, real signup, real privacy enforcement = future PR.
 - Real translation / OCR / Google Maps / Mapbox.
 - `react-i18next` — Hebrew-only mockup, hardcode strings.
 - Animation libraries.

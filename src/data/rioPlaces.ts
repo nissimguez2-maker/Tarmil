@@ -1,12 +1,14 @@
 /**
  * Rio de Janeiro places — curated set for the investor demo.
  *
- * Sourced from a Perplexity research pass on places Israeli backpackers
- * actually go to in the Rio metro area + Búzios. Hebrew copy in the natural
- * voice of a 22-year-old post-army backpacker (sentence cap ~14 words).
+ * SEED ONLY. Runtime data is read from the `places` table in Supabase
+ * (region = 'rio'). The `rioPlaces` array below is the source of truth for
+ * `scripts/seed-supabase.ts`; nothing in `src/` imports it at runtime.
+ * Edit here, then re-run the seed script (or update the dashboard directly).
  *
- * Coordinates verified against Google Maps. Categories drive marker styling
- * in RioMap.css.
+ * Hebrew copy in the natural voice of a 22-year-old post-army backpacker
+ * (sentence cap ~14 words). Coordinates verified against Google Maps.
+ * Categories drive marker styling in RioMap.css.
  */
 
 export type RioPlaceCategory =
@@ -197,7 +199,7 @@ export const rioPlaces: RioPlace[] = [
     friendsKnow: 2,
   },
   {
-    id: 'buzios-geriba',
+    id: 'buzios-geriba-beach',
     hebrewName: 'חוף ז׳ריבה בוזיוס',
     englishName: 'Praia de Geribá',
     category: 'beach',
@@ -799,7 +801,3 @@ export const rioPlaces: RioPlace[] = [
     friendsKnow: 4,
   },
 ];
-
-export function getPlaceById(id: string): RioPlace | undefined {
-  return rioPlaces.find((p) => p.id === id);
-}

@@ -3,10 +3,13 @@
  * exact dates. Polarsteps-style planning grafted onto Tarmil's city-level
  * privacy model: planned stops are the user's private intent, but friends'
  * matching declarations surface as future overlaps with exact dates.
+ *
+ * SEED ONLY for the array below. Runtime data is read from the
+ * `planned_stops` table in Supabase via SupabaseDataProvider, and mutated by
+ * the hook's saveStop / removeStop / savePlaceToStop / resetDemo. The
+ * `reset_demo_state()` SQL function (see migration 0002) restores the same
+ * 4-stop seed below. Keep them in sync if you edit either side.
  */
-
-import { friendOverlaps, type FriendOverlap } from './myTrip';
-import { globalPlaces, type GlobalPlace } from './globalPlaces';
 
 export type PlannedStopPrivacy = 'private' | 'friends' | 'hidden';
 
@@ -92,17 +95,3 @@ export const plannedStops: PlannedStop[] = [
     friendOverlapIds: ['tom-buenosaires'],
   },
 ];
-
-export function getPlannedStopById(id: string): PlannedStop | undefined {
-  return plannedStops.find((stop) => stop.id === id);
-}
-
-export function getPlacesForStop(stop: PlannedStop): GlobalPlace[] {
-  return globalPlaces.filter((p) => p.destinationId === stop.id);
-}
-
-export function getFriendOverlapsForStop(stop: PlannedStop): FriendOverlap[] {
-  if (!stop.friendOverlapIds || stop.friendOverlapIds.length === 0) return [];
-  const ids = new Set(stop.friendOverlapIds);
-  return friendOverlaps.filter((f) => ids.has(f.id));
-}
