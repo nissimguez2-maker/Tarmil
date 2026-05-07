@@ -34,22 +34,29 @@ import {
   plannedStops as seedStops,
   type PlannedStop,
 } from '../../data/plannedStops';
-import { friendOverlaps } from '../../data/myTrip';
-import { rioPlaces } from '../../data/rioPlaces';
 import { useSupabaseState } from '../../hooks/useSupabaseState';
+import { useStaticData } from '../../lib/SupabaseStaticData';
 
 const PLANNED_STOPS_KEY = 'tarmil:planned_stops:v1';
+const CURRENT_DESTINATION_ID = 'rio-de-janeiro';
 
 /**
  * Trip tab — the app's hero.
  *
- * Owns map UI state via useReducer; planned stops live in Supabase via
- * useSupabaseState (drop-in replacement for usePersistentState that
- * persists to the `app_state` table and broadcasts via Realtime). All
- * add/edit/remove flows write through the network so investor demos
- * survive reload and sync live across devices.
+ * Reads static data (places, friend overlaps, trip waypoints) from Supabase
+ * via useStaticData(); planned stops are mutable user state via
+ * useSupabaseState(app_state) and broadcast over Realtime. All add/edit/
+ * remove flows write through the network so investor demos survive reload
+ * and sync live across devices.
+ *
+ * Live demo flow: pick a curated suggestion (Mendoza/Bariloche/Punta) ->
+ * the saved planned-stop's id matches `places.destination_id` rows already
+ * in Supabase, so the trip line, copper marker, ~12 places, and a friend
+ * bubble all materialise in the same render tick. Removing the stop
+ * reverses every one of those.
  */
 export function TripScreen() {
+  const { data: staticData, loading, error } = useStaticData();
   const [state, dispatch] = useReducer(tripReducer, undefined, () =>
     makeInitialTripState(),
   );
@@ -59,22 +66,25 @@ export function TripScreen() {
   );
   const navigate = useNavigate();
   const tripMapRef = useRef<TripMapHandle>(null);
+  const [filterOpen, setFilterOpen] = useState(false);
 
   const presentFriendCount = useMemo(
-    () => friendOverlaps.filter((f) => f.status === 'present').length,
-    [],
+    () =>
+      staticData?.friendOverlaps.filter((f) => f.status === 'present').length ??
+      0,
+    [staticData],
   );
   const picksNearbyCount = useMemo(
-    () => rioPlaces.filter((p) => p.tarmilPick).length,
-    [],
+    () =>
+      staticData?.places.filter(
+        (p) => p.destinationId === CURRENT_DESTINATION_ID && p.tarmilPick,
+      ).length ?? 0,
+    [staticData],
   );
 
   const sheet = state.sheet;
   const nextStop = plannedStops[0];
   const floatersVisible = sheet === null && state.mode === 'default';
-  // When the filter panel is open we hide the FAB + travel-moment card so
-  // the panel can drop down without overlapping bottom UI.
-  const [filterOpen, setFilterOpen] = useState(false);
   const isTallSheet = sheet?.kind === 'plannedStop';
 
   const handleConfirmPick = () => {
@@ -134,6 +144,35 @@ export function TripScreen() {
     dispatch({ type: 'CLOSE_SHEET' });
   };
 
+  if (loading) {
+    return (
+      <Screen>
+        <div className="flex h-full items-center justify-center p-md">
+          <span className="text-small text-cocoa-55">טוען נתונים…</span>
+        </div>
+      </Screen>
+    );
+  }
+  if (error || !staticData) {
+    return (
+      <Screen>
+        <div className="flex h-full flex-col items-center justify-center gap-md p-md">
+          <p className="font-serif text-lede text-cocoa">לא הצלחנו להתחבר.</p>
+          {error?.message && (
+            <p className="max-w-body text-small text-cocoa-55">{error.message}</p>
+          )}
+          <button
+            type="button"
+            onClick={() => window.location.reload()}
+            className="meta-caps text-cocoa-70 active:text-cocoa"
+          >
+            נסה שוב
+          </button>
+        </div>
+      </Screen>
+    );
+  }
+
   return (
     <Screen noScroll>
       <div className="flex h-full flex-col">
@@ -150,6 +189,10 @@ export function TripScreen() {
               ref={tripMapRef}
               mode={state.mode}
               activeFilters={state.activeFilters}
+              places={staticData.places}
+              friendOverlaps={staticData.friendOverlaps}
+              pastTrip={staticData.myTrip.past}
+              presentLocation={staticData.myTrip.present}
               plannedStops={plannedStops}
               activeStopId={
                 sheet?.kind === 'plannedStop' ? sheet.stopId : undefined
@@ -255,9 +298,27 @@ export function TripScreen() {
               (() => {
                 const stop = resolveStop(sheet.stopId);
                 if (!stop) return null;
+                const stopPlaces = staticData.places.filter(
+                  (p) => p.destinationId === stop.id,
+                );
+                const overlapIds = new Set(stop.friendOverlapIds ?? []);
+                const matchedById = staticData.friendOverlaps.filter((f) =>
+                  overlapIds.has(f.id),
+                );
+                const matchedByDest = staticData.friendOverlaps.filter(
+                  (f) => f.destinationId === stop.id,
+                );
+                // Use friendOverlapIds when set; otherwise fall back to
+                // destinationId-matched friends (the seed for new candidate
+                // cities sets destinationId but not the back-reference on
+                // the stop).
+                const stopOverlaps =
+                  matchedById.length > 0 ? matchedById : matchedByDest;
                 return (
                   <PlannedStopSheet
                     stop={stop}
+                    places={stopPlaces}
+                    overlaps={stopOverlaps}
                     onClose={() => dispatch({ type: 'CLOSE_SHEET' })}
                     onBack={openPlannedRoute}
                     onEdit={() => openEditStop(stop)}

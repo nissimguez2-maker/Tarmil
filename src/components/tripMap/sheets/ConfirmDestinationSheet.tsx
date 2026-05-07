@@ -9,7 +9,14 @@ import type {
 } from '../../../data/plannedStops';
 
 type Props = {
-  candidate: { nameHe: string; latlng: [number, number] };
+  candidate: {
+    nameHe: string;
+    latlng: [number, number];
+    /** When the candidate originated from a curated suggestion, this is the
+     *  canonical destination id (e.g. 'mendoza') so the saved stop matches
+     *  the rows already seeded in `places.destination_id`. */
+    idHint?: string;
+  };
   /** When set, the sheet edits an existing stop instead of creating one. */
   editingStop?: PlannedStop;
   onSave: (stop: PlannedStop) => void;
@@ -43,7 +50,7 @@ export function ConfirmDestinationSheet({
   const handleSave = () => {
     const trimmedName = name.trim() || candidate.nameHe || 'יעד חדש';
     const stop: PlannedStop = {
-      id: editingStop?.id ?? `stop-${Date.now()}`,
+      id: editingStop?.id ?? candidate.idHint ?? `stop-${Date.now()}`,
       nameHe: trimmedName,
       nameEn: editingStop?.nameEn ?? trimmedName,
       type: editingStop?.type ?? 'city',

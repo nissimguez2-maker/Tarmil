@@ -9,9 +9,11 @@ import tt from '@tomtom-international/web-sdk-maps';
 import '@tomtom-international/web-sdk-maps/dist/maps.css';
 import './TripMap.css';
 
-import { rioPlaces, type RioPlace } from '../../data/rioPlaces';
-import { globalPlaces, type GlobalPlace } from '../../data/globalPlaces';
-import { myTrip, friendOverlaps, type LatLng } from '../../data/myTrip';
+import type {
+  FriendOverlap,
+  LatLng,
+  Place,
+} from '../../data/types';
 import type { PlannedStop } from '../../data/plannedStops';
 import { drawTripLine } from './layers/drawTripLine';
 import { drawPlaceMarkers } from './layers/drawPlaceMarkers';
@@ -23,21 +25,31 @@ import type { SheetState } from './tripReducer';
 
 const TOMTOM_API_KEY = import.meta.env.VITE_TOMTOM_API_KEY;
 
+// The user's current city. Places at this destination_id are always visible
+// regardless of planned stops; future-only places are gated by what's planned.
+const CURRENT_DESTINATION_ID = 'rio-de-janeiro';
+
 export type TripMapHandle = {
-  /** Current map center as [lat, lng]. Returns null before init. */
   getCenter: () => [number, number] | null;
 };
 
 type Props = {
   mode: 'default' | 'pick';
   activeFilters: Set<FilterId>;
+  /** All places from Supabase. Filtered to current city + planned stops. */
+  places: Place[];
+  /** All friend overlaps. Future-status filtered by planned stops. */
+  friendOverlaps: FriendOverlap[];
+  /** Past trip waypoints (centroids). */
+  pastTrip: LatLng[];
+  /** Current user position. */
+  presentLocation: LatLng;
   plannedStops: PlannedStop[];
   activeStopId?: string;
   onOpenSheet: (sheet: SheetState) => void;
   onCloseSheet: () => void;
 };
 
-/** Compute LngLatBoundsLike from a list of [lat, lng] coords. */
 function boundsFromLatLngs(
   coords: LatLng[],
 ): [[number, number], [number, number]] | null {
@@ -58,25 +70,14 @@ function boundsFromLatLngs(
   ];
 }
 
-/**
- * Trip map — TomTom Maps SDK v6 backend, controlled component.
- *
- * Two effects:
- *   - one-time map init (creates `tt.map`, fits initial bounds, attaches
- *     a click-to-close handler). Sets `mapReady` after the style loads so
- *     downstream layer effects can safely call `addSource`/`addLayer`.
- *   - layer-redraw on [mapReady, mode, activeFilters, plannedStops,
- *     activeStopId] — clears layers and re-runs the pure draw functions.
- *
- * Click handlers reach the parent through a ref so the redraw effect doesn't
- * have to depend on potentially unstable callback identities. The map's
- * center is exposed imperatively so PickOnMapBar in the parent can read it
- * on confirm.
- */
 export const TripMap = forwardRef<TripMapHandle, Props>(function TripMap(
   {
     mode,
     activeFilters,
+    places,
+    friendOverlaps,
+    pastTrip,
+    presentLocation,
     plannedStops,
     activeStopId,
     onOpenSheet,
@@ -104,7 +105,6 @@ export const TripMap = forwardRef<TripMapHandle, Props>(function TripMap(
     [],
   );
 
-  // One-time map init.
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
 
@@ -116,10 +116,7 @@ export const TripMap = forwardRef<TripMapHandle, Props>(function TripMap(
       return;
     }
 
-    const initialCenter: LatLng = myTrip.present;
-    // Style is left to the SDK default — TomTom v6 builds the right URL with
-    // the API key. Passing an explicit `tomtom://...` value caused tiles to
-    // never resolve in the deployed build.
+    const initialCenter = presentLocation;
     const map = tt.map({
       key: TOMTOM_API_KEY,
       container: containerRef.current,
@@ -140,8 +137,8 @@ export const TripMap = forwardRef<TripMapHandle, Props>(function TripMap(
 
     const handleLoad = () => {
       const allCoords: LatLng[] = [
-        ...myTrip.past,
-        myTrip.present,
+        ...pastTrip,
+        presentLocation,
         ...plannedStops.map((s): LatLng => [s.lat, s.lng]),
       ];
       const bounds = boundsFromLatLngs(allCoords);
@@ -158,10 +155,6 @@ export const TripMap = forwardRef<TripMapHandle, Props>(function TripMap(
     mapRef.current = map;
 
     return () => {
-      // Defensive: TomTom v6 (Mapbox-GL 1.13 under the hood) sometimes throws
-      // during teardown if the WebGL context was lost or a tile request was
-      // mid-flight. Swallow the error so route changes never crash the React
-      // tree.
       try {
         map.off('click', handleMapClick);
         map.remove();
@@ -175,8 +168,6 @@ export const TripMap = forwardRef<TripMapHandle, Props>(function TripMap(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Re-run draw layers when state changes. Marker click handlers are no-ops
-  // in pick mode so taps go through the map instead of opening sheets.
   useEffect(() => {
     if (!mapReady || !mapRef.current) return;
     const map = mapRef.current;
@@ -187,11 +178,11 @@ export const TripMap = forwardRef<TripMapHandle, Props>(function TripMap(
     const noopFriend = () => {};
     const noopStop = () => {};
 
-    cleanups.push(drawTripLine(map, myTrip.past));
+    cleanups.push(drawTripLine(map, pastTrip));
     cleanups.push(
       drawPlannedStops(
         map,
-        myTrip.present,
+        presentLocation,
         plannedStops,
         activeStopId,
         isPick
@@ -204,10 +195,18 @@ export const TripMap = forwardRef<TripMapHandle, Props>(function TripMap(
       ),
     );
 
-    const visiblePlaces: (RioPlace | GlobalPlace)[] = [
-      ...rioPlaces,
-      ...globalPlaces,
-    ].filter((p) => placeMatchesFilters(p, activeFilters));
+    // A place is visible if it's in the user's current city OR its destination
+    // is currently in the planned route. This is what makes "stuff appears /
+    // disappears" feel live when the founder picks or removes a city in front
+    // of investors.
+    const plannedDestIds = new Set(plannedStops.map((s) => s.id));
+    const isPlaceLive = (p: Place) =>
+      p.destinationId === CURRENT_DESTINATION_ID ||
+      plannedDestIds.has(p.destinationId);
+
+    const visiblePlaces = places.filter(
+      (p) => isPlaceLive(p) && placeMatchesFilters(p, activeFilters),
+    );
     cleanups.push(
       drawPlaceMarkers(
         map,
@@ -220,10 +219,16 @@ export const TripMap = forwardRef<TripMapHandle, Props>(function TripMap(
     );
 
     if (activeFilters.has('friendBubbles')) {
+      // Present-status friends always show (they're "with you here"). Future
+      // friends only render if their destination is on the route.
+      const visibleFriends = friendOverlaps.filter((f) => {
+        if (f.status === 'present') return true;
+        return f.destinationId ? plannedDestIds.has(f.destinationId) : false;
+      });
       cleanups.push(
         drawFriendBubbles(
           map,
-          friendOverlaps,
+          visibleFriends,
           isPick
             ? noopFriend
             : (friend) =>
@@ -232,24 +237,29 @@ export const TripMap = forwardRef<TripMapHandle, Props>(function TripMap(
       );
     }
 
-    cleanups.push(drawPresentPin(map, myTrip.present));
+    cleanups.push(drawPresentPin(map, presentLocation));
 
     return () => {
-      // Each layer cleanup is isolated so one bad teardown can't take the
-      // others down — and importantly can't take the React tree down on
-      // route changes. Mapbox-GL 1.13 (under TomTom v6) sometimes throws
-      // during removeLayer / removeSource if the style is in an in-between
-      // state, e.g., an in-flight tile request canceling at the same time.
       cleanups.reverse().forEach((fn) => {
         try {
           fn();
         } catch (e) {
           // eslint-disable-next-line no-console
-          console.warn('[TripMap] layer cleanup threw:', e);
+          console.warn('[TripMap] layer cleanup threw, continuing:', e);
         }
       });
     };
-  }, [mapReady, mode, activeFilters, plannedStops, activeStopId]);
+  }, [
+    mapReady,
+    mode,
+    activeFilters,
+    places,
+    friendOverlaps,
+    pastTrip,
+    presentLocation,
+    plannedStops,
+    activeStopId,
+  ]);
 
   return <div ref={containerRef} className="tarmil-map h-full w-full" />;
 });

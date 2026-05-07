@@ -5,24 +5,31 @@ import { TopBar } from '../../components/TopBar';
 import { SectionLabel } from '../../components/SectionLabel';
 import { Button } from '../../components/Button';
 import { Dunes } from '../../components/Dunes';
-import { getPlaceById } from '../../data/rioPlaces';
+import { useStaticData } from '../../lib/SupabaseStaticData';
+import type { PlaceCategory } from '../../data/types';
 
 /**
- * Place detail — the drill-down view for a single place from the Trip map.
- *
- * Layout:
- *  - TopBar with back chevron and the place's Hebrew name
- *  - Hero strip with category, Tarmil rating, friends-who-know
- *  - Description in Hebrew
- *  - Mock review excerpts
- *  - Primary "directions" CTA → would deep-link to Waze / Apple Maps / Google
- *    Maps in the real app (Technical Brief §Navigation: action sheet)
- *  - Dunes signature at the foot
+ * Place detail — drill-down view for a single place from the Trip map.
+ * Resolves across all places (Rio + every other destination) by id; the
+ * previous getPlaceById helper only handled Rio, which broke for global ids.
  */
 export function PlaceScreen() {
   const { id } = useParams<{ id: string }>();
-  const place = id ? getPlaceById(id) : undefined;
+  const { data, loading, error } = useStaticData();
 
+  if (loading) {
+    return (
+      <Screen>
+        <div className="flex h-full items-center justify-center p-md">
+          <span className="text-small text-cocoa-55">טוען…</span>
+        </div>
+      </Screen>
+    );
+  }
+  if (error || !data) {
+    return <Navigate to="/trip" replace />;
+  }
+  const place = id ? data.places.find((p) => p.id === id) : undefined;
   if (!place) {
     return <Navigate to="/trip" replace />;
   }
@@ -32,7 +39,6 @@ export function PlaceScreen() {
       <TopBar back title={place.hebrewName} eyebrow={categoryLabel(place.category)} />
 
       <div className="flex flex-col gap-lg p-md pb-xl">
-        {/* hero strip */}
         <div className="flex flex-col gap-sm rounded-md border border-rope bg-sand p-md">
           <div className="flex items-baseline justify-between gap-sm">
             <h1 className="font-serif text-sub leading-tight">{place.hebrewName}</h1>
@@ -171,13 +177,7 @@ function ReviewCard({
   );
 }
 
-function categoryLabel(
-  c: ReturnType<typeof getPlaceById> extends infer P
-    ? P extends { category: infer C }
-      ? C
-      : never
-    : never,
-): string {
+function categoryLabel(c: PlaceCategory): string {
   switch (c) {
     case 'beach':
       return 'חוף';

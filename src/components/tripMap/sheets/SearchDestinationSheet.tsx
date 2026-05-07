@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Search, X, MapPin } from 'lucide-react';
 
 type Suggestion = {
+  /** Stable id used when this suggestion becomes a planned-stop id, so the
+   *  matching `places.destination_id` rows in Supabase light up immediately. */
   id: string;
   nameHe: string;
   nameEn: string;
@@ -10,7 +12,35 @@ type Suggestion = {
   lng: number;
 };
 
+// Demo candidates — the cities the founder picks live in front of investors.
+// Each one has a matching set of places + a friend overlap already seeded in
+// Supabase (see `supabase/migrations/0003_seed_static_data.sql`), so on save
+// the trip line extends, ~12 markers appear, and a friend bubble pops up.
 const SUGGESTIONS: Suggestion[] = [
+  {
+    id: 'mendoza',
+    nameHe: 'מנדוסה',
+    nameEn: 'Mendoza',
+    kindHe: 'יקבים · ארגנטינה',
+    lat: -32.8908,
+    lng: -68.8272,
+  },
+  {
+    id: 'bariloche',
+    nameHe: 'בריצ׳ה',
+    nameEn: 'Bariloche',
+    kindHe: 'אגמים · ארגנטינה',
+    lat: -41.1335,
+    lng: -71.3103,
+  },
+  {
+    id: 'punta-del-este',
+    nameHe: 'פונטה דל אסטה',
+    nameEn: 'Punta del Este',
+    kindHe: 'חוף · אורוגוואי',
+    lat: -34.9591,
+    lng: -54.9472,
+  },
   {
     id: 'sug-cusco',
     nameHe: 'קוסקו',
@@ -18,30 +48,6 @@ const SUGGESTIONS: Suggestion[] = [
     kindHe: 'עיר · פרו',
     lat: -13.5319,
     lng: -71.9675,
-  },
-  {
-    id: 'sug-medellin',
-    nameHe: 'מדיין',
-    nameEn: 'Medellín',
-    kindHe: 'עיר · קולומביה',
-    lat: 6.2442,
-    lng: -75.5812,
-  },
-  {
-    id: 'sug-lisbon',
-    nameHe: 'ליסבון',
-    nameEn: 'Lisbon',
-    kindHe: 'עיר · פורטוגל',
-    lat: 38.7223,
-    lng: -9.1393,
-  },
-  {
-    id: 'sug-tokyo',
-    nameHe: 'טוקיו',
-    nameEn: 'Tokyo',
-    kindHe: 'עיר · יפן',
-    lat: 35.6762,
-    lng: 139.6503,
   },
 ];
 
@@ -57,7 +63,11 @@ const RECENT: Suggestion[] = [
 ];
 
 type Props = {
-  onPickSuggestion: (sug: { nameHe: string; latlng: [number, number] }) => void;
+  onPickSuggestion: (sug: {
+    nameHe: string;
+    latlng: [number, number];
+    idHint?: string;
+  }) => void;
   onPickOnMap: () => void;
   onClose: () => void;
 };
@@ -76,6 +86,15 @@ export function SearchDestinationSheet({
           s.nameEn.toLowerCase().includes(q),
       )
     : SUGGESTIONS;
+
+  const pick = (s: Suggestion) =>
+    onPickSuggestion({
+      nameHe: s.nameHe,
+      latlng: [s.lat, s.lng],
+      // Only pre-seeded demo cities carry an idHint. The "RECENT" / generic
+      // picks fall back to the auto-generated stop id.
+      idHint: s.id.startsWith('sug-') || s.id.startsWith('rec-') ? undefined : s.id,
+    });
 
   return (
     <div className="flex max-h-[60dvh] flex-col gap-md p-md">
@@ -122,9 +141,7 @@ export function SearchDestinationSheet({
           <button
             key={s.id}
             type="button"
-            onClick={() =>
-              onPickSuggestion({ nameHe: s.nameHe, latlng: [s.lat, s.lng] })
-            }
+            onClick={() => pick(s)}
             className="flex items-center justify-between gap-sm border-t border-cocoa-08 py-sm text-start active:bg-cocoa-08"
           >
             <div className="flex flex-col">
@@ -141,9 +158,7 @@ export function SearchDestinationSheet({
               <button
                 key={s.id}
                 type="button"
-                onClick={() =>
-                  onPickSuggestion({ nameHe: s.nameHe, latlng: [s.lat, s.lng] })
-                }
+                onClick={() => pick(s)}
                 className="flex items-center justify-between gap-sm border-t border-cocoa-08 py-sm text-start active:bg-cocoa-08"
               >
                 <div className="flex flex-col">

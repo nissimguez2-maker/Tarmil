@@ -2,16 +2,39 @@ import clsx from 'clsx';
 import { Screen } from '../../components/Screen';
 import { TopBar } from '../../components/TopBar';
 import { SectionLabel } from '../../components/SectionLabel';
-import { friendOverlaps } from '../../data/myTrip';
 import { formatDateRange } from '../../components/tripMap/utils/formatDateRange';
+import { useStaticData } from '../../lib/SupabaseStaticData';
 
 /**
- * Friends tab — fed by the same `friendOverlaps` array the trip map uses.
- * The list reflects every friend whose declared trip touches the user's:
- * present-status friends are tagged "איתך כאן", future-status friends show
+ * Friends tab — fed by the same `friend_overlaps` table the trip map uses.
+ * Present-status friends are tagged "איתך כאן"; future-status friends show
  * the city + exact overlap dates.
  */
 export function FriendsScreen() {
+  const { data, loading, error } = useStaticData();
+
+  if (loading) {
+    return (
+      <Screen>
+        <div className="flex h-full items-center justify-center p-md">
+          <span className="text-small text-cocoa-55">טוען חברים…</span>
+        </div>
+      </Screen>
+    );
+  }
+  if (error || !data) {
+    return (
+      <Screen>
+        <div className="flex h-full flex-col items-center justify-center gap-md p-md">
+          <p className="font-serif text-lede text-cocoa">לא הצלחנו להתחבר.</p>
+          {error?.message && (
+            <p className="max-w-body text-small text-cocoa-55">{error.message}</p>
+          )}
+        </div>
+      </Screen>
+    );
+  }
+
   return (
     <Screen>
       <TopBar eyebrow="Tarmil" title="חברים" />
@@ -25,7 +48,7 @@ export function FriendsScreen() {
         </p>
 
         <ul className="flex flex-col gap-sm">
-          {friendOverlaps.map((friend) => {
+          {data.friendOverlaps.map((friend) => {
             const isPresent = friend.status === 'present';
             const dates =
               friend.overlapStart && friend.overlapEnd

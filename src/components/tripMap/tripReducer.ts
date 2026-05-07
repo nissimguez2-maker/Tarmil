@@ -1,23 +1,31 @@
-import type { RioPlace } from '../../data/rioPlaces';
-import type { GlobalPlace } from '../../data/globalPlaces';
-import type { FriendOverlap } from '../../data/myTrip';
+import type { FriendOverlap, Place } from '../../data/types';
 import {
   DEFAULT_ACTIVE_FILTERS,
   type FilterId,
 } from './utils/categoryLabel';
 
 export type SheetState =
-  | { kind: 'place'; place: RioPlace | GlobalPlace }
+  | { kind: 'place'; place: Place }
   | { kind: 'friend'; friend: FriendOverlap }
   | { kind: 'searchDest' }
   | {
       kind: 'confirmDest';
-      candidate: { nameHe: string; latlng: [number, number] };
+      candidate: {
+        nameHe: string;
+        latlng: [number, number];
+        /** When set, the saved planned-stop uses this as its id (instead of
+         *  the auto-generated `stop-${Date.now()}`). Suggestions in
+         *  SearchDestinationSheet pass their canonical id through here so
+         *  the saved stop's `id` matches `places.destination_id` rows
+         *  already in Supabase — that's what makes the new city's curated
+         *  places light up the moment the stop is saved. */
+        idHint?: string;
+      };
       editingStopId?: string;
     }
   | { kind: 'plannedRoute' }
   | { kind: 'plannedStop'; stopId: string }
-  | { kind: 'savePlaceToStop'; place: RioPlace | GlobalPlace }
+  | { kind: 'savePlaceToStop'; place: Place }
   | { kind: 'arrivalConfirm'; stopId: string };
 
 // UI-only state. Planned stops live in Supabase (app_state) and are owned

@@ -3,17 +3,17 @@ import clsx from 'clsx';
 import { ChevronDown, ChevronRight, X, Star } from 'lucide-react';
 import { Button } from '../../Button';
 import type { PlannedStop } from '../../../data/plannedStops';
-import {
-  getPlacesForStop,
-  getFriendOverlapsForStop,
-} from '../../../data/plannedStops';
-import type { GlobalPlace } from '../../../data/globalPlaces';
+import type { FriendOverlap, Place } from '../../../data/types';
 import { formatDateRange } from '../utils/formatDateRange';
 import { categoryLabel } from '../utils/categoryLabel';
 import { groupPlacesBySection } from '../utils/groupPlacesBySection';
 
 type Props = {
   stop: PlannedStop;
+  /** Curated places at this stop's destination (pre-filtered by parent). */
+  places: Place[];
+  /** Friend overlaps at this stop's destination (pre-filtered by parent). */
+  overlaps: FriendOverlap[];
   onClose: () => void;
   onBack: () => void;
   onEdit: () => void;
@@ -36,6 +36,8 @@ const PRIVACY_LABEL: Record<PlannedStop['privacy'], string> = {
  */
 export function PlannedStopSheet({
   stop,
+  places,
+  overlaps,
   onClose,
   onBack,
   onEdit,
@@ -43,8 +45,6 @@ export function PlannedStopSheet({
   onOpenPlace,
   onMarkArrived,
 }: Props) {
-  const places = getPlacesForStop(stop);
-  const overlaps = getFriendOverlapsForStop(stop);
   const sections = groupPlacesBySection(places);
   const savedIds = new Set(stop.savedPlaceIds ?? []);
 
@@ -125,7 +125,7 @@ export function PlannedStopSheet({
                 {sec.places.map((p) => (
                   <PlaceRow
                     key={p.id}
-                    place={p as GlobalPlace}
+                    place={p as Place}
                     saved={savedIds.has(p.id)}
                     onClick={() => onOpenPlace(p.id)}
                   />
@@ -200,7 +200,7 @@ function PlaceRow({
   saved,
   onClick,
 }: {
-  place: GlobalPlace;
+  place: Place;
   saved: boolean;
   onClick: () => void;
 }) {
