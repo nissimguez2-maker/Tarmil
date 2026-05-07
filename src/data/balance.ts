@@ -9,6 +9,7 @@
  */
 import type { LiveRates } from '../hooks/useLiveRates';
 import { toIls, type CurrencyCode } from './currencies';
+import type { ExpenseCategory } from './expenses';
 
 export const ME_ID = 'me';
 export const ME_LABEL = 'אני';
@@ -49,6 +50,10 @@ export type Expense = {
   paidBy: string; // ME_ID or friend id
   splitWith: string[]; // includes ME_ID for everyone sharing
   createdAt: string; // ISO yyyy-mm-dd
+  /** Category — added in v2 of the schema; pre-existing entries default to
+   * 'other' at read time. Used by the Personal Expense Tracker when this
+   * balance entry is mirrored over. */
+  category?: ExpenseCategory;
   /** True for synthetic settlement entries created by tapping "סגור חוב". */
   isSettlement?: boolean;
 };
@@ -62,6 +67,7 @@ export const SEED_EXPENSES: Expense[] = [
     paidBy: ME_ID,
     splitWith: [ME_ID, 'maya'],
     createdAt: '2026-05-04',
+    category: 'food',
   },
   {
     id: 'seed-2',
@@ -71,6 +77,7 @@ export const SEED_EXPENSES: Expense[] = [
     paidBy: 'maya',
     splitWith: [ME_ID, 'maya', 'roi'],
     createdAt: '2026-05-05',
+    category: 'transport',
   },
   {
     id: 'seed-3',
@@ -80,6 +87,7 @@ export const SEED_EXPENSES: Expense[] = [
     paidBy: ME_ID,
     splitWith: [ME_ID, 'roi'],
     createdAt: '2026-05-05',
+    category: 'nightlife',
   },
 ];
 

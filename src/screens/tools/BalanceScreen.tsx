@@ -7,6 +7,7 @@ import { TopBar } from '../../components/TopBar';
 import { SectionLabel } from '../../components/SectionLabel';
 import { Button } from '../../components/Button';
 import { ConfirmPill } from '../../components/ConfirmPill';
+import { CategoryPicker } from '../../components/CategoryPicker';
 import {
   FriendsPicker,
   type FriendOption,
@@ -29,6 +30,12 @@ import {
   computeBalances,
   type Expense,
 } from '../../data/balance';
+import {
+  EXPENSES_STORAGE_KEY,
+  SEED_PERSONAL_EXPENSES,
+  type ExpenseCategory,
+  type PersonalExpense,
+} from '../../data/expenses';
 
 const ALL_PEOPLE: FriendOption[] = [
   { id: ME_ID, label: ME_LABEL },
@@ -48,6 +55,14 @@ export function BalanceScreen() {
   const [expenses, setExpenses] = usePersistentState<Expense[]>(
     BALANCE_STORAGE_KEY,
     SEED_EXPENSES,
+  );
+  // Personal Expense Tracker store — Balance writes a mirrored entry here
+  // every time the user adds an expense they paid for, and erases all
+  // matching entries when settling that friend's debt. Reads the same
+  // localStorage key as ExpensesScreen so the two tabs stay in sync.
+  const [, setPersonalExpenses] = usePersistentState<PersonalExpense[]>(
+    EXPENSES_STORAGE_KEY,
+    SEED_PERSONAL_EXPENSES,
   );
   const [friendCcy, setFriendCcy] = usePersistentState<
     Record<string, CurrencyCode>
@@ -73,6 +88,23 @@ export function BalanceScreen() {
       createdAt: new Date().toISOString().slice(0, 10),
     };
     setExpenses((cur) => [...cur, expense]);
+
+    // Mirror into the Personal Expense Tracker iff THE USER paid. If a
+    // friend paid, no money came out of the user's pocket yet, so there's
+    // nothing to track personally — that flow is captured purely as a
+    // balance owed. Settlement entries are never mirrored either.
+    if (expense.paidBy === ME_ID) {
+      const mirrored: PersonalExpense = {
+        id: `pe-from-${expense.id}`,
+        date: expense.createdAt,
+        amount: expense.amount,
+        currency: expense.currency,
+        category: expense.category ?? 'other',
+        note: expense.description,
+        sourceBalanceId: expense.id,
+      };
+      setPersonalExpenses((cur) => [...cur, mirrored]);
+    }
     setAdding(false);
   };
 
@@ -86,6 +118,27 @@ export function BalanceScreen() {
       ccy,
       live.rates ?? undefined,
     );
+
+    // Find every (paid-by-me, friend-involved, non-settlement) balance
+    // expense — those are the entries we mirrored into the tracker. We
+    // erase the tracker rows linked back to them by `sourceBalanceId`.
+    const erasableBalanceIds = new Set(
+      expenses
+        .filter(
+          (x) =>
+            !x.isSettlement &&
+            x.paidBy === ME_ID &&
+            x.splitWith.includes(friendId),
+        )
+        .map((x) => x.id),
+    );
+    setPersonalExpenses((cur) =>
+      cur.filter(
+        (pe) =>
+          !pe.sourceBalanceId || !erasableBalanceIds.has(pe.sourceBalanceId),
+      ),
+    );
+
     const settle: Expense = {
       id: `settle-${Date.now()}`,
       description: 'סגירת חוב',
@@ -350,6 +403,7 @@ function AddExpenseForm({
   const [description, setDescription] = useState('');
   const [amount, setAmount] = useState('');
   const [currency, setCurrency] = useState<CurrencyCode>('BRL');
+  const [category, setCategory] = useState<ExpenseCategory>('food');
   const [paidBy, setPaidBy] = useState<string>(ME_ID);
   const [splitWith, setSplitWith] = useState<string[]>([ME_ID, 'maya']);
 
@@ -366,6 +420,7 @@ function AddExpenseForm({
       description: description.trim(),
       amount: amountNum,
       currency,
+      category,
       paidBy,
       splitWith,
     });
@@ -424,6 +479,11 @@ function AddExpenseForm({
             ))}
           </select>
         </label>
+      </div>
+
+      <div className="flex flex-col gap-1">
+        <span className="meta-caps text-cocoa-55">קטגוריה</span>
+        <CategoryPicker value={category} onChange={setCategory} />
       </div>
 
       <div className="flex flex-col gap-1">

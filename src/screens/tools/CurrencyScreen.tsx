@@ -126,13 +126,17 @@ function CurrencyRow({
   onSwap: () => void;
 }) {
   return (
-    <div className="flex items-center gap-sm" dir="ltr">
+    // Stack From/To vertically so each select gets the full card width —
+    // the previous side-by-side row clipped the displayed value (e.g.
+    // "$ U…"). Swap button sits on its own line, centered, between the
+    // two selects.
+    <div className="flex flex-col gap-2" dir="ltr">
       <CurrencyPicker label="From" value={from} onChange={onChangeFrom} />
       <button
         type="button"
         onClick={onSwap}
         aria-label="החלף מטבעות"
-        className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-cocoa-15 bg-ivory text-copper active:bg-cocoa-8"
+        className="inline-flex h-10 w-10 shrink-0 items-center justify-center self-center rounded-full border border-copper-70 bg-ivory text-copper active:bg-cocoa-8"
       >
         <ArrowDownUp className="h-4 w-4" aria-hidden />
       </button>
@@ -151,12 +155,12 @@ function CurrencyPicker({
   onChange: (c: CurrencyCode) => void;
 }) {
   return (
-    <label className="flex flex-1 flex-col gap-1">
+    <label className="flex flex-col gap-1">
       <span className="meta-caps text-cocoa-55">{label}</span>
       <select
         value={value}
         onChange={(e) => onChange(e.target.value as CurrencyCode)}
-        className="tnum h-10 w-full rounded-full border border-cocoa-15 bg-ivory px-md text-body text-cocoa focus:border-copper focus:outline-none"
+        className="tnum h-11 w-full rounded-full border border-cocoa-15 bg-ivory px-md text-body text-cocoa focus:border-copper focus:outline-none"
       >
         {CURRENCIES.map((c) => (
           <option key={c.code} value={c.code}>

@@ -80,8 +80,14 @@ export function FilterPanel({ active, onToggle }: Props) {
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
         aria-haspopup="true"
+        aria-label="מסננים"
         className={clsx(
-          'inline-flex h-11 items-center gap-2 rounded-full border bg-ivory/95 px-md text-body backdrop-blur-sm transition-colors duration-200 ease-out-quart',
+          'inline-flex h-11 items-center gap-2 rounded-full border bg-ivory/95 backdrop-blur-sm transition-colors duration-200 ease-out-quart',
+          // When open, the pill collapses to icon-only — tighter footprint
+          // so it doesn't visually compete with the panel below it. The
+          // label "מסננים" hides; SlidersHorizontal + count badge + chevron
+          // remain. Closed state shows the full pill.
+          open ? 'px-sm' : 'px-md',
           open
             ? 'border-cocoa bg-cocoa text-ivory'
             : 'border-cocoa-15 text-cocoa active:bg-cocoa-8',
@@ -89,7 +95,7 @@ export function FilterPanel({ active, onToggle }: Props) {
         style={{ boxShadow: '0 2px 10px -4px rgba(53, 40, 24, 0.15)' }}
       >
         <SlidersHorizontal className="h-4 w-4" strokeWidth={2} aria-hidden />
-        <span>מסננים</span>
+        {!open && <span>מסננים</span>}
         {activeCount > 0 && (
           <span
             className={clsx(
@@ -112,7 +118,12 @@ export function FilterPanel({ active, onToggle }: Props) {
 
       {open && (
         <div
-          className="mt-2 w-72 max-w-[88vw] rounded-md border border-rope bg-ivory p-md"
+          // Cap at 55vh so the panel never overruns the trip-map area on
+          // short viewports; the inner scroll keeps every filter reachable
+          // without colliding with sheets or the FAB. mt-3 gives a clear
+          // gap between pill and panel so the dropdown doesn't feel glued
+          // to the button.
+          className="mt-3 max-h-[55vh] w-72 max-w-[88vw] overflow-y-auto rounded-md border border-rope bg-ivory p-md"
           style={{
             boxShadow: '0 16px 40px -12px rgba(53, 40, 24, 0.30)',
           }}

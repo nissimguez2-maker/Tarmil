@@ -6,6 +6,7 @@ import { CurrencyScreen } from './screens/tools/CurrencyScreen';
 import { ChecklistScreen } from './screens/tools/ChecklistScreen';
 import { BalanceScreen } from './screens/tools/BalanceScreen';
 import { BalanceHistoryScreen } from './screens/tools/BalanceHistoryScreen';
+import { ExpensesScreen } from './screens/tools/ExpensesScreen';
 import { FriendsScreen } from './screens/friends/FriendsScreen';
 import { ProfileScreen } from './screens/profile/ProfileScreen';
 import { PlaceScreen } from './screens/place/PlaceScreen';
@@ -31,6 +32,7 @@ export function AppRoutes() {
           path="/tools/balance/history"
           element={<BalanceHistoryScreen />}
         />
+        <Route path="/tools/expenses" element={<ExpensesScreen />} />
         <Route path="/friends" element={<FriendsScreen />} />
         <Route path="/profile" element={<ProfileScreen />} />
         <Route path="*" element={<Navigate to="/trip" replace />} />

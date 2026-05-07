@@ -6,6 +6,7 @@ import {
   Coins,
   ListChecks,
   Languages,
+  Receipt,
   ScanText,
   Wallet,
   Smartphone,
@@ -40,6 +41,12 @@ const TOOLS: Tool[] = [
     meta: 'מחשב חוב פתוח, מטבעות מעורבים',
     Icon: Wallet,
     to: '/tools/balance',
+  },
+  {
+    name: 'מעקב הוצאות',
+    meta: 'יומן אישי, סיכום במטבע שלך',
+    Icon: Receipt,
+    to: '/tools/expenses',
   },
   { name: 'מתרגם קולי', meta: 'דיבור-לדיבור, תרגום מיידי', Icon: Languages },
   {
