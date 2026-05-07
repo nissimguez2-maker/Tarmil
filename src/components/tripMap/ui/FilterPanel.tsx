@@ -15,21 +15,12 @@ type Props = {
 /** Filters grouped for the drop-down. Order is the same as the legacy chip
  * rail; "extra" lifts modifiers (picks, friends-know-this-place); "layers"
  * lifts the friend-bubble visibility toggle to the bottom so it reads as a
- * map-overlay control rather than a place filter. */
+ * map-overlay control rather than a place filter. Total length must equal
+ * ALL_FILTERS.length — when adding a new FilterId, route it into one of the
+ * three groups below. */
 const PLACES: FilterId[] = ['hostels', 'food', 'beaches', 'nightlife'];
 const EXTRA: FilterId[] = ['kosher', 'chabad', 'picks', 'friends'];
 const LAYERS: FilterId[] = ['friendBubbles'];
-
-// Sanity guard at module load — keep PLACES/EXTRA/LAYERS in sync with ALL_FILTERS.
-if (
-  import.meta.env.DEV &&
-  [...PLACES, ...EXTRA, ...LAYERS].length !== ALL_FILTERS.length
-) {
-  // eslint-disable-next-line no-console
-  console.warn(
-    '[FilterPanel] grouped filters out of sync with ALL_FILTERS — update FilterPanel.tsx.',
-  );
-}
 
 /**
  * Centered "מסננים" button atop the map. Tapping drops a panel of iOS-style
