@@ -389,7 +389,7 @@ function AddItemRow({
         onChange={(e) => onChange(e.target.value)}
         dir="rtl"
         placeholder="הוסף פריט…"
-        className="h-11 flex-1 rounded-full border border-cocoa-15 bg-ivory px-md text-body text-cocoa placeholder:text-cocoa-55 focus:border-copper focus:outline-none"
+        className="h-11 flex-1 rounded-full border border-cocoa-15 bg-white px-md text-body text-cocoa placeholder:text-cocoa-55 focus:border-copper focus:outline-none"
       />
       <button
         type="submit"
@@ -442,7 +442,7 @@ function AddSectionRow({ onAdd }: { onAdd: (label: string) => void }) {
         onChange={(e) => setDraft(e.target.value)}
         dir="rtl"
         placeholder="שם הקטגוריה…"
-        className="h-11 flex-1 rounded-full border border-cocoa-15 bg-ivory px-md text-body text-cocoa placeholder:text-cocoa-55 focus:border-copper focus:outline-none"
+        className="h-11 flex-1 rounded-full border border-cocoa-15 bg-white px-md text-body text-cocoa placeholder:text-cocoa-55 focus:border-copper focus:outline-none"
       />
       <button
         type="submit"

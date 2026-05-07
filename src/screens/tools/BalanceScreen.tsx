@@ -1,10 +1,12 @@
 import { useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import clsx from 'clsx';
-import { Plus, X } from 'lucide-react';
+import { ChevronLeft, History, Plus, X } from 'lucide-react';
 import { Screen } from '../../components/Screen';
 import { TopBar } from '../../components/TopBar';
 import { SectionLabel } from '../../components/SectionLabel';
 import { Button } from '../../components/Button';
+import { ConfirmPill } from '../../components/ConfirmPill';
 import {
   FriendsPicker,
   type FriendOption,
@@ -15,103 +17,43 @@ import {
   CURRENCIES,
   convert,
   formatAmount,
-  toIls,
   type CurrencyCode,
 } from '../../data/currencies';
-import { formatDateChip } from '../../components/tripMap/utils/formatDateRange';
-
-const ME_ID = 'me';
-const ME_LABEL = 'אני';
-
-const FRIENDS: Array<{ id: string; name: string; initial: string }> = [
-  { id: 'maya', name: 'מאיה לוי', initial: 'מ' },
-  { id: 'roi', name: 'רועי בן עמי', initial: 'ר' },
-  { id: 'shir', name: 'שיר כהן', initial: 'ש' },
-];
+import {
+  BALANCE_STORAGE_KEY,
+  FRIENDS,
+  FRIEND_CCY_KEY,
+  ME_ID,
+  ME_LABEL,
+  SEED_EXPENSES,
+  computeBalances,
+  type Expense,
+} from '../../data/balance';
 
 const ALL_PEOPLE: FriendOption[] = [
   { id: ME_ID, label: ME_LABEL },
   ...FRIENDS.map((f) => ({ id: f.id, label: f.name })),
 ];
 
-type Expense = {
-  id: string;
-  description: string;
-  amount: number;
-  currency: CurrencyCode;
-  paidBy: string; // ME_ID or friend id
-  splitWith: string[]; // includes ME_ID for everyone sharing
-  createdAt: string; // ISO yyyy-mm-dd
-  isSettlement?: boolean;
-};
+type ConfirmState =
+  | { kind: 'settle'; friendId: string }
+  | null;
 
-const SEED: Expense[] = [
-  {
-    id: 'seed-1',
-    description: 'ארוחת צהריים בקופקבנה',
-    amount: 90,
-    currency: 'BRL',
-    paidBy: ME_ID,
-    splitWith: [ME_ID, 'maya'],
-    createdAt: '2026-05-04',
-  },
-  {
-    id: 'seed-2',
-    description: 'אובר מאיפנמה לסנטה טרזה',
-    amount: 45,
-    currency: 'BRL',
-    paidBy: 'maya',
-    splitWith: [ME_ID, 'maya', 'roi'],
-    createdAt: '2026-05-05',
-  },
-  {
-    id: 'seed-3',
-    description: 'בירות בלאפא',
-    amount: 60,
-    currency: 'BRL',
-    paidBy: ME_ID,
-    splitWith: [ME_ID, 'roi'],
-    createdAt: '2026-05-05',
-  },
-];
-
-const STORAGE_KEY = 'tarmil:balance:v2';
-const FRIEND_CCY_KEY = 'tarmil:balance:friend-ccy:v1';
-
-/** Net balance in ILS per friend. Positive = friend owes you; negative = you owe friend. */
-function computeBalances(
-  expenses: Expense[],
-  rates: LiveRates | null,
-): Record<string, number> {
-  const balances: Record<string, number> = {};
-  FRIENDS.forEach((f) => (balances[f.id] = 0));
-  for (const exp of expenses) {
-    const amountIls = toIls(exp.amount, exp.currency, rates ?? undefined);
-    const share = amountIls / exp.splitWith.length;
-    if (exp.paidBy === ME_ID) {
-      for (const personId of exp.splitWith) {
-        if (personId === ME_ID) continue;
-        if (!(personId in balances)) continue;
-        balances[personId] += share;
-      }
-    } else if (exp.paidBy in balances) {
-      if (exp.splitWith.includes(ME_ID)) {
-        balances[exp.paidBy] -= share;
-      }
-    }
-  }
-  return balances;
-}
-
+/**
+ * Balance tool — focused on per-friend status. The full expense log lives
+ * at /tools/balance/history (BalanceHistoryScreen). Settle actions are
+ * gated by a centered ConfirmPill so they can't be triggered by accident.
+ */
 export function BalanceScreen() {
   const [expenses, setExpenses] = usePersistentState<Expense[]>(
-    STORAGE_KEY,
-    SEED,
+    BALANCE_STORAGE_KEY,
+    SEED_EXPENSES,
   );
   const [friendCcy, setFriendCcy] = usePersistentState<
     Record<string, CurrencyCode>
   >(FRIEND_CCY_KEY, {});
   const [adding, setAdding] = useState(false);
+  const [confirm, setConfirm] = useState<ConfirmState>(null);
 
   const live = useLiveRates();
 
@@ -161,12 +103,57 @@ export function BalanceScreen() {
     setFriendCcy((cur) => ({ ...cur, [friendId]: ccy }));
   };
 
+  const confirmDetails = (() => {
+    if (!confirm) return null;
+    if (confirm.kind === 'settle') {
+      const friend = FRIENDS.find((f) => f.id === confirm.friendId);
+      if (!friend) return null;
+      const netIls = balances[confirm.friendId];
+      const ccy = friendCcy[confirm.friendId] ?? 'ILS';
+      const symbol =
+        CURRENCIES.find((c) => c.code === ccy)?.symbol ?? '';
+      const amount = formatAmount(
+        Math.abs(convert(netIls, 'ILS', ccy, live.rates ?? undefined)),
+        netIls >= 100 ? 0 : 2,
+      );
+      const direction =
+        netIls > 0
+          ? `${friend.name} שילם לך ${amount} ${symbol}`
+          : `שילמת ל${friend.name} ${amount} ${symbol}`;
+      return {
+        title: 'לסגור את החוב?',
+        body: `${direction}. הפעולה תיכתב להיסטוריה ולא תוכל לבטל אותה משם.`,
+        action: () => settleFriend(confirm.friendId),
+      };
+    }
+    return null;
+  })();
+
   return (
     <Screen>
       <TopBar eyebrow="Tarmil" title="יתרות בין חברים" back />
 
       <div className="flex flex-col gap-lg p-md">
         <SummaryCard totalNet={totalNet} />
+
+        {/* Add-expense — primary CTA at the top of the friend list, where
+          * the user expects "do something" actions to live. Inline form
+          * expands on tap so we don't punch the user out to a new sheet. */}
+        {adding ? (
+          <AddExpenseForm
+            onSave={addExpense}
+            onCancel={() => setAdding(false)}
+          />
+        ) : (
+          <Button
+            variant="primary"
+            onClick={() => setAdding(true)}
+            fullWidth
+          >
+            <Plus className="h-4 w-4" aria-hidden />
+            <span>הוסף הוצאה</span>
+          </Button>
+        )}
 
         <section className="flex flex-col gap-sm">
           <SectionLabel number="01" label="Per friend." />
@@ -179,31 +166,24 @@ export function BalanceScreen() {
                 displayCurrency={friendCcy[f.id] ?? 'ILS'}
                 rates={live.rates}
                 onChangeCurrency={(c) => setFriendCurrency(f.id, c)}
-                onSettle={() => settleFriend(f.id)}
+                onSettle={() => setConfirm({ kind: 'settle', friendId: f.id })}
               />
             ))}
           </div>
         </section>
 
-        <section className="flex flex-col gap-sm">
-          <SectionLabel number="02" label="History." />
-          {adding ? (
-            <AddExpenseForm
-              onSave={addExpense}
-              onCancel={() => setAdding(false)}
-            />
-          ) : (
-            <Button
-              variant="primary"
-              onClick={() => setAdding(true)}
-              fullWidth
-            >
-              <Plus className="h-4 w-4" aria-hidden />
-              <span>הוסף הוצאה</span>
-            </Button>
-          )}
-          <ExpenseList expenses={expenses} />
-        </section>
+        {/* Link to the full transaction log. Ghost styling so it doesn't
+          * compete with the primary "+הוסף הוצאה" CTA above. */}
+        <Link
+          to="/tools/balance/history"
+          className="inline-flex h-11 items-center justify-between rounded-full border border-cocoa-15 bg-ivory px-md text-body text-cocoa active:bg-cocoa-08"
+        >
+          <span className="inline-flex items-center gap-2">
+            <History className="h-4 w-4" strokeWidth={1.5} aria-hidden />
+            <span>היסטוריית תשלומים</span>
+          </span>
+          <ChevronLeft className="h-4 w-4 text-cocoa-55" aria-hidden />
+        </Link>
 
         <p className="text-small leading-snug text-cocoa-55">
           {live.error
@@ -213,6 +193,19 @@ export function BalanceScreen() {
               : 'טוען שערים חיים…'}
         </p>
       </div>
+
+      <ConfirmPill
+        open={confirmDetails !== null}
+        title={confirmDetails?.title ?? ''}
+        body={confirmDetails?.body}
+        confirmLabel="סגור חוב"
+        danger
+        onCancel={() => setConfirm(null)}
+        onConfirm={() => {
+          confirmDetails?.action();
+          setConfirm(null);
+        }}
+      />
     </Screen>
   );
 }
@@ -266,7 +259,7 @@ function FriendCard({
   onChangeCurrency,
   onSettle,
 }: {
-  friend: { id: string; name: string; initial: string };
+  friend: { id: string; name: string; initial: string; photoUrl: string };
   netIls: number;
   displayCurrency: CurrencyCode;
   rates: LiveRates | null;
@@ -293,11 +286,11 @@ function FriendCard({
     <div className="flex flex-col gap-sm rounded-md border border-rope bg-sand p-md">
       <div className="flex items-center gap-md">
         <span
-          className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-cocoa font-serif text-lede text-ivory"
-          aria-hidden
-        >
-          {friend.initial}
-        </span>
+          className="inline-block h-11 w-11 shrink-0 rounded-full border border-cocoa-15 bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: `url('${friend.photoUrl}')` }}
+          role="img"
+          aria-label={friend.name}
+        />
         <div className="flex flex-1 flex-col">
           <span className="font-serif text-lede leading-tight">
             {friend.name}
@@ -308,21 +301,25 @@ function FriendCard({
               balanced
                 ? 'text-cocoa-55'
                 : netIls > 0
-                  ? 'text-cocoa font-medium'
-                  : 'text-cocoa font-medium italic',
+                  ? 'font-medium text-cocoa'
+                  : 'font-medium italic text-cocoa',
             )}
           >
             {line}
           </span>
         </div>
       </div>
-      <div className="flex items-center gap-sm">
-        <label className="flex flex-1 items-center gap-2 text-small text-cocoa-55">
-          <span>מטבע</span>
+      {/* Settle + currency selector. The currency picker is compact (no
+        * full-width label) and only appears when there's an open balance —
+        * for "אין חוב פתוח" friends, the row is silent so the card reads as
+        * "all settled" without competing controls. */}
+      {!balanced && (
+        <div className="flex items-center gap-sm">
           <select
             value={displayCurrency}
             onChange={(e) => onChangeCurrency(e.target.value as CurrencyCode)}
-            className="h-11 flex-1 rounded-full border border-cocoa-15 bg-ivory px-sm text-body text-cocoa focus:border-copper focus:outline-none"
+            aria-label={`מטבע עבור ${friend.name}`}
+            className="h-11 flex-1 rounded-full border border-cocoa-15 bg-ivory px-md text-body text-cocoa focus:border-copper focus:outline-none"
           >
             {CURRENCIES.map((c) => (
               <option key={c.code} value={c.code}>
@@ -330,74 +327,17 @@ function FriendCard({
               </option>
             ))}
           </select>
-        </label>
-        {!balanced && (
           <button
             type="button"
             onClick={onSettle}
-            className="inline-flex h-11 items-center justify-center rounded-full border border-cocoa-15 bg-ivory px-md text-body text-cocoa active:bg-cocoa-8"
+            className="inline-flex h-11 items-center justify-center rounded-full bg-copper px-md text-body font-medium text-ivory active:bg-copper-85"
           >
             סגור חוב
           </button>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
-}
-
-function ExpenseList({ expenses }: { expenses: Expense[] }) {
-  if (expenses.length === 0) {
-    return (
-      <p className="text-body text-cocoa-55">
-        עדיין לא נוספו הוצאות. תוסיף אחת ב־"הוסף הוצאה".
-      </p>
-    );
-  }
-  const ordered = [...expenses].sort((a, b) =>
-    b.createdAt.localeCompare(a.createdAt),
-  );
-  return (
-    <ul className="flex flex-col">
-      {ordered.map((exp) => (
-        <li
-          key={exp.id}
-          className="flex items-start justify-between gap-sm border-b border-cocoa-08 py-sm last:border-b-0"
-        >
-          <div className="flex flex-col">
-            <span
-              className={clsx(
-                'text-body',
-                exp.isSettlement ? 'text-cocoa italic' : 'text-cocoa',
-              )}
-            >
-              {exp.description}
-            </span>
-            <span className="text-small text-cocoa-55">
-              {personLabel(exp.paidBy)} שילם · חולק עם{' '}
-              {exp.splitWith
-                .filter((p) => p !== exp.paidBy)
-                .map(personLabel)
-                .join(', ') || 'אף אחד'}
-            </span>
-          </div>
-          <div className="flex flex-col items-end">
-            <span className="tnum text-body text-cocoa">
-              {formatAmount(exp.amount, exp.amount % 1 === 0 ? 0 : 2)}{' '}
-              <span className="ltr text-cocoa-70">{exp.currency}</span>
-            </span>
-            <span className="text-small text-cocoa-55">
-              {formatDateChip(exp.createdAt)}
-            </span>
-          </div>
-        </li>
-      ))}
-    </ul>
-  );
-}
-
-function personLabel(id: string): string {
-  if (id === ME_ID) return ME_LABEL;
-  return FRIENDS.find((f) => f.id === id)?.name ?? id;
 }
 
 function AddExpenseForm({
@@ -453,7 +393,7 @@ function AddExpenseForm({
           onChange={(e) => setDescription(e.target.value)}
           dir="rtl"
           placeholder="לדוגמה: ארוחת ערב באיפנמה"
-          className="h-11 rounded-full border border-cocoa-15 bg-ivory px-md text-body text-cocoa placeholder:text-cocoa-55 focus:border-copper focus:outline-none"
+          className="h-11 rounded-full border border-cocoa-15 bg-white px-md text-body text-cocoa placeholder:text-cocoa-55 focus:border-copper focus:outline-none"
         />
       </label>
 
@@ -467,7 +407,7 @@ function AddExpenseForm({
             onChange={(e) => setAmount(e.target.value)}
             dir="ltr"
             placeholder="0"
-            className="tnum h-11 rounded-full border border-cocoa-15 bg-ivory px-md text-body text-cocoa focus:border-copper focus:outline-none"
+            className="tnum h-11 rounded-full border border-cocoa-15 bg-white px-md text-body text-cocoa focus:border-copper focus:outline-none"
           />
         </label>
         <label className="flex flex-col gap-1">
@@ -475,7 +415,7 @@ function AddExpenseForm({
           <select
             value={currency}
             onChange={(e) => setCurrency(e.target.value as CurrencyCode)}
-            className="h-11 rounded-full border border-cocoa-15 bg-ivory px-md text-body text-cocoa focus:border-copper focus:outline-none"
+            className="h-11 rounded-full border border-cocoa-15 bg-white px-md text-body text-cocoa focus:border-copper focus:outline-none"
           >
             {CURRENCIES.map((c) => (
               <option key={c.code} value={c.code}>

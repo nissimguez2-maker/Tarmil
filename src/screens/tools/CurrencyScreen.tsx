@@ -53,6 +53,7 @@ export function CurrencyScreen() {
       <div className="flex flex-col gap-lg p-md">
         <SectionLabel number="01" label="Quick conversion." />
 
+        {/* Input card: amount → from/to selectors. */}
         <div className="flex flex-col gap-sm rounded-md border border-rope bg-sand p-md">
           <span className="meta-caps text-cocoa-55">סכום</span>
           <input
@@ -64,7 +65,7 @@ export function CurrencyScreen() {
             }
             dir="ltr"
             aria-label="סכום להמרה"
-            className="tnum w-full border-none bg-transparent text-display text-cocoa focus:outline-none"
+            className="tnum w-full border-none bg-transparent text-center text-display text-cocoa focus:outline-none"
           />
           <CurrencyRow
             from={state.from}
@@ -75,21 +76,24 @@ export function CurrencyScreen() {
           />
         </div>
 
-        <div className="flex flex-col gap-1">
-          <span className="meta-caps text-cocoa-55">תוצאה</span>
+        {/* Output card: mirrors the input card so the screen reads as a
+          * symmetric "in / out" comparison. The display number is centered
+          * and dominant; the implied rate sits beneath as a quiet caption. */}
+        <div className="flex flex-col items-center gap-1 rounded-md border border-rope bg-sand p-md text-center">
+          <span className="meta-caps self-start text-cocoa-55">תוצאה</span>
           {valid && result != null ? (
-            <div className="flex items-baseline gap-sm">
-              <span className="tnum font-serif text-sub leading-tight text-cocoa">
+            <div className="flex flex-col items-center gap-1">
+              <span className="tnum font-serif text-display leading-none text-cocoa">
                 {formatAmount(result)}
               </span>
-              <span className="text-lede text-cocoa-70 ltr">
+              <span className="ltr text-lede text-cocoa-70">
                 {to.symbol} {to.code}
               </span>
             </div>
           ) : (
-            <span className="text-body text-cocoa-55">הזן סכום תקין</span>
+            <span className="py-sm text-body text-cocoa-55">הזן סכום תקין</span>
           )}
-          <span className="text-small text-cocoa-55">
+          <span className="mt-1 text-small text-cocoa-55">
             <span className="ltr">
               1 {from.code} = {formatAmount(fromUnitInIls, 4)} ₪
             </span>

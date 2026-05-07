@@ -63,10 +63,18 @@ export function FilterPanel({ active, onToggle }: Props) {
   );
 
   return (
-    <div
-      ref={containerRef}
-      className="absolute start-1/2 top-md z-[400] flex -translate-x-1/2 flex-col items-center"
-    >
+    // Outer wrapper spans the full map width and uses flex to physically
+    // center the inner stack — works equally in RTL and LTR. The previous
+    // `start-1/2 -translate-x-1/2` approach pushed the button off-screen in
+    // RTL because Tailwind's translate-x is always physical, but `start-1/2`
+    // is logical (= right-1/2 in RTL).
+    // pointer-events-none here so the wrapper doesn't intercept map drags;
+    // the inner stack re-enables pointer events for its own controls.
+    <div className="pointer-events-none absolute inset-x-0 top-md z-[400] flex justify-center">
+      <div
+        ref={containerRef}
+        className="pointer-events-auto flex flex-col items-center"
+      >
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
@@ -143,6 +151,7 @@ export function FilterPanel({ active, onToggle }: Props) {
           </Group>
         </div>
       )}
+      </div>
     </div>
   );
 }
