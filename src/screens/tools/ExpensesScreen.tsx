@@ -6,7 +6,7 @@ import { TopBar } from '../../components/TopBar';
 import { Button } from '../../components/Button';
 import { ConfirmPill } from '../../components/ConfirmPill';
 import { CategoryPicker } from '../../components/CategoryPicker';
-import { usePersistentState } from '../../hooks/usePersistentState';
+import { useSupabaseState } from '../../hooks/useSupabaseState';
 import { useLiveRates } from '../../hooks/useLiveRates';
 import {
   CURRENCIES,
@@ -66,11 +66,11 @@ function groupByDay(
 }
 
 export function ExpensesScreen() {
-  const [expenses, setExpenses] = usePersistentState<PersonalExpense[]>(
+  const [expenses, setExpenses] = useSupabaseState<PersonalExpense[]>(
     EXPENSES_STORAGE_KEY,
     SEED_PERSONAL_EXPENSES,
   );
-  const [displayCcy, setDisplayCcy] = usePersistentState<CurrencyCode>(
+  const [displayCcy, setDisplayCcy] = useSupabaseState<CurrencyCode>(
     EXPENSE_CCY_KEY,
     'ILS',
   );

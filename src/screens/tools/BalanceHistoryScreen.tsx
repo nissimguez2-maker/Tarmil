@@ -8,7 +8,7 @@ import {
   FriendsPicker,
   type FriendOption,
 } from '../../components/tools/FriendsPicker';
-import { usePersistentState } from '../../hooks/usePersistentState';
+import { useSupabaseState } from '../../hooks/useSupabaseState';
 import { formatAmount } from '../../data/currencies';
 import {
   BALANCE_STORAGE_KEY,
@@ -50,7 +50,7 @@ function withinDate(iso: string, filter: DateFilter): boolean {
  * "סגירת חוב" entries inline with the rest of the timeline.
  */
 export function BalanceHistoryScreen() {
-  const [expenses, setExpenses] = usePersistentState<Expense[]>(
+  const [expenses, setExpenses] = useSupabaseState<Expense[]>(
     BALANCE_STORAGE_KEY,
     SEED_EXPENSES,
   );

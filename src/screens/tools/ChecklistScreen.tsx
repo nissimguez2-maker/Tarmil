@@ -4,7 +4,7 @@ import { ChevronDown, Plus, X } from 'lucide-react';
 import { Screen } from '../../components/Screen';
 import { TopBar } from '../../components/TopBar';
 import { Button } from '../../components/Button';
-import { usePersistentState } from '../../hooks/usePersistentState';
+import { useSupabaseState } from '../../hooks/useSupabaseState';
 import { CHECKLIST_TEMPLATE } from '../../data/checklistTemplate';
 
 type Item = { id: string; label: string; checked: boolean };
@@ -44,7 +44,7 @@ function sectionNumber(i: number): string {
 }
 
 export function ChecklistScreen() {
-  const [state, setState] = usePersistentState<State>(STORAGE_KEY, fromTemplate());
+  const [state, setState] = useSupabaseState<State>(STORAGE_KEY, fromTemplate());
   const [confirmRestore, setConfirmRestore] = useState(false);
 
   const totalItems = useMemo(

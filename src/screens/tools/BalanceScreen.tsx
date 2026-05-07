@@ -12,7 +12,7 @@ import {
   FriendsPicker,
   type FriendOption,
 } from '../../components/tools/FriendsPicker';
-import { usePersistentState } from '../../hooks/usePersistentState';
+import { useSupabaseState } from '../../hooks/useSupabaseState';
 import { useLiveRates, type LiveRates } from '../../hooks/useLiveRates';
 import {
   CURRENCIES,
@@ -52,7 +52,7 @@ type ConfirmState =
  * gated by a centered ConfirmPill so they can't be triggered by accident.
  */
 export function BalanceScreen() {
-  const [expenses, setExpenses] = usePersistentState<Expense[]>(
+  const [expenses, setExpenses] = useSupabaseState<Expense[]>(
     BALANCE_STORAGE_KEY,
     SEED_EXPENSES,
   );
@@ -60,11 +60,11 @@ export function BalanceScreen() {
   // every time the user adds an expense they paid for, and erases all
   // matching entries when settling that friend's debt. Reads the same
   // localStorage key as ExpensesScreen so the two tabs stay in sync.
-  const [, setPersonalExpenses] = usePersistentState<PersonalExpense[]>(
+  const [, setPersonalExpenses] = useSupabaseState<PersonalExpense[]>(
     EXPENSES_STORAGE_KEY,
     SEED_PERSONAL_EXPENSES,
   );
-  const [friendCcy, setFriendCcy] = usePersistentState<
+  const [friendCcy, setFriendCcy] = useSupabaseState<
     Record<string, CurrencyCode>
   >(FRIEND_CCY_KEY, {});
   const [adding, setAdding] = useState(false);

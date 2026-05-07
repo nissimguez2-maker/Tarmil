@@ -3,7 +3,7 @@ import { ArrowDownUp } from 'lucide-react';
 import { Screen } from '../../components/Screen';
 import { TopBar } from '../../components/TopBar';
 import { SectionLabel } from '../../components/SectionLabel';
-import { usePersistentState } from '../../hooks/usePersistentState';
+import { useSupabaseState } from '../../hooks/useSupabaseState';
 import { useLiveRates } from '../../hooks/useLiveRates';
 import {
   CURRENCIES,
@@ -24,7 +24,7 @@ const INITIAL: State = { amount: '100', from: 'ILS', to: 'BRL' };
 const STORAGE_KEY = 'tarmil:currency:v1';
 
 export function CurrencyScreen() {
-  const [state, setState] = usePersistentState<State>(STORAGE_KEY, INITIAL);
+  const [state, setState] = useSupabaseState<State>(STORAGE_KEY, INITIAL);
   const live = useLiveRates();
 
   const amountNum = Number(state.amount);
