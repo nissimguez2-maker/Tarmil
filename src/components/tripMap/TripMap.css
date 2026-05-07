@@ -40,8 +40,16 @@
   border: 2.5px solid var(--ivory);
   box-shadow: 0 1px 4px rgba(53, 40, 24, 0.35);
   margin: 5.5px;
-  transition: transform 0.15s ease;
+  transition: transform 200ms cubic-bezier(0.165, 0.84, 0.44, 1);
+  animation: tarmil-pop-in 220ms cubic-bezier(0.165, 0.84, 0.44, 1) both;
   cursor: pointer;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tarmil-place-dot {
+    animation: none;
+    transition: none;
+  }
 }
 
 .tarmil-place-dot:hover,
@@ -76,7 +84,7 @@
   font-weight: 700;
   font-size: 11pt;
   box-shadow: 0 2px 6px rgba(53, 40, 24, 0.32);
-  transition: transform 0.15s ease;
+  transition: transform 200ms cubic-bezier(0.165, 0.84, 0.44, 1);
   cursor: pointer;
 }
 
@@ -114,7 +122,15 @@
   font-weight: 700;
   font-size: 14pt;
   cursor: pointer;
-  transition: transform 0.15s ease;
+  transition: transform 200ms cubic-bezier(0.165, 0.84, 0.44, 1);
+  animation: tarmil-pop-in 280ms cubic-bezier(0.165, 0.84, 0.44, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tarmil-friend-circle {
+    animation: none;
+    transition: none;
+  }
 }
 
 .tarmil-friend-circle.is-present {
@@ -221,8 +237,28 @@
   box-shadow:
     0 0 0 4px rgba(166, 75, 41, 0.10),
     0 1px 4px rgba(53, 40, 24, 0.30);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition: transform 200ms cubic-bezier(0.165, 0.84, 0.44, 1),
+    box-shadow 200ms cubic-bezier(0.165, 0.84, 0.44, 1);
+  animation: tarmil-pop-in 250ms cubic-bezier(0.165, 0.84, 0.44, 1) both;
   cursor: pointer;
+}
+
+@keyframes tarmil-pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tarmil-planned-circle {
+    animation: none;
+    transition: none;
+  }
 }
 
 .tarmil-planned-circle:hover,

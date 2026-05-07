@@ -184,7 +184,7 @@ function CollapsibleSection({
         <span className="font-serif text-body text-cocoa">{label}</span>
         <ChevronDown
           className={clsx(
-            'h-4 w-4 text-cocoa-55 transition-transform',
+            'h-4 w-4 text-cocoa-55 transition-transform duration-200 ease-out-quart',
             open && 'rotate-180',
           )}
           aria-hidden

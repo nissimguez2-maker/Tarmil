@@ -23,7 +23,7 @@ export function BottomSheet({
   return (
     <div
       className={clsx(
-        'absolute z-[1000] origin-bottom rounded-md border border-rope bg-ivory transition-all duration-300',
+        'absolute z-[1000] origin-bottom rounded-md border border-rope bg-ivory transition-[transform,opacity] duration-300 ease-out-quart',
         height === 'tall'
           ? 'inset-x-md bottom-md top-[15%] flex flex-col overflow-hidden'
           : 'inset-x-md bottom-md',

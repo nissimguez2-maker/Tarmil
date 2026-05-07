@@ -51,7 +51,7 @@ function Chip({
       type="button"
       onClick={onClick}
       className={clsx(
-        'inline-flex h-11 shrink-0 items-center rounded-full border px-sm text-body leading-none transition-colors',
+        'inline-flex h-11 shrink-0 items-center rounded-full border px-sm text-body leading-none transition-colors duration-200 ease-out-quart',
         active
           ? 'border-cocoa bg-cocoa text-ivory'
           : 'border-cocoa-15 bg-ivory text-cocoa hover:bg-cocoa-8 active:bg-cocoa-15',

@@ -68,7 +68,7 @@ export function ToolsScreen() {
               <li key={tool.name}>
                 <Link
                   to={tool.to}
-                  className="flex items-center gap-md rounded-sm border border-cocoa-15 bg-sand p-md active:bg-cocoa-08"
+                  className="flex items-center gap-md rounded-sm border border-rope bg-sand p-md transition-colors duration-200 ease-out-quart active:bg-rope"
                 >
                   <ToolBody {...tool} />
                   <ChevronLeft
@@ -81,7 +81,7 @@ export function ToolsScreen() {
               <li
                 key={tool.name}
                 className={clsx(
-                  'flex items-center gap-md rounded-sm border border-cocoa-15 bg-sand p-md',
+                  'flex items-center gap-md rounded-sm border border-rope bg-sand p-md',
                   'opacity-60',
                 )}
               >

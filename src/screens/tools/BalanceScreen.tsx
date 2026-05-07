@@ -290,7 +290,7 @@ function FriendCard({
     line = `אתה חייב ${formatAmount(netInCcy, netInCcy >= 100 ? 0 : 2)} ${symbol}`;
 
   return (
-    <div className="flex flex-col gap-sm rounded-md border border-cocoa-15 bg-sand p-md">
+    <div className="flex flex-col gap-sm rounded-md border border-rope bg-sand p-md">
       <div className="flex items-center gap-md">
         <span
           className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-cocoa font-serif text-lede text-ivory"

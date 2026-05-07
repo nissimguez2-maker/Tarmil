@@ -103,7 +103,7 @@ export function FriendsPicker(props: Props) {
         <span className="truncate text-start">{selectedSummary}</span>
         <ChevronDown
           className={clsx(
-            'h-4 w-4 shrink-0 text-cocoa-55 transition-transform',
+            'h-4 w-4 shrink-0 text-cocoa-55 transition-transform duration-200 ease-out-quart',
             open && 'rotate-180',
           )}
           aria-hidden

@@ -149,7 +149,7 @@ export function ChecklistScreen() {
           </div>
           <div className="relative h-2 w-full overflow-hidden rounded-full bg-cocoa-08">
             <div
-              className="absolute inset-y-0 start-0 rounded-full bg-cocoa transition-[width]"
+              className="absolute inset-y-0 start-0 rounded-full bg-cocoa transition-[width] duration-300 ease-out-quart"
               style={{ width: `${pct}%` }}
               aria-hidden
             />
@@ -285,7 +285,7 @@ function SectionBlock({
         >
           <ChevronDown
             className={clsx(
-              'h-4 w-4 shrink-0 text-cocoa-55 transition-transform',
+              'h-4 w-4 shrink-0 text-cocoa-55 transition-transform duration-200 ease-out-quart',
               section.collapsed && '-rotate-90',
             )}
             aria-hidden
@@ -333,7 +333,7 @@ function SectionBlock({
                     />
                     <span
                       className={clsx(
-                        'text-body transition-colors',
+                        'text-body transition-colors duration-200 ease-out-quart',
                         item.checked
                           ? 'text-cocoa-55 line-through'
                           : 'text-cocoa',
