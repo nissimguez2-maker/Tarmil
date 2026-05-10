@@ -1,32 +1,44 @@
 import { Screen } from '../../components/Screen';
 import { TopBar } from '../../components/TopBar';
-import { SectionLabel } from '../../components/SectionLabel';
+import { useSupabaseData } from '../../lib/SupabaseDataProvider';
+import { LoadingPanel, ErrorPanel } from '../../components/DataState';
+import { ThreadCard } from './ThreadCard';
 
 /**
- * Placeholder for the Activity tab.
+ * Activity feed. Reverse-chronological list of threads. Three kinds — the
+ * card itself adapts: friend-trip threads lead with the friend's avatar +
+ * season chip, city / destination threads lead with the location label.
  *
- * Final design (PR4): feed-style surface mixing friends' new declared trips,
- * city threads in declared destinations, and popular destination threads.
- * Each card opens to a thread detail at /activity/:threadId. Posting and
- * following land then; Realtime keeps replies live during demos.
+ * Tapping a card opens the detail at /activity/:threadId where the live
+ * realtime channel keeps replies flowing in during the demo.
  */
 export function ActivityScreen() {
+  const { data, loading, error } = useSupabaseData();
+  if (loading) return <LoadingPanel />;
+  if (error || !data) return <ErrorPanel error={error} />;
+
+  const threads = data.threads;
+
   return (
     <Screen>
       <TopBar eyebrow="Tarmil" title="פעילות" />
 
-      <div className="flex flex-col gap-lg p-md">
-        <SectionLabel number="01" label="What's happening." />
-
-        <p className="max-w-body text-body text-cocoa-70">
-          פיד הפעילות יראה לך את החברים שהכריזו על טיול חדש, שיחות חיות בערים
-          שיצא לך לבקר, ושרשורים פופולריים על יעדים בקורידור.
-        </p>
-
-        <p className="max-w-body text-body text-cocoa-55">
-          בקרוב — שרשורים, תגובות, וטיולים שזה עתה הוכרזו.
-        </p>
-      </div>
+      {threads.length === 0 ? (
+        <div className="flex flex-col gap-md p-md">
+          <p className="max-w-body text-body text-cocoa-70">
+            עוד אין פעילות בפיד. ברגע שמישהו יכריז על טיול, ייפתח שרשור עיר
+            או יעלה דיון על יעד פופולרי — זה יופיע כאן.
+          </p>
+        </div>
+      ) : (
+        <ul className="flex flex-col gap-sm p-md">
+          {threads.map((t) => (
+            <li key={t.id}>
+              <ThreadCard thread={t} />
+            </li>
+          ))}
+        </ul>
+      )}
     </Screen>
   );
 }

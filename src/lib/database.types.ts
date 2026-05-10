@@ -152,6 +152,84 @@ export type Database = {
         }
         Relationships: []
       }
+      threads: {
+        Row: {
+          id: string
+          kind: string
+          title: string
+          body: string
+          author_initial: string
+          author_name: string
+          destination_id: string | null
+          city_label: string | null
+          friend_id: string | null
+          trip_season: string | null
+          trip_year: number | null
+          reply_count: number
+          follow_count: number
+          created_at: string
+        }
+        Insert: {
+          id: string
+          kind: string
+          title: string
+          body: string
+          author_initial: string
+          author_name: string
+          destination_id?: string | null
+          city_label?: string | null
+          friend_id?: string | null
+          trip_season?: string | null
+          trip_year?: number | null
+          reply_count?: number
+          follow_count?: number
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          kind?: string
+          title?: string
+          body?: string
+          author_initial?: string
+          author_name?: string
+          destination_id?: string | null
+          city_label?: string | null
+          friend_id?: string | null
+          trip_season?: string | null
+          trip_year?: number | null
+          reply_count?: number
+          follow_count?: number
+          created_at?: string
+        }
+        Relationships: []
+      }
+      thread_replies: {
+        Row: {
+          id: string
+          thread_id: string
+          author_initial: string
+          author_name: string
+          body: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          thread_id: string
+          author_initial: string
+          author_name: string
+          body: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          thread_id?: string
+          author_initial?: string
+          author_name?: string
+          body?: string
+          created_at?: string
+        }
+        Relationships: []
+      }
       trip_waypoints: {
         Row: {
           id: string

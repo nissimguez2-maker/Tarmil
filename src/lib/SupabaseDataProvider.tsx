@@ -12,12 +12,15 @@ import type { Tables, TablesInsert } from './database.types';
 import type { FriendVisit, Place, PlaceCategory, Season } from '../data/places';
 import type { FriendOverlap, LatLng } from '../data/myTrip';
 import type { PlannedStop, PlannedStopPrivacy } from '../data/plannedStops';
+import type { Thread, ThreadKind, ThreadReply } from '../data/threads';
 
 export type TripData = {
   places: Place[];
   friendOverlaps: FriendOverlap[];
   myTrip: { past: LatLng[]; present: LatLng };
   plannedStops: PlannedStop[];
+  threads: Thread[];
+  threadReplies: ThreadReply[];
 };
 
 type Mutators = {
@@ -25,6 +28,12 @@ type Mutators = {
   removeStop: (stopId: string) => Promise<void>;
   savePlaceToStop: (placeId: string, stopId: string) => Promise<void>;
   resetDemo: () => Promise<void>;
+  postReply: (input: {
+    threadId: string;
+    body: string;
+    authorInitial: string;
+    authorName: string;
+  }) => Promise<void>;
 };
 
 type ContextValue = {
@@ -131,6 +140,43 @@ const plannedToStopRow = (s: PlannedStop): TablesInsert<'planned_stops'> => ({
   saved_place_ids: s.savedPlaceIds ?? [],
 });
 
+const THREAD_KINDS: ReadonlySet<ThreadKind> = new Set([
+  'friend_trip',
+  'city',
+  'destination',
+]);
+
+const threadRowToThread = (r: Tables<'threads'>): Thread => ({
+  id: r.id,
+  kind: THREAD_KINDS.has(r.kind as ThreadKind)
+    ? (r.kind as ThreadKind)
+    : 'destination',
+  title: r.title,
+  body: r.body,
+  authorInitial: r.author_initial,
+  authorName: r.author_name,
+  destinationId: r.destination_id ?? undefined,
+  cityLabel: r.city_label ?? undefined,
+  friendId: r.friend_id ?? undefined,
+  tripSeason:
+    r.trip_season && SEASONS.has(r.trip_season as Season)
+      ? (r.trip_season as Season)
+      : undefined,
+  tripYear: r.trip_year ?? undefined,
+  replyCount: r.reply_count,
+  followCount: r.follow_count,
+  createdAt: r.created_at,
+});
+
+const replyRowToReply = (r: Tables<'thread_replies'>): ThreadReply => ({
+  id: r.id,
+  threadId: r.thread_id,
+  authorInitial: r.author_initial,
+  authorName: r.author_name,
+  body: r.body,
+  createdAt: r.created_at,
+});
+
 export function SupabaseDataProvider({ children }: { children: ReactNode }) {
   const [data, setData] = useState<TripData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -156,22 +202,38 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
     );
   }, []);
 
-  // Initial fetch — all four tables in parallel.
+  // Initial fetch — all six tables in parallel.
   useEffect(() => {
     let cancelled = false;
     async function load() {
       try {
-        const [placesRes, friendsRes, waypointsRes, stopsRes] =
-          await Promise.all([
-            supabase.from('places').select('*'),
-            supabase.from('friend_overlaps').select('*'),
-            supabase.from('trip_waypoints').select('*').order('order_index'),
-            supabase.from('planned_stops').select('*').order('arrival_date'),
-          ]);
+        const [
+          placesRes,
+          friendsRes,
+          waypointsRes,
+          stopsRes,
+          threadsRes,
+          repliesRes,
+        ] = await Promise.all([
+          supabase.from('places').select('*'),
+          supabase.from('friend_overlaps').select('*'),
+          supabase.from('trip_waypoints').select('*').order('order_index'),
+          supabase.from('planned_stops').select('*').order('arrival_date'),
+          supabase
+            .from('threads')
+            .select('*')
+            .order('created_at', { ascending: false }),
+          supabase
+            .from('thread_replies')
+            .select('*')
+            .order('created_at', { ascending: true }),
+        ]);
         if (placesRes.error) throw placesRes.error;
         if (friendsRes.error) throw friendsRes.error;
         if (waypointsRes.error) throw waypointsRes.error;
         if (stopsRes.error) throw stopsRes.error;
+        if (threadsRes.error) throw threadsRes.error;
+        if (repliesRes.error) throw repliesRes.error;
 
         const places = placesRes.data.map(placeRowToPlace);
         const friendOverlaps = friendsRes.data.map(friendRowToOverlap);
@@ -183,6 +245,8 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
         if (!presentRow) throw new Error('Missing present trip waypoint');
         const present: LatLng = [presentRow.lat, presentRow.lng];
         const plannedStops = stopsRes.data.map(stopRowToPlanned);
+        const threads = threadsRes.data.map(threadRowToThread);
+        const threadReplies = repliesRes.data.map(replyRowToReply);
 
         if (!cancelled) {
           setData({
@@ -190,6 +254,8 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
             friendOverlaps,
             myTrip: { past, present },
             plannedStops,
+            threads,
+            threadReplies,
           });
           setLoading(false);
         }
@@ -223,6 +289,55 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
       supabase.removeChannel(channel);
     };
   }, [refetchStops]);
+
+  const refetchThreadsAndReplies = useCallback(async () => {
+    const [threadsRes, repliesRes] = await Promise.all([
+      supabase
+        .from('threads')
+        .select('*')
+        .order('created_at', { ascending: false }),
+      supabase
+        .from('thread_replies')
+        .select('*')
+        .order('created_at', { ascending: true }),
+    ]);
+    if (threadsRes.error) {
+      console.error('Failed to refetch threads:', threadsRes.error);
+      return;
+    }
+    if (repliesRes.error) {
+      console.error('Failed to refetch thread_replies:', repliesRes.error);
+      return;
+    }
+    setData((prev) =>
+      prev
+        ? {
+            ...prev,
+            threads: threadsRes.data.map(threadRowToThread),
+            threadReplies: repliesRes.data.map(replyRowToReply),
+          }
+        : prev,
+    );
+  }, []);
+
+  // Realtime: thread_replies broadcasts so demos see new replies appear live.
+  // The trigger maintains threads.reply_count; refetching both keeps the
+  // feed counters and the detail list in sync.
+  useEffect(() => {
+    const channel = supabase
+      .channel('thread_replies_changes')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'thread_replies' },
+        () => {
+          refetchThreadsAndReplies();
+        },
+      )
+      .subscribe();
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [refetchThreadsAndReplies]);
 
   const saveStop = useCallback(
     async (stop: PlannedStop) => {
@@ -270,6 +385,36 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
     await refetchStops();
   }, [refetchStops]);
 
+  const postReply = useCallback(
+    async ({
+      threadId,
+      body,
+      authorInitial,
+      authorName,
+    }: {
+      threadId: string;
+      body: string;
+      authorInitial: string;
+      authorName: string;
+    }) => {
+      const trimmed = body.trim();
+      if (!trimmed) return;
+      const { error: insertErr } = await supabase
+        .from('thread_replies')
+        .insert({
+          thread_id: threadId,
+          author_initial: authorInitial,
+          author_name: authorName,
+          body: trimmed,
+        });
+      if (insertErr) throw insertErr;
+      // Realtime will refetch; refetch here too so the local user sees the
+      // post immediately even if the channel is slow to wake.
+      await refetchThreadsAndReplies();
+    },
+    [refetchThreadsAndReplies],
+  );
+
   return (
     <Context.Provider
       value={{
@@ -280,6 +425,7 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
         removeStop,
         savePlaceToStop,
         resetDemo,
+        postReply,
       }}
     >
       {children}

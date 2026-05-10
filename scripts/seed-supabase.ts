@@ -15,6 +15,7 @@ import { rioPlaces } from '../src/data/rioPlaces';
 import { globalPlaces } from '../src/data/globalPlaces';
 import { friendOverlaps, myTrip } from '../src/data/myTrip';
 import { plannedStops } from '../src/data/plannedStops';
+import { threads } from '../src/data/threads';
 
 const url = process.env.VITE_SUPABASE_URL;
 const anonKey = process.env.VITE_SUPABASE_ANON_KEY;
@@ -112,6 +113,29 @@ async function main() {
     .upsert(stops);
   if (stopsErr) throw stopsErr;
   console.log(`  ${stops.length} planned stops upserted`);
+
+  console.log('Seeding threads...');
+  const threadRows = threads.map((t) => ({
+    id: t.id,
+    kind: t.kind,
+    title: t.title,
+    body: t.body,
+    author_initial: t.authorInitial,
+    author_name: t.authorName,
+    destination_id: t.destinationId ?? null,
+    city_label: t.cityLabel ?? null,
+    friend_id: t.friendId ?? null,
+    trip_season: t.tripSeason ?? null,
+    trip_year: t.tripYear ?? null,
+    reply_count: t.replyCount,
+    follow_count: t.followCount,
+    created_at: t.createdAt,
+  }));
+  const { error: threadsErr } = await supabase
+    .from('threads')
+    .upsert(threadRows);
+  if (threadsErr) throw threadsErr;
+  console.log(`  ${threadRows.length} threads upserted`);
 
   console.log('\nSeed complete.');
 }
