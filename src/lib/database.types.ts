@@ -62,6 +62,7 @@ export type Database = {
           destination_id: string
           english_description: string
           english_name: string
+          friend_visits: Json
           friends_know: number
           hebrew_description: string
           hebrew_name: string
@@ -76,6 +77,7 @@ export type Database = {
           destination_id: string
           english_description: string
           english_name: string
+          friend_visits?: Json
           friends_know?: number
           hebrew_description: string
           hebrew_name: string
@@ -90,6 +92,7 @@ export type Database = {
           destination_id?: string
           english_description?: string
           english_name?: string
+          friend_visits?: Json
           friends_know?: number
           hebrew_description?: string
           hebrew_name?: string

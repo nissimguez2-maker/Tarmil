@@ -19,6 +19,21 @@ export type PlaceCategory =
   | 'kosher'
   | 'landmark';
 
+export type Season = 'spring' | 'summer' | 'autumn' | 'winter';
+
+/**
+ * One friend's past visit to this place, displayed at season+year+duration
+ * resolution per the privacy posture (never specific dates).
+ */
+export type FriendVisit = {
+  friendInitial: string;
+  friendName: string;
+  season: Season;
+  year: number;
+  /** Hebrew duration label, e.g. "שבועיים", "סוף שבוע". Rendered verbatim. */
+  durationLabel: string;
+};
+
 export type Place = {
   id: string;
   destinationId: string;
@@ -35,4 +50,6 @@ export type Place = {
   friendsKnow: number;
   /** Hand-picked Tarmil recommendation badge. */
   tarmilPick?: boolean;
+  /** Friends' past visits, season+year+duration only. Default empty. */
+  friendVisits?: FriendVisit[];
 };

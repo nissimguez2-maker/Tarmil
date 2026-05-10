@@ -1,5 +1,7 @@
-import { useParams, Navigate } from 'react-router-dom';
+import { useState } from 'react';
+import { useParams, Navigate, useNavigate } from 'react-router-dom';
 import { Star, Navigation, MapPin } from 'lucide-react';
+import clsx from 'clsx';
 import { Screen } from '../../components/Screen';
 import { TopBar } from '../../components/TopBar';
 import { SectionLabel } from '../../components/SectionLabel';
@@ -7,7 +9,8 @@ import { Button } from '../../components/Button';
 import { Dunes } from '../../components/Dunes';
 import { useSupabaseData } from '../../lib/SupabaseDataProvider';
 import { LoadingPanel, ErrorPanel } from '../../components/DataState';
-import type { PlaceCategory } from '../../data/places';
+import type { FriendVisit, PlaceCategory, Season } from '../../data/places';
+import { MapsActionSheet } from './MapsActionSheet';
 
 /**
  * Place detail — the drill-down view for a single place from the Trip map.
@@ -16,6 +19,8 @@ import type { PlaceCategory } from '../../data/places';
 export function PlaceScreen() {
   const { id } = useParams<{ id: string }>();
   const { data, loading, error } = useSupabaseData();
+  const navigate = useNavigate();
+  const [mapsOpen, setMapsOpen] = useState(false);
   if (loading) return <LoadingPanel />;
   if (error || !data) return <ErrorPanel error={error} />;
 
@@ -24,6 +29,8 @@ export function PlaceScreen() {
   if (!place) {
     return <Navigate to="/trip" replace />;
   }
+
+  const visits = place.friendVisits ?? [];
 
   return (
     <Screen>
@@ -74,7 +81,9 @@ export function PlaceScreen() {
         </p>
 
         <SectionLabel number="02" label="Friends who know this place." />
-        {place.friendsKnow > 0 ? (
+        {visits.length > 0 ? (
+          <FriendVisitsList visits={visits} totalKnown={place.friendsKnow} />
+        ) : place.friendsKnow > 0 ? (
           <div className="flex items-center gap-sm">
             <FriendDots count={Math.min(place.friendsKnow, 5)} />
             <span className="text-body text-cocoa-70">
@@ -87,6 +96,11 @@ export function PlaceScreen() {
         ) : (
           <p className="text-body text-cocoa-55">
             עדיין אף חבר שלך לא היה כאן.
+          </p>
+        )}
+        {visits.length > 0 && (
+          <p className="text-[9pt] text-cocoa-55">
+            תרמיל מציג ביקורי חברים ברמת עונה ושנה בלבד — לא תאריכים מדויקים.
           </p>
         )}
 
@@ -104,12 +118,27 @@ export function PlaceScreen() {
           />
         </div>
 
-        <Button variant="accent" fullWidth>
+        <Button
+          variant="accent"
+          fullWidth
+          aria-expanded={mapsOpen}
+          onClick={() => setMapsOpen((o) => !o)}
+        >
           <Navigation className="h-4 w-4" aria-hidden />
           קבל הוראות הגעה
         </Button>
 
-        <Button variant="ghost" fullWidth>
+        <MapsActionSheet
+          open={mapsOpen}
+          place={place}
+          onClose={() => setMapsOpen(false)}
+        />
+
+        <Button
+          variant="ghost"
+          fullWidth
+          onClick={() => navigate('/trip')}
+        >
           <MapPin className="h-4 w-4" aria-hidden />
           חזרה למפה
         </Button>
@@ -133,6 +162,57 @@ function FriendDots({ count }: { count: number }) {
           aria-hidden
         />
       ))}
+    </div>
+  );
+}
+
+const SEASON_HE: Record<Season, string> = {
+  spring: 'אביב',
+  summer: 'קיץ',
+  autumn: 'סתיו',
+  winter: 'חורף',
+};
+
+function FriendVisitsList({
+  visits,
+  totalKnown,
+}: {
+  visits: FriendVisit[];
+  totalKnown: number;
+}) {
+  const additional = Math.max(totalKnown - visits.length, 0);
+  return (
+    <div className="flex flex-col gap-sm">
+      <ul className="flex flex-col">
+        {visits.map((v, i) => (
+          <li
+            key={`${v.friendName}-${v.year}-${v.season}-${i}`}
+            className={clsx(
+              'flex items-center gap-md py-2',
+              i < visits.length - 1 && 'border-b border-cocoa-15',
+            )}
+          >
+            <span
+              className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-cocoa font-serif text-body text-ivory"
+              aria-hidden
+            >
+              {v.friendInitial}
+            </span>
+            <span className="flex flex-col">
+              <span className="text-body text-cocoa">{v.friendName}</span>
+              <span className="text-[10pt] text-cocoa-55">
+                {SEASON_HE[v.season]}{' '}
+                <span className="tnum">{v.year}</span> · {v.durationLabel}
+              </span>
+            </span>
+          </li>
+        ))}
+      </ul>
+      {additional > 0 && (
+        <span className="text-[10pt] text-cocoa-55">
+          ועוד <span className="tnum">{additional}</span> חברים שלך היו כאן.
+        </span>
+      )}
     </div>
   );
 }

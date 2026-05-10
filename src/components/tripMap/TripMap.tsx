@@ -30,6 +30,8 @@ type Props = {
   activeFilters: Set<FilterId>;
   places: Place[];
   friendOverlaps: FriendOverlap[];
+  /** When false, friend pins are hidden (FriendDensityToggle off). */
+  friendsVisible: boolean;
   pastTrip: LatLng[];
   presentLocation: LatLng;
   plannedStops: PlannedStop[];
@@ -49,6 +51,7 @@ export const TripMap = forwardRef<TripMapHandle, Props>(function TripMap(
     activeFilters,
     places,
     friendOverlaps,
+    friendsVisible,
     pastTrip,
     presentLocation,
     plannedStops,
@@ -168,16 +171,18 @@ export const TripMap = forwardRef<TripMapHandle, Props>(function TripMap(
       ),
     );
 
-    cleanups.push(
-      drawFriendBubbles(
-        map,
-        friendOverlaps,
-        isPick
-          ? noopFriend
-          : (friend) =>
-              handlersRef.current.onOpenSheet({ kind: 'friend', friend }),
-      ),
-    );
+    if (friendsVisible) {
+      cleanups.push(
+        drawFriendBubbles(
+          map,
+          friendOverlaps,
+          isPick
+            ? noopFriend
+            : (friend) =>
+                handlersRef.current.onOpenSheet({ kind: 'friend', friend }),
+        ),
+      );
+    }
 
     cleanups.push(drawPresentPin(map, presentLocation));
 
@@ -189,6 +194,7 @@ export const TripMap = forwardRef<TripMapHandle, Props>(function TripMap(
     activeFilters,
     places,
     friendOverlaps,
+    friendsVisible,
     pastTrip,
     presentLocation,
     plannedStops,

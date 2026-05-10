@@ -9,7 +9,7 @@ import {
 } from 'react';
 import { supabase } from './supabase';
 import type { Tables, TablesInsert } from './database.types';
-import type { Place, PlaceCategory } from '../data/places';
+import type { FriendVisit, Place, PlaceCategory, Season } from '../data/places';
 import type { FriendOverlap, LatLng } from '../data/myTrip';
 import type { PlannedStop, PlannedStopPrivacy } from '../data/plannedStops';
 
@@ -35,6 +35,40 @@ type ContextValue = {
 
 const Context = createContext<ContextValue | null>(null);
 
+const SEASONS: ReadonlySet<Season> = new Set([
+  'spring',
+  'summer',
+  'autumn',
+  'winter',
+]);
+
+const parseFriendVisits = (raw: unknown): FriendVisit[] | undefined => {
+  if (!Array.isArray(raw) || raw.length === 0) return undefined;
+  const visits: FriendVisit[] = [];
+  for (const item of raw) {
+    if (!item || typeof item !== 'object') continue;
+    const v = item as Record<string, unknown>;
+    if (
+      typeof v.friendInitial !== 'string' ||
+      typeof v.friendName !== 'string' ||
+      typeof v.season !== 'string' ||
+      !SEASONS.has(v.season as Season) ||
+      typeof v.year !== 'number' ||
+      typeof v.durationLabel !== 'string'
+    ) {
+      continue;
+    }
+    visits.push({
+      friendInitial: v.friendInitial,
+      friendName: v.friendName,
+      season: v.season as Season,
+      year: v.year,
+      durationLabel: v.durationLabel,
+    });
+  }
+  return visits.length ? visits : undefined;
+};
+
 const placeRowToPlace = (r: Tables<'places'>): Place => ({
   id: r.id,
   destinationId: r.destination_id,
@@ -48,6 +82,7 @@ const placeRowToPlace = (r: Tables<'places'>): Place => ({
   rating: r.rating,
   friendsKnow: r.friends_know,
   tarmilPick: r.tarmil_pick || undefined,
+  friendVisits: parseFriendVisits(r.friend_visits),
 });
 
 const friendRowToOverlap = (r: Tables<'friend_overlaps'>): FriendOverlap => ({

@@ -28,6 +28,9 @@ export const globalPlaces: Place[] = [
     rating: 4.7,
     friendsKnow: 2,
     tarmilPick: true,
+    friendVisits: [
+      { friendInitial: 'ר', friendName: 'רועי בן עמי', season: 'summer', year: 2025, durationLabel: 'שבוע' },
+    ],
   },
   {
     id: 'buzios-geriba-hostel',
@@ -595,6 +598,9 @@ export const globalPlaces: Place[] = [
     rating: 4.8,
     friendsKnow: 9,
     tarmilPick: true,
+    friendVisits: [
+      { friendInitial: 'א', friendName: 'איתי לוטם', season: 'winter', year: 2024, durationLabel: 'שבוע' },
+    ],
   },
   {
     id: 'duna-por-do-sol',
@@ -611,6 +617,10 @@ export const globalPlaces: Place[] = [
     rating: 4.8,
     friendsKnow: 8,
     tarmilPick: true,
+    friendVisits: [
+      { friendInitial: 'ה', friendName: 'יותם הררי', season: 'autumn', year: 2024, durationLabel: 'שבוע' },
+      { friendInitial: 'נ', friendName: 'נועה גרין', season: 'summer', year: 2023, durationLabel: 'שבועיים' },
+    ],
   },
   {
     id: 'pedra-furada',
@@ -887,6 +897,9 @@ export const globalPlaces: Place[] = [
     rating: 4.4,
     friendsKnow: 8,
     tarmilPick: true,
+    friendVisits: [
+      { friendInitial: 'ת', friendName: 'תום פרידמן', season: 'autumn', year: 2025, durationLabel: 'סוף שבוע' },
+    ],
   },
   {
     id: 'rayuela-hostel',
@@ -963,6 +976,10 @@ export const globalPlaces: Place[] = [
     rating: 4.7,
     friendsKnow: 7,
     tarmilPick: true,
+    friendVisits: [
+      { friendInitial: 'ת', friendName: 'תום פרידמן', season: 'autumn', year: 2025, durationLabel: 'סוף שבוע' },
+      { friendInitial: 'ד', friendName: 'דניאל שמש', season: 'winter', year: 2025, durationLabel: 'סוף שבוע' },
+    ],
   },
   {
     id: 'la-boca',
@@ -1130,6 +1147,9 @@ export const globalPlaces: Place[] = [
     rating: 4.5,
     friendsKnow: 6,
     tarmilPick: true,
+    friendVisits: [
+      { friendInitial: 'א', friendName: 'איתי לוטם', season: 'autumn', year: 2024, durationLabel: 'שבועיים' },
+    ],
   },
   {
     id: 'chabad-downtown',

@@ -42,13 +42,44 @@ export const globalZones = {
   buenosAires: [-34.6037, -58.3816] as LatLng,
 };
 
-export const myTrip = {
-  past: [
+/**
+ * Past trip legs — multi-year continent arc, chronological earliest-first.
+ * Each leg is a self-contained sequence of city centroids the user passed
+ * through. drawTripLine connects waypoints inside a leg and breaks the line
+ * between legs (the gap-detection in legBreaks.ts handles this from the
+ * flattened array, but the leg shape stays here for seeded clarity).
+ */
+export const pastLegs = {
+  greece2024: [
+    [37.9838, 23.7275] as LatLng, // Athens
+    [36.4083, 25.4419] as LatLng, // Santorini (Fira)
+    [37.4467, 25.3289] as LatLng, // Mykonos
+  ],
+  coteAzur2025: [
+    [43.7102, 7.262] as LatLng, // Nice
+    [43.5528, 7.0174] as LatLng, // Cannes
+    [43.7384, 7.4246] as LatLng, // Monaco
+  ],
+  southeastAsia2025: [
+    [13.7563, 100.5018] as LatLng, // Bangkok
+    [8.0349, 98.8228] as LatLng, // Krabi / Ao Nang
+    [18.7883, 98.9853] as LatLng, // Chiang Mai
+  ],
+  brazil2026: [
     zones.gigAirport,
     zones.maracana,
     zones.centro,
     zones.santaTeresa,
     zones.copacabana,
+  ],
+} as const;
+
+export const myTrip = {
+  past: [
+    ...pastLegs.greece2024,
+    ...pastLegs.coteAzur2025,
+    ...pastLegs.southeastAsia2025,
+    ...pastLegs.brazil2026,
   ] as LatLng[],
 
   /** Where the user is right now — Copacabana centroid, not a specific spot. */

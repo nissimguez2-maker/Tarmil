@@ -29,6 +29,8 @@ export type TripState = {
   sheet: SheetState | null;
   pickPrefillName?: string;
   arrivalDismissed: boolean;
+  /** Friend density toggle — when false, friend pins hide on the map. */
+  friendsVisible: boolean;
 };
 
 export type TripAction =
@@ -39,7 +41,8 @@ export type TripAction =
   | { type: 'START_PICK'; nameHe?: string }
   | { type: 'CANCEL_PICK' }
   | { type: 'CONFIRM_PICK'; latlng: [number, number] }
-  | { type: 'DISMISS_ARRIVAL' };
+  | { type: 'DISMISS_ARRIVAL' }
+  | { type: 'TOGGLE_FRIENDS_VISIBLE' };
 
 export function makeInitialTripState(): TripState {
   return {
@@ -47,6 +50,7 @@ export function makeInitialTripState(): TripState {
     activeFilters: new Set(DEFAULT_ACTIVE_FILTERS),
     sheet: null,
     arrivalDismissed: false,
+    friendsVisible: true,
   };
 }
 
@@ -88,6 +92,8 @@ export function tripReducer(state: TripState, action: TripAction): TripState {
       };
     case 'DISMISS_ARRIVAL':
       return { ...state, sheet: null, arrivalDismissed: true };
+    case 'TOGGLE_FRIENDS_VISIBLE':
+      return { ...state, friendsVisible: !state.friendsVisible };
   }
 }
 
