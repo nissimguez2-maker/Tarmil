@@ -25,6 +25,7 @@ export type Database = {
           lng: number
           overlap_end: string | null
           overlap_start: string | null
+          past_trips: Json
           status: string
           zone_label: string
         }
@@ -38,6 +39,7 @@ export type Database = {
           lng: number
           overlap_end?: string | null
           overlap_start?: string | null
+          past_trips?: Json
           status: string
           zone_label: string
         }
@@ -51,6 +53,7 @@ export type Database = {
           lng?: number
           overlap_end?: string | null
           overlap_start?: string | null
+          past_trips?: Json
           status?: string
           zone_label?: string
         }

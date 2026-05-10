@@ -10,7 +10,7 @@ import {
 import { supabase } from './supabase';
 import type { Tables, TablesInsert } from './database.types';
 import type { FriendVisit, Place, PlaceCategory, Season } from '../data/places';
-import type { FriendOverlap, LatLng } from '../data/myTrip';
+import type { FriendOverlap, FriendPastTrip, LatLng } from '../data/myTrip';
 import type { PlannedStop, PlannedStopPrivacy } from '../data/plannedStops';
 import type { Thread, ThreadKind, ThreadReply } from '../data/threads';
 
@@ -94,6 +94,47 @@ const placeRowToPlace = (r: Tables<'places'>): Place => ({
   friendVisits: parseFriendVisits(r.friend_visits),
 });
 
+const parsePastTrips = (raw: unknown): FriendPastTrip[] | undefined => {
+  if (!Array.isArray(raw) || raw.length === 0) return undefined;
+  const trips: FriendPastTrip[] = [];
+  for (const item of raw) {
+    if (!item || typeof item !== 'object') continue;
+    const v = item as Record<string, unknown>;
+    if (
+      typeof v.id !== 'string' ||
+      typeof v.destinationLabel !== 'string' ||
+      typeof v.season !== 'string' ||
+      !SEASONS.has(v.season as Season) ||
+      typeof v.year !== 'number' ||
+      typeof v.durationLabel !== 'string' ||
+      !Array.isArray(v.waypoints)
+    ) {
+      continue;
+    }
+    const waypoints: LatLng[] = [];
+    for (const point of v.waypoints) {
+      if (
+        Array.isArray(point) &&
+        point.length === 2 &&
+        typeof point[0] === 'number' &&
+        typeof point[1] === 'number'
+      ) {
+        waypoints.push([point[0], point[1]]);
+      }
+    }
+    if (waypoints.length === 0) continue;
+    trips.push({
+      id: v.id,
+      destinationLabel: v.destinationLabel,
+      season: v.season as Season,
+      year: v.year,
+      durationLabel: v.durationLabel,
+      waypoints,
+    });
+  }
+  return trips.length ? trips : undefined;
+};
+
 const friendRowToOverlap = (r: Tables<'friend_overlaps'>): FriendOverlap => ({
   id: r.id,
   friendName: r.friend_name,
@@ -106,6 +147,7 @@ const friendRowToOverlap = (r: Tables<'friend_overlaps'>): FriendOverlap => ({
   destinationId: r.destination_id ?? undefined,
   overlapStart: r.overlap_start ?? undefined,
   overlapEnd: r.overlap_end ?? undefined,
+  pastTrips: parsePastTrips(r.past_trips),
 });
 
 const stopRowToPlanned = (r: Tables<'planned_stops'>): PlannedStop => ({

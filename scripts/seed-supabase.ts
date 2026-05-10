@@ -62,6 +62,7 @@ async function main() {
     destination_id: f.destinationId ?? null,
     overlap_start: f.overlapStart ?? null,
     overlap_end: f.overlapEnd ?? null,
+    past_trips: f.pastTrips ?? [],
   }));
   const { error: friendsErr } = await supabase
     .from('friend_overlaps')

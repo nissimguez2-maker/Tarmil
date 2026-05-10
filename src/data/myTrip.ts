@@ -86,6 +86,22 @@ export const myTrip = {
   present: zones.copacabana,
 };
 
+/**
+ * One past trip a friend has taken, displayed at season+year+duration
+ * resolution per the privacy posture (never specific dates, even though the
+ * data layer could carry them — it intentionally doesn't).
+ */
+export type FriendPastTrip = {
+  id: string;
+  destinationLabel: string;
+  season: 'spring' | 'summer' | 'autumn' | 'winter';
+  year: number;
+  /** Hebrew duration label, e.g. "שבועיים", "שלושה שבועות". */
+  durationLabel: string;
+  /** City centroids drawn as a polyline on the friend's profile map. */
+  waypoints: LatLng[];
+};
+
 export type FriendOverlap = {
   /** Stable id, referenced from PlannedStop.friendOverlapIds. */
   id: string;
@@ -105,6 +121,8 @@ export type FriendOverlap = {
   overlapStart?: string;
   /** ISO yyyy-mm-dd — exact end of the overlap window. */
   overlapEnd?: string;
+  /** Past trips the friend has taken, season+year+duration resolution only. */
+  pastTrips?: FriendPastTrip[];
 };
 
 /**
@@ -121,6 +139,32 @@ export const friendOverlaps: FriendOverlap[] = [
     zoneLabel: 'איפנמה',
     status: 'present',
     detail: 'באיפנמה כבר ארבעה ימים, יוצאת בסוף השבוע.',
+    pastTrips: [
+      {
+        id: 'maya-greece-2024',
+        destinationLabel: 'איי יוון',
+        season: 'summer',
+        year: 2024,
+        durationLabel: 'שבועיים',
+        waypoints: [
+          [37.9838, 23.7275],
+          [36.4083, 25.4419],
+          [37.4467, 25.3289],
+        ],
+      },
+      {
+        id: 'maya-cote-2025',
+        destinationLabel: 'קוט ד׳אזור',
+        season: 'spring',
+        year: 2025,
+        durationLabel: 'שבוע',
+        waypoints: [
+          [43.7102, 7.262],
+          [43.5528, 7.0174],
+          [43.7384, 7.4246],
+        ],
+      },
+    ],
   },
   {
     id: 'yael-botafogo',
@@ -131,6 +175,20 @@ export const friendOverlaps: FriendOverlap[] = [
     zoneLabel: 'בוטפוגו',
     status: 'present',
     detail: 'בבוטפוגו הערב, בא לקפוץ אליה לבירה?',
+    pastTrips: [
+      {
+        id: 'yael-thailand-2024',
+        destinationLabel: 'תאילנד',
+        season: 'winter',
+        year: 2024,
+        durationLabel: 'שלושה שבועות',
+        waypoints: [
+          [13.7563, 100.5018],
+          [8.0349, 98.8228],
+          [18.7883, 98.9853],
+        ],
+      },
+    ],
   },
   {
     id: 'roi-buzios',
@@ -144,6 +202,32 @@ export const friendOverlaps: FriendOverlap[] = [
     destinationId: 'buzios',
     overlapStart: '2026-10-29',
     overlapEnd: '2026-10-31',
+    pastTrips: [
+      {
+        id: 'roi-bali-2024',
+        destinationLabel: 'באלי',
+        season: 'winter',
+        year: 2024,
+        durationLabel: 'שבועיים',
+        waypoints: [
+          [-8.4095, 115.1889],
+          [-8.65, 115.2167],
+          [-8.6905, 115.1729],
+        ],
+      },
+      {
+        id: 'roi-greece-2025',
+        destinationLabel: 'איי יוון',
+        season: 'summer',
+        year: 2025,
+        durationLabel: 'שבוע',
+        waypoints: [
+          [37.9838, 23.7275],
+          [36.7372, 24.4344],
+          [37.4467, 25.3289],
+        ],
+      },
+    ],
   },
   {
     id: 'shir-saopaulo',
@@ -157,6 +241,31 @@ export const friendOverlaps: FriendOverlap[] = [
     destinationId: 'sao-paulo',
     overlapStart: '2026-11-03',
     overlapEnd: '2026-11-05',
+    pastTrips: [
+      {
+        id: 'shir-mendoza-2024',
+        destinationLabel: 'מנדוסה',
+        season: 'autumn',
+        year: 2024,
+        durationLabel: 'סוף שבוע',
+        waypoints: [
+          [-32.8895, -68.8458],
+          [-33.4378, -69.083],
+          [-32.9442, -68.7656],
+        ],
+      },
+      {
+        id: 'shir-punta-2025',
+        destinationLabel: 'פונטה דל אסטה',
+        season: 'summer',
+        year: 2025,
+        durationLabel: 'עשרה ימים',
+        waypoints: [
+          [-34.9591, -54.9472],
+          [-34.9214, -54.7569],
+        ],
+      },
+    ],
   },
   {
     id: 'yotam-jericoacoara',
@@ -170,6 +279,32 @@ export const friendOverlaps: FriendOverlap[] = [
     destinationId: 'jericoacoara',
     overlapStart: '2026-11-10',
     overlapEnd: '2026-11-13',
+    pastTrips: [
+      {
+        id: 'yotam-bali-2024',
+        destinationLabel: 'באלי',
+        season: 'summer',
+        year: 2024,
+        durationLabel: 'שלושה שבועות',
+        waypoints: [
+          [-8.65, 115.2167],
+          [-8.6905, 115.1729],
+          [-8.7986, 115.1671],
+        ],
+      },
+      {
+        id: 'yotam-bariloche-2025',
+        destinationLabel: 'בריצ׳ה',
+        season: 'winter',
+        year: 2025,
+        durationLabel: 'שבוע',
+        waypoints: [
+          [-41.1335, -71.3103],
+          [-41.0833, -71.55],
+          [-41.1668, -71.5378],
+        ],
+      },
+    ],
   },
   {
     id: 'tom-buenosaires',
@@ -183,5 +318,31 @@ export const friendOverlaps: FriendOverlap[] = [
     destinationId: 'buenos-aires',
     overlapStart: '2026-11-18',
     overlapEnd: '2026-11-22',
+    pastTrips: [
+      {
+        id: 'tom-patagonia-2024',
+        destinationLabel: 'פטגוניה',
+        season: 'autumn',
+        year: 2024,
+        durationLabel: 'חודש',
+        waypoints: [
+          [-50.9423, -72.8676],
+          [-49.3, -72.5],
+          [-46.5, -71.7],
+        ],
+      },
+      {
+        id: 'tom-cusco-2025',
+        destinationLabel: 'קוסקו ומאצ׳ו פיצ׳ו',
+        season: 'spring',
+        year: 2025,
+        durationLabel: 'שבועיים',
+        waypoints: [
+          [-13.5319, -71.9675],
+          [-13.1631, -72.545],
+          [-13.5226, -71.545],
+        ],
+      },
+    ],
   },
 ];

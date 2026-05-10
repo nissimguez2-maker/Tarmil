@@ -4,6 +4,7 @@ import { TripScreen } from './screens/trip/TripScreen';
 import { ActivityScreen } from './screens/activity/ActivityScreen';
 import { ActivityThreadScreen } from './screens/activity/ActivityThreadScreen';
 import { FriendsScreen } from './screens/friends/FriendsScreen';
+import { FriendProfileScreen } from './screens/friends/FriendProfileScreen';
 import { ProfileScreen } from './screens/profile/ProfileScreen';
 import { PlaceScreen } from './screens/place/PlaceScreen';
 
@@ -26,6 +27,7 @@ export function AppRoutes() {
         <Route path="/activity" element={<ActivityScreen />} />
         <Route path="/activity/:threadId" element={<ActivityThreadScreen />} />
         <Route path="/friends" element={<FriendsScreen />} />
+        <Route path="/friends/:id" element={<FriendProfileScreen />} />
         <Route path="/profile" element={<ProfileScreen />} />
         <Route path="*" element={<Navigate to="/trip" replace />} />
       </Route>
