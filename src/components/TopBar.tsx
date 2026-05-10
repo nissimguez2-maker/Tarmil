@@ -1,6 +1,7 @@
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, Wrench } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
+import { useToolsPanel } from '../lib/ToolsPanelContext';
 
 type Props = {
   /** Title in the center, set in Fraunces serif. */
@@ -9,7 +10,7 @@ type Props = {
   eyebrow?: string;
   /** Show a back chevron on the start side. Tapping calls navigate(-1). */
   back?: boolean;
-  /** Optional element on the end side (e.g., a settings gear). */
+  /** Optional element on the end side, rendered just before the wrench (e.g., a settings gear). */
   end?: React.ReactNode;
   className?: string;
 };
@@ -18,11 +19,16 @@ type Props = {
  * Top bar for screens that need a title or back affordance.
  * Hairline cocoa-15 separator at the bottom.
  *
+ * Always renders a wrench icon at the very end corner — taps open the global
+ * <ToolsPanel>. Per-screen `end` content (e.g., the Profile gear) renders just
+ * before it on the start side of the wrench.
+ *
  * In RTL, the chevron on the start side points right (▶︎-style) — Lucide's
  * ChevronRight is correct because in RTL the start side is on the right.
  */
 export function TopBar({ title, eyebrow, back, end, className }: Props) {
   const navigate = useNavigate();
+  const { open: openTools } = useToolsPanel();
 
   return (
     <header
@@ -56,7 +62,17 @@ export function TopBar({ title, eyebrow, back, end, className }: Props) {
         )}
       </div>
 
-      {end && <div className="absolute end-md">{end}</div>}
+      <div className="absolute end-md flex items-center gap-1">
+        {end}
+        <button
+          type="button"
+          aria-label="כלים"
+          onClick={openTools}
+          className="inline-flex h-9 w-9 items-center justify-center rounded-full text-cocoa hover:bg-cocoa-8 active:bg-cocoa-15"
+        >
+          <Wrench className="h-5 w-5" strokeWidth={1.5} aria-hidden />
+        </button>
+      </div>
     </header>
   );
 }
