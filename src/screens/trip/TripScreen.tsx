@@ -7,7 +7,8 @@ import {
   type TripMapHandle,
 } from '../../components/tripMap/TripMap';
 import { CategoryFilterRail } from '../../components/tripMap/ui/CategoryFilterRail';
-import { TravelMomentCard } from '../../components/tripMap/ui/TravelMomentCard';
+import { NextTripCard } from '../../components/tripMap/ui/NextTripCard';
+import { FriendDensityToggle } from '../../components/tripMap/ui/FriendDensityToggle';
 import { AddDestinationFab } from '../../components/tripMap/ui/AddDestinationFab';
 import { PickReticle } from '../../components/tripMap/ui/PickReticle';
 import { PickOnMapBar } from '../../components/tripMap/ui/PickOnMapBar';
@@ -28,10 +29,6 @@ import type { PlannedStop } from '../../data/plannedStops';
 import { ALL_FILTERS } from '../../components/tripMap/utils/categoryLabel';
 import { useSupabaseData } from '../../lib/SupabaseDataProvider';
 import { LoadingPanel, ErrorPanel } from '../../components/DataState';
-
-// The user's current destination. Hardcoded for the mockup; later this comes
-// from session / "where am I" detection.
-const CURRENT_DESTINATION_ID = 'rio-de-janeiro';
 
 /**
  * Trip tab — the app's hero.
@@ -56,16 +53,8 @@ export function TripScreen() {
   const navigate = useNavigate();
   const tripMapRef = useRef<TripMapHandle>(null);
 
-  const presentFriendCount = useMemo(
-    () =>
-      data?.friendOverlaps.filter((f) => f.status === 'present').length ?? 0,
-    [data],
-  );
-  const picksNearbyCount = useMemo(
-    () =>
-      data?.places.filter(
-        (p) => p.destinationId === CURRENT_DESTINATION_ID && p.tarmilPick,
-      ).length ?? 0,
+  const totalFriendCount = useMemo(
+    () => data?.friendOverlaps.length ?? 0,
     [data],
   );
 
@@ -74,6 +63,11 @@ export function TripScreen() {
 
   const sheet = state.sheet;
   const nextStop = data.plannedStops[0];
+  const nextStopFriends = nextStop
+    ? data.friendOverlaps.filter((f) =>
+        nextStop.friendOverlapIds?.includes(f.id),
+      )
+    : [];
   const floatersVisible = sheet === null && state.mode === 'default';
   const isTallSheet = sheet?.kind === 'plannedStop';
 
@@ -139,6 +133,15 @@ export function TripScreen() {
     <Screen noScroll>
       <div className="flex h-full flex-col">
         <TopBar eyebrow="Tarmil" title="המסע שלך" />
+
+        {nextStop && (
+          <NextTripCard
+            stop={nextStop}
+            friends={nextStopFriends}
+            onTap={openPlannedRoute}
+          />
+        )}
+
         <div className="relative flex-1 overflow-hidden">
           <TripMap
             ref={tripMapRef}
@@ -146,6 +149,7 @@ export function TripScreen() {
             activeFilters={state.activeFilters}
             places={data.places}
             friendOverlaps={data.friendOverlaps}
+            friendsVisible={state.friendsVisible}
             pastTrip={data.myTrip.past}
             presentLocation={data.myTrip.present}
             plannedStops={data.plannedStops}
@@ -168,17 +172,15 @@ export function TripScreen() {
                   })
                 }
               />
-              <div className="absolute inset-x-md bottom-md z-[800] flex flex-col items-stretch gap-sm">
-                <div className="self-end">
-                  <AddDestinationFab onClick={openSearch} />
-                </div>
-                <TravelMomentCard
-                  hereLabel="אתה בריו"
-                  next={nextStop}
-                  friendCount={presentFriendCount}
-                  picksCount={picksNearbyCount}
-                  onTap={openPlannedRoute}
-                />
+              <FriendDensityToggle
+                visible={state.friendsVisible}
+                onToggle={() =>
+                  dispatch({ type: 'TOGGLE_FRIENDS_VISIBLE' })
+                }
+                count={totalFriendCount}
+              />
+              <div className="absolute end-md bottom-md z-[800]">
+                <AddDestinationFab onClick={openSearch} />
               </div>
             </>
           )}

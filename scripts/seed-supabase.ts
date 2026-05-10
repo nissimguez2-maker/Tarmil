@@ -41,6 +41,7 @@ async function main() {
     rating: p.rating,
     friends_know: p.friendsKnow,
     tarmil_pick: p.tarmilPick ?? false,
+    friend_visits: p.friendVisits ?? [],
   }));
 
   const { error: placesErr } = await supabase.from('places').upsert(places);

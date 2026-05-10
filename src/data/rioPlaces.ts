@@ -27,6 +27,10 @@ export const rioPlaces: Place[] = [
     rating: 4.7,
     friendsKnow: 12,
     tarmilPick: true,
+    friendVisits: [
+      { friendInitial: 'מ', friendName: 'מאיה לוי', season: 'summer', year: 2024, durationLabel: 'שבוע' },
+      { friendInitial: 'י', friendName: 'יעל אברהם', season: 'winter', year: 2025, durationLabel: 'שבועיים' },
+    ],
   },
   {
     id: 'ipanema-beach',
@@ -43,6 +47,11 @@ export const rioPlaces: Place[] = [
     rating: 4.8,
     friendsKnow: 11,
     tarmilPick: true,
+    friendVisits: [
+      { friendInitial: 'ר', friendName: 'רועי בן עמי', season: 'autumn', year: 2025, durationLabel: 'סוף שבוע' },
+      { friendInitial: 'ש', friendName: 'שיר כהן', season: 'summer', year: 2024, durationLabel: 'שבוע' },
+      { friendInitial: 'ד', friendName: 'דניאל שמש', season: 'spring', year: 2025, durationLabel: 'שבוע' },
+    ],
   },
   {
     id: 'leblon-beach',
@@ -214,6 +223,10 @@ export const rioPlaces: Place[] = [
     rating: 4.6,
     friendsKnow: 14,
     tarmilPick: true,
+    friendVisits: [
+      { friendInitial: 'ד', friendName: 'דניאל שמש', season: 'autumn', year: 2024, durationLabel: 'שבועיים' },
+      { friendInitial: 'מ', friendName: 'מאיה לוי', season: 'summer', year: 2024, durationLabel: 'שבוע' },
+    ],
   },
   {
     id: 'lemix-hostel',
@@ -657,6 +670,9 @@ export const rioPlaces: Place[] = [
     rating: 4.7,
     friendsKnow: 13,
     tarmilPick: true,
+    friendVisits: [
+      { friendInitial: 'ת', friendName: 'תום פרידמן', season: 'autumn', year: 2025, durationLabel: 'סוף שבוע' },
+    ],
   },
   {
     id: 'sugarloaf',
