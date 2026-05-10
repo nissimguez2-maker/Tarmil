@@ -7,6 +7,13 @@ import { FriendsScreen } from './screens/friends/FriendsScreen';
 import { FriendProfileScreen } from './screens/friends/FriendProfileScreen';
 import { ProfileScreen } from './screens/profile/ProfileScreen';
 import { PlaceScreen } from './screens/place/PlaceScreen';
+import { CurrencyToolScreen } from './screens/tools/CurrencyToolScreen';
+import { ChecklistToolScreen } from './screens/tools/ChecklistToolScreen';
+import { VoiceTranslateToolScreen } from './screens/tools/VoiceTranslateToolScreen';
+import { MenuTranslateToolScreen } from './screens/tools/MenuTranslateToolScreen';
+import { SignTranslateToolScreen } from './screens/tools/SignTranslateToolScreen';
+import { BalancesToolScreen } from './screens/tools/BalancesToolScreen';
+import { EsimToolScreen } from './screens/tools/EsimToolScreen';
 
 /**
  * Route table.
@@ -29,6 +36,13 @@ export function AppRoutes() {
         <Route path="/friends" element={<FriendsScreen />} />
         <Route path="/friends/:id" element={<FriendProfileScreen />} />
         <Route path="/profile" element={<ProfileScreen />} />
+        <Route path="/tools/currency" element={<CurrencyToolScreen />} />
+        <Route path="/tools/checklist" element={<ChecklistToolScreen />} />
+        <Route path="/tools/voice" element={<VoiceTranslateToolScreen />} />
+        <Route path="/tools/menu" element={<MenuTranslateToolScreen />} />
+        <Route path="/tools/sign" element={<SignTranslateToolScreen />} />
+        <Route path="/tools/balances" element={<BalancesToolScreen />} />
+        <Route path="/tools/esim" element={<EsimToolScreen />} />
         <Route path="*" element={<Navigate to="/trip" replace />} />
       </Route>
     </Routes>

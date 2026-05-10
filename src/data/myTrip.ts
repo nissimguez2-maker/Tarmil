@@ -74,6 +74,42 @@ export const pastLegs = {
   ],
 } as const;
 
+/**
+ * Display metadata for the user's own past legs. Profile screen surfaces
+ * these at full date precision — privacy posture about season+year+duration
+ * applies to OTHER people's trips, not the user's own.
+ */
+export type PastLegMeta = {
+  label: string;
+  /** ISO yyyy-mm-dd. */
+  startIso: string;
+  /** ISO yyyy-mm-dd. */
+  endIso: string;
+};
+
+export const pastLegMeta: Record<keyof typeof pastLegs, PastLegMeta> = {
+  greece2024: {
+    label: 'איי יוון',
+    startIso: '2024-07-15',
+    endIso: '2024-07-29',
+  },
+  coteAzur2025: {
+    label: 'קוט ד׳אזור',
+    startIso: '2025-04-10',
+    endIso: '2025-04-17',
+  },
+  southeastAsia2025: {
+    label: 'דרום מזרח אסיה',
+    startIso: '2025-12-05',
+    endIso: '2025-12-26',
+  },
+  brazil2026: {
+    label: 'ברזיל — הטיול הנוכחי',
+    startIso: '2026-04-22',
+    endIso: '2026-09-30',
+  },
+};
+
 export const myTrip = {
   past: [
     ...pastLegs.greece2024,

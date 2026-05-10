@@ -1,11 +1,14 @@
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
 import {
   X,
+  ChevronLeft,
   Coins,
   ListChecks,
-  Languages,
+  Mic,
   ScanText,
+  Languages,
   Wallet,
   Smartphone,
 } from 'lucide-react';
@@ -13,18 +16,20 @@ import type { LucideIcon } from 'lucide-react';
 import { SectionLabel } from './SectionLabel';
 
 type Tool = {
+  to: string;
   name: string;
   meta: string;
   Icon: LucideIcon;
 };
 
 const TOOLS: Tool[] = [
-  { name: 'ממיר מטבעות', meta: 'עובד גם בלי רשת', Icon: Coins },
-  { name: 'צ׳ק ליסט לפני יציאה', meta: 'ויזה, חיסונים, ביטוח', Icon: ListChecks },
-  { name: 'מתרגם קולי', meta: 'דיבור-לדיבור, תרגום מיידי', Icon: Languages },
-  { name: 'מתרגם תפריט ושלטים', meta: 'סורק, מתרגם, מסמן רכיבים', Icon: ScanText },
-  { name: 'יתרות בין חברים', meta: 'חוב פתוח בין שני חברים', Icon: Wallet },
-  { name: 'eSIM וחבילות גלישה', meta: 'תמיכה בעברית בחו״ל', Icon: Smartphone },
+  { to: '/tools/currency', name: 'ממיר מטבעות', meta: 'עובד גם בלי רשת', Icon: Coins },
+  { to: '/tools/checklist', name: 'צ׳ק ליסט לפני יציאה', meta: 'ויזה, חיסונים, ביטוח', Icon: ListChecks },
+  { to: '/tools/voice', name: 'מתרגם קולי', meta: 'דיבור-לדיבור, תרגום מיידי', Icon: Mic },
+  { to: '/tools/menu', name: 'מתרגם תפריט', meta: 'סורק, מתרגם, מסמן רכיבים', Icon: ScanText },
+  { to: '/tools/sign', name: 'מתרגם שלטים', meta: 'איסורים, תחבורה, חירום', Icon: Languages },
+  { to: '/tools/balances', name: 'יתרות בין חברים', meta: 'חוב פתוח בין שני חברים', Icon: Wallet },
+  { to: '/tools/esim', name: 'eSIM וחבילות גלישה', meta: 'תמיכה בעברית בחו״ל', Icon: Smartphone },
 ];
 
 type Props = {
@@ -40,8 +45,13 @@ type Props = {
  * Closed: translated off-screen via -translate-x-full (off the physical-left
  * edge in RTL). Open: translate-x-0. Backdrop swallows clicks behind the panel
  * and closes on tap or ESC.
+ *
+ * Each tool row is a launcher — tap closes the panel and navigates to the
+ * tool's full screen.
  */
 export function ToolsPanel({ open, onClose }: Props) {
+  const navigate = useNavigate();
+
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
@@ -50,6 +60,11 @@ export function ToolsPanel({ open, onClose }: Props) {
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, [open, onClose]);
+
+  const launch = (to: string) => {
+    onClose();
+    navigate(to);
+  };
 
   return (
     <>
@@ -102,18 +117,27 @@ export function ToolsPanel({ open, onClose }: Props) {
             </p>
 
             <ul className="flex flex-col gap-sm">
-              {TOOLS.map(({ name, meta, Icon }) => (
-                <li
-                  key={name}
-                  className="flex items-center gap-md rounded-sm border border-cocoa-15 bg-sand p-md"
-                >
-                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-cocoa text-ivory">
-                    <Icon className="h-5 w-5" strokeWidth={1.5} aria-hidden />
-                  </span>
-                  <span className="flex flex-col">
-                    <span className="font-serif text-lede leading-tight">{name}</span>
-                    <span className="text-[10pt] text-cocoa-55">{meta}</span>
-                  </span>
+              {TOOLS.map(({ to, name, meta, Icon }) => (
+                <li key={to}>
+                  <button
+                    type="button"
+                    onClick={() => launch(to)}
+                    className={clsx(
+                      'flex w-full items-center gap-md rounded-sm border border-cocoa-15 bg-sand p-md text-start',
+                      'active:bg-cocoa-08',
+                    )}
+                  >
+                    <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-cocoa text-ivory">
+                      <Icon className="h-5 w-5" strokeWidth={1.5} aria-hidden />
+                    </span>
+                    <span className="flex flex-1 flex-col">
+                      <span className="font-serif text-lede leading-tight">
+                        {name}
+                      </span>
+                      <span className="text-[10pt] text-cocoa-55">{meta}</span>
+                    </span>
+                    <ChevronLeft className="h-5 w-5 text-cocoa-55" aria-hidden />
+                  </button>
                 </li>
               ))}
             </ul>
