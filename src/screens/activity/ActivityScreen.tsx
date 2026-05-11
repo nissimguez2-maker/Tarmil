@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Plus } from 'lucide-react';
 import { Screen } from '../../components/Screen';
@@ -8,6 +8,7 @@ import { Fab } from '../../components/shared/Fab';
 import { TripDeclarationCard } from '../../components/activity/TripDeclarationCard';
 import { WhosDownCard } from '../../components/activity/WhosDownCard';
 import { OverlapNotificationCard } from '../../components/activity/OverlapNotificationCard';
+import { ComposePostSheet } from '../../components/activity/ComposePostSheet';
 import { useSupabaseData } from '../../lib/SupabaseDataProvider';
 import type { Reaction } from '../../data/reactions';
 
@@ -23,6 +24,7 @@ import type { Reaction } from '../../data/reactions';
 export function ActivityScreen() {
   const navigate = useNavigate();
   const { data, loading, error, toggleReaction } = useSupabaseData();
+  const [composeOpen, setComposeOpen] = useState(false);
 
   const reactionsByTarget = useMemo(() => {
     const map = new Map<string, Reaction[]>();
@@ -104,10 +106,12 @@ export function ActivityScreen() {
       <Fab
         ariaLabel="פוסט חדש"
         icon={<Plus className="h-6 w-6" strokeWidth={2} />}
-        onClick={() => {
-          // Stub: scroll to top to acknowledge tap. A future PR adds a composer sheet.
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }}
+        onClick={() => setComposeOpen(true)}
+      />
+
+      <ComposePostSheet
+        open={composeOpen}
+        onClose={() => setComposeOpen(false)}
       />
     </Screen>
   );

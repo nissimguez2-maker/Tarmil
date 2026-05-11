@@ -68,6 +68,11 @@ export function DeviceFrame({ children }: Props) {
         <div className="absolute inset-0 md:top-[44px] flex flex-col">
           {children}
         </div>
+
+        {/* portal target for app-modal sheets (tool details, settings detail,
+            compose). Anchored to the device interior so on desktop they cover
+            the phone, not the desktop viewport. */}
+        <div id="device-portal" className="pointer-events-none absolute inset-0 md:top-[44px] z-[2000]" />
       </div>
     </div>
   );
