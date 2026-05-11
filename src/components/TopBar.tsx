@@ -33,7 +33,7 @@ export function TopBar({ title, eyebrow, back, end, className }: Props) {
   return (
     <header
       className={clsx(
-        'relative flex h-[14mm] items-center justify-center',
+        'relative flex h-lg items-center justify-center',
         'border-b border-cocoa-15 bg-ivory',
         'px-md',
         className,
@@ -46,14 +46,14 @@ export function TopBar({ title, eyebrow, back, end, className }: Props) {
           onClick={() => navigate(-1)}
           className={clsx(
             'absolute start-md inline-flex h-9 w-9 items-center justify-center',
-            'rounded-full text-cocoa hover:bg-cocoa-8 active:bg-cocoa-15',
+            'rounded-full text-cocoa transition-colors duration-instant ease-out-quart hover:bg-cocoa-8 active:bg-cocoa-15',
           )}
         >
           <ChevronRight className="h-5 w-5" aria-hidden />
         </button>
       )}
 
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center gap-px">
         {eyebrow && (
           <span className="meta-caps text-copper">{eyebrow}</span>
         )}
@@ -68,7 +68,7 @@ export function TopBar({ title, eyebrow, back, end, className }: Props) {
           type="button"
           aria-label="כלים"
           onClick={openTools}
-          className="inline-flex h-9 w-9 items-center justify-center rounded-full text-cocoa hover:bg-cocoa-8 active:bg-cocoa-15"
+          className="inline-flex h-9 w-9 items-center justify-center rounded-full text-cocoa transition-colors duration-instant ease-out-quart hover:bg-cocoa-8 active:bg-cocoa-15"
         >
           <Wrench className="h-5 w-5" strokeWidth={1.5} aria-hidden />
         </button>

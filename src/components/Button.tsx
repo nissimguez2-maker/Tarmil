@@ -2,10 +2,12 @@ import type { ButtonHTMLAttributes, ReactNode } from 'react';
 import clsx from 'clsx';
 
 type Variant = 'primary' | 'accent' | 'ghost';
+type Size = 'sm' | 'md';
 
 type Props = {
   children: ReactNode;
   variant?: Variant;
+  size?: Size;
   fullWidth?: boolean;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
@@ -15,12 +17,16 @@ type Props = {
  *  - accent  : copper fill, ivory text. The "vibrant" CTA. Use sparingly.
  *  - ghost   : transparent, cocoa text, hairline cocoa-15 border. Secondary actions.
  *
- * Height is 14mm (DA spacing.lg) — comfortable for mobile thumbs and matches
- * the editorial spacing scale.
+ * Sizes:
+ *  - md (default) : h-lg (14mm) — main CTAs, sticky bottom actions, sheet primaries.
+ *  - sm           : h-10 (40px) — inline secondary actions inside dense sheets.
+ *
+ * Motion is uniform: instant color transition with ease-out-quart.
  */
 export function Button({
   children,
   variant = 'primary',
+  size = 'md',
   fullWidth,
   className,
   ...rest
@@ -31,10 +37,14 @@ export function Button({
       {...rest}
       className={clsx(
         // base
-        'inline-flex h-lg items-center justify-center gap-2 rounded-full px-md',
-        'font-sans text-[11pt] font-medium leading-none',
-        'transition-colors disabled:opacity-30 disabled:pointer-events-none',
+        'inline-flex items-center justify-center gap-2 rounded-full px-md',
+        'font-sans text-body font-medium leading-none',
+        'transition-colors duration-instant ease-out-quart',
+        'disabled:opacity-30 disabled:pointer-events-none',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory',
+        // size
+        size === 'md' && 'h-lg',
+        size === 'sm' && 'h-10',
         // variants
         variant === 'primary' && 'bg-cocoa text-ivory hover:bg-cocoa-70 active:bg-cocoa',
         variant === 'accent' && 'bg-copper text-ivory hover:bg-copper-85 active:bg-copper',

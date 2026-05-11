@@ -25,18 +25,22 @@ export function BottomSheet({
   return (
     <div
       className={clsx(
-        'absolute z-[1000] origin-bottom rounded-md border border-rope bg-ivory transition-all duration-300',
-        height === 'tall'
-          ? 'inset-x-md bottom-md top-[15%] flex flex-col overflow-hidden'
-          : 'inset-x-md bottom-md',
+        'absolute inset-x-0 bottom-0 z-[1000] origin-bottom',
+        'rounded-t-[20px] border-t border-cocoa-15 bg-ivory',
+        'shadow-sheet duration-considered ease-out-quart',
+        'transition-[transform,opacity] motion-reduce:transition-none',
+        height === 'tall' && 'top-[12%] flex flex-col overflow-hidden',
         open
           ? 'translate-y-0 opacity-100'
-          : 'pointer-events-none translate-y-[120%] opacity-0',
+          : 'pointer-events-none translate-y-full opacity-0',
         className,
       )}
-      style={{ boxShadow: '0 -10px 30px -10px rgba(53, 40, 24, 0.25)' }}
       onClick={(e) => e.stopPropagation()}
     >
+      <span
+        aria-hidden
+        className="mx-auto mt-2 block h-1 w-10 rounded-full bg-cocoa-30"
+      />
       {children}
     </div>
   );

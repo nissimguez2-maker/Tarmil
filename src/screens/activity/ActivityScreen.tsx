@@ -103,13 +103,12 @@ export function ActivityScreen() {
 
       <Fab
         ariaLabel="פוסט חדש"
+        icon={<Plus className="h-6 w-6" strokeWidth={2} />}
         onClick={() => {
           // Stub: scroll to top to acknowledge tap. A future PR adds a composer sheet.
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }}
-      >
-        <Plus className="h-6 w-6" strokeWidth={2} aria-hidden />
-      </Fab>
+      />
     </Screen>
   );
 }

@@ -18,7 +18,7 @@ type Props = {
 export function OverlapNotificationCard({ post, friend, onOpenChat }: Props) {
   return (
     <article className="flex flex-col gap-sm rounded-md border border-cocoa-15 bg-sand p-md">
-      <header className="flex items-center gap-3">
+      <header className="flex items-center gap-sm">
         <Avatar
           photoUrl={friend?.photoUrl}
           initial={friend?.friendInitial ?? '·'}
@@ -26,11 +26,16 @@ export function OverlapNotificationCard({ post, friend, onOpenChat }: Props) {
           size="md"
           statusDot
         />
-        <span className="font-serif text-lede italic text-cocoa">
-          {friend?.friendName ?? 'חבר'} ביומן
-        </span>
+        <div className="flex min-w-0 flex-1 flex-col leading-tight">
+          <span className="truncate font-serif text-lede italic text-cocoa">
+            {friend?.friendName ?? 'חבר'}
+          </span>
+          <span className="meta-caps text-copper">חפיפה ביומן</span>
+        </div>
       </header>
-      <p className="font-serif text-lede italic text-cocoa">{post.bodyHe}</p>
+      <p className="font-serif text-lede italic leading-snug text-cocoa">
+        {post.bodyHe}
+      </p>
       <div className="flex justify-start">
         <Button variant="accent" onClick={onOpenChat}>
           פתח שיחה

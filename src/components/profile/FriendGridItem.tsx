@@ -21,7 +21,7 @@ export function FriendGridItem({ friend }: Props) {
   return (
     <Link
       to={`/profile/friend/${friend.id}`}
-      className="flex flex-col items-center gap-1 rounded-md p-sm hover:bg-cocoa-8 active:bg-cocoa-15"
+      className="flex flex-col items-center gap-xs rounded-md p-sm transition-colors duration-instant ease-out-quart hover:bg-cocoa-8 active:bg-cocoa-15"
     >
       <Avatar
         photoUrl={friend.photoUrl}
@@ -30,10 +30,12 @@ export function FriendGridItem({ friend }: Props) {
         size="xl"
         statusDot={friend.status === 'present'}
       />
-      <span className="line-clamp-1 text-[10pt] font-medium text-cocoa">
+      <span className="line-clamp-1 max-w-full text-small font-medium text-cocoa">
         {friend.friendName.split(' ')[0]}
       </span>
-      <span className="line-clamp-1 text-[9pt] text-cocoa-55">{status}</span>
+      <span className="line-clamp-1 max-w-full text-small text-cocoa-55">
+        {status}
+      </span>
     </Link>
   );
 }
