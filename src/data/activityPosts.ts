@@ -120,7 +120,6 @@ export const activityPosts: ActivityPost[] = [
     id: 'act-whosdown-patagonia',
     kind: 'whos_down',
     authorFriendId: 'roi-buzios',
-    destinationId: null,
     bodyHe: 'טיול דרום פטגוניה — מי בעניין דצמבר? חושב על שבועיים, ארקעדה ועד קלפטה.',
     payload: { dateLabel: 'דצמבר 2026' },
     replyCount: 2,

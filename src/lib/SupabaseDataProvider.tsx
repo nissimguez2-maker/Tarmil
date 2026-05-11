@@ -8,7 +8,7 @@ import {
   type ReactNode,
 } from 'react';
 import { supabase } from './supabase';
-import type { Tables, TablesInsert } from './database.types';
+import type { Json, Tables, TablesInsert } from './database.types';
 import type { FriendVisit, Place, PlaceCategory, Season } from '../data/places';
 import type { FriendOverlap, LatLng } from '../data/myTrip';
 import type { PlannedStop, PlannedStopPrivacy } from '../data/plannedStops';
@@ -749,7 +749,7 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
         author_friend_id: null,
         destination_id: destinationId ?? null,
         body_he: trimmed,
-        payload: payload ?? {},
+        payload: (payload ?? {}) as Json,
         reply_count: 0,
       });
       if (insertErr) throw insertErr;

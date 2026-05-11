@@ -8,6 +8,7 @@ import { ForumRow } from '../../components/messages/ForumRow';
 import { GroupChatRow } from '../../components/messages/GroupChatRow';
 import { DMRow } from '../../components/messages/DMRow';
 import { useSupabaseData } from '../../lib/SupabaseDataProvider';
+import type { GroupMessage } from '../../data/groupMessages';
 
 type SubTab = 'forums' | 'chats' | 'dms';
 
@@ -51,7 +52,7 @@ export function MessagesScreen() {
   }, [data]);
 
   const lastMessageByChat = useMemo(() => {
-    const map = new Map<string, (typeof data.groupMessages)[number]>();
+    const map = new Map<string, GroupMessage>();
     if (!data) return map;
     // groupMessages are ordered chronologically; iterate forward and overwrite
     // so the final write per chat is the newest.
