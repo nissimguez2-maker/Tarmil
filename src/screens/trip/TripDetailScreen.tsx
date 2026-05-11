@@ -46,16 +46,17 @@ export function TripDetailScreen() {
     <Screen>
       <TopBar back title={stop.nameHe} eyebrow="טיול הבא" />
 
-      <div className="flex flex-col gap-lg p-md">
-        <section className="flex flex-col gap-sm rounded-md border border-cocoa-15 bg-sand p-md">
+      <div className="flex flex-col gap-lg p-md pb-xl">
+        <section className="flex flex-col gap-xs rounded-md border border-cocoa-15 bg-sand p-md">
           <span className="font-serif text-display leading-none text-cocoa">
             {stop.nameHe}
           </span>
-          <span className="text-[10pt] text-cocoa-70">
-            {formatDateRange(stop.arrivalDate, stop.departureDate)} · {stop.nights} לילות
+          <span className="text-small text-cocoa-70">
+            {formatDateRange(stop.arrivalDate, stop.departureDate)} ·{' '}
+            <span className="tnum">{stop.nights}</span> לילות
           </span>
           {stop.note && (
-            <p className="text-[11pt] italic text-cocoa-70">{stop.note}</p>
+            <p className="mt-xs text-body italic text-cocoa-70">{stop.note}</p>
           )}
         </section>
 
@@ -69,7 +70,7 @@ export function TripDetailScreen() {
                 <li key={f.id}>
                   <Link
                     to={`/profile/friend/${f.id}`}
-                    className="flex items-center gap-3 rounded-md border border-cocoa-15 bg-ivory p-md hover:bg-sand/40"
+                    className="flex items-center gap-sm rounded-md border border-cocoa-15 bg-ivory p-md transition-colors duration-instant ease-out-quart hover:bg-sand/40 active:bg-sand/60"
                   >
                     <Avatar
                       photoUrl={f.photoUrl}
@@ -78,11 +79,11 @@ export function TripDetailScreen() {
                       size="md"
                       statusDot={f.status === 'present'}
                     />
-                    <span className="flex flex-col gap-1">
-                      <span className="font-serif text-lede italic text-cocoa">
+                    <span className="flex min-w-0 flex-1 flex-col gap-px">
+                      <span className="truncate font-serif text-lede italic text-cocoa">
                         {f.friendName}
                       </span>
-                      <span className="text-[10pt] text-cocoa-70">
+                      <span className="text-small text-cocoa-70">
                         {f.detail}
                       </span>
                     </span>
@@ -103,12 +104,12 @@ export function TripDetailScreen() {
                 <li key={t.id}>
                   <Link
                     to={`/messages/forums/${forum.id}/${t.id}`}
-                    className="flex flex-col gap-1 rounded-md border border-cocoa-15 bg-ivory p-md hover:bg-sand/40"
+                    className="flex flex-col gap-px rounded-md border border-cocoa-15 bg-ivory p-md transition-colors duration-instant ease-out-quart hover:bg-sand/40 active:bg-sand/60"
                   >
                     <span className="font-serif text-lede italic text-cocoa">
                       {t.title}
                     </span>
-                    <span className="line-clamp-2 text-[10pt] text-cocoa-70">
+                    <span className="line-clamp-2 text-small text-cocoa-70">
                       {t.body}
                     </span>
                   </Link>
@@ -119,14 +120,12 @@ export function TripDetailScreen() {
         )}
 
         <section className="flex flex-col gap-sm">
-          <h2 className="font-serif text-lede italic text-cocoa">
-            כלים ליעד
-          </h2>
+          <h2 className="font-serif text-lede italic text-cocoa">כלים ליעד</h2>
           <div className="grid grid-cols-3 gap-sm">
             {['ממיר מטבעות', 'eSIM', 'תרגום קולי'].map((tool) => (
               <div
                 key={tool}
-                className="rounded-md border border-cocoa-15 bg-ivory p-sm text-center text-[10pt] text-cocoa"
+                className="rounded-md border border-cocoa-15 bg-ivory p-sm text-center text-small text-cocoa"
               >
                 {tool}
               </div>

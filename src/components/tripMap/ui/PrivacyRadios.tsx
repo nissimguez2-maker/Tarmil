@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import type { PlannedStopPrivacy } from '../../../data/plannedStops';
 
 type Props = {
@@ -17,24 +18,27 @@ const OPTIONS: Array<{
 
 export function PrivacyRadios({ value, onChange }: Props) {
   return (
-    <div className="flex flex-col gap-sm">
+    <div className="flex flex-col gap-xs">
       <span className="meta-caps text-cocoa-55">מי יכול לראות חפיפות?</span>
-      <div className="flex flex-col gap-2">
-        {OPTIONS.map((opt) => (
+      <div className="flex flex-col">
+        {OPTIONS.map((opt, i) => (
           <label
             key={opt.value}
-            className="flex cursor-pointer items-start gap-sm py-1"
+            className={clsx(
+              'flex cursor-pointer items-start gap-sm py-sm',
+              i > 0 && 'border-t border-cocoa-15',
+            )}
           >
             <input
               type="radio"
               name="planned-stop-privacy"
               checked={value === opt.value}
               onChange={() => onChange(opt.value)}
-              className="mt-1 h-4 w-4 accent-copper"
+              className="mt-1 h-4 w-4 shrink-0 accent-copper"
             />
-            <div className="flex flex-col">
+            <div className="flex min-w-0 flex-1 flex-col gap-px">
               <span className="text-body text-cocoa">{opt.label}</span>
-              <span className="text-[10pt] text-cocoa-55">{opt.hint}</span>
+              <span className="text-small text-cocoa-55">{opt.hint}</span>
             </div>
           </label>
         ))}

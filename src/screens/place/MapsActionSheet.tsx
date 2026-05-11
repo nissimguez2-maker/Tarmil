@@ -41,15 +41,15 @@ export function MapsActionSheet({ open, place, onClose }: Props) {
     <div
       role="menu"
       aria-label="פתח באפליקציית מפות"
-      className="flex flex-col rounded-md border border-cocoa-15 bg-sand"
+      className="flex flex-col overflow-hidden rounded-md border border-cocoa-15 bg-sand"
     >
-      <div className="flex items-center justify-between border-b border-cocoa-15 px-md py-2">
+      <div className="flex items-center justify-between border-b border-cocoa-15 px-md py-sm">
         <span className="meta-caps text-copper">פתח במפות</span>
         <button
           type="button"
           onClick={onClose}
           aria-label="סגירה"
-          className="text-[10pt] text-cocoa-55 hover:text-cocoa"
+          className="text-small text-cocoa-55 transition-colors duration-instant ease-out-quart hover:text-cocoa"
         >
           ביטול
         </button>
@@ -63,20 +63,20 @@ export function MapsActionSheet({ open, place, onClose }: Props) {
               onClick={() => handlePick(id)}
               className={clsx(
                 'flex w-full items-center gap-md px-md py-3 text-start',
-                'active:bg-cocoa-08',
+                'transition-colors duration-instant ease-out-quart active:bg-cocoa-08',
                 i < PROVIDERS.length - 1 && 'border-b border-cocoa-15',
               )}
             >
-              <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-cocoa text-ivory">
+              <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-cocoa text-ivory">
                 <Icon className="h-4 w-4" strokeWidth={1.7} aria-hidden />
               </span>
-              <span className="flex flex-1 flex-col">
+              <span className="flex min-w-0 flex-1 flex-col">
                 <span className="font-serif text-lede leading-tight text-cocoa ltr">
                   {label}
                 </span>
-                <span className="text-[10pt] text-cocoa-55">{meta}</span>
+                <span className="text-small text-cocoa-55">{meta}</span>
               </span>
-              <ChevronLeft className="h-4 w-4 text-cocoa-55" aria-hidden />
+              <ChevronLeft className="h-4 w-4 shrink-0 text-cocoa-55" aria-hidden />
             </button>
           </li>
         ))}

@@ -78,11 +78,11 @@ export function SearchDestinationSheet({
     : SUGGESTIONS;
 
   return (
-    <div className="flex max-h-[60dvh] flex-col gap-md p-md">
+    <div className="flex max-h-[60dvh] flex-col gap-md px-md pb-md pt-sm">
       <div className="flex items-start justify-between gap-sm">
-        <div className="flex flex-col">
+        <div className="flex min-w-0 flex-1 flex-col gap-px">
           <span className="meta-caps text-copper">הוסף יעד למסע</span>
-          <h3 className="font-serif text-lede leading-tight">
+          <h3 className="font-serif text-lede leading-tight text-cocoa">
             לאן רוצה להגיע?
           </h3>
         </div>
@@ -90,9 +90,9 @@ export function SearchDestinationSheet({
           type="button"
           aria-label="סגור"
           onClick={onClose}
-          className="inline-flex h-8 w-8 items-center justify-center rounded-full text-cocoa-55 hover:bg-cocoa-8 active:bg-cocoa-15"
+          className="-me-1 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-cocoa-55 transition-colors duration-instant ease-out-quart hover:bg-cocoa-8 active:bg-cocoa-15"
         >
-          <X className="h-4 w-4" aria-hidden />
+          <X className="h-4 w-4" strokeWidth={1.8} aria-hidden />
         </button>
       </div>
 
@@ -110,50 +110,34 @@ export function SearchDestinationSheet({
           autoCorrect="off"
           spellCheck={false}
           dir="rtl"
-          className="h-10 w-full rounded-full border border-cocoa-15 bg-sand pe-lg ps-md text-body text-cocoa placeholder:text-cocoa-55 focus:border-copper focus:outline-none"
+          className="h-10 w-full rounded-full border border-cocoa-15 bg-sand pe-lg ps-md text-body text-cocoa placeholder:text-cocoa-55 transition-colors duration-instant ease-out-quart focus:border-copper focus:outline-none"
         />
       </div>
 
-      <div className="flex flex-col gap-1 overflow-y-auto">
-        <span className="meta-caps text-cocoa-55">
+      <div className="flex flex-col overflow-y-auto">
+        <span className="meta-caps pb-xs text-cocoa-55">
           {q ? 'תוצאות' : 'מומלצים לישראלים'}
         </span>
         {filtered.map((s) => (
-          <button
+          <SuggestionRow
             key={s.id}
-            type="button"
+            suggestion={s}
             onClick={() =>
               onPickSuggestion({ nameHe: s.nameHe, latlng: [s.lat, s.lng] })
             }
-            className="flex items-center justify-between gap-sm border-t border-cocoa-08 py-sm text-start active:bg-cocoa-08"
-          >
-            <div className="flex flex-col">
-              <span className="text-body text-cocoa">{s.nameHe}</span>
-              <span className="text-[10pt] text-cocoa-55">{s.kindHe}</span>
-            </div>
-            <span className="text-[10pt] text-cocoa-55 ltr">{s.nameEn}</span>
-          </button>
+          />
         ))}
         {!q && RECENT.length > 0 && (
           <>
-            <span className="meta-caps mt-sm text-cocoa-55">לאחרונה</span>
+            <span className="meta-caps mt-sm pb-xs text-cocoa-55">לאחרונה</span>
             {RECENT.map((s) => (
-              <button
+              <SuggestionRow
                 key={s.id}
-                type="button"
+                suggestion={s}
                 onClick={() =>
                   onPickSuggestion({ nameHe: s.nameHe, latlng: [s.lat, s.lng] })
                 }
-                className="flex items-center justify-between gap-sm border-t border-cocoa-08 py-sm text-start active:bg-cocoa-08"
-              >
-                <div className="flex flex-col">
-                  <span className="text-body text-cocoa">{s.nameHe}</span>
-                  <span className="text-[10pt] text-cocoa-55">{s.kindHe}</span>
-                </div>
-                <span className="text-[10pt] text-cocoa-55 ltr">
-                  {s.nameEn}
-                </span>
-              </button>
+              />
             ))}
           </>
         )}
@@ -162,11 +146,35 @@ export function SearchDestinationSheet({
       <button
         type="button"
         onClick={onPickOnMap}
-        className="inline-flex items-center gap-2 self-start rounded-full border border-cocoa-15 px-md py-2 text-[11pt] text-cocoa active:bg-cocoa-8"
+        className="inline-flex items-center gap-2 self-start rounded-full border border-cocoa-15 px-md py-2 text-body text-cocoa transition-colors duration-instant ease-out-quart active:bg-cocoa-8"
       >
         <MapPin className="h-4 w-4 text-copper" aria-hidden />
         <span>בחר מיקום במפה</span>
       </button>
     </div>
+  );
+}
+
+function SuggestionRow({
+  suggestion,
+  onClick,
+}: {
+  suggestion: Suggestion;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="flex items-center justify-between gap-sm border-t border-cocoa-08 py-sm text-start transition-colors duration-instant ease-out-quart first:border-t-0 active:bg-cocoa-08"
+    >
+      <div className="flex min-w-0 flex-1 flex-col">
+        <span className="truncate text-body text-cocoa">{suggestion.nameHe}</span>
+        <span className="text-small text-cocoa-55">{suggestion.kindHe}</span>
+      </div>
+      <span className="shrink-0 text-small text-cocoa-55 ltr">
+        {suggestion.nameEn}
+      </span>
+    </button>
   );
 }

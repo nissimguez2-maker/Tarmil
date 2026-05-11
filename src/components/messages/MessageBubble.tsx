@@ -25,16 +25,18 @@ export function MessageBubble({ self, leading, children, authorName }: Props) {
       {!self && leading && <span className="self-end pb-1">{leading}</span>}
       <div
         className={clsx(
-          'flex max-w-[78%] flex-col gap-1 rounded-md px-md py-sm',
-          self ? 'bg-copper-70 text-ivory' : 'bg-sand text-cocoa',
+          'flex max-w-[78%] flex-col gap-px rounded-2xl px-md py-sm',
+          self
+            ? 'rounded-ee-sm bg-copper-70 text-ivory'
+            : 'rounded-es-sm bg-sand text-cocoa',
         )}
       >
         {authorName && !self && (
-          <span className="font-serif text-[10pt] italic text-cocoa-70">
+          <span className="font-serif text-small italic text-cocoa-70">
             {authorName}
           </span>
         )}
-        <span className="text-[11pt] leading-snug">{children}</span>
+        <span className="text-body leading-snug">{children}</span>
       </div>
     </div>
   );

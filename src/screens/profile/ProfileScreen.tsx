@@ -51,7 +51,7 @@ export function ProfileScreen() {
           <Link
             to="/profile/settings"
             aria-label="הגדרות"
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full text-cocoa hover:bg-cocoa-8 active:bg-cocoa-15"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full text-cocoa transition-colors duration-instant ease-out-quart hover:bg-cocoa-8 active:bg-cocoa-15"
           >
             <Settings className="h-5 w-5" aria-hidden />
           </Link>
@@ -67,8 +67,10 @@ export function ProfileScreen() {
             size="hero"
             copperBorder
           />
-          <span className="font-serif text-sub leading-tight">נסים גז</span>
-          <span className="text-[10pt] text-cocoa-55">מטייל מאז קיץ 2024</span>
+          <span className="font-serif text-sub leading-tight text-cocoa">
+            נסים גז
+          </span>
+          <span className="text-small text-cocoa-55">מטייל מאז קיץ 2024</span>
           <div className="mt-1 flex flex-wrap items-center justify-center gap-2">
             <StatsPill label="ארצות" value={countriesCount + 2} />
             <StatsPill label="מקומות" value={placesCount} />
@@ -80,17 +82,17 @@ export function ProfileScreen() {
           <SectionLabel number="01" label="Your route." />
           <Link
             to="/trip"
-            className="flex items-center justify-between rounded-md border border-cocoa-15 bg-sand p-md hover:bg-sand/70 active:bg-sand"
+            className="flex items-center justify-between gap-sm rounded-md border border-cocoa-15 bg-sand p-md transition-colors duration-instant ease-out-quart hover:bg-sand/70 active:bg-sand"
           >
-            <span className="flex flex-col gap-1">
-              <span className="font-serif text-lede italic text-cocoa">
+            <span className="flex min-w-0 flex-1 flex-col gap-px">
+              <span className="truncate font-serif text-lede italic text-cocoa">
                 המסלול שלך
               </span>
-              <span className="text-[10pt] text-cocoa-70">
+              <span className="text-small text-cocoa-70">
                 ריו עכשיו · 4 יעדים מתוכננים בלאטם
               </span>
             </span>
-            <span className="meta-caps text-copper">פתח מפה</span>
+            <span className="meta-caps shrink-0 text-copper">פתח מפה</span>
           </Link>
         </section>
 
@@ -133,7 +135,7 @@ export function ProfileScreen() {
             <SectionLabel number="03" label="Friends in network." />
             <Link
               to="/profile/friends"
-              className="text-[10pt] text-copper hover:text-copper-85"
+              className="text-small text-copper transition-colors duration-instant ease-out-quart hover:text-copper-85"
             >
               ראה הכל
             </Link>
