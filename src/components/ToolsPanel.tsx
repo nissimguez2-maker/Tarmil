@@ -68,7 +68,7 @@ export function ToolsPanel({ open, onClose }: Props) {
         onClick={onClose}
         className={clsx(
           'absolute inset-0 z-30 cursor-default bg-cocoa-30',
-          'transition-opacity duration-300',
+          'transition-opacity duration-considered ease-out-quart',
           open ? 'opacity-100' : 'pointer-events-none opacity-0',
         )}
       />
@@ -80,28 +80,29 @@ export function ToolsPanel({ open, onClose }: Props) {
         aria-hidden={!open}
         className={clsx(
           'absolute inset-x-0 top-0 z-40 flex flex-col bg-sand',
-          'rounded-b-md shadow-device transition-transform duration-300 ease-out',
+          'rounded-b-[20px] shadow-panel',
+          'transition-transform duration-considered ease-out-quart',
           open ? 'translate-y-0' : '-translate-y-full',
         )}
         style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}
       >
-        <header className="relative flex h-[14mm] shrink-0 items-center justify-center border-b border-cocoa-15 px-md">
+        <header className="relative flex h-lg shrink-0 items-center justify-center border-b border-cocoa-15 px-md">
           <button
             type="button"
             aria-label="סגירה"
             onClick={onClose}
-            className="absolute end-md inline-flex h-9 w-9 items-center justify-center rounded-full text-cocoa hover:bg-cocoa-8 active:bg-cocoa-15"
+            className="absolute end-md inline-flex h-9 w-9 items-center justify-center rounded-full text-cocoa transition-colors duration-instant ease-out-quart hover:bg-cocoa-8 active:bg-cocoa-15"
           >
             <X className="h-5 w-5" aria-hidden />
           </button>
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-center gap-px">
             <span className="meta-caps text-copper">Tarmil</span>
             <h2 className="font-serif text-lede leading-none">כלים</h2>
           </div>
         </header>
 
         <div className="flex flex-col gap-md p-md">
-          <p className="text-[10pt] text-cocoa-70">
+          <p className="text-small text-cocoa-70">
             כלים יומיומיים לטיול בחו״ל. כל כלי עומד לבד — נפתח, בשימוש, נסגר.
           </p>
 
@@ -110,7 +111,7 @@ export function ToolsPanel({ open, onClose }: Props) {
               <li key={name}>
                 <button
                   type="button"
-                  className="flex h-full w-full flex-col items-center gap-1 rounded-md bg-ivory p-md text-center transition-colors hover:bg-ivory/80 active:bg-cocoa-8"
+                  className="flex h-full w-full flex-col items-center gap-xs rounded-md bg-ivory p-md text-center transition-colors duration-instant ease-out-quart hover:bg-ivory/80 active:bg-cocoa-8"
                   onClick={() => {
                     // Each tool is a stub for now — taps acknowledge via close.
                     onClose();
@@ -119,10 +120,10 @@ export function ToolsPanel({ open, onClose }: Props) {
                   <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-cocoa text-ivory">
                     <Icon className="h-5 w-5" strokeWidth={1.5} aria-hidden />
                   </span>
-                  <span className="font-serif text-[12pt] italic leading-tight text-cocoa">
+                  <span className="mid-title text-body leading-tight">
                     {name}
                   </span>
-                  <span className="text-[9pt] leading-tight text-cocoa-55">
+                  <span className="text-small leading-tight text-cocoa-55">
                     {meta}
                   </span>
                 </button>

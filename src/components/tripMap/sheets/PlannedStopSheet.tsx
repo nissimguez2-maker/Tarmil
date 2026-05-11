@@ -143,14 +143,14 @@ export function PlannedStopSheet({
         )}
 
         <div className="flex flex-wrap items-center gap-sm pt-sm">
-          <Button variant="ghost" onClick={onEdit}>
+          <Button variant="ghost" size="sm" onClick={onEdit}>
             ערוך תאריכים
           </Button>
-          <Button variant="ghost" onClick={onRemove}>
+          <Button variant="ghost" size="sm" onClick={onRemove}>
             הסר יעד
           </Button>
           {onMarkArrived && (
-            <Button variant="ghost" onClick={onMarkArrived}>
+            <Button variant="ghost" size="sm" onClick={onMarkArrived}>
               סמן כהגעתי
             </Button>
           )}

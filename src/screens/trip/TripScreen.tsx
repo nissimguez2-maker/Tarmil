@@ -177,9 +177,7 @@ export function TripScreen() {
                   dispatch({ type: 'OPEN_SHEET', sheet: { kind: 'filters' } })
                 }
               />
-              <div className="absolute end-md bottom-md z-[800]">
-                <AddDestinationFab onClick={openSearch} />
-              </div>
+              <AddDestinationFab onClick={openSearch} />
             </>
           )}
 

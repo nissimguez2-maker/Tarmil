@@ -32,24 +32,24 @@ export function WhosDownCard({
 
   return (
     <article className="flex flex-col gap-sm rounded-md border border-cocoa-15 bg-ivory p-md">
-      <header className="flex items-center gap-3">
+      <header className="flex items-center gap-sm">
         <Avatar
           photoUrl={author?.photoUrl}
           initial={author?.friendInitial ?? '·'}
           name={author?.friendName ?? 'משתמש'}
           size="md"
         />
-        <div className="flex flex-col leading-tight">
-          <span className="font-serif text-lede italic text-cocoa">
+        <div className="flex min-w-0 flex-1 flex-col leading-tight">
+          <span className="truncate font-serif text-lede italic text-cocoa">
             {author?.friendName ?? 'משתמש'}
           </span>
-          <span className="text-[10pt] text-cocoa-55">
+          <span className="text-small text-cocoa-55">
             {dateLabel ?? 'הזמנה פתוחה'}
           </span>
         </div>
       </header>
-      <p className="text-[11pt] text-cocoa">{post.bodyHe}</p>
-      <div className="flex flex-wrap items-center justify-between gap-2">
+      <p className="text-body text-cocoa">{post.bodyHe}</p>
+      <div className="flex flex-wrap items-center justify-between gap-sm">
         <div className="flex flex-wrap items-center gap-2">
           {grouped.map((g) => (
             <ReactionPill
@@ -67,7 +67,7 @@ export function WhosDownCard({
         <button
           type="button"
           onClick={onReply}
-          className="text-[10pt] text-copper hover:text-copper-85"
+          className="text-small text-copper transition-colors duration-instant ease-out-quart hover:text-copper-85"
         >
           {post.replyCount > 0 ? `${post.replyCount} תגובות · השב` : 'השב'}
         </button>

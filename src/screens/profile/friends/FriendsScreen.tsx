@@ -43,8 +43,8 @@ export function FriendsScreen() {
                 <Link
                   to={`/profile/friend/${friend.id}`}
                   className={clsx(
-                    'flex items-start gap-md rounded-sm border border-cocoa-15 bg-sand p-md',
-                    'hover:bg-sand/70 active:bg-sand',
+                    'flex items-start gap-sm rounded-md border border-cocoa-15 bg-sand p-md',
+                    'transition-colors duration-instant ease-out-quart hover:bg-sand/70 active:bg-sand',
                   )}
                 >
                   <Avatar
@@ -54,20 +54,20 @@ export function FriendsScreen() {
                     size="lg"
                     statusDot={isPresent}
                   />
-                  <span className="flex flex-1 flex-col gap-1">
-                    <span className="flex flex-wrap items-center gap-2">
-                      <span className="font-serif text-lede leading-tight">
+                  <span className="flex min-w-0 flex-1 flex-col gap-xs">
+                    <span className="flex flex-wrap items-baseline gap-2">
+                      <span className="font-serif text-lede leading-tight text-cocoa">
                         {friend.friendName}
                       </span>
                       <span className="meta-caps text-copper">
                         {isPresent ? 'איתך כאן' : 'חופף בעתיד'}
                       </span>
                     </span>
-                    <span className="text-[10pt] text-cocoa-70">
+                    <span className="text-small text-cocoa-70">
                       <span className="text-cocoa">{friend.zoneLabel}</span>
                       {dates && <span className="text-cocoa-55"> · {dates}</span>}
                     </span>
-                    <span className="text-[10pt] text-cocoa-55">
+                    <span className="text-small text-cocoa-55">
                       {friend.detail}
                     </span>
                   </span>
@@ -77,7 +77,7 @@ export function FriendsScreen() {
           })}
         </ul>
 
-        <p className="text-[9pt] leading-snug text-cocoa-55">
+        <p className="text-small leading-snug text-cocoa-55">
           מיקום ברמת עיר בלבד. תרמיל לעולם לא חושף לחברים את הכתובת המדויקת
           שלך — חפיפות מוצגות ברמת עיר בלבד.
         </p>

@@ -75,6 +75,16 @@ export default {
       },
       boxShadow: {
         device: '0 30px 80px -20px rgba(53, 40, 24, 0.4)',
+        sheet: 'var(--shadow-sheet)',
+        fab: 'var(--shadow-fab)',
+        panel: 'var(--shadow-panel)',
+      },
+      transitionTimingFunction: {
+        'out-quart': 'var(--ease-out-quart)',
+      },
+      transitionDuration: {
+        instant: '140ms',
+        considered: '280ms',
       },
       screens: {
         // default tailwind breakpoints (sm 640, md 768, lg 1024, xl 1280, 2xl 1536) preserved
