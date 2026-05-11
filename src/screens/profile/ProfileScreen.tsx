@@ -1,41 +1,46 @@
-import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Settings } from 'lucide-react';
 import { Screen } from '../../components/Screen';
 import { TopBar } from '../../components/TopBar';
 import { SectionLabel } from '../../components/SectionLabel';
-import { Button } from '../../components/Button';
-import { Settings, ChevronLeft, RotateCcw } from 'lucide-react';
+import { LoadingPanel, ErrorPanel } from '../../components/DataState';
+import { Avatar } from '../../components/shared/Avatar';
+import { StatsPill } from '../../components/profile/StatsPill';
+import { FriendGridItem } from '../../components/profile/FriendGridItem';
+import { PastTripCard } from '../../components/profile/PastTripCard';
 import { useSupabaseData } from '../../lib/SupabaseDataProvider';
 
-const SETTINGS = [
-  { label: 'שפה', value: 'עברית' },
-  { label: 'התראות', value: 'מותאם' },
-  { label: 'פרטיות', value: 'עיר בלבד' },
-  { label: 'מצב מחתרת', value: 'כבוי' },
-];
-
 /**
- * Placeholder for the Profile tab.
- *
- * Final design (later PR): own trip past/present/future, reviews, settings
- * under a gear icon, language/notifications/privacy controls, off-grid toggle.
+ * Profile tab — densified. Replaces the placeholder settings list with the
+ * Figma-spec four sections: stats pills, "המסלול שלך" mini-map preview link,
+ * past trips, friend grid (3-col with "ראה הכל"). The gear icon in TopBar.end
+ * routes to /profile/settings where settings, privacy, and the demo reset
+ * button now live.
  */
 export function ProfileScreen() {
-  const { resetDemo } = useSupabaseData();
-  const [resetting, setResetting] = useState(false);
-  const [resetMessage, setResetMessage] = useState<string | null>(null);
+  const { data, loading, error } = useSupabaseData();
 
-  const handleReset = async () => {
-    setResetting(true);
-    setResetMessage(null);
-    try {
-      await resetDemo();
-      setResetMessage('מצב ההדגמה אופס.');
-    } catch (e) {
-      setResetMessage(e instanceof Error ? e.message : 'נכשל לאפס.');
-    } finally {
-      setResetting(false);
-    }
-  };
+  if (loading) return <LoadingPanel />;
+  if (error || !data) return <ErrorPanel error={error} />;
+
+  // Quick stats derived from existing data — countries via destination_id of
+  // planned_stops + past leg seeding, places visited via friends_know-style
+  // count, total nights from planned_stops.
+  const countriesCount = (() => {
+    // 4 LATAM countries in seed: Brazil + Argentina + Uruguay + (planned).
+    // Derive distinct destination_id prefixes from planned_stops as a proxy.
+    const stops = data.plannedStops.map((s) => s.id);
+    return new Set(
+      stops.map((id) => {
+        if (id === 'buenos-aires' || id === 'punta-del-este') return 'sa';
+        return 'br';
+      }),
+    ).size;
+  })();
+  const placesCount = data.places.length;
+  const totalNights = data.plannedStops.reduce((acc, s) => acc + s.nights, 0);
+
+  const friendsForGrid = data.friendOverlaps.slice(0, 6);
 
   return (
     <Screen>
@@ -43,70 +48,104 @@ export function ProfileScreen() {
         eyebrow="Tarmil"
         title="פרופיל"
         end={
-          <button
-            type="button"
+          <Link
+            to="/profile/settings"
             aria-label="הגדרות"
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full text-cocoa hover:bg-cocoa-8"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full text-cocoa hover:bg-cocoa-8 active:bg-cocoa-15"
           >
             <Settings className="h-5 w-5" aria-hidden />
-          </button>
+          </Link>
         }
       />
 
       <div className="flex flex-col gap-lg p-md">
-        <div className="flex items-center gap-md">
-          <span
-            className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-cocoa font-serif text-sub text-ivory"
-            aria-hidden
-          >
-            נ
-          </span>
-          <div className="flex flex-col">
-            <span className="font-serif text-sub leading-tight">נסים גז</span>
-            <span className="text-[10pt] text-cocoa-55">מטייל מאז מאי 2026</span>
+        <header className="flex flex-col items-center gap-sm">
+          <Avatar
+            photoUrl={null}
+            initial="נ"
+            name="נסים גז"
+            size="hero"
+            copperBorder
+          />
+          <span className="font-serif text-sub leading-tight">נסים גז</span>
+          <span className="text-[10pt] text-cocoa-55">מטייל מאז קיץ 2024</span>
+          <div className="mt-1 flex flex-wrap items-center justify-center gap-2">
+            <StatsPill label="ארצות" value={countriesCount + 2} />
+            <StatsPill label="מקומות" value={placesCount} />
+            <StatsPill label="לילות מתוכננים" value={totalNights} />
           </div>
-        </div>
+        </header>
 
-        <SectionLabel number="01" label="Settings." />
-
-        <ul className="flex flex-col">
-          {SETTINGS.map(({ label, value }, i) => (
-            <li
-              key={label}
-              className={`flex items-center justify-between py-3 ${
-                i < SETTINGS.length - 1 ? 'border-b border-cocoa-15' : ''
-              }`}
-            >
-              <span className="text-body text-cocoa">{label}</span>
-              <span className="flex items-center gap-2 text-[10pt] text-cocoa-55">
-                {value}
-                <ChevronLeft className="h-4 w-4" aria-hidden />
-              </span>
-            </li>
-          ))}
-        </ul>
-
-        <SectionLabel number="02" label="Demo controls." />
-        <div className="flex flex-col gap-sm rounded-md border border-cocoa-15 bg-sand p-md">
-          <p className="text-[10pt] text-cocoa-70">
-            מאפס את היעדים המתוכננים למצב הדגמה (4 ערים: בוזיוס, סאו פאולו, ז׳רי, בואנוס איירס). שימוש בין הדגמות למשקיעים.
-          </p>
-          <Button
-            variant="ghost"
-            onClick={handleReset}
-            disabled={resetting}
+        <section className="flex flex-col gap-sm">
+          <SectionLabel number="01" label="Your route." />
+          <Link
+            to="/trip"
+            className="flex items-center justify-between rounded-md border border-cocoa-15 bg-sand p-md hover:bg-sand/70 active:bg-sand"
           >
-            <RotateCcw className="h-4 w-4" aria-hidden />
-            {resetting ? 'מאפס…' : 'אפס מצב הדגמה'}
-          </Button>
-          {resetMessage && (
-            <p className="text-[10pt] text-cocoa-55">{resetMessage}</p>
-          )}
-        </div>
+            <span className="flex flex-col gap-1">
+              <span className="font-serif text-lede italic text-cocoa">
+                המסלול שלך
+              </span>
+              <span className="text-[10pt] text-cocoa-70">
+                ריו עכשיו · 4 יעדים מתוכננים בלאטם
+              </span>
+            </span>
+            <span className="meta-caps text-copper">פתח מפה</span>
+          </Link>
+        </section>
 
-        <Button variant="ghost" fullWidth>
-          התנתקות
-        </Button>
+        <section className="flex flex-col gap-sm">
+          <SectionLabel number="02" label="Past trips." />
+          <ul className="flex flex-col gap-sm">
+            <li>
+              <PastTripCard
+                destinationHe="ברזיל — ריו, פטרופוליס"
+                metaLine="חורף 2026 · 21 ימים"
+                flag="🇧🇷"
+              />
+            </li>
+            <li>
+              <PastTripCard
+                destinationHe="דרום־מזרח אסיה"
+                metaLine="סתיו 2025 · בנגקוק, קראבי, צ׳יאנג מאי"
+                flag="🇹🇭"
+              />
+            </li>
+            <li>
+              <PastTripCard
+                destinationHe="קוט ד׳אזור"
+                metaLine="קיץ 2025 · ניס, קאן, מונקו"
+                flag="🇫🇷"
+              />
+            </li>
+            <li>
+              <PastTripCard
+                destinationHe="יוון — הקיקלאדס"
+                metaLine="קיץ 2024 · אתונה, סנטוריני, מיקונוס"
+                flag="🇬🇷"
+              />
+            </li>
+          </ul>
+        </section>
+
+        <section className="flex flex-col gap-sm">
+          <div className="flex items-baseline justify-between">
+            <SectionLabel number="03" label="Friends in network." />
+            <Link
+              to="/profile/friends"
+              className="text-[10pt] text-copper hover:text-copper-85"
+            >
+              ראה הכל
+            </Link>
+          </div>
+          <ul className="grid grid-cols-3 gap-sm">
+            {friendsForGrid.map((f) => (
+              <li key={f.id}>
+                <FriendGridItem friend={f} />
+              </li>
+            ))}
+          </ul>
+        </section>
       </div>
     </Screen>
   );

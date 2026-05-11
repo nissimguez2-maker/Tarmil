@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { Map, Newspaper, Users, User } from 'lucide-react';
+import { Map, Newspaper, MessageSquare, User } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import clsx from 'clsx';
 
@@ -10,17 +10,17 @@ type Tab = {
 };
 
 /**
- * Tab order in source = Trip → Activity → Friends → Profile.
+ * Tab order in source = Trip → Activity → Messages → Profile.
  * Because <html dir="rtl">, this renders visually right-to-left:
  * Trip is rightmost (Hebrew "first"), Profile leftmost.
  *
- * Tools moved out of the tab bar in PR2 — it now lives in a slide-in panel
- * triggered by the wrench in <TopBar>.
+ * Friends moved under /profile/friends as a Profile drill-down per the Figma
+ * structure. Tools live in a slide-in panel triggered by the wrench in <TopBar>.
  */
 const TABS: Tab[] = [
   { to: '/trip', label: 'טיול', Icon: Map },
   { to: '/activity', label: 'פעילות', Icon: Newspaper },
-  { to: '/friends', label: 'חברים', Icon: Users },
+  { to: '/messages', label: 'הודעות', Icon: MessageSquare },
   { to: '/profile', label: 'פרופיל', Icon: User },
 ];
 

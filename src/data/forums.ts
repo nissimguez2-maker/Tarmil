@@ -1,0 +1,108 @@
+/**
+ * Forums — city-scoped and interest-scoped discussion boards.
+ *
+ * SEED ONLY. Runtime data is read from the `forums` table in Supabase via
+ * SupabaseDataProvider. Nothing in `src/` imports this array outside of
+ * `scripts/seed-supabase.ts`.
+ *
+ * Distribution: 4 joined city forums tracking the user's LATAM trip (Rio,
+ * Búzios, São Paulo, Jericoacoara) + 1 cross-cutting interest forum +
+ * 1 recommended forum for Buenos Aires (their next stop they haven't joined
+ * yet — demos the "join" CTA).
+ *
+ * `member_count` realistic 80–240 range. `last_activity_at` is illustrative
+ * — the seed writes `now()` server-side so it always looks recent.
+ */
+
+export type ForumKind = 'city' | 'interest' | 'region';
+
+export type Forum = {
+  /** Stable id, FK target for forum_threads. */
+  id: string;
+  /** URL-safe slug for /messages/forums/:slug routing. */
+  slug: string;
+  nameHe: string;
+  nameEn: string;
+  cityLabel?: string;
+  /** Matches places.destination_id when this is a city forum. */
+  destinationId?: string;
+  kind: ForumKind;
+  memberCount: number;
+  /** 1-sentence Hebrew tagline in backpacker tone. */
+  heroBlurbHe: string;
+  /** True = surfaced under "מומלצים לך" with a join CTA. */
+  isRecommended: boolean;
+};
+
+export const forums: Forum[] = [
+  {
+    id: 'forum-rio',
+    slug: 'rio',
+    nameHe: 'ריו דה ז׳נרו',
+    nameEn: 'Rio de Janeiro',
+    cityLabel: 'ריו',
+    destinationId: 'rio-de-janeiro',
+    kind: 'city',
+    memberCount: 234,
+    heroBlurbHe: 'המקום של כל מי שעובר בריו. ביקורת על הוסטלים, חבר׳ה לחוף, ועזרה דחופה.',
+    isRecommended: false,
+  },
+  {
+    id: 'forum-buzios',
+    slug: 'buzios',
+    nameHe: 'בוזיוס',
+    nameEn: 'Búzios',
+    cityLabel: 'בוזיוס',
+    destinationId: 'buzios',
+    kind: 'city',
+    memberCount: 87,
+    heroBlurbHe: 'סופ״ש ים, סנוקלינג, ובאר ליד החוף. רוב הפעילות סופי שבוע.',
+    isRecommended: false,
+  },
+  {
+    id: 'forum-sao-paulo',
+    slug: 'sao-paulo',
+    nameHe: 'סאו פאולו',
+    nameEn: 'São Paulo',
+    cityLabel: 'סאו פאולו',
+    destinationId: 'sao-paulo',
+    kind: 'city',
+    memberCount: 156,
+    heroBlurbHe: 'וילה מדלנה, אסאדו, וברים בעבירה. עיר ענקית, פורום קטן ובוטה.',
+    isRecommended: false,
+  },
+  {
+    id: 'forum-jericoacoara',
+    slug: 'jericoacoara',
+    nameHe: 'ז׳ריקואקוארה',
+    nameEn: 'Jericoacoara',
+    cityLabel: 'ז׳רי',
+    destinationId: 'jericoacoara',
+    kind: 'city',
+    memberCount: 112,
+    heroBlurbHe: 'קייטסרף, דיונות, ובוקרים יחפים. מי בא, מי יוצא, איפה לישון.',
+    isRecommended: false,
+  },
+  {
+    id: 'forum-latam-israelis',
+    slug: 'latam-israelis',
+    nameHe: 'ישראלים בדרום אמריקה',
+    nameEn: 'Israelis in South America',
+    kind: 'interest',
+    memberCount: 198,
+    heroBlurbHe: 'אוכל, ויזות, חבד, ביטוחים, וכל מה שלא נכנס לפורום עיר אחד.',
+    isRecommended: false,
+  },
+  {
+    id: 'forum-buenos-aires',
+    slug: 'buenos-aires',
+    nameHe: 'בואנוס איירס',
+    nameEn: 'Buenos Aires',
+    cityLabel: 'בואנוס',
+    destinationId: 'buenos-aires',
+    kind: 'city',
+    memberCount: 142,
+    heroBlurbHe: 'פאלרמו, סן תלמו, אסאדו עד חצות. מצטרפים לפני שיוצאים.',
+    isRecommended: true,
+  },
+];
