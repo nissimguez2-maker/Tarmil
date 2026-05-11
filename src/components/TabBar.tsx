@@ -42,7 +42,7 @@ export function TabBar() {
           className={({ isActive }) =>
             clsx(
               'relative flex flex-col items-center justify-center gap-1 py-3',
-              'text-cocoa-55 transition-colors',
+              'text-cocoa-55 transition-colors duration-instant ease-out-quart',
               isActive && 'text-copper',
             )
           }
@@ -54,7 +54,7 @@ export function TabBar() {
                 strokeWidth={isActive ? 2 : 1.5}
                 aria-hidden
               />
-              <span className="text-[9pt] font-medium">{label}</span>
+              <span className="text-small font-medium">{label}</span>
               {isActive && (
                 <span
                   aria-hidden

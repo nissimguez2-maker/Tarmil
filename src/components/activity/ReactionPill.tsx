@@ -19,8 +19,8 @@ export function ReactionPill({ emoji, count, active, onClick }: Props) {
       type="button"
       onClick={onClick}
       className={clsx(
-        'inline-flex h-7 items-center gap-1 rounded-full px-2 text-[10pt]',
-        'transition-colors',
+        'inline-flex h-7 items-center gap-1 rounded-full px-2 text-small',
+        'transition-colors duration-instant ease-out-quart',
         active
           ? 'bg-sand text-cocoa ring-1 ring-copper'
           : 'bg-cocoa-8 text-cocoa-70 hover:bg-cocoa-15',

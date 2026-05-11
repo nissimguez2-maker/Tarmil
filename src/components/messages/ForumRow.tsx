@@ -24,22 +24,23 @@ type Props = {
 export function ForumRow({ forum, previewTitle, recommended, onJoin }: Props) {
   const body = (
     <>
-      <div className="flex min-w-0 flex-1 flex-col gap-1">
-        <div className="flex items-baseline gap-2">
+      <div className="flex min-w-0 flex-1 flex-col gap-px">
+        <div className="flex flex-wrap items-baseline gap-2">
           <span className="font-serif text-lede italic text-cocoa">
             {forum.nameHe}
           </span>
-          <span className="text-[10pt] text-cocoa-55">
-            {forum.memberCount} חברים
+          <span className="text-small text-cocoa-55">
+            <span className="tnum">{forum.memberCount}</span> חברים
           </span>
         </div>
-        <span className="line-clamp-1 text-[10pt] text-cocoa-70">
+        <span className="line-clamp-1 text-small text-cocoa-70">
           {previewTitle ?? forum.heroBlurbHe}
         </span>
       </div>
       {recommended ? (
         <Button
           variant="ghost"
+          size="sm"
           onClick={(e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -61,7 +62,7 @@ export function ForumRow({ forum, previewTitle, recommended, onJoin }: Props) {
   return (
     <Link
       to={`/messages/forums/${forum.id}`}
-      className="flex items-center gap-3 rounded-md border border-cocoa-15 bg-ivory p-md hover:bg-sand/40 active:bg-sand/60"
+      className="flex items-center gap-sm rounded-md border border-cocoa-15 bg-ivory p-md transition-colors duration-instant ease-out-quart hover:bg-sand/40 active:bg-sand/60"
     >
       {body}
     </Link>

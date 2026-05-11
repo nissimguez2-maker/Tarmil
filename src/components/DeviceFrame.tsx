@@ -52,7 +52,7 @@ export function DeviceFrame({ children }: Props) {
           dir="ltr"
           className={clsx(
             'absolute top-0 inset-x-0 z-20 flex items-start justify-between',
-            'h-[44px] pt-3 px-9 text-cocoa text-[10pt] font-medium tnum',
+            'h-[44px] pt-3 px-9 text-cocoa text-small font-medium tnum',
             'hidden md:flex',
           )}
         >

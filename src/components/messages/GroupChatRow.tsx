@@ -30,7 +30,7 @@ export function GroupChatRow({ chat, members, lastMessage, selfLabel = 'אני' 
   return (
     <Link
       to={`/messages/chats/${chat.id}`}
-      className="flex items-center gap-3 rounded-md border border-cocoa-15 bg-ivory p-md hover:bg-sand/40 active:bg-sand/60"
+      className="flex items-center gap-sm rounded-md border border-cocoa-15 bg-ivory p-md transition-colors duration-instant ease-out-quart hover:bg-sand/40 active:bg-sand/60"
     >
       <span className="relative inline-flex h-12 w-12 shrink-0 items-center">
         {previewMembers.map((m, i) => (
@@ -44,12 +44,12 @@ export function GroupChatRow({ chat, members, lastMessage, selfLabel = 'אני' 
           />
         ))}
       </span>
-      <div className="flex min-w-0 flex-1 flex-col gap-1">
-        <span className="font-serif text-lede italic text-cocoa">
+      <div className="flex min-w-0 flex-1 flex-col gap-px">
+        <span className="truncate font-serif text-lede italic text-cocoa">
           {chat.nameHe}
         </span>
         {lastMessage && (
-          <span className="line-clamp-1 text-[10pt] text-cocoa-70">
+          <span className="line-clamp-1 text-small text-cocoa-70">
             {senderName ? `${senderName}: ` : ''}
             {lastMessage.body}
           </span>

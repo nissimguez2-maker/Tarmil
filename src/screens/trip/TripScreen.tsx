@@ -1,5 +1,6 @@
 import { useReducer, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
+import clsx from 'clsx';
 import { Screen } from '../../components/Screen';
 import { TopBar } from '../../components/TopBar';
 import {
@@ -145,11 +146,23 @@ export function TripScreen() {
         <TopBar eyebrow="Tarmil" title="המסע שלך" />
 
         {nextStop && (
-          <NextTripCard
-            stop={nextStop}
-            friends={nextStopFriends}
-            onTap={openPlannedRoute}
-          />
+          <div
+            aria-hidden={sheet !== null}
+            className={clsx(
+              'grid transition-[grid-template-rows,opacity] duration-considered ease-out-quart',
+              sheet === null
+                ? 'grid-rows-[1fr] opacity-100'
+                : 'grid-rows-[0fr] opacity-0',
+            )}
+          >
+            <div className="overflow-hidden">
+              <NextTripCard
+                stop={nextStop}
+                friends={nextStopFriends}
+                onTap={openPlannedRoute}
+              />
+            </div>
+          </div>
         )}
 
         <div className="relative flex-1 overflow-hidden">

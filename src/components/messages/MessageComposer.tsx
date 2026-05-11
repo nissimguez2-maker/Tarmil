@@ -33,7 +33,7 @@ export function MessageComposer({ placeholder = 'הקלד הודעה...', onSend
   return (
     <form
       onSubmit={handleSubmit}
-      className="sticky bottom-0 flex items-center gap-2 border-t border-cocoa-15 bg-ivory p-sm"
+      className="sticky bottom-0 flex items-center gap-sm border-t border-cocoa-15 bg-ivory px-md pt-sm"
       style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 12px)' }}
     >
       <input
@@ -43,15 +43,22 @@ export function MessageComposer({ placeholder = 'הקלד הודעה...', onSend
         placeholder={placeholder}
         disabled={sending}
         className={clsx(
-          'min-w-0 flex-1 rounded-full bg-sand ps-md pe-md py-2 text-[11pt] text-cocoa placeholder:text-cocoa-55',
-          'outline-none focus:ring-2 focus:ring-copper-70',
+          'h-10 min-w-0 flex-1 rounded-full bg-sand ps-md pe-md text-body text-cocoa placeholder:text-cocoa-55',
+          'outline-none transition-colors duration-instant ease-out-quart',
+          'focus:bg-ivory focus:ring-2 focus:ring-copper-70',
         )}
       />
       <button
         type="submit"
         aria-label="שליחה"
         disabled={!value.trim() || sending}
-        className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-copper text-ivory transition-colors hover:bg-copper-85 disabled:opacity-30"
+        className={clsx(
+          'inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full',
+          'bg-copper text-ivory shadow-fab',
+          'transition-[transform,background-color] duration-instant ease-out-quart',
+          'hover:bg-copper-85 active:scale-[0.96] active:bg-copper',
+          'disabled:opacity-30 disabled:shadow-none disabled:active:scale-100',
+        )}
       >
         <Send className="h-4 w-4" strokeWidth={2} aria-hidden />
       </button>

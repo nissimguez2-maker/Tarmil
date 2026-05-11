@@ -40,8 +40,8 @@ export function ForumScreen() {
         <p className="font-serif text-lede italic text-cocoa-70">
           {forum.heroBlurbHe}
         </p>
-        <span className="text-[10pt] text-cocoa-55">
-          {forum.memberCount} חברים
+        <span className="text-small text-cocoa-55">
+          <span className="tnum">{forum.memberCount}</span> חברים
         </span>
 
         <ul className="flex flex-col gap-sm">
@@ -54,7 +54,7 @@ export function ForumScreen() {
               <li key={t.id}>
                 <Link
                   to={`/messages/forums/${forum.id}/${t.id}`}
-                  className="flex items-start gap-3 rounded-md border border-cocoa-15 bg-ivory p-md hover:bg-sand/40 active:bg-sand/60"
+                  className="flex items-start gap-sm rounded-md border border-cocoa-15 bg-ivory p-md transition-colors duration-instant ease-out-quart hover:bg-sand/40 active:bg-sand/60"
                 >
                   <Avatar
                     photoUrl={author?.photoUrl}
@@ -62,19 +62,20 @@ export function ForumScreen() {
                     name={author?.friendName ?? 'את'}
                     size="sm"
                   />
-                  <div className="flex min-w-0 flex-1 flex-col gap-1">
+                  <div className="flex min-w-0 flex-1 flex-col gap-px">
                     <span className="font-serif text-lede italic text-cocoa">
                       {t.title}
                     </span>
-                    <span className="line-clamp-2 text-[10pt] text-cocoa-70">
+                    <span className="line-clamp-2 text-small text-cocoa-70">
                       {t.body}
                     </span>
-                    <span className="text-[9pt] text-cocoa-55">
-                      {authorName} · {t.replyCount} תגובות
+                    <span className="text-small text-cocoa-55">
+                      {authorName} ·{' '}
+                      <span className="tnum">{t.replyCount}</span> תגובות
                     </span>
                   </div>
                   <ChevronLeft
-                    className="h-5 w-5 shrink-0 text-cocoa-55"
+                    className="mt-1 h-5 w-5 shrink-0 text-cocoa-55"
                     strokeWidth={1.5}
                     aria-hidden
                   />

@@ -48,18 +48,18 @@ export function ForumThreadScreen() {
 
       <div className="flex flex-1 flex-col gap-md overflow-y-auto p-md">
         <article className="flex flex-col gap-sm rounded-md border border-cocoa-15 bg-ivory p-md">
-          <header className="flex items-center gap-3">
+          <header className="flex items-center gap-sm">
             <Avatar
               photoUrl={author?.photoUrl}
               initial={author?.friendInitial ?? 'א'}
               name={author?.friendName ?? 'את'}
               size="md"
             />
-            <span className="font-serif text-lede italic text-cocoa">
+            <span className="min-w-0 flex-1 truncate font-serif text-lede italic text-cocoa">
               {author?.friendName ?? 'את'}
             </span>
           </header>
-          <p className="text-[11pt] text-cocoa">{thread.body}</p>
+          <p className="text-body text-cocoa">{thread.body}</p>
           <div className="flex flex-wrap items-center gap-2">
             {grouped.map((g) => (
               <ReactionPill
@@ -90,7 +90,7 @@ export function ForumThreadScreen() {
             return (
               <li
                 key={r.id}
-                className="flex items-start gap-3 rounded-md bg-sand p-md"
+                className="flex items-start gap-sm rounded-md bg-sand p-md"
               >
                 <Avatar
                   photoUrl={replyAuthor?.photoUrl}
@@ -98,11 +98,11 @@ export function ForumThreadScreen() {
                   name={replyAuthor?.friendName ?? 'את'}
                   size="sm"
                 />
-                <div className="flex flex-1 flex-col gap-1">
-                  <span className="font-serif text-[12pt] italic text-cocoa">
+                <div className="flex min-w-0 flex-1 flex-col gap-px">
+                  <span className="truncate font-serif text-body italic text-cocoa">
                     {replyAuthor?.friendName ?? 'את'}
                   </span>
-                  <p className="text-[11pt] text-cocoa">{r.body}</p>
+                  <p className="text-body text-cocoa">{r.body}</p>
                 </div>
               </li>
             );

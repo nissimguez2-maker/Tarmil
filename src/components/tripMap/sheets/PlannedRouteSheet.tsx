@@ -22,19 +22,21 @@ export function PlannedRouteSheet({
   onClose,
 }: Props) {
   return (
-    <div className="flex max-h-[70dvh] flex-col gap-md p-md">
+    <div className="flex max-h-[70dvh] flex-col gap-md px-md pb-md pt-sm">
       <div className="flex items-start justify-between gap-sm">
-        <div className="flex flex-col">
+        <div className="flex min-w-0 flex-1 flex-col gap-px">
           <span className="meta-caps text-copper">המסע שלך</span>
-          <h3 className="font-serif text-lede leading-tight">התוכנית הקרובה</h3>
+          <h3 className="font-serif text-lede leading-tight text-cocoa">
+            התוכנית הקרובה
+          </h3>
         </div>
         <button
           type="button"
           aria-label="סגור"
           onClick={onClose}
-          className="inline-flex h-8 w-8 items-center justify-center rounded-full text-cocoa-55 hover:bg-cocoa-8 active:bg-cocoa-15"
+          className="-me-1 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-cocoa-55 transition-colors duration-instant ease-out-quart hover:bg-cocoa-8 active:bg-cocoa-15"
         >
-          <X className="h-4 w-4" aria-hidden />
+          <X className="h-4 w-4" strokeWidth={1.8} aria-hidden />
         </button>
       </div>
 
@@ -51,28 +53,28 @@ export function PlannedRouteSheet({
               key={stop.id}
               type="button"
               onClick={() => onPickStop(stop.id)}
-              className="flex items-start gap-md border-t border-cocoa-08 py-sm text-start first:border-t-0 active:bg-cocoa-08"
+              className="flex items-start gap-md border-t border-cocoa-08 py-sm text-start transition-colors duration-instant ease-out-quart first:border-t-0 active:bg-cocoa-08"
             >
               <span className="tnum mt-1 font-serif text-lede text-cocoa-55">
                 {String(i + 1).padStart(2, '0')}
               </span>
-              <div className="flex flex-1 flex-col">
-                <span className="font-serif text-lede leading-tight">
+              <div className="flex min-w-0 flex-1 flex-col">
+                <span className="truncate font-serif text-lede leading-tight text-cocoa">
                   {stop.nameHe}
                 </span>
-                <span className="text-[10pt] text-cocoa-70">
+                <span className="text-small text-cocoa-70">
                   {formatDateRange(stop.arrivalDate, stop.departureDate)} ·{' '}
                   <span className="tnum">{stop.nights}</span> לילות
                 </span>
                 {overlapCount > 0 && (
-                  <span className="text-[10pt] text-copper">
+                  <span className="text-small text-copper">
                     <span className="tnum">{overlapCount}</span>{' '}
                     {overlapCount === 1 ? 'חבר חופף' : 'חברים חופפים'}
                   </span>
                 )}
               </div>
               <ChevronLeft
-                className="mt-1 h-4 w-4 text-cocoa-55"
+                className="mt-1 h-4 w-4 shrink-0 text-cocoa-55"
                 aria-hidden
               />
             </button>
@@ -80,7 +82,7 @@ export function PlannedRouteSheet({
         })}
       </div>
 
-      <Button variant="ghost" onClick={onAdd} fullWidth>
+      <Button variant="ghost" size="sm" onClick={onAdd} fullWidth>
         + הוסף יעד נוסף
       </Button>
     </div>

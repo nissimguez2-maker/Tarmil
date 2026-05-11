@@ -45,7 +45,8 @@ export function SubNav<T extends string>({
             type="button"
             onClick={() => onChange(t.id)}
             className={clsx(
-              'flex-1 py-3 text-center font-sans text-[11pt] transition-colors',
+              'flex-1 py-3 text-center font-sans text-body',
+              'transition-colors duration-instant ease-out-quart',
               isActive
                 ? 'font-medium text-cocoa'
                 : 'text-cocoa-55 hover:text-cocoa-70',
@@ -58,7 +59,7 @@ export function SubNav<T extends string>({
       })}
       <span
         aria-hidden
-        className="absolute bottom-0 h-[2px] rounded-t-full bg-copper transition-transform duration-300 ease-out"
+        className="absolute bottom-0 h-[2px] rounded-t-full bg-copper transition-transform duration-considered ease-out-quart"
         style={{
           width: `${100 / items.length}%`,
           insetInlineStart: 0,

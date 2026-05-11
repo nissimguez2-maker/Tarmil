@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { ChevronLeft, RotateCcw } from 'lucide-react';
+import clsx from 'clsx';
 import { Screen } from '../../../components/Screen';
 import { TopBar } from '../../../components/TopBar';
 import { SectionLabel } from '../../../components/SectionLabel';
@@ -73,22 +74,22 @@ export function SettingsScreen() {
     <Screen>
       <TopBar back title="הגדרות" eyebrow="Tarmil" />
 
-      <div className="flex flex-col gap-lg p-md">
+      <div className="flex flex-col gap-lg p-md pb-xl">
         {SECTIONS.map((section) => (
           <section key={section.number} className="flex flex-col gap-sm">
             <SectionLabel number={section.number} label={section.label} />
-            <ul className="rounded-md border border-cocoa-15 bg-ivory">
+            <ul className="overflow-hidden rounded-md border border-cocoa-15 bg-ivory">
               {section.rows.map((row, i) => (
                 <li
                   key={row.label}
-                  className={`flex items-center justify-between px-md py-3 ${
-                    i < section.rows.length - 1
-                      ? 'border-b border-cocoa-15'
-                      : ''
-                  }`}
+                  className={clsx(
+                    'flex items-center justify-between gap-sm px-md py-3',
+                    'transition-colors duration-instant ease-out-quart active:bg-cocoa-08',
+                    i < section.rows.length - 1 && 'border-b border-cocoa-15',
+                  )}
                 >
-                  <span className="text-[11pt] text-cocoa">{row.label}</span>
-                  <span className="flex items-center gap-2 text-[10pt] text-cocoa-55">
+                  <span className="text-body text-cocoa">{row.label}</span>
+                  <span className="flex shrink-0 items-center gap-2 text-small text-cocoa-55">
                     {row.value}
                     <ChevronLeft className="h-4 w-4" aria-hidden />
                   </span>
@@ -101,16 +102,21 @@ export function SettingsScreen() {
         <section className="flex flex-col gap-sm">
           <SectionLabel number="05" label="Demo controls." />
           <div className="flex flex-col gap-sm rounded-md border border-cocoa-15 bg-sand p-md">
-            <p className="text-[10pt] text-cocoa-70">
+            <p className="text-small text-cocoa-70">
               מאפס את היעדים המתוכננים למצב הדגמה הקנוני. שימוש בין הדגמות
               למשקיעים.
             </p>
-            <Button variant="ghost" onClick={handleReset} disabled={resetting}>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleReset}
+              disabled={resetting}
+            >
               <RotateCcw className="h-4 w-4" aria-hidden />
               {resetting ? 'מאפס…' : 'אפס מצב הדגמה'}
             </Button>
             {resetMessage && (
-              <p className="text-[10pt] text-cocoa-55">{resetMessage}</p>
+              <p className="text-small text-cocoa-55">{resetMessage}</p>
             )}
           </div>
         </section>

@@ -22,7 +22,7 @@ export function SearchBar({ value, onChange, placeholder, className }: Props) {
     <div
       className={clsx(
         'flex h-lg items-center gap-2 rounded-full bg-sand ps-md pe-md',
-        'text-[11pt] text-cocoa placeholder:text-cocoa-55',
+        'text-body text-cocoa placeholder:text-cocoa-55',
         className,
       )}
     >

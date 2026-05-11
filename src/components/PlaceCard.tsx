@@ -37,25 +37,25 @@ export function PlaceCard({
       type="button"
       onClick={onClick}
       className={clsx(
-        'group flex w-full flex-col gap-xs rounded-sm border border-rope bg-sand p-md text-start',
-        'transition-colors hover:bg-sand active:bg-rope',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper',
+        'group flex w-full flex-col gap-xs rounded-md border border-cocoa-15 bg-sand p-md text-start',
+        'transition-colors duration-instant ease-out-quart hover:bg-sand/80 active:bg-rope',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory',
         className,
       )}
     >
       <div className="flex items-baseline justify-between gap-sm">
-        <h3 className="font-serif text-lede leading-tight">{name}</h3>
+        <h3 className="font-serif text-lede leading-tight text-cocoa">{name}</h3>
         {tarmilPick && (
           <span className="meta-caps shrink-0 text-copper">בחירת תרמיל</span>
         )}
       </div>
 
-      {meta && <p className="text-[10pt] text-cocoa-55">{meta}</p>}
+      {meta && <p className="text-small text-cocoa-55">{meta}</p>}
 
       {(rating !== undefined || friendsKnow !== undefined) && (
         <div className="mt-xs flex items-center gap-md">
           {rating !== undefined && (
-            <span className="inline-flex items-center gap-1 text-[10pt] text-cocoa">
+            <span className="inline-flex items-center gap-1 text-small text-cocoa">
               <Star
                 className="h-3.5 w-3.5 fill-copper text-copper"
                 strokeWidth={0}
@@ -65,7 +65,7 @@ export function PlaceCard({
             </span>
           )}
           {friendsKnow !== undefined && friendsKnow > 0 && (
-            <span className="text-[10pt] text-cocoa-70">
+            <span className="text-small text-cocoa-70">
               <span className="tnum">{friendsKnow}</span> חברים מכירים
             </span>
           )}

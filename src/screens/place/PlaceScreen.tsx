@@ -41,15 +41,17 @@ export function PlaceScreen() {
       />
 
       <div className="flex flex-col gap-lg p-md pb-xl">
-        <div className="flex flex-col gap-sm rounded-md border border-rope bg-sand p-md">
+        <div className="flex flex-col gap-sm rounded-md border border-cocoa-15 bg-sand p-md">
           <div className="flex items-baseline justify-between gap-sm">
-            <h1 className="font-serif text-sub leading-tight">{place.hebrewName}</h1>
+            <h1 className="font-serif text-sub leading-tight text-cocoa">
+              {place.hebrewName}
+            </h1>
             {place.tarmilPick && (
-              <span className="meta-caps text-copper">בחירת תרמיל</span>
+              <span className="meta-caps shrink-0 text-copper">בחירת תרמיל</span>
             )}
           </div>
 
-          <span className="text-[10pt] text-cocoa-55 ltr">
+          <span className="text-small text-cocoa-55 ltr">
             {place.englishName}
           </span>
 
@@ -99,7 +101,7 @@ export function PlaceScreen() {
           </p>
         )}
         {visits.length > 0 && (
-          <p className="text-[9pt] text-cocoa-55">
+          <p className="text-small text-cocoa-55">
             תרמיל מציג ביקורי חברים ברמת עונה ושנה בלבד — לא תאריכים מדויקים.
           </p>
         )}
@@ -200,7 +202,7 @@ function FriendVisitsList({
             </span>
             <span className="flex flex-col">
               <span className="text-body text-cocoa">{v.friendName}</span>
-              <span className="text-[10pt] text-cocoa-55">
+              <span className="text-small text-cocoa-55">
                 {SEASON_HE[v.season]}{' '}
                 <span className="tnum">{v.year}</span> · {v.durationLabel}
               </span>
@@ -209,7 +211,7 @@ function FriendVisitsList({
         ))}
       </ul>
       {additional > 0 && (
-        <span className="text-[10pt] text-cocoa-55">
+        <span className="text-small text-cocoa-55">
           ועוד <span className="tnum">{additional}</span> חברים שלך היו כאן.
         </span>
       )}
@@ -227,10 +229,10 @@ function ReviewCard({
   text: string;
 }) {
   return (
-    <article className="flex flex-col gap-1.5 rounded-sm border border-cocoa-15 bg-sand p-sm">
-      <div className="flex items-center justify-between">
-        <span className="text-[10pt] font-medium text-cocoa">{reviewer}</span>
-        <span aria-label={`${stars} כוכבים`} className="flex gap-0.5">
+    <article className="flex flex-col gap-xs rounded-md border border-cocoa-15 bg-sand p-md">
+      <div className="flex items-center justify-between gap-sm">
+        <span className="text-small font-medium text-cocoa">{reviewer}</span>
+        <span aria-label={`${stars} כוכבים`} className="flex shrink-0 gap-0.5">
           {Array.from({ length: 5 }).map((_, i) => (
             <Star
               key={i}
@@ -245,7 +247,7 @@ function ReviewCard({
           ))}
         </span>
       </div>
-      <p className="text-[11pt] leading-relaxed text-cocoa-70 allow-select">
+      <p className="text-body leading-relaxed text-cocoa-70 allow-select">
         {text}
       </p>
     </article>

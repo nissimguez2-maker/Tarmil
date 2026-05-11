@@ -61,13 +61,13 @@ export function ConfirmDestinationSheet({
   };
 
   return (
-    <div className="flex max-h-[80dvh] flex-col gap-md overflow-y-auto p-md">
+    <div className="flex max-h-[80dvh] flex-col gap-md overflow-y-auto px-md pb-md pt-sm">
       <div className="flex items-start justify-between gap-sm">
-        <div className="flex flex-col">
+        <div className="flex min-w-0 flex-1 flex-col gap-px">
           <span className="meta-caps text-copper">
             {isEditing ? 'ערוך יעד' : 'יעד חדש'}
           </span>
-          <h3 className="font-serif text-lede leading-tight">
+          <h3 className="font-serif text-lede leading-tight text-cocoa">
             פרטי היעד
           </h3>
         </div>
@@ -75,24 +75,24 @@ export function ConfirmDestinationSheet({
           type="button"
           aria-label="סגור"
           onClick={onClose}
-          className="inline-flex h-8 w-8 items-center justify-center rounded-full text-cocoa-55 hover:bg-cocoa-8 active:bg-cocoa-15"
+          className="-me-1 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-cocoa-55 transition-colors duration-instant ease-out-quart hover:bg-cocoa-8 active:bg-cocoa-15"
         >
-          <X className="h-4 w-4" aria-hidden />
+          <X className="h-4 w-4" strokeWidth={1.8} aria-hidden />
         </button>
       </div>
 
-      <div className="flex flex-col gap-sm">
+      <div className="flex flex-col gap-xs">
         <span className="meta-caps text-cocoa-55">שם היעד</span>
         <input
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
           dir="rtl"
-          className="h-10 w-full rounded-full border border-cocoa-15 bg-sand px-md text-body text-cocoa focus:border-copper focus:outline-none"
+          className="h-10 w-full rounded-full border border-cocoa-15 bg-sand px-md text-body text-cocoa transition-colors duration-instant ease-out-quart focus:border-copper focus:outline-none"
         />
       </div>
 
-      <div className="flex flex-col gap-sm">
+      <div className="flex flex-col gap-xs">
         <span className="meta-caps text-cocoa-55">מתי תהיה שם?</span>
         <div className="flex flex-col gap-2">
           <DateField
@@ -106,14 +106,14 @@ export function ConfirmDestinationSheet({
             onChange={setDepartureDate}
           />
         </div>
-        <span className="text-[10pt] text-cocoa-70">
+        <span className="text-small text-cocoa-70">
           <span className="tnum">{nights}</span> לילות
         </span>
       </div>
 
       <PrivacyRadios value={privacy} onChange={setPrivacy} />
 
-      <div className="flex flex-col gap-sm">
+      <div className="flex flex-col gap-xs">
         <span className="meta-caps text-cocoa-55">הערה (אופציונלי)</span>
         <textarea
           value={note}
@@ -121,7 +121,7 @@ export function ConfirmDestinationSheet({
           rows={2}
           dir="rtl"
           placeholder="לדוגמה: לבדוק טיסה מבנגקוק…"
-          className="resize-none rounded-md border border-cocoa-15 bg-sand p-sm text-body text-cocoa placeholder:text-cocoa-55 focus:border-copper focus:outline-none"
+          className="resize-none rounded-md border border-cocoa-15 bg-sand p-sm text-body text-cocoa placeholder:text-cocoa-55 transition-colors duration-instant ease-out-quart focus:border-copper focus:outline-none"
         />
       </div>
 
@@ -142,8 +142,8 @@ function DateField({
   onChange: (v: string) => void;
 }) {
   return (
-    <label className="flex h-10 cursor-pointer items-center justify-between gap-sm rounded-full border border-rope bg-sand px-md text-cocoa focus-within:border-copper">
-      <span className="text-[10pt] text-cocoa-55">{label}</span>
+    <label className="flex h-10 cursor-pointer items-center justify-between gap-sm rounded-full border border-cocoa-15 bg-sand px-md text-cocoa transition-colors duration-instant ease-out-quart focus-within:border-copper">
+      <span className="text-small text-cocoa-55">{label}</span>
       <input
         type="date"
         value={value}

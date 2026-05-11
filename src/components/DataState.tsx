@@ -19,7 +19,7 @@ export function ErrorPanel({ error }: { error: Error | null }) {
       <div className="flex h-full flex-col items-center justify-center gap-md p-md">
         <p className="font-serif text-lede text-cocoa">לא הצלחנו להתחבר.</p>
         {error?.message && (
-          <p className="max-w-body text-[10pt] text-cocoa-55">
+          <p className="max-w-body text-small text-cocoa-55">
             {error.message}
           </p>
         )}
