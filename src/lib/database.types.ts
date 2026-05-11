@@ -14,6 +14,47 @@ export type Database = {
   }
   public: {
     Tables: {
+      activity_posts: {
+        Row: {
+          author_friend_id: string | null
+          body_he: string
+          created_at: string
+          destination_id: string | null
+          id: string
+          kind: string
+          payload: Json
+          reply_count: number
+        }
+        Insert: {
+          author_friend_id?: string | null
+          body_he: string
+          created_at?: string
+          destination_id?: string | null
+          id: string
+          kind: string
+          payload?: Json
+          reply_count?: number
+        }
+        Update: {
+          author_friend_id?: string | null
+          body_he?: string
+          created_at?: string
+          destination_id?: string | null
+          id?: string
+          kind?: string
+          payload?: Json
+          reply_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "activity_posts_author_friend_id_fkey"
+            columns: ["author_friend_id"]
+            isOneToOne: false
+            referencedRelation: "friend_overlaps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       app_state: {
         Row: {
           key: string
@@ -29,6 +70,205 @@ export type Database = {
           key?: string
           updated_at?: string
           value?: Json
+        }
+        Relationships: []
+      }
+      dm_messages: {
+        Row: {
+          body: string
+          created_at: string
+          dm_thread_id: string
+          from_friend: boolean
+          id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          dm_thread_id: string
+          from_friend: boolean
+          id?: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          dm_thread_id?: string
+          from_friend?: boolean
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dm_messages_dm_thread_id_fkey"
+            columns: ["dm_thread_id"]
+            isOneToOne: false
+            referencedRelation: "dm_threads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      dm_threads: {
+        Row: {
+          friend_id: string
+          id: string
+          last_message_at: string
+          last_message_preview_he: string
+          unread_count: number
+        }
+        Insert: {
+          friend_id: string
+          id: string
+          last_message_at?: string
+          last_message_preview_he?: string
+          unread_count?: number
+        }
+        Update: {
+          friend_id?: string
+          id?: string
+          last_message_at?: string
+          last_message_preview_he?: string
+          unread_count?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dm_threads_friend_id_fkey"
+            columns: ["friend_id"]
+            isOneToOne: true
+            referencedRelation: "friend_overlaps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      forum_thread_replies: {
+        Row: {
+          author_friend_id: string | null
+          body: string
+          created_at: string
+          id: string
+          thread_id: string
+        }
+        Insert: {
+          author_friend_id?: string | null
+          body: string
+          created_at?: string
+          id?: string
+          thread_id: string
+        }
+        Update: {
+          author_friend_id?: string | null
+          body?: string
+          created_at?: string
+          id?: string
+          thread_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "forum_thread_replies_author_friend_id_fkey"
+            columns: ["author_friend_id"]
+            isOneToOne: false
+            referencedRelation: "friend_overlaps"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "forum_thread_replies_thread_id_fkey"
+            columns: ["thread_id"]
+            isOneToOne: false
+            referencedRelation: "forum_threads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      forum_threads: {
+        Row: {
+          author_friend_id: string | null
+          body: string
+          created_at: string
+          follow_count: number
+          forum_id: string
+          id: string
+          pinned: boolean
+          reply_count: number
+          title: string
+        }
+        Insert: {
+          author_friend_id?: string | null
+          body: string
+          created_at?: string
+          follow_count?: number
+          forum_id: string
+          id: string
+          pinned?: boolean
+          reply_count?: number
+          title: string
+        }
+        Update: {
+          author_friend_id?: string | null
+          body?: string
+          created_at?: string
+          follow_count?: number
+          forum_id?: string
+          id?: string
+          pinned?: boolean
+          reply_count?: number
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "forum_threads_author_friend_id_fkey"
+            columns: ["author_friend_id"]
+            isOneToOne: false
+            referencedRelation: "friend_overlaps"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "forum_threads_forum_id_fkey"
+            columns: ["forum_id"]
+            isOneToOne: false
+            referencedRelation: "forums"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      forums: {
+        Row: {
+          city_label: string | null
+          created_at: string
+          destination_id: string | null
+          hero_blurb_he: string
+          id: string
+          is_recommended: boolean
+          kind: string
+          last_activity_at: string
+          member_count: number
+          name_en: string
+          name_he: string
+          slug: string
+        }
+        Insert: {
+          city_label?: string | null
+          created_at?: string
+          destination_id?: string | null
+          hero_blurb_he: string
+          id: string
+          is_recommended?: boolean
+          kind: string
+          last_activity_at?: string
+          member_count?: number
+          name_en: string
+          name_he: string
+          slug: string
+        }
+        Update: {
+          city_label?: string | null
+          created_at?: string
+          destination_id?: string | null
+          hero_blurb_he?: string
+          id?: string
+          is_recommended?: boolean
+          kind?: string
+          last_activity_at?: string
+          member_count?: number
+          name_en?: string
+          name_he?: string
+          slug?: string
         }
         Relationships: []
       }
@@ -79,6 +319,105 @@ export type Database = {
           zone_label?: string
         }
         Relationships: []
+      }
+      group_chat_members: {
+        Row: {
+          chat_id: string
+          friend_id: string
+          joined_at: string
+        }
+        Insert: {
+          chat_id: string
+          friend_id: string
+          joined_at?: string
+        }
+        Update: {
+          chat_id?: string
+          friend_id?: string
+          joined_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_chat_members_chat_id_fkey"
+            columns: ["chat_id"]
+            isOneToOne: false
+            referencedRelation: "group_chats"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "group_chat_members_friend_id_fkey"
+            columns: ["friend_id"]
+            isOneToOne: false
+            referencedRelation: "friend_overlaps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      group_chats: {
+        Row: {
+          city_label: string | null
+          created_at: string
+          destination_id: string | null
+          id: string
+          last_message_at: string
+          name_he: string
+        }
+        Insert: {
+          city_label?: string | null
+          created_at?: string
+          destination_id?: string | null
+          id: string
+          last_message_at?: string
+          name_he: string
+        }
+        Update: {
+          city_label?: string | null
+          created_at?: string
+          destination_id?: string | null
+          id?: string
+          last_message_at?: string
+          name_he?: string
+        }
+        Relationships: []
+      }
+      group_messages: {
+        Row: {
+          author_friend_id: string | null
+          body: string
+          chat_id: string
+          created_at: string
+          id: string
+        }
+        Insert: {
+          author_friend_id?: string | null
+          body: string
+          chat_id: string
+          created_at?: string
+          id?: string
+        }
+        Update: {
+          author_friend_id?: string | null
+          body?: string
+          chat_id?: string
+          created_at?: string
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_messages_author_friend_id_fkey"
+            columns: ["author_friend_id"]
+            isOneToOne: false
+            referencedRelation: "friend_overlaps"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "group_messages_chat_id_fkey"
+            columns: ["chat_id"]
+            isOneToOne: false
+            referencedRelation: "group_chats"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       places: {
         Row: {
@@ -175,6 +514,41 @@ export type Database = {
           type?: string
         }
         Relationships: []
+      }
+      reactions: {
+        Row: {
+          actor_friend_id: string | null
+          created_at: string
+          emoji: string
+          id: string
+          target_id: string
+          target_type: string
+        }
+        Insert: {
+          actor_friend_id?: string | null
+          created_at?: string
+          emoji: string
+          id?: string
+          target_id: string
+          target_type: string
+        }
+        Update: {
+          actor_friend_id?: string | null
+          created_at?: string
+          emoji?: string
+          id?: string
+          target_id?: string
+          target_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reactions_actor_friend_id_fkey"
+            columns: ["actor_friend_id"]
+            isOneToOne: false
+            referencedRelation: "friend_overlaps"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       thread_replies: {
         Row: {
