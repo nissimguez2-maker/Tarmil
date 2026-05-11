@@ -11,7 +11,7 @@ import { FilterFab } from '../../components/tripMap/ui/FilterFab';
 import { AddDestinationFab } from '../../components/tripMap/ui/AddDestinationFab';
 import { PickReticle } from '../../components/tripMap/ui/PickReticle';
 import { PickOnMapBar } from '../../components/tripMap/ui/PickOnMapBar';
-import { BottomSheet } from '../../components/tripMap/sheets/BottomSheet';
+import { BottomSheet } from '../../components/shared/BottomSheet';
 import { PlaceSheet } from '../../components/tripMap/sheets/PlaceSheet';
 import { FriendSheet } from '../../components/tripMap/sheets/FriendSheet';
 import { SearchDestinationSheet } from '../../components/tripMap/sheets/SearchDestinationSheet';

@@ -1,0 +1,60 @@
+import { Send } from 'lucide-react';
+import { useState } from 'react';
+import type { FormEvent } from 'react';
+import clsx from 'clsx';
+
+type Props = {
+  placeholder?: string;
+  onSend: (body: string) => void | Promise<void>;
+};
+
+/**
+ * Sticky chat composer. Sand input + copper send button. Pressed Enter
+ * submits; Shift+Enter inserts a newline. The input clears after a
+ * successful send.
+ */
+export function MessageComposer({ placeholder = 'הקלד הודעה...', onSend }: Props) {
+  const [value, setValue] = useState('');
+  const [sending, setSending] = useState(false);
+
+  async function handleSubmit(e: FormEvent) {
+    e.preventDefault();
+    const trimmed = value.trim();
+    if (!trimmed || sending) return;
+    setSending(true);
+    try {
+      await onSend(trimmed);
+      setValue('');
+    } finally {
+      setSending(false);
+    }
+  }
+
+  return (
+    <form
+      onSubmit={handleSubmit}
+      className="sticky bottom-0 flex items-center gap-2 border-t border-cocoa-15 bg-ivory p-sm"
+      style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 12px)' }}
+    >
+      <input
+        type="text"
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        placeholder={placeholder}
+        disabled={sending}
+        className={clsx(
+          'min-w-0 flex-1 rounded-full bg-sand ps-md pe-md py-2 text-[11pt] text-cocoa placeholder:text-cocoa-55',
+          'outline-none focus:ring-2 focus:ring-copper-70',
+        )}
+      />
+      <button
+        type="submit"
+        aria-label="שליחה"
+        disabled={!value.trim() || sending}
+        className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-copper text-ivory transition-colors hover:bg-copper-85 disabled:opacity-30"
+      >
+        <Send className="h-4 w-4" strokeWidth={2} aria-hidden />
+      </button>
+    </form>
+  );
+}

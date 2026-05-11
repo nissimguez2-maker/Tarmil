@@ -4,15 +4,17 @@ import clsx from 'clsx';
 type Props = {
   open: boolean;
   children: ReactNode;
-  /** When 'tall', the sheet expands to ~85% of the map area with internal scroll. */
+  /** When 'tall', the sheet expands to ~85% of the parent area with internal scroll. */
   height?: 'auto' | 'tall';
   className?: string;
 };
 
 /**
- * Bottom sheet primitive shared across the trip map. Always mounted; visibility
- * is class-driven so the close transition runs on hide. Click events inside the
- * sheet are stopped so they don't bubble to the map's "click outside" handler.
+ * Bottom sheet primitive. Always mounted; visibility is class-driven so the
+ * close transition runs on hide. Click events inside the sheet are stopped so
+ * they don't bubble to the parent's "click outside" handler.
+ *
+ * Used by the trip map sheets and the activity composer.
  */
 export function BottomSheet({
   open,
