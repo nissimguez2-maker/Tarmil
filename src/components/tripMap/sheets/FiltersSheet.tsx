@@ -24,6 +24,12 @@ const FRIENDS_OPTIONS: Array<{ value: FriendsView; label: string }> = [
   { value: 'none', label: 'כבוי' },
 ];
 
+const FRIENDS_HINT: Record<FriendsView, string> = {
+  all: 'מציג את כל החברים שהמסע שלהם נוגע במסע שלך.',
+  overlaps: 'רק חברים שמקושרים ליעד בתכנון שלך.',
+  none: 'אין סיכות של חברים על המפה.',
+};
+
 export function FiltersSheet({
   friendsView,
   onSetFriendsView,
@@ -36,36 +42,38 @@ export function FiltersSheet({
   const noneOn = activeFilters.size === 0;
   return (
     <div className="flex h-full flex-col">
-      <div className="flex items-center justify-between border-b border-cocoa-15 px-md py-sm">
-        <span className="font-serif text-lede text-cocoa">סינון</span>
+      <div className="flex justify-center pt-2 pb-1" aria-hidden>
+        <div className="h-1 w-9 rounded-full bg-cocoa-30" />
+      </div>
+
+      <div className="flex items-center justify-between border-b border-cocoa-15 px-md pb-sm pt-1">
+        <h2 className="font-serif text-lede text-cocoa">סינון</h2>
         <button
           type="button"
           aria-label="סגור"
           onClick={onClose}
-          className="-me-1 inline-flex h-8 w-8 items-center justify-center rounded-full text-cocoa-55 active:bg-cocoa-08"
+          className="-me-1 inline-flex h-8 w-8 items-center justify-center rounded-full bg-cocoa-08 text-cocoa active:bg-cocoa-15"
         >
-          <X className="h-4 w-4" strokeWidth={1.7} aria-hidden />
+          <X className="h-4 w-4" strokeWidth={2} aria-hidden />
         </button>
       </div>
 
       <div className="flex-1 overflow-y-auto px-md py-md">
         <section className="flex flex-col gap-sm">
-          <span className="meta-caps text-cocoa-55">חברים על המפה</span>
+          <h3 className="text-body font-medium text-cocoa">חברים על המפה</h3>
           <SegmentedControl
             value={friendsView}
             onChange={onSetFriendsView}
             options={FRIENDS_OPTIONS}
           />
-          <p className="text-[10pt] leading-snug text-cocoa-55">
-            {friendsView === 'all' && 'מציג את כל החברים שהמסע שלהם נוגע במסע שלך.'}
-            {friendsView === 'overlaps' && 'רק חברים שמקושרים ליעד בתכנון שלך.'}
-            {friendsView === 'none' && 'אין סיכות של חברים על המפה.'}
+          <p className="text-[10pt] leading-snug text-cocoa-70">
+            {FRIENDS_HINT[friendsView]}
           </p>
         </section>
 
         <section className="mt-lg flex flex-col gap-sm">
           <div className="flex items-baseline justify-between">
-            <span className="meta-caps text-cocoa-55">מקומות על המפה</span>
+            <h3 className="text-body font-medium text-cocoa">מקומות על המפה</h3>
             <button
               type="button"
               onClick={() =>
@@ -84,7 +92,7 @@ export function FiltersSheet({
               <li
                 key={id}
                 className={clsx(
-                  'flex items-center justify-between py-sm',
+                  'flex items-center justify-between gap-md py-sm',
                   i > 0 && 'border-t border-cocoa-15',
                 )}
               >
@@ -99,7 +107,7 @@ export function FiltersSheet({
           </ul>
 
           {noneOn && (
-            <p className="text-[10pt] leading-snug text-cocoa-55">
+            <p className="text-[10pt] leading-snug text-cocoa-70">
               כל הסיכות כבויות — לא יוצגו מקומות על המפה.
             </p>
           )}
@@ -119,7 +127,7 @@ function SegmentedControl<T extends string>({
   options: Array<{ value: T; label: string }>;
 }) {
   return (
-    <div className="flex rounded-full bg-cocoa-08 p-1">
+    <div className="flex rounded-full bg-cocoa-15 p-1">
       {options.map((opt) => {
         const active = value === opt.value;
         return (
@@ -131,8 +139,8 @@ function SegmentedControl<T extends string>({
             className={clsx(
               'flex-1 rounded-full px-sm py-1.5 text-[11pt] leading-none transition-colors',
               active
-                ? 'bg-ivory text-cocoa shadow-sm'
-                : 'text-cocoa-55 active:text-cocoa',
+                ? 'bg-cocoa text-ivory shadow-sm'
+                : 'text-cocoa-70 active:text-cocoa',
             )}
           >
             {opt.label}
@@ -161,15 +169,15 @@ function IOSToggle({
       onClick={onChange}
       className={clsx(
         'relative inline-flex h-7 w-12 shrink-0 items-center rounded-full transition-colors',
-        checked ? 'bg-copper' : 'bg-cocoa-15',
+        checked ? 'bg-copper' : 'bg-cocoa-30',
       )}
     >
       <span
         className={clsx(
-          'absolute top-0.5 start-0.5 h-6 w-6 rounded-full bg-ivory shadow-sm transition-transform duration-200',
-          // In RTL, the knob sits at `start` (physical right) when off.
-          // Translating physically left (negative X) moves it to the
-          // logical end — the "on" position.
+          'absolute top-0.5 start-0.5 h-6 w-6 rounded-full border border-cocoa-15 bg-ivory shadow-sm transition-transform duration-200',
+          // In RTL, the knob sits at logical-start (physical right) when off;
+          // translating physically left (negative X) moves it to the
+          // logical-end "on" position.
           checked && '-translate-x-5',
         )}
       />
