@@ -46,20 +46,23 @@ export default {
       display: ['44pt', { lineHeight: '0.94', letterSpacing: '-0.035em' }],
       hero: ['92pt', { lineHeight: '0.92', letterSpacing: '-0.04em' }],
     },
-    spacing: {
-      0: '0',
-      px: '1px',
-      hair: '0.5mm',
-      xs: '2mm',
-      sm: '4mm',
-      md: '8mm',
-      lg: '14mm',
-      xl: '22mm',
-      xxl: '36mm',
-      full: '100%',
-      screen: '100dvh',
-    },
     extend: {
+      // DA mm scale lives alongside the default Tailwind numeric spacing.
+      // Putting it on `theme.spacing` directly used to wipe out the default
+      // scale, which silently turned every `h-8`, `w-10`, `gap-2`, `p-1` into
+      // a no-op — avatars and FABs lost their dimensions and Hebrew wrapped
+      // character-per-line because flex siblings collapsed to min-content.
+      spacing: {
+        hair: '0.5mm',
+        xs: '2mm',
+        sm: '4mm',
+        md: '8mm',
+        lg: '14mm',
+        xl: '22mm',
+        xxl: '36mm',
+        full: '100%',
+        screen: '100dvh',
+      },
       borderRadius: {
         device: '54px',
         notch: '20px',
