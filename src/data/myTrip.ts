@@ -91,6 +91,8 @@ export type FriendOverlap = {
   id: string;
   friendName: string;
   friendInitial: string;
+  /** Avatar URL. Placeholder (pravatar) until we have real headshots. */
+  photoUrl: string;
   /** Centroid of the friend's neighborhood / town / city — never a specific place. */
   lat: number;
   lng: number;
@@ -116,6 +118,7 @@ export const friendOverlaps: FriendOverlap[] = [
     id: 'maya-ipanema',
     friendName: 'מאיה לוי',
     friendInitial: 'מ',
+    photoUrl: 'https://i.pravatar.cc/200?img=47',
     lat: zones.ipanema[0],
     lng: zones.ipanema[1],
     zoneLabel: 'איפנמה',
@@ -126,6 +129,7 @@ export const friendOverlaps: FriendOverlap[] = [
     id: 'yael-botafogo',
     friendName: 'יעל אברהם',
     friendInitial: 'י',
+    photoUrl: 'https://i.pravatar.cc/200?img=44',
     lat: zones.botafogo[0],
     lng: zones.botafogo[1],
     zoneLabel: 'בוטפוגו',
@@ -136,6 +140,7 @@ export const friendOverlaps: FriendOverlap[] = [
     id: 'roi-buzios',
     friendName: 'רועי בן עמי',
     friendInitial: 'ר',
+    photoUrl: 'https://i.pravatar.cc/200?img=33',
     lat: globalZones.buzios[0],
     lng: globalZones.buzios[1],
     zoneLabel: 'בוזיוס',
@@ -149,6 +154,7 @@ export const friendOverlaps: FriendOverlap[] = [
     id: 'shir-saopaulo',
     friendName: 'שיר כהן',
     friendInitial: 'ש',
+    photoUrl: 'https://i.pravatar.cc/200?img=49',
     lat: globalZones.saoPaulo[0],
     lng: globalZones.saoPaulo[1],
     zoneLabel: 'סאו פאולו',
@@ -162,6 +168,7 @@ export const friendOverlaps: FriendOverlap[] = [
     id: 'yotam-jericoacoara',
     friendName: 'יותם הררי',
     friendInitial: 'ה',
+    photoUrl: 'https://i.pravatar.cc/200?img=68',
     lat: globalZones.jericoacoara[0],
     lng: globalZones.jericoacoara[1],
     zoneLabel: 'ז׳ריקואקוארה',
@@ -175,6 +182,7 @@ export const friendOverlaps: FriendOverlap[] = [
     id: 'tom-buenosaires',
     friendName: 'תום פרידמן',
     friendInitial: 'ת',
+    photoUrl: 'https://i.pravatar.cc/200?img=50',
     lat: globalZones.buenosAires[0],
     lng: globalZones.buenosAires[1],
     zoneLabel: 'בואנוס איירס',

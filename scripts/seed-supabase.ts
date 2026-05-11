@@ -53,6 +53,7 @@ async function main() {
     id: f.id,
     friend_name: f.friendName,
     friend_initial: f.friendInitial,
+    photo_url: f.photoUrl,
     lat: f.lat,
     lng: f.lng,
     zone_label: f.zoneLabel,

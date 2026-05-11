@@ -108,6 +108,7 @@ const friendRowToOverlap = (r: Tables<'friend_overlaps'>): FriendOverlap => ({
   id: r.id,
   friendName: r.friend_name,
   friendInitial: r.friend_initial,
+  photoUrl: r.photo_url,
   lat: r.lat,
   lng: r.lng,
   zoneLabel: r.zone_label,
