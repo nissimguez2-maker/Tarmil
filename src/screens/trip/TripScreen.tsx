@@ -1,4 +1,4 @@
-import { useReducer, useMemo, useRef } from 'react';
+import { useReducer, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Screen } from '../../components/Screen';
 import { TopBar } from '../../components/TopBar';
@@ -6,9 +6,8 @@ import {
   TripMap,
   type TripMapHandle,
 } from '../../components/tripMap/TripMap';
-import { CategoryFilterRail } from '../../components/tripMap/ui/CategoryFilterRail';
 import { NextTripCard } from '../../components/tripMap/ui/NextTripCard';
-import { FriendDensityToggle } from '../../components/tripMap/ui/FriendDensityToggle';
+import { FilterFab } from '../../components/tripMap/ui/FilterFab';
 import { AddDestinationFab } from '../../components/tripMap/ui/AddDestinationFab';
 import { PickReticle } from '../../components/tripMap/ui/PickReticle';
 import { PickOnMapBar } from '../../components/tripMap/ui/PickOnMapBar';
@@ -21,12 +20,13 @@ import { PlannedRouteSheet } from '../../components/tripMap/sheets/PlannedRouteS
 import { PlannedStopSheet } from '../../components/tripMap/sheets/PlannedStopSheet';
 import { SavePlaceToStopSheet } from '../../components/tripMap/sheets/SavePlaceToStopSheet';
 import { ArrivalConfirmSheet } from '../../components/tripMap/sheets/ArrivalConfirmSheet';
+import { FiltersSheet } from '../../components/tripMap/sheets/FiltersSheet';
 import {
   tripReducer,
   makeInitialTripState,
 } from '../../components/tripMap/tripReducer';
 import type { PlannedStop } from '../../data/plannedStops';
-import { ALL_FILTERS } from '../../components/tripMap/utils/categoryLabel';
+import { DEFAULT_ACTIVE_FILTERS } from '../../components/tripMap/utils/categoryLabel';
 import { useSupabaseData } from '../../lib/SupabaseDataProvider';
 import { LoadingPanel, ErrorPanel } from '../../components/DataState';
 
@@ -53,11 +53,6 @@ export function TripScreen() {
   const navigate = useNavigate();
   const tripMapRef = useRef<TripMapHandle>(null);
 
-  const totalFriendCount = useMemo(
-    () => data?.friendOverlaps.length ?? 0,
-    [data],
-  );
-
   if (loading) return <LoadingPanel />;
   if (error || !data) return <ErrorPanel error={error} />;
 
@@ -69,7 +64,22 @@ export function TripScreen() {
       )
     : [];
   const floatersVisible = sheet === null && state.mode === 'default';
-  const isTallSheet = sheet?.kind === 'plannedStop';
+  const isTallSheet = sheet?.kind === 'plannedStop' || sheet?.kind === 'filters';
+
+  const plannedFriendIds = new Set(
+    data.plannedStops.flatMap((s) => s.friendOverlapIds ?? []),
+  );
+  const visibleFriends =
+    state.friendsView === 'none'
+      ? []
+      : state.friendsView === 'overlaps'
+        ? data.friendOverlaps.filter((f) => plannedFriendIds.has(f.id))
+        : data.friendOverlaps;
+
+  const filtersDirty =
+    state.friendsView !== 'all' ||
+    state.activeFilters.size !== DEFAULT_ACTIVE_FILTERS.size ||
+    ![...DEFAULT_ACTIVE_FILTERS].every((f) => state.activeFilters.has(f));
 
   const handleConfirmPick = () => {
     const center = tripMapRef.current?.getCenter();
@@ -148,8 +158,7 @@ export function TripScreen() {
             mode={state.mode}
             activeFilters={state.activeFilters}
             places={data.places}
-            friendOverlaps={data.friendOverlaps}
-            friendsVisible={state.friendsVisible}
+            friendOverlaps={visibleFriends}
             pastTrip={data.myTrip.past}
             presentLocation={data.myTrip.present}
             plannedStops={data.plannedStops}
@@ -162,22 +171,11 @@ export function TripScreen() {
 
           {floatersVisible && (
             <>
-              <CategoryFilterRail
-                active={state.activeFilters}
-                onToggle={(id) => dispatch({ type: 'TOGGLE_FILTER', id })}
-                onSetAll={() =>
-                  dispatch({
-                    type: 'SET_FILTERS',
-                    filters: new Set(ALL_FILTERS),
-                  })
+              <FilterFab
+                active={filtersDirty}
+                onClick={() =>
+                  dispatch({ type: 'OPEN_SHEET', sheet: { kind: 'filters' } })
                 }
-              />
-              <FriendDensityToggle
-                visible={state.friendsVisible}
-                onToggle={() =>
-                  dispatch({ type: 'TOGGLE_FRIENDS_VISIBLE' })
-                }
-                count={totalFriendCount}
               />
               <div className="absolute end-md bottom-md z-[800]">
                 <AddDestinationFab onClick={openSearch} />
@@ -311,6 +309,22 @@ export function TripScreen() {
                   />
                 );
               })()}
+            {sheet?.kind === 'filters' && (
+              <FiltersSheet
+                friendsView={state.friendsView}
+                onSetFriendsView={(view) =>
+                  dispatch({ type: 'SET_FRIENDS_VIEW', view })
+                }
+                activeFilters={state.activeFilters}
+                onToggleFilter={(id) =>
+                  dispatch({ type: 'TOGGLE_FILTER', id })
+                }
+                onSetFilters={(filters) =>
+                  dispatch({ type: 'SET_FILTERS', filters })
+                }
+                onClose={() => dispatch({ type: 'CLOSE_SHEET' })}
+              />
+            )}
           </BottomSheet>
         </div>
       </div>

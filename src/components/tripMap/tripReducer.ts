@@ -18,7 +18,16 @@ export type SheetState =
   | { kind: 'plannedRoute' }
   | { kind: 'plannedStop'; stopId: string }
   | { kind: 'savePlaceToStop'; place: Place | Place }
-  | { kind: 'arrivalConfirm'; stopId: string };
+  | { kind: 'arrivalConfirm'; stopId: string }
+  | { kind: 'filters' };
+
+/**
+ * How friends render on the map.
+ * - 'all'      : every friend in the overlap list.
+ * - 'overlaps' : only friends linked to a planned stop (friendOverlapIds).
+ * - 'none'     : hidden.
+ */
+export type FriendsView = 'all' | 'overlaps' | 'none';
 
 // UI state only. Persisted data (planned_stops) lives in Supabase and is
 // fetched by SupabaseDataProvider; mutators on that hook handle add/edit/
@@ -29,8 +38,7 @@ export type TripState = {
   sheet: SheetState | null;
   pickPrefillName?: string;
   arrivalDismissed: boolean;
-  /** Friend density toggle — when false, friend pins hide on the map. */
-  friendsVisible: boolean;
+  friendsView: FriendsView;
 };
 
 export type TripAction =
@@ -42,7 +50,7 @@ export type TripAction =
   | { type: 'CANCEL_PICK' }
   | { type: 'CONFIRM_PICK'; latlng: [number, number] }
   | { type: 'DISMISS_ARRIVAL' }
-  | { type: 'TOGGLE_FRIENDS_VISIBLE' };
+  | { type: 'SET_FRIENDS_VIEW'; view: FriendsView };
 
 export function makeInitialTripState(): TripState {
   return {
@@ -50,7 +58,7 @@ export function makeInitialTripState(): TripState {
     activeFilters: new Set(DEFAULT_ACTIVE_FILTERS),
     sheet: null,
     arrivalDismissed: false,
-    friendsVisible: true,
+    friendsView: 'all',
   };
 }
 
@@ -92,8 +100,8 @@ export function tripReducer(state: TripState, action: TripAction): TripState {
       };
     case 'DISMISS_ARRIVAL':
       return { ...state, sheet: null, arrivalDismissed: true };
-    case 'TOGGLE_FRIENDS_VISIBLE':
-      return { ...state, friendsVisible: !state.friendsVisible };
+    case 'SET_FRIENDS_VIEW':
+      return { ...state, friendsView: action.view };
   }
 }
 
