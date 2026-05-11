@@ -49,9 +49,11 @@ export function Modal({ open, onClose, eyebrow, title, children, footer }: Props
       aria-modal="true"
       aria-label={title}
       className={clsx(
-        'pointer-events-auto absolute inset-0 flex flex-col justify-end',
+        'absolute inset-0 flex flex-col justify-end',
         'transition-opacity duration-considered ease-out-quart',
-        open ? 'opacity-100' : 'pointer-events-none opacity-0',
+        open
+          ? 'pointer-events-auto opacity-100'
+          : 'pointer-events-none opacity-0',
       )}
     >
       <button
