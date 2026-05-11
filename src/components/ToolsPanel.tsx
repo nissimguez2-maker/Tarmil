@@ -6,11 +6,12 @@ import {
   ListChecks,
   Languages,
   ScanText,
+  ScanLine,
   Wallet,
   Smartphone,
+  Star,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
-import { SectionLabel } from './SectionLabel';
 
 type Tool = {
   name: string;
@@ -22,9 +23,11 @@ const TOOLS: Tool[] = [
   { name: 'ממיר מטבעות', meta: 'עובד גם בלי רשת', Icon: Coins },
   { name: 'צ׳ק ליסט לפני יציאה', meta: 'ויזה, חיסונים, ביטוח', Icon: ListChecks },
   { name: 'מתרגם קולי', meta: 'דיבור-לדיבור, תרגום מיידי', Icon: Languages },
-  { name: 'מתרגם תפריט ושלטים', meta: 'סורק, מתרגם, מסמן רכיבים', Icon: ScanText },
+  { name: 'מתרגם תפריט', meta: 'סורק, מתרגם, מסמן רכיבים', Icon: ScanText },
+  { name: 'סורק שלטים', meta: 'מתרגם שילוט ושלטים', Icon: ScanLine },
   { name: 'יתרות בין חברים', meta: 'חוב פתוח בין שני חברים', Icon: Wallet },
-  { name: 'eSIM וחבילות גלישה', meta: 'תמיכה בעברית בחו״ל', Icon: Smartphone },
+  { name: 'eSIM וגלישה', meta: 'תמיכה בעברית בחו״ל', Icon: Smartphone },
+  { name: 'כלים יהודיים', meta: 'חב״ד, כשרות, שבת', Icon: Star },
 ];
 
 type Props = {
@@ -33,13 +36,17 @@ type Props = {
 };
 
 /**
- * Slide-in panel anchored to the end side (physical left in RTL Hebrew).
- * Triggered by the wrench icon in <TopBar>; lives inside <DeviceFrame> so the
+ * Slide-down tools panel anchored to the top-trailing corner.
+ *
+ * Triggered by the wrench icon in <TopBar>. Lives inside <DeviceFrame> so the
  * iPhone shell on desktop bounds it.
  *
- * Closed: translated off-screen via -translate-x-full (off the physical-left
- * edge in RTL). Open: translate-x-0. Backdrop swallows clicks behind the panel
- * and closes on tap or ESC.
+ * Closed: translated above the screen via -translate-y-full. Open:
+ * translate-y-0. Backdrop swallows clicks behind the panel and closes on tap
+ * or Escape.
+ *
+ * 8 tools in a 2-column grid. Each card is an 80px-square ivory tile inside
+ * the sand panel body.
  */
 export function ToolsPanel({ open, onClose }: Props) {
   useEffect(() => {
@@ -72,9 +79,9 @@ export function ToolsPanel({ open, onClose }: Props) {
         aria-label="כלים"
         aria-hidden={!open}
         className={clsx(
-          'absolute bottom-0 end-0 top-0 z-40 flex w-[88%] flex-col bg-ivory',
-          'shadow-device transition-transform duration-300 ease-out',
-          open ? 'translate-x-0' : '-translate-x-full',
+          'absolute inset-x-0 top-0 z-40 flex flex-col bg-sand',
+          'rounded-b-md shadow-device transition-transform duration-300 ease-out',
+          open ? 'translate-y-0' : '-translate-y-full',
         )}
         style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}
       >
@@ -83,7 +90,7 @@ export function ToolsPanel({ open, onClose }: Props) {
             type="button"
             aria-label="סגירה"
             onClick={onClose}
-            className="absolute start-md inline-flex h-9 w-9 items-center justify-center rounded-full text-cocoa hover:bg-cocoa-8 active:bg-cocoa-15"
+            className="absolute end-md inline-flex h-9 w-9 items-center justify-center rounded-full text-cocoa hover:bg-cocoa-8 active:bg-cocoa-15"
           >
             <X className="h-5 w-5" aria-hidden />
           </button>
@@ -93,31 +100,35 @@ export function ToolsPanel({ open, onClose }: Props) {
           </div>
         </header>
 
-        <div className="flex-1 overflow-y-auto">
-          <div className="flex flex-col gap-lg p-md">
-            <SectionLabel number="01" label="Tools at launch." />
+        <div className="flex flex-col gap-md p-md">
+          <p className="text-[10pt] text-cocoa-70">
+            כלים יומיומיים לטיול בחו״ל. כל כלי עומד לבד — נפתח, בשימוש, נסגר.
+          </p>
 
-            <p className="max-w-body text-body text-cocoa-70">
-              כלים יומיומיים לטיול בחו״ל. כל כלי עומד לבד — נפתח, בשימוש, נסגר.
-            </p>
-
-            <ul className="flex flex-col gap-sm">
-              {TOOLS.map(({ name, meta, Icon }) => (
-                <li
-                  key={name}
-                  className="flex items-center gap-md rounded-sm border border-cocoa-15 bg-sand p-md"
+          <ul className="grid grid-cols-2 gap-sm">
+            {TOOLS.map(({ name, meta, Icon }) => (
+              <li key={name}>
+                <button
+                  type="button"
+                  className="flex h-full w-full flex-col items-center gap-1 rounded-md bg-ivory p-md text-center transition-colors hover:bg-ivory/80 active:bg-cocoa-8"
+                  onClick={() => {
+                    // Each tool is a stub for now — taps acknowledge via close.
+                    onClose();
+                  }}
                 >
                   <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-cocoa text-ivory">
                     <Icon className="h-5 w-5" strokeWidth={1.5} aria-hidden />
                   </span>
-                  <span className="flex flex-col">
-                    <span className="font-serif text-lede leading-tight">{name}</span>
-                    <span className="text-[10pt] text-cocoa-55">{meta}</span>
+                  <span className="font-serif text-[12pt] italic leading-tight text-cocoa">
+                    {name}
                   </span>
-                </li>
-              ))}
-            </ul>
-          </div>
+                  <span className="text-[9pt] leading-tight text-cocoa-55">
+                    {meta}
+                  </span>
+                </button>
+              </li>
+            ))}
+          </ul>
         </div>
       </aside>
     </>
