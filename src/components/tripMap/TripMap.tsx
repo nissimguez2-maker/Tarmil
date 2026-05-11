@@ -95,14 +95,28 @@ export const TripMap = forwardRef<TripMapHandle, Props>(function TripMap(
       worldCopyJump: false,
     });
 
-    L.tileLayer(
-      'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
-      {
-        attribution: '© OpenStreetMap contributors © CARTO',
-        subdomains: 'abcd',
-        maxZoom: 19,
-      },
-    ).addTo(map);
+    const tomtomKey = import.meta.env.VITE_TOMTOM_KEY;
+    if (tomtomKey) {
+      L.tileLayer(
+        `https://api.tomtom.com/map/1/tile/basic/main/{z}/{x}/{y}.png?key=${tomtomKey}&tileSize=512`,
+        {
+          attribution: '© TomTom',
+          maxZoom: 19,
+          tileSize: 512,
+          zoomOffset: -1,
+        },
+      ).addTo(map);
+    } else {
+      // Build-time fallback so a deploy without VITE_TOMTOM_KEY still ships a map.
+      L.tileLayer(
+        'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+        {
+          attribution: '© OpenStreetMap contributors © CARTO',
+          subdomains: 'abcd',
+          maxZoom: 19,
+        },
+      ).addTo(map);
+    }
 
     const allCoords: [number, number][] = [
       ...pastTrip,

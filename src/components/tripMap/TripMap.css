@@ -1,19 +1,14 @@
 /*
  * Tarmil-styled overrides for Leaflet.
  *
- * Strategy: take CartoDB Positron's neutral, Google-Maps-like base and apply
- * a subtle warm tint via a CSS filter on the tile pane only — markers and
- * overlays stay full-saturation so the brand cocoa / copper pop.
+ * Tiles are now TomTom raster ("basic / main") which already render clean and
+ * legible — no client-side tinting. Markers and overlays are full-saturation
+ * so the brand cocoa / copper still pop against the neutral cartography.
  */
 
 .tarmil-map {
   background: var(--ivory);
   font-family: 'Heebo', 'Google Sans Text', system-ui, sans-serif;
-}
-
-/* warm desert-paper tint — applied to tiles only, not overlays */
-.tarmil-map .leaflet-tile-pane {
-  filter: sepia(0.18) saturate(0.85) hue-rotate(-10deg) brightness(1.03);
 }
 
 /* hide default Leaflet attribution flag (we set attributionControl:false) */
