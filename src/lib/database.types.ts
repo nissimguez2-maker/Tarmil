@@ -14,6 +14,24 @@ export type Database = {
   }
   public: {
     Tables: {
+      app_state: {
+        Row: {
+          key: string
+          updated_at: string
+          value: Json
+        }
+        Insert: {
+          key: string
+          updated_at?: string
+          value: Json
+        }
+        Update: {
+          key?: string
+          updated_at?: string
+          value?: Json
+        }
+        Relationships: []
+      }
       friend_overlaps: {
         Row: {
           destination_id: string | null
@@ -25,6 +43,8 @@ export type Database = {
           lng: number
           overlap_end: string | null
           overlap_start: string | null
+          past_trips: Json
+          photo_url: string
           status: string
           zone_label: string
         }
@@ -38,6 +58,8 @@ export type Database = {
           lng: number
           overlap_end?: string | null
           overlap_start?: string | null
+          past_trips?: Json
+          photo_url: string
           status: string
           zone_label: string
         }
@@ -51,6 +73,8 @@ export type Database = {
           lng?: number
           overlap_end?: string | null
           overlap_start?: string | null
+          past_trips?: Json
+          photo_url?: string
           status?: string
           zone_label?: string
         }
@@ -149,6 +173,92 @@ export type Database = {
           privacy?: string
           saved_place_ids?: string[]
           type?: string
+        }
+        Relationships: []
+      }
+      thread_replies: {
+        Row: {
+          author_initial: string
+          author_name: string
+          body: string
+          created_at: string
+          id: string
+          thread_id: string
+        }
+        Insert: {
+          author_initial: string
+          author_name: string
+          body: string
+          created_at?: string
+          id?: string
+          thread_id: string
+        }
+        Update: {
+          author_initial?: string
+          author_name?: string
+          body?: string
+          created_at?: string
+          id?: string
+          thread_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "thread_replies_thread_id_fkey"
+            columns: ["thread_id"]
+            isOneToOne: false
+            referencedRelation: "threads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      threads: {
+        Row: {
+          author_initial: string
+          author_name: string
+          body: string
+          city_label: string | null
+          created_at: string
+          destination_id: string | null
+          follow_count: number
+          friend_id: string | null
+          id: string
+          kind: string
+          reply_count: number
+          title: string
+          trip_season: string | null
+          trip_year: number | null
+        }
+        Insert: {
+          author_initial: string
+          author_name: string
+          body: string
+          city_label?: string | null
+          created_at?: string
+          destination_id?: string | null
+          follow_count?: number
+          friend_id?: string | null
+          id: string
+          kind: string
+          reply_count?: number
+          title: string
+          trip_season?: string | null
+          trip_year?: number | null
+        }
+        Update: {
+          author_initial?: string
+          author_name?: string
+          body?: string
+          city_label?: string | null
+          created_at?: string
+          destination_id?: string | null
+          follow_count?: number
+          friend_id?: string | null
+          id?: string
+          kind?: string
+          reply_count?: number
+          title?: string
+          trip_season?: string | null
+          trip_year?: number | null
         }
         Relationships: []
       }

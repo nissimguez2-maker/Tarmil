@@ -35,6 +35,25 @@ type ContextValue = {
 
 const Context = createContext<ContextValue | null>(null);
 
+// Supabase throws PostgrestError-shaped objects that aren't `instanceof Error`,
+// so the obvious `new Error(String(e))` stringifies them as "[object Object]"
+// and the screen swallows the real cause. Keep the original Error when we have
+// one, otherwise fold message + code + hint into a readable line.
+const toError = (e: unknown): Error => {
+  if (e instanceof Error) return e;
+  if (e && typeof e === 'object') {
+    const o = e as Record<string, unknown>;
+    const msg = typeof o.message === 'string' ? o.message : null;
+    if (msg) {
+      const tail = [o.code, o.hint, o.details]
+        .filter((x): x is string => typeof x === 'string' && x.length > 0)
+        .join(' · ');
+      return new Error(tail ? `${msg} (${tail})` : msg);
+    }
+  }
+  return new Error(String(e));
+};
+
 const SEASONS: ReadonlySet<Season> = new Set([
   'spring',
   'summer',
@@ -195,7 +214,7 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
         }
       } catch (e) {
         if (!cancelled) {
-          setError(e instanceof Error ? e : new Error(String(e)));
+          setError(toError(e));
           setLoading(false);
         }
       }
