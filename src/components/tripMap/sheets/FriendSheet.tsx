@@ -40,14 +40,14 @@ export function FriendSheet({ friend, onClose, onAddToTrip }: Props) {
               {friend.friendName}
             </h3>
             <span className="meta-caps text-copper">
-              {friend.status === 'present' ? 'איתך כאן' : 'חופף בעתיד'}
+              {friend.status === 'present' ? 'Here with you' : 'Future overlap'}
               <span className="ms-2 text-cocoa-55">· {friend.zoneLabel}</span>
             </span>
           </div>
         </div>
         <button
           type="button"
-          aria-label="סגור"
+          aria-label="Close"
           onClick={onClose}
           className="-me-1 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-cocoa-55 transition-colors duration-instant ease-out-quart hover:bg-cocoa-8 active:bg-cocoa-15"
         >
@@ -67,12 +67,12 @@ export function FriendSheet({ friend, onClose, onAddToTrip }: Props) {
       {showAddToTripCta && (
         <Button variant="accent" size="sm" fullWidth onClick={onAddToTrip}>
           <Plus className="h-4 w-4" strokeWidth={2.2} aria-hidden />
-          הוסף את {friend.zoneLabel} לנסיעה שלי
+          Add {friend.zoneLabel} to my trip
         </Button>
       )}
 
       <p className="text-small leading-snug text-cocoa-55">
-        מיקום ברמת עיר בלבד. תרמיל לעולם לא מציג את המיקום המדויק של חבר.
+        City-level location only. Tarmil never shows a friend's exact spot.
       </p>
     </div>
   );

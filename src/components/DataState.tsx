@@ -7,7 +7,7 @@ export function LoadingPanel() {
   return (
     <Screen>
       <div className="flex h-full items-center justify-center p-md">
-        <span className="text-body text-cocoa-55">טוען…</span>
+        <span className="text-body text-cocoa-55">Loading…</span>
       </div>
     </Screen>
   );
@@ -17,7 +17,7 @@ export function ErrorPanel({ error }: { error: Error | null }) {
   return (
     <Screen>
       <div className="flex h-full flex-col items-center justify-center gap-md p-md">
-        <p className="font-serif text-lede text-cocoa">לא הצלחנו להתחבר.</p>
+        <p className="font-serif text-lede text-cocoa">We couldn't connect.</p>
         {error?.message && (
           <p className="max-w-body text-small text-cocoa-55">
             {error.message}
@@ -28,7 +28,7 @@ export function ErrorPanel({ error }: { error: Error | null }) {
           onClick={() => window.location.reload()}
           className="meta-caps text-copper active:text-copper-70"
         >
-          נסה שוב
+          Try again
         </button>
       </div>
     </Screen>

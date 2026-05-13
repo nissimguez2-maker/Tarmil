@@ -13,16 +13,16 @@ type Props = {
 export function PickOnMapBar({ onCancel, onConfirm }: Props) {
   return (
     <div className="absolute inset-x-md bottom-[88px] z-[800] flex flex-col gap-sm rounded-2xl bg-ivory px-md pb-md pt-sm shadow-card">
-      <span className="meta-caps text-copper">בחירת יעד במפה</span>
+      <span className="meta-caps text-copper">Pick a spot on the map</span>
       <p className="text-small leading-snug text-cocoa-70">
-        גרור את המפה כך שהסיכה תהיה במרכז היעד שלך.
+        Drag the map so the pin sits on your destination.
       </p>
       <div className="flex items-center gap-sm">
         <Button variant="ghost" size="sm" onClick={onCancel}>
-          ביטול
+          Cancel
         </Button>
         <Button variant="accent" size="sm" onClick={onConfirm}>
-          אישור
+          Confirm
         </Button>
       </div>
     </div>

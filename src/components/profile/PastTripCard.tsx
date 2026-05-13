@@ -1,6 +1,6 @@
 type Props = {
   destinationHe: string;
-  /** Season + year + duration label, e.g. "אביב 2025 · 8 ימים". */
+  /** Season + year + duration label, e.g. "Spring 2025 · 8 days". */
   metaLine: string;
   /** Optional small emoji flag prefix. */
   flag?: string;

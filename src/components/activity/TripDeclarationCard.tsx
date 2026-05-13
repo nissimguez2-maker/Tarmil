@@ -26,14 +26,14 @@ export function TripDeclarationCard({ post, author, reactions, onReact }: Props)
         <Avatar
           photoUrl={author?.photoUrl}
           initial={author?.friendInitial ?? '·'}
-          name={author?.friendName ?? 'משתמש'}
+          name={author?.friendName ?? 'User'}
           size="md"
         />
         <div className="flex min-w-0 flex-1 flex-col leading-tight">
           <span className="truncate font-serif text-lede italic text-cocoa">
-            {author?.friendName ?? 'משתמש'}
+            {author?.friendName ?? 'User'}
           </span>
-          <span className="text-small text-cocoa-55">הכרזה על טיול</span>
+          <span className="text-small text-cocoa-55">Trip declaration</span>
         </div>
       </header>
       <p className="text-body text-cocoa-70">{post.bodyHe}</p>

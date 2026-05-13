@@ -62,19 +62,19 @@ export function ConfirmFriendTripSheet({ friend, onSave, onClose }: Props) {
     <div className="flex max-h-[80dvh] flex-col gap-md overflow-y-auto px-md pb-md pt-sm">
       <div className="flex items-start justify-between gap-sm">
         <div className="flex min-w-0 flex-1 flex-col gap-px">
-          <span className="meta-caps text-copper">הצטרף לחבר</span>
+          <span className="meta-caps text-copper">Join a friend</span>
           <h3 className="font-serif text-lede leading-tight text-cocoa">
-            {friend.friendName} ב{friend.zoneLabel}
+            {friend.friendName} in {friend.zoneLabel}
           </h3>
           {overlapWindow && (
             <span className="text-small text-cocoa-70">
-              חופף איתך {overlapWindow}
+              Overlaps with you {overlapWindow}
             </span>
           )}
         </div>
         <button
           type="button"
-          aria-label="סגור"
+          aria-label="Close"
           onClick={onClose}
           className="-me-1 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-cocoa-55 transition-colors duration-instant ease-out-quart hover:bg-cocoa-8 active:bg-cocoa-15"
         >
@@ -83,33 +83,34 @@ export function ConfirmFriendTripSheet({ friend, onSave, onClose }: Props) {
       </div>
 
       <p className="text-body leading-snug text-cocoa-70">
-        ניצור יעד חדש במסע שלך עם המיקום של {friend.friendName} ועם החלון
-        שמתחפף לכם. אפשר לערוך את התאריכים לפני שמירה.
+        We'll create a new stop on your trip with {friend.friendName}'s location
+        and the window where you overlap. You can still tweak the dates before
+        saving.
       </p>
 
       <div className="flex flex-col gap-xs">
-        <span className="meta-caps text-cocoa-55">מתי תהיה שם?</span>
+        <span className="meta-caps text-cocoa-55">When will you be there?</span>
         <div className="flex flex-col gap-2">
           <DateField
-            label="תאריך הגעה"
+            label="Arrival"
             value={arrivalDate}
             onChange={setArrivalDate}
           />
           <DateField
-            label="תאריך יציאה"
+            label="Departure"
             value={departureDate}
             onChange={setDepartureDate}
           />
         </div>
         <span className="text-small text-cocoa-70">
-          <span className="tnum">{nights}</span> לילות
+          <span className="tnum">{nights}</span> nights
         </span>
       </div>
 
       <PrivacyRadios value={privacy} onChange={setPrivacy} />
 
       <Button variant="accent" onClick={handleSave} fullWidth>
-        הוסף לנסיעה שלי
+        Add to my trip
       </Button>
     </div>
   );

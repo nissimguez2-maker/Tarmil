@@ -37,7 +37,7 @@ export function TopBar({ title, eyebrow, back, end, className }: Props) {
       {back && (
         <button
           type="button"
-          aria-label="חזרה"
+          aria-label="Back"
           onClick={() => navigate(-1)}
           className={clsx(
             'absolute start-md inline-flex h-9 w-9 items-center justify-center',

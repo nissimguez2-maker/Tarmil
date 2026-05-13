@@ -20,14 +20,14 @@ type Props = {
   onEdit: () => void;
   onRemove: () => void;
   onOpenPlace: (placeId: string) => void;
-  /** When provided, shows an "סמן כהגעתי" button that opens arrival confirm. */
+  /** When provided, shows a "Mark as arrived" button that opens arrival confirm. */
   onMarkArrived?: () => void;
 };
 
 const PRIVACY_LABEL: Record<PlannedStop['privacy'], string> = {
-  private: 'פרטי',
-  friends: 'גלוי לחברים',
-  hidden: 'מוסתר',
+  private: 'Private',
+  friends: 'Visible to friends',
+  hidden: 'Hidden',
 };
 
 /**
@@ -59,14 +59,14 @@ export function PlannedStopSheet({
             className="meta-caps inline-flex items-center gap-1 self-start text-cocoa-55 transition-colors duration-instant ease-out-quart active:text-cocoa"
           >
             <ChevronRight className="h-3 w-3" aria-hidden />
-            <span>לתוכנית שלך</span>
+            <span>To your plan</span>
           </button>
           <h3 className="truncate font-serif text-sub leading-tight text-cocoa">
             {stop.nameHe}
           </h3>
           <span className="text-small text-cocoa-70">
             {formatDateRange(stop.arrivalDate, stop.departureDate)} ·{' '}
-            <span className="tnum">{stop.nights}</span> לילות ·{' '}
+            <span className="tnum">{stop.nights}</span> nights ·{' '}
             <span className="text-cocoa-55">
               {PRIVACY_LABEL[stop.privacy]}
             </span>
@@ -74,7 +74,7 @@ export function PlannedStopSheet({
         </div>
         <button
           type="button"
-          aria-label="סגור"
+          aria-label="Close"
           onClick={onClose}
           className="-me-1 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-cocoa-55 transition-colors duration-instant ease-out-quart hover:bg-cocoa-8 active:bg-cocoa-15"
         >
@@ -89,7 +89,7 @@ export function PlannedStopSheet({
 
         {overlaps.length > 0 && (
           <section className="flex flex-col gap-sm">
-            <span className="meta-caps text-cocoa-70">חברים שחופפים איתך</span>
+            <span className="meta-caps text-cocoa-70">Friends overlapping with you</span>
             <div className="flex flex-col gap-sm">
               {overlaps.map((f) => (
                 <div
@@ -122,7 +122,7 @@ export function PlannedStopSheet({
 
         {sections.length > 0 && (
           <div className="flex flex-col gap-1">
-            <span className="meta-caps text-cocoa-70">מקומות מומלצים</span>
+            <span className="meta-caps text-cocoa-70">Recommended places</span>
             {sections.map((sec) => (
               <CollapsibleSection key={sec.id} label={sec.labelHe}>
                 {sec.places.map((p) => (
@@ -140,27 +140,27 @@ export function PlannedStopSheet({
 
         {sections.length === 0 && (
           <p className="text-small text-cocoa-55">
-            עדיין אין מקומות מומלצים ליעד הזה. אפשר לשמור מהמפה.
+            No recommended places for this stop yet. You can save some from the map.
           </p>
         )}
 
         <div className="flex flex-wrap items-center gap-sm pt-sm">
           <Button variant="ghost" size="sm" onClick={onEdit}>
-            ערוך תאריכים
+            Edit dates
           </Button>
           <Button variant="ghost" size="sm" onClick={onRemove}>
-            הסר יעד
+            Remove stop
           </Button>
           {onMarkArrived && (
             <Button variant="ghost" size="sm" onClick={onMarkArrived}>
-              סמן כהגעתי
+              Mark as arrived
             </Button>
           )}
         </div>
 
         <p className="text-small leading-snug text-cocoa-55">
-          התאריכים שלך פרטיים. תרמיל לעולם לא חושף לחברים את הכתובת המדויקת
-          שלך — חפיפות מוצגות ברמת עיר בלבד.
+          Your dates are private. Tarmil never shows friends your exact address —
+          overlaps appear at city level only.
         </p>
       </div>
     </div>
@@ -218,7 +218,7 @@ function PlaceRow({
         <div className="flex items-baseline gap-2">
           <span className="text-body text-cocoa">{place.hebrewName}</span>
           {place.tarmilPick && (
-            <span className="meta-caps text-copper">בחירה</span>
+            <span className="meta-caps text-copper">Pick</span>
           )}
         </div>
         <span className="inline-flex items-center gap-2 text-small text-cocoa-55">
@@ -233,13 +233,13 @@ function PlaceRow({
           </span>
           {place.friendsKnow > 0 && (
             <span>
-              <span className="tnum">{place.friendsKnow}</span> מכירים
+              <span className="tnum">{place.friendsKnow}</span> know it
             </span>
           )}
         </span>
       </div>
       {saved && (
-        <span className="meta-caps mt-1 shrink-0 text-copper">נשמר</span>
+        <span className="meta-caps mt-1 shrink-0 text-copper">Saved</span>
       )}
     </button>
   );

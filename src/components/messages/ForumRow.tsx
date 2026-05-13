@@ -15,7 +15,7 @@ type Props = {
 /**
  * Row in the Forums list. Tap drills into /messages/forums/:slug. When the
  * forum is recommended (not yet joined), the chevron is replaced by a copper
- * accent button that calls `onJoin` and stops navigation.
+ * accent "Join" button that calls `onJoin` and stops navigation.
  *
  * Chevron points left visually because in RTL the "forward into a detail"
  * direction is the start side, which is right — so the chevron points away
@@ -30,7 +30,7 @@ export function ForumRow({ forum, previewTitle, recommended, onJoin }: Props) {
             {forum.nameHe}
           </span>
           <span className="text-small text-cocoa-55">
-            <span className="tnum">{forum.memberCount}</span> חברים
+            <span className="tnum">{forum.memberCount}</span> members
           </span>
         </div>
         <span className="line-clamp-1 text-small text-cocoa-70">
@@ -47,7 +47,7 @@ export function ForumRow({ forum, previewTitle, recommended, onJoin }: Props) {
             onJoin?.();
           }}
         >
-          הצטרף
+          Join
         </Button>
       ) : (
         <ChevronLeft

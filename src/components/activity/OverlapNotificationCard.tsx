@@ -22,15 +22,15 @@ export function OverlapNotificationCard({ post, friend, onOpenChat }: Props) {
         <Avatar
           photoUrl={friend?.photoUrl}
           initial={friend?.friendInitial ?? '·'}
-          name={friend?.friendName ?? 'חבר'}
+          name={friend?.friendName ?? 'Friend'}
           size="md"
           statusDot
         />
         <div className="flex min-w-0 flex-1 flex-col leading-tight">
           <span className="truncate font-serif text-lede italic text-cocoa">
-            {friend?.friendName ?? 'חבר'}
+            {friend?.friendName ?? 'Friend'}
           </span>
-          <span className="meta-caps text-copper">חפיפה ביומן</span>
+          <span className="meta-caps text-copper">Calendar overlap</span>
         </div>
       </header>
       <p className="font-serif text-lede italic leading-snug text-cocoa">
@@ -38,7 +38,7 @@ export function OverlapNotificationCard({ post, friend, onOpenChat }: Props) {
       </p>
       <div className="flex justify-start">
         <Button variant="accent" onClick={onOpenChat}>
-          פתח שיחה
+          Open chat
         </Button>
       </div>
     </article>

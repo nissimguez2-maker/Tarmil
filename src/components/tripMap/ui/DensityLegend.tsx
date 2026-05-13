@@ -8,7 +8,7 @@ export function DensityLegend() {
     <div className="pointer-events-none absolute inset-x-0 bottom-[88px] z-[750] flex justify-center px-md">
       <div className="pointer-events-auto flex max-w-[300px] flex-col items-center gap-1.5 rounded-full bg-ivory/95 px-md py-2 shadow-card backdrop-blur">
         <div className="flex w-full items-center gap-sm">
-          <span className="meta-caps shrink-0 text-cocoa-55">שקט</span>
+          <span className="meta-caps shrink-0 text-cocoa-55">Quiet</span>
           <span
             className="h-1.5 flex-1 rounded-full"
             style={{
@@ -17,10 +17,10 @@ export function DensityLegend() {
             }}
             aria-hidden
           />
-          <span className="meta-caps shrink-0 text-cocoa">צפוף</span>
+          <span className="meta-caps shrink-0 text-cocoa">Packed</span>
         </div>
         <span className="text-meta normal-case tracking-normal text-cocoa-55">
-          צפיפות תרמילים גלובלית
+          Global backpacker density
         </span>
       </div>
     </div>

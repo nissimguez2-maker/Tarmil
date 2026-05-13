@@ -36,15 +36,15 @@ export function WhosDownCard({
         <Avatar
           photoUrl={author?.photoUrl}
           initial={author?.friendInitial ?? '·'}
-          name={author?.friendName ?? 'משתמש'}
+          name={author?.friendName ?? 'User'}
           size="md"
         />
         <div className="flex min-w-0 flex-1 flex-col leading-tight">
           <span className="truncate font-serif text-lede italic text-cocoa">
-            {author?.friendName ?? 'משתמש'}
+            {author?.friendName ?? 'User'}
           </span>
           <span className="text-small text-cocoa-55">
-            {dateLabel ?? 'הזמנה פתוחה'}
+            {dateLabel ?? 'Open invite'}
           </span>
         </div>
       </header>
@@ -69,7 +69,7 @@ export function WhosDownCard({
           onClick={onReply}
           className="text-small text-copper transition-colors duration-instant ease-out-quart hover:text-copper-85"
         >
-          {post.replyCount > 0 ? `${post.replyCount} תגובות · השב` : 'השב'}
+          {post.replyCount > 0 ? `${post.replyCount} replies · Reply` : 'Reply'}
         </button>
       </div>
     </article>

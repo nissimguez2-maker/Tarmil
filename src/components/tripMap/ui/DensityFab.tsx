@@ -15,7 +15,7 @@ export function DensityFab({ active, onClick }: Props) {
   return (
     <button
       type="button"
-      aria-label={active ? 'כבה צפיפות תרמילים' : 'הראה צפיפות תרמילים'}
+      aria-label={active ? 'Hide backpacker density' : 'Show backpacker density'}
       aria-pressed={active}
       onClick={onClick}
       className={clsx(

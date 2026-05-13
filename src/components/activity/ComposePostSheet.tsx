@@ -15,19 +15,19 @@ type Props = {
 const KIND_OPTIONS: Array<{ value: PostKind; label: string; meta: string }> = [
   {
     value: 'declaration',
-    label: 'הכרזה על טיול',
-    meta: 'משתף את החברים על מסלול חדש',
+    label: 'Trip declaration',
+    meta: 'Tell friends about a new route',
   },
   {
     value: 'whos_down',
-    label: 'הזמנה פתוחה',
-    meta: 'שואל מי מצטרף — מקום או חוויה',
+    label: "Who's down?",
+    meta: 'Ask who wants to join — a place or experience',
   },
 ];
 
 /**
  * Compose sheet for the Activity tab's "+" FAB. Pick a post kind, type a body,
- * tap "פרסם". The post is mock — onPost is optional and currently just closes.
+ * tap "Post". The post is mock — onPost is optional and currently just closes.
  * Drafts to a future PR that wires this to Supabase activity_posts.
  */
 export function ComposePostSheet({ open, onClose, onPost }: Props) {
@@ -54,8 +54,8 @@ export function ComposePostSheet({ open, onClose, onPost }: Props) {
     <Modal
       open={open}
       onClose={onClose}
-      eyebrow="פוסט חדש"
-      title="מה קורה במסע?"
+      eyebrow="New post"
+      title="What's happening on the trip?"
       footer={
         <Button
           variant="accent"
@@ -63,13 +63,13 @@ export function ComposePostSheet({ open, onClose, onPost }: Props) {
           disabled={!canPost}
           onClick={handlePost}
         >
-          {sending ? 'מפרסם…' : 'פרסם'}
+          {sending ? 'Posting…' : 'Post'}
         </Button>
       }
     >
       <div className="flex flex-col gap-md">
         <div className="flex flex-col gap-xs">
-          <span className="meta-caps text-cocoa-55">סוג פוסט</span>
+          <span className="meta-caps text-cocoa-55">Post type</span>
           <div className="flex flex-col gap-sm">
             {KIND_OPTIONS.map((opt) => {
               const active = kind === opt.value;
@@ -113,13 +113,13 @@ export function ComposePostSheet({ open, onClose, onPost }: Props) {
         </div>
 
         <div className="flex flex-col gap-xs">
-          <span className="meta-caps text-cocoa-55">הגוף</span>
+          <span className="meta-caps text-cocoa-55">Body</span>
           <textarea
             value={body}
             onChange={(e) => setBody(e.target.value)}
             rows={5}
-            dir="rtl"
-            placeholder="שני משפטים זה הרבה. השאר את זה אמיתי."
+            dir="ltr"
+            placeholder="Two sentences is plenty. Keep it real."
             className="resize-none rounded-2xl bg-sand shadow-card p-md text-body text-cocoa placeholder:text-cocoa-55 transition-colors duration-instant ease-out-quart focus:border-copper focus:outline-none"
           />
         </div>

@@ -15,8 +15,8 @@ type Props = {
 export function FriendGridItem({ friend }: Props) {
   const status =
     friend.status === 'present'
-      ? `ב${friend.zoneLabel}`
-      : `מתכנן ${friend.zoneLabel}`;
+      ? `In ${friend.zoneLabel}`
+      : `Planning ${friend.zoneLabel}`;
 
   return (
     <Link

@@ -11,15 +11,15 @@ const OPTIONS: Array<{
   label: string;
   hint: string;
 }> = [
-  { value: 'private', label: 'פרטי', hint: 'רק אני רואה את היעד.' },
-  { value: 'friends', label: 'חברים', hint: 'מאפשר זיהוי חפיפות עם חברים.' },
-  { value: 'hidden', label: 'מוסתר', hint: 'לא נכלל בחפיפות. שקט מוחלט.' },
+  { value: 'private', label: 'Private', hint: 'Only I can see the stop.' },
+  { value: 'friends', label: 'Friends', hint: 'Lets friends see overlaps with you.' },
+  { value: 'hidden', label: 'Hidden', hint: 'Not counted for overlaps. Total silence.' },
 ];
 
 export function PrivacyRadios({ value, onChange }: Props) {
   return (
     <div className="flex flex-col gap-xs">
-      <span className="meta-caps text-cocoa-55">מי יכול לראות חפיפות?</span>
+      <span className="meta-caps text-cocoa-55">Who can see overlaps?</span>
       <div className="flex flex-col">
         {OPTIONS.map((opt, i) => (
           <label

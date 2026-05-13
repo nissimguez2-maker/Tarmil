@@ -15,7 +15,7 @@ export function FilterFab({ onClick, active }: Props) {
   return (
     <button
       type="button"
-      aria-label="פתח סינון"
+      aria-label="Open filters"
       onClick={onClick}
       className={clsx(
         'pointer-events-auto absolute start-md top-md z-[750]',

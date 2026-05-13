@@ -46,7 +46,7 @@ export function PlaceCard({
       <div className="flex items-baseline justify-between gap-sm">
         <h3 className="font-serif text-lede leading-tight text-cocoa">{name}</h3>
         {tarmilPick && (
-          <span className="meta-caps shrink-0 text-copper">בחירת תרמיל</span>
+          <span className="meta-caps shrink-0 text-copper">Tarmil pick</span>
         )}
       </div>
 
@@ -66,7 +66,7 @@ export function PlaceCard({
           )}
           {friendsKnow !== undefined && friendsKnow > 0 && (
             <span className="text-small text-cocoa-70">
-              <span className="tnum">{friendsKnow}</span> חברים מכירים
+              <span className="tnum">{friendsKnow}</span> friends know it
             </span>
           )}
         </div>

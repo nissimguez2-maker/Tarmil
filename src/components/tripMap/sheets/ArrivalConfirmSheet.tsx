@@ -18,14 +18,14 @@ export function ArrivalConfirmSheet({ stop, onConfirm, onDismiss }: Props) {
     <div className="flex flex-col gap-md px-md pb-md pt-sm">
       <div className="flex items-start justify-between gap-sm">
         <div className="flex min-w-0 flex-1 flex-col gap-px">
-          <span className="meta-caps text-copper">בדיקה עדינה</span>
+          <span className="meta-caps text-copper">Gentle check</span>
           <h3 className="font-serif text-lede leading-tight text-cocoa">
-            הגעת ל{stop.nameHe}?
+            Did you arrive in {stop.nameHe}?
           </h3>
         </div>
         <button
           type="button"
-          aria-label="סגור"
+          aria-label="Close"
           onClick={onDismiss}
           className="-me-1 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-cocoa-55 transition-colors duration-instant ease-out-quart hover:bg-cocoa-8 active:bg-cocoa-15"
         >
@@ -34,21 +34,21 @@ export function ArrivalConfirmSheet({ stop, onConfirm, onDismiss }: Props) {
       </div>
 
       <p className="text-body leading-snug text-cocoa-70">
-        אם הגעת, נוסיף את {stop.nameHe} למסלול שעברת בפועל. אם לא — לא נוגעים
-        בכלום.
+        If you've arrived, we'll add {stop.nameHe} to the route you've actually
+        travelled. If not — we won't touch a thing.
       </p>
 
       <div className="flex items-center gap-sm">
         <Button variant="ghost" size="sm" onClick={onDismiss}>
-          לא עכשיו
+          Not now
         </Button>
         <Button variant="accent" size="sm" onClick={onConfirm}>
-          הוסף למסע
+          Add to my trip
         </Button>
       </div>
 
       <p className="text-small leading-snug text-cocoa-55">
-        תמיד פרטי. תרמיל לעולם לא מסיק את התנועה שלך אוטומטית.
+        Always private. Tarmil never infers your movement automatically.
       </p>
     </div>
   );
