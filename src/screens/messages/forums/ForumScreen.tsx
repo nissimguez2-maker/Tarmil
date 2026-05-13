@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { ChevronLeft } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 import clsx from 'clsx';
 import { Screen } from '../../../components/Screen';
 import { TopBar } from '../../../components/TopBar';
@@ -130,7 +130,7 @@ export function ForumScreen() {
                         <span className="tnum">{t.replyCount}</span> replies
                       </span>
                     </div>
-                    <ChevronLeft
+                    <ChevronRight
                       className="mt-1 h-5 w-5 shrink-0 text-cocoa-55"
                       strokeWidth={1.5}
                       aria-hidden

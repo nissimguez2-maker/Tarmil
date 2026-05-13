@@ -1,4 +1,4 @@
-import { ChevronRight } from 'lucide-react';
+import { ChevronLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
 
@@ -16,11 +16,8 @@ type Props = {
 
 /**
  * Top bar for screens that need a title or back affordance.
- * Hairline cocoa-15 separator at the bottom.
- *
- * In RTL, the back chevron sits on the start side (right) and points right —
- * Lucide's ChevronRight is correct because in RTL the start side is on the
- * right.
+ * Hairline cocoa-15 separator at the bottom. In LTR the back chevron
+ * sits on the start (left) side and points left.
  */
 export function TopBar({ title, eyebrow, back, end, className }: Props) {
   const navigate = useNavigate();
@@ -47,7 +44,7 @@ export function TopBar({ title, eyebrow, back, end, className }: Props) {
             'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory',
           )}
         >
-          <ChevronRight className="h-5 w-5" strokeWidth={1.7} aria-hidden />
+          <ChevronLeft className="h-5 w-5" strokeWidth={1.7} aria-hidden />
         </button>
       )}
 

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import clsx from 'clsx';
-import { ChevronDown, ChevronRight, X, Star } from 'lucide-react';
+import { ChevronDown, ChevronLeft, X, Star } from 'lucide-react';
 import { Button } from '../../Button';
 import type { PlannedStop } from '../../../data/plannedStops';
 import type { Place } from '../../../data/places';
@@ -58,7 +58,7 @@ export function PlannedStopSheet({
             onClick={onBack}
             className="meta-caps inline-flex items-center gap-1 self-start text-cocoa-55 transition-colors duration-instant ease-out-quart active:text-cocoa"
           >
-            <ChevronRight className="h-3 w-3" aria-hidden />
+            <ChevronLeft className="h-3 w-3" aria-hidden />
             <span>To your plan</span>
           </button>
           <h3 className="truncate font-serif text-sub leading-tight text-cocoa">

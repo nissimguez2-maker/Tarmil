@@ -1,4 +1,4 @@
-import { Star, X, ChevronLeft, Bookmark } from 'lucide-react';
+import { Star, X, ChevronRight, Bookmark } from 'lucide-react';
 import clsx from 'clsx';
 import { Button } from '../../Button';
 import type { Place } from '../../../data/places';
@@ -112,7 +112,7 @@ export function PlaceSheet({ place, onClose, onOpen, onSaveToStop }: Props) {
         )}
         <Button variant="primary" size="sm" fullWidth onClick={onOpen}>
           <span className="flex-1 text-start">Full details</span>
-          <ChevronLeft className="h-4 w-4" aria-hidden />
+          <ChevronRight className="h-4 w-4" aria-hidden />
         </Button>
       </div>
     </div>
