@@ -7,8 +7,8 @@
  * SEED ONLY for the array below. Runtime data is read from the
  * `planned_stops` table in Supabase via SupabaseDataProvider, and mutated by
  * the hook's saveStop / removeStop / savePlaceToStop / resetDemo. The
- * `reset_demo_state()` SQL function (see migration 0002) restores the same
- * 4-stop seed below. Keep them in sync if you edit either side.
+ * `reset_demo_state()` SQL function (see migration 0012) restores the same
+ * 5-stop seed below. Keep them in sync if you edit either side.
  */
 
 export type PlannedStopPrivacy = 'private' | 'friends' | 'hidden';
@@ -34,8 +34,8 @@ export type PlannedStop = {
 };
 
 /**
- * Demo route — Israeli backpacker narrative: Rio (currently) → Búzios coast
- * weekend → São Paulo → Jericoacoara → Buenos Aires.
+ * Demo route — Israeli backpacker narrative across Brazil + Argentina + Uruguay.
+ * Each stop has a 1-day transit gap to the next so the calendar reads cleanly.
  */
 export const plannedStops: PlannedStop[] = [
   {
@@ -46,10 +46,10 @@ export const plannedStops: PlannedStop[] = [
     lat: -22.747,
     lng: -41.881,
     arrivalDate: '2026-10-28',
-    departureDate: '2026-10-31',
-    nights: 3,
+    departureDate: '2026-10-30',
+    nights: 2,
     privacy: 'friends',
-    note: 'Three beach days after Rio, before São Paulo.',
+    note: 'Short beach run between Rio and São Paulo.',
     friendOverlapIds: ['roi-buzios'],
   },
   {
@@ -60,8 +60,8 @@ export const plannedStops: PlannedStop[] = [
     lat: -23.5505,
     lng: -46.6333,
     arrivalDate: '2026-11-01',
-    departureDate: '2026-11-06',
-    nights: 5,
+    departureDate: '2026-11-05',
+    nights: 4,
     privacy: 'friends',
     note: 'Vila Madalena, Paulista, asado and a first beer of the night.',
     friendOverlapIds: ['shir-saopaulo'],
@@ -73,9 +73,9 @@ export const plannedStops: PlannedStop[] = [
     type: 'city',
     lat: -2.7959,
     lng: -40.5125,
-    arrivalDate: '2026-11-08',
-    departureDate: '2026-11-14',
-    nights: 6,
+    arrivalDate: '2026-11-07',
+    departureDate: '2026-11-12',
+    nights: 5,
     privacy: 'friends',
     note: 'Dunes, kitesurf and barefoot mornings.',
     friendOverlapIds: ['yotam-jericoacoara'],
@@ -87,11 +87,25 @@ export const plannedStops: PlannedStop[] = [
     type: 'city',
     lat: -34.6037,
     lng: -58.3816,
-    arrivalDate: '2026-11-16',
-    departureDate: '2026-11-25',
-    nights: 9,
+    arrivalDate: '2026-11-14',
+    departureDate: '2026-11-19',
+    nights: 5,
     privacy: 'friends',
-    note: 'Palermo, San Telmo, tango and asado till midnight.',
-    friendOverlapIds: ['tom-buenosaires'],
+    note: 'Palermo, San Telmo, tango, asado till midnight.',
+    friendOverlapIds: ['moshe-buenosaires'],
+  },
+  {
+    id: 'punta-del-este',
+    nameHe: 'Punta del Este',
+    nameEn: 'Punta del Este',
+    type: 'city',
+    lat: -34.9633,
+    lng: -54.9476,
+    arrivalDate: '2026-11-20',
+    departureDate: '2026-11-23',
+    nights: 3,
+    privacy: 'friends',
+    note: 'Uruguay coast finale — Casapueblo sunset, José Ignacio fish.',
+    friendOverlapIds: ['dana-punta'],
   },
 ];
