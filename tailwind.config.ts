@@ -78,6 +78,7 @@ export default {
       },
       boxShadow: {
         device: '0 30px 80px -20px rgba(53, 40, 24, 0.4)',
+        card: 'var(--shadow-card)',
         sheet: 'var(--shadow-sheet)',
         fab: 'var(--shadow-fab)',
         panel: 'var(--shadow-panel)',

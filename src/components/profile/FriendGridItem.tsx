@@ -21,7 +21,7 @@ export function FriendGridItem({ friend }: Props) {
   return (
     <Link
       to={`/profile/friend/${friend.id}`}
-      className="flex flex-col items-center gap-xs rounded-md p-sm transition-colors duration-instant ease-out-quart hover:bg-cocoa-8 active:bg-cocoa-15"
+      className="flex flex-col items-center gap-xs rounded-xl p-sm transition-colors duration-instant ease-out-quart hover:bg-cocoa-8 active:bg-cocoa-15"
     >
       <Avatar
         photoUrl={friend.photoUrl}

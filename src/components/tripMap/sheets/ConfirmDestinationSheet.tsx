@@ -121,7 +121,7 @@ export function ConfirmDestinationSheet({
           rows={2}
           dir="rtl"
           placeholder="לדוגמה: לבדוק טיסה מבנגקוק…"
-          className="resize-none rounded-md border border-cocoa-15 bg-sand p-sm text-body text-cocoa placeholder:text-cocoa-55 transition-colors duration-instant ease-out-quart focus:border-copper focus:outline-none"
+          className="resize-none rounded-xl border border-cocoa-15 bg-sand p-sm text-body text-cocoa placeholder:text-cocoa-55 transition-colors duration-instant ease-out-quart focus:border-copper focus:outline-none"
         />
       </div>
 

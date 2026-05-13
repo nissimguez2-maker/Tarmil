@@ -29,7 +29,7 @@ export function TopBar({ title, eyebrow, back, end, className }: Props) {
     <header
       className={clsx(
         'relative flex h-lg items-center justify-center',
-        'border-b border-cocoa-15 bg-ivory',
+        'border-b border-cocoa-08 bg-ivory/95 backdrop-blur',
         'px-md',
         className,
       )}
@@ -41,21 +41,28 @@ export function TopBar({ title, eyebrow, back, end, className }: Props) {
           onClick={() => navigate(-1)}
           className={clsx(
             'absolute start-md inline-flex h-9 w-9 items-center justify-center',
-            'rounded-full text-cocoa transition-colors duration-instant ease-out-quart hover:bg-cocoa-8 active:bg-cocoa-15',
+            'rounded-full text-cocoa',
+            'transition-[transform,background-color] duration-instant ease-out-quart',
+            'hover:bg-cocoa-8 active:scale-95 active:bg-cocoa-15',
+            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory',
           )}
         >
-          <ChevronRight className="h-5 w-5" aria-hidden />
+          <ChevronRight className="h-5 w-5" strokeWidth={1.7} aria-hidden />
         </button>
       )}
 
-      <div className="flex flex-col items-center gap-px">
+      <div className="flex flex-col items-center gap-[1px]">
         {eyebrow && <span className="meta-caps text-copper">{eyebrow}</span>}
         {title && (
-          <h1 className="font-serif text-lede leading-none">{title}</h1>
+          <h1 className="font-serif text-lede font-semibold leading-none tracking-[-0.01em] text-cocoa">
+            {title}
+          </h1>
         )}
       </div>
 
-      {end && <div className="absolute end-md flex items-center gap-1">{end}</div>}
+      {end && (
+        <div className="absolute end-md flex items-center gap-1">{end}</div>
+      )}
     </header>
   );
 }

@@ -26,10 +26,10 @@ export function BottomSheet({
     <div
       className={clsx(
         'absolute inset-x-0 bottom-0 z-[1000] origin-bottom',
-        'rounded-t-[20px] border-t border-cocoa-15 bg-ivory',
+        'rounded-t-3xl bg-ivory',
         'shadow-sheet duration-considered ease-out-quart',
         'transition-[transform,opacity] motion-reduce:transition-none',
-        height === 'tall' && 'top-[12%] flex flex-col overflow-hidden',
+        height === 'tall' && 'top-[10%] flex flex-col overflow-hidden',
         open
           ? 'translate-y-0 opacity-100'
           : 'pointer-events-none translate-y-full opacity-0',
@@ -39,7 +39,7 @@ export function BottomSheet({
     >
       <span
         aria-hidden
-        className="mx-auto mt-2 block h-1 w-10 rounded-full bg-cocoa-30"
+        className="mx-auto mt-2.5 block h-1 w-9 rounded-full bg-cocoa-15"
       />
       {children}
     </div>

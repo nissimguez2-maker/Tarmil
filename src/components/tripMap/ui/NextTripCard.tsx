@@ -25,14 +25,23 @@ export function NextTripCard({ stop, friends, onTap }: Props) {
       type="button"
       onClick={onTap}
       className={clsx(
-        'block w-full border-b border-cocoa-15 bg-sand text-start',
-        'transition-colors duration-instant ease-out-quart active:bg-cocoa-08',
+        'group/card block w-full border-b border-cocoa-08 bg-sand text-start',
+        'transition-colors duration-instant ease-out-quart hover:bg-sand/80 active:bg-rope/40',
+        'focus-visible:outline-none focus-visible:bg-sand/80',
       )}
     >
       <div className="flex flex-col gap-xs px-md pb-sm pt-md">
-        <span className="meta-caps text-copper">הטיול הבא</span>
+        <div className="flex items-baseline justify-between gap-sm">
+          <span className="meta-caps text-copper">הטיול הבא</span>
+          <span
+            aria-hidden
+            className="text-small text-cocoa-30 transition-transform duration-instant ease-out-quart group-hover/card:-translate-x-1"
+          >
+            ‹
+          </span>
+        </div>
 
-        <h2 className="font-serif text-sub leading-[1.05] text-cocoa">
+        <h2 className="font-serif text-sub leading-[1.02] tracking-[-0.02em] text-balance text-cocoa">
           {stop.nameHe}
         </h2>
 
@@ -47,9 +56,7 @@ export function NextTripCard({ stop, friends, onTap }: Props) {
         </p>
       </div>
 
-      {friends.length > 0 && (
-        <FriendsRow friends={friends} stop={stop} />
-      )}
+      {friends.length > 0 && <FriendsRow friends={friends} stop={stop} />}
     </button>
   );
 }

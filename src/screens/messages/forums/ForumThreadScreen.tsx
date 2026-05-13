@@ -47,7 +47,7 @@ export function ForumThreadScreen() {
       <TopBar back title={thread.title} />
 
       <div className="flex flex-1 flex-col gap-md overflow-y-auto p-md">
-        <article className="flex flex-col gap-sm rounded-md border border-cocoa-15 bg-ivory p-md">
+        <article className="flex flex-col gap-sm rounded-2xl border border-cocoa-15 bg-ivory shadow-card p-md">
           <header className="flex items-center gap-sm">
             <Avatar
               photoUrl={author?.photoUrl}
@@ -90,7 +90,7 @@ export function ForumThreadScreen() {
             return (
               <li
                 key={r.id}
-                className="flex items-start gap-sm rounded-md bg-sand p-md"
+                className="flex items-start gap-sm rounded-2xl bg-sand p-md"
               >
                 <Avatar
                   photoUrl={replyAuthor?.photoUrl}
@@ -111,7 +111,7 @@ export function ForumThreadScreen() {
       </div>
 
       <MessageComposer
-        placeholder="הגב לשרשור..."
+        placeholder="הגב לשרשור…"
         onSend={(body) => postForumReply(thread.id, body)}
       />
     </Screen>

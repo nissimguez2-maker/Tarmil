@@ -31,7 +31,7 @@ export function WhosDownCard({
       : null;
 
   return (
-    <article className="flex flex-col gap-sm rounded-md border border-cocoa-15 bg-ivory p-md">
+    <article className="flex flex-col gap-sm rounded-2xl border border-cocoa-15 bg-ivory shadow-card p-md">
       <header className="flex items-center gap-sm">
         <Avatar
           photoUrl={author?.photoUrl}

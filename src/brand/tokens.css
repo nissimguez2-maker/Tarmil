@@ -6,7 +6,7 @@
 
 :root {
   /* surface scale */
-  --ivory: #faf8f2;
+  --ivory: #fdfbf7;
   --sand: #ead8c0;
   --rope: #d1bb9e;
   --stone: #a79277;
@@ -46,11 +46,13 @@
 
   /*
    * Elevation — tinted cocoa shadows, never neutral grey.
+   * card  — quiet lift on hover (cards, list rows, place pins)
    * sheet — bottom sheet rising into ivory
    * fab   — copper FAB on map / feed
    * panel — tools tray sliding from top
    */
-  --shadow-sheet: 0 -12px 32px -16px rgba(53, 40, 24, 0.28);
-  --shadow-fab: 0 10px 24px -10px rgba(199, 93, 36, 0.42);
-  --shadow-panel: 0 18px 40px -18px rgba(53, 40, 24, 0.32);
+  --shadow-card: 0 1px 2px rgba(53, 40, 24, 0.04), 0 4px 14px -6px rgba(53, 40, 24, 0.08);
+  --shadow-sheet: 0 -12px 36px -14px rgba(53, 40, 24, 0.22);
+  --shadow-fab: 0 8px 24px -8px rgba(199, 93, 36, 0.4), 0 2px 6px -2px rgba(199, 93, 36, 0.32);
+  --shadow-panel: 0 16px 40px -16px rgba(53, 40, 24, 0.28);
 }

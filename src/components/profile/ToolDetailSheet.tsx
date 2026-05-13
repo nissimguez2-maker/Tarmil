@@ -120,7 +120,7 @@ function CurrencyConverter() {
         </div>
       </div>
 
-      <div className="rounded-md border border-cocoa-15 bg-sand p-md">
+      <div className="rounded-2xl border border-cocoa-15 bg-sand shadow-card p-md">
         <span className="meta-caps text-copper">תוצאה</span>
         <p className="mt-xs font-serif text-display leading-none text-cocoa">
           <span className="tnum">{formatNumber(result)}</span>
@@ -251,7 +251,7 @@ function VoiceTranslator() {
         מקוון; אם אין רשת, יחזור על התרגום האחרון.
       </p>
 
-      <div className="rounded-md border border-cocoa-15 bg-sand p-md">
+      <div className="rounded-2xl border border-cocoa-15 bg-sand shadow-card p-md">
         <span className="meta-caps text-cocoa-55">דוגמה אחרונה</span>
         <p className="mt-xs font-serif text-lede italic text-cocoa">
           איפה אפשר להזמין מונית?
@@ -299,7 +299,7 @@ function MenuTranslator() {
         ים, לפי ההעדפות שלך.
       </p>
 
-      <div className="flex h-32 items-center justify-center rounded-md border-2 border-dashed border-cocoa-30 bg-sand">
+      <div className="flex h-32 items-center justify-center rounded-2xl border-2 border-dashed border-cocoa-30 bg-sand">
         <Camera className="h-8 w-8 text-cocoa-55" strokeWidth={1.5} aria-hidden />
       </div>
 
@@ -346,11 +346,11 @@ function SignScanner() {
         ישר מעל הטקסט.
       </p>
 
-      <div className="flex h-32 items-center justify-center rounded-md border-2 border-dashed border-cocoa-30 bg-sand">
+      <div className="flex h-32 items-center justify-center rounded-2xl border-2 border-dashed border-cocoa-30 bg-sand">
         <Camera className="h-8 w-8 text-cocoa-55" strokeWidth={1.5} aria-hidden />
       </div>
 
-      <div className="rounded-md border border-cocoa-15 bg-sand p-md">
+      <div className="rounded-2xl border border-cocoa-15 bg-sand shadow-card p-md">
         <span className="meta-caps text-cocoa-55">דוגמה אחרונה</span>
         <p className="mt-xs font-serif text-lede italic text-cocoa ltr">
           Cuidado: piso molhado
@@ -449,7 +449,7 @@ function EsimPlans() {
           <li
             key={plan.region}
             className={clsx(
-              'flex items-center justify-between gap-sm rounded-md border p-md',
+              'flex items-center justify-between gap-sm rounded-2xl border p-md',
               'transition-colors duration-instant ease-out-quart active:bg-cocoa-08',
               plan.popular
                 ? 'border-copper bg-sand'
@@ -499,7 +499,7 @@ const CHABAD_HOUSES = [
 function JewishTools() {
   return (
     <div className="flex flex-col gap-md">
-      <div className="rounded-md border border-cocoa-15 bg-sand p-md">
+      <div className="rounded-2xl border border-cocoa-15 bg-sand shadow-card p-md">
         <div className="flex items-baseline justify-between">
           <span className="meta-caps text-copper">שבת קרובה · ריו</span>
           <Globe className="h-4 w-4 text-cocoa-55" aria-hidden />
@@ -531,7 +531,7 @@ function JewishTools() {
         ))}
       </ul>
 
-      <div className="flex items-center gap-sm rounded-md border border-cocoa-15 bg-ivory p-md">
+      <div className="flex items-center gap-sm rounded-2xl border border-cocoa-15 bg-ivory shadow-card p-md">
         <Star className="h-5 w-5 shrink-0 text-copper" aria-hidden fill="currentColor" strokeWidth={0} />
         <p className="text-small text-cocoa-70">
           סורק כשרות — סרוק מוצר במכולת לבדיקה מהירה. כולל את כשרויות חו״ל

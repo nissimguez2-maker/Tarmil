@@ -61,7 +61,11 @@ export function ForumScreen() {
           <span className="tnum">{forum.memberCount}</span> חברים
         </span>
 
-        <div className="-mx-md overflow-x-auto px-md">
+        <div
+          className="-mx-md overflow-x-auto px-md [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          role="tablist"
+          aria-label="סנן לפי נושא"
+        >
           <ul className="flex w-max items-center gap-2">
             {SUBJECT_CHIPS.map((chip) => {
               const active = chip.id === filter;
@@ -69,14 +73,18 @@ export function ForumScreen() {
                 <li key={chip.id}>
                   <button
                     type="button"
+                    role="tab"
                     onClick={() => setFilter(chip.id)}
                     aria-pressed={active}
+                    aria-selected={active}
                     className={clsx(
-                      'inline-flex h-8 items-center rounded-full px-md text-small leading-none',
-                      'transition-colors duration-instant ease-out-quart',
+                      'inline-flex h-8 items-center rounded-full px-md text-small font-medium leading-none',
+                      'transition-[transform,background-color,border-color,color] duration-instant ease-out-quart',
+                      'active:scale-[0.96]',
+                      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory',
                       active
-                        ? 'bg-cocoa text-ivory'
-                        : 'border border-cocoa-15 bg-ivory text-cocoa-70 active:bg-cocoa-08',
+                        ? 'bg-cocoa text-ivory shadow-card'
+                        : 'border border-cocoa-15 bg-ivory text-cocoa-70 hover:border-cocoa-30 hover:text-cocoa',
                     )}
                   >
                     {chip.label}
@@ -88,7 +96,7 @@ export function ForumScreen() {
         </div>
 
         {threads.length === 0 ? (
-          <p className="rounded-md border border-cocoa-15 bg-sand p-md text-small leading-snug text-cocoa-70">
+          <p className="rounded-2xl border border-cocoa-15 bg-sand shadow-card p-md text-small leading-snug text-cocoa-70">
             עדיין אין שרשורים בקטגוריה הזו. תתחיל את הראשון מ"פוסט חדש" בפעילות.
           </p>
         ) : (
@@ -102,7 +110,7 @@ export function ForumScreen() {
                 <li key={t.id}>
                   <Link
                     to={`/messages/forums/${forum.id}/${t.id}`}
-                    className="flex items-start gap-sm rounded-md border border-cocoa-15 bg-ivory p-md transition-colors duration-instant ease-out-quart hover:bg-sand/40 active:bg-sand/60"
+                    className="flex items-start gap-sm rounded-2xl border border-cocoa-15 bg-ivory shadow-card p-md transition-colors duration-instant ease-out-quart hover:bg-sand/40 active:bg-sand/60"
                   >
                     <Avatar
                       photoUrl={author?.photoUrl}

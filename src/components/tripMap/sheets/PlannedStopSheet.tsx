@@ -94,7 +94,7 @@ export function PlannedStopSheet({
               {overlaps.map((f) => (
                 <div
                   key={f.id}
-                  className="flex items-start gap-sm rounded-md border border-cocoa-08 bg-sand p-sm"
+                  className="flex items-start gap-sm rounded-xl border border-cocoa-08 bg-sand p-sm"
                 >
                   <span
                     className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 border-dashed border-copper bg-ivory font-serif text-body text-copper"
@@ -212,7 +212,7 @@ function PlaceRow({
     <button
       type="button"
       onClick={onClick}
-      className="flex items-start justify-between gap-sm rounded-md py-2 text-start active:bg-cocoa-08"
+      className="flex items-start justify-between gap-sm rounded-xl py-2 text-start active:bg-cocoa-08"
     >
       <div className="flex flex-col">
         <div className="flex items-baseline gap-2">

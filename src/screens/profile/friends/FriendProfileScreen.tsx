@@ -107,7 +107,7 @@ export function FriendProfileScreen() {
           </p>
           <ul className="flex flex-col gap-sm">
             {pastTrips.length === 0 && (
-              <li className="rounded-md bg-sand p-md text-small text-cocoa-70">
+              <li className="rounded-2xl bg-sand p-md text-small text-cocoa-70">
                 אין עדיין מסלולי עבר משותפים. תוסיף כשיוצאת לכם חפיפה.
               </li>
             )}
