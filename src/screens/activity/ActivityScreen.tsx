@@ -54,6 +54,15 @@ export function ActivityScreen() {
           const r = reactionsByTarget.get(post.id) ?? [];
 
           if (post.kind === 'overlap_notification') {
+            // Only render "Calendar overlap" cards when the friend's
+            // declared destination actually matches one of the user's
+            // planned stops. If the author isn't a true overlap (e.g.,
+            // Neta in Mendoza), drop the post — never frame a non-
+            // overlap as an overlap.
+            const isTrueOverlap =
+              !!author?.destinationId &&
+              data.plannedStops.some((s) => s.id === author.destinationId);
+            if (!isTrueOverlap) return null;
             return (
               <li key={post.id}>
                 <OverlapNotificationCard

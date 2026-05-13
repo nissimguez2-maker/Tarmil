@@ -114,11 +114,29 @@
   box-shadow: 0 2px 8px rgba(53, 40, 24, 0.28);
 }
 
-.tarmil-friend-circle.is-future {
+.tarmil-friend-circle.is-overlap {
   background: var(--ivory);
   color: var(--copper);
   border: 2px dashed var(--copper);
   box-shadow: 0 2px 8px rgba(53, 40, 24, 0.22);
+}
+
+/*
+ * Traveling — friend has a future trip somewhere the user is NOT
+ * going. Same shape vocabulary as the overlap bubble (dashed) but
+ * smaller and muted (cocoa-30 / cocoa-55) so true overlaps remain the
+ * visual anchor of the map. Drawn at a 24px diameter inside a 44×44
+ * icon box (the bubble layer matches that on the JS side).
+ */
+.tarmil-friend-circle.is-traveling {
+  width: 24px;
+  height: 24px;
+  margin: 10px;
+  background: var(--ivory);
+  color: var(--cocoa-55);
+  border: 1.5px dashed var(--cocoa-30);
+  font-size: 10pt;
+  box-shadow: 0 1px 4px rgba(53, 40, 24, 0.14);
 }
 
 .tarmil-friend-circle:hover,

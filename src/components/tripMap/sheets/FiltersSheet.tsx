@@ -23,8 +23,8 @@ const FRIENDS_OPTIONS: Array<{ value: FriendsView; label: string }> = [
 ];
 
 const FRIENDS_HINT: Record<FriendsView, string> = {
-  all: 'Showing every friend whose trip touches yours.',
-  overlaps: 'Only friends tied to a stop on your plan.',
+  all: 'Every friend with a place to be — overlaps in colour, traveling friends muted.',
+  overlaps: 'Only friends whose plans actually touch yours.',
   none: 'No friend pins on the map.',
 };
 

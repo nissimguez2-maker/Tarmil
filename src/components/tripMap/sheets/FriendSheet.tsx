@@ -1,42 +1,42 @@
-import { X, Plus, ArrowRight, MessageCircle } from 'lucide-react';
+import { X, ArrowRight, MessageCircle } from 'lucide-react';
 import clsx from 'clsx';
 import { Button } from '../../Button';
 import type { FriendOverlap } from '../../../data/myTrip';
 import { formatDateRange } from '../utils/formatDateRange';
+import type { FriendRelationship } from '../utils/relateFriend';
 
 type Props = {
   friend: FriendOverlap;
+  /**
+   * Pre-computed relationship from `relateFriend()`. Drives every
+   * branching decision in this sheet — eyebrow copy, body framing, and
+   * which CTAs render. Computed in TripScreen once per render so map +
+   * sheet stay in sync.
+   */
+  relationship: FriendRelationship;
   onClose: () => void;
   /**
-   * Opens the "join your friend's trip" flow. Shown when the friend has a
-   * concrete overlap window AND their destination isn't already on the
-   * user's plan. Otherwise the smarter `onOpenStop` / `onMessage` CTAs win.
-   */
-  onAddToTrip?: () => void;
-  /**
-   * The friend's destination is already a planned stop. Tapping the CTA
-   * opens that stop's sheet instead of "Add to my trip" — no double-add.
+   * Opens the matching planned-stop sheet. Only meaningful when the
+   * relationship is `future_overlap`. Ignored for present / traveling.
    */
   onOpenStop?: () => void;
-  /** Opens a DM thread with the friend. Always shown when provided. */
+  /**
+   * Opens a DM thread with the friend. Rendered as primary on
+   * `present` / `traveling`, secondary on `future_overlap`. Omit when
+   * there's no DM thread for this friend.
+   */
   onMessage?: () => void;
 };
 
 export function FriendSheet({
   friend,
+  relationship,
   onClose,
-  onAddToTrip,
   onOpenStop,
   onMessage,
 }: Props) {
-  const hasExactOverlap =
-    friend.status === 'future' && !!friend.overlapStart && !!friend.overlapEnd;
-
-  // Smart routing — if the destination is already on the plan, suppress the
-  // "Add to my trip" CTA and offer the stop sheet instead. Friends in the
-  // present (same city as the user) skip both since there's nothing to add.
-  const showOpenStop = !!onOpenStop;
-  const showAddToTrip = hasExactOverlap && !!onAddToTrip && !showOpenStop;
+  const eyebrow = eyebrowFor(relationship);
+  const dateLine = dateLineFor(relationship);
 
   return (
     <div className="flex flex-col gap-sm px-md pb-md pt-sm">
@@ -45,9 +45,11 @@ export function FriendSheet({
           <span
             className={clsx(
               'inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full font-serif text-lede',
-              friend.status === 'present'
+              relationship.kind === 'present'
                 ? 'bg-copper text-ivory'
-                : 'border-2 border-dashed border-copper bg-ivory text-copper',
+                : relationship.kind === 'future_overlap'
+                  ? 'border-2 border-dashed border-copper bg-ivory text-copper'
+                  : 'border-2 border-dashed border-cocoa-30 bg-ivory text-cocoa-70',
             )}
             aria-hidden
           >
@@ -57,9 +59,15 @@ export function FriendSheet({
             <h3 className="truncate font-serif text-lede leading-tight text-cocoa">
               {friend.friendName}
             </h3>
-            <span className="meta-caps text-copper">
-              {friend.status === 'present' ? 'Here with you' : 'Future overlap'}
-              <span className="ms-2 text-cocoa-55">· {friend.zoneLabel}</span>
+            <span
+              className={clsx(
+                'meta-caps',
+                relationship.kind === 'traveling'
+                  ? 'text-cocoa-55'
+                  : 'text-copper',
+              )}
+            >
+              {eyebrow}
             </span>
           </div>
         </div>
@@ -73,31 +81,35 @@ export function FriendSheet({
         </button>
       </div>
 
-      {hasExactOverlap && (
-        <p className="text-body text-copper">
-          {friend.zoneLabel} ·{' '}
-          {formatDateRange(friend.overlapStart!, friend.overlapEnd!)}
+      {dateLine && (
+        <p
+          className={clsx(
+            'text-body',
+            relationship.kind === 'traveling' ? 'text-cocoa-70' : 'text-copper',
+          )}
+        >
+          {dateLine}
         </p>
       )}
 
       <p className="text-body text-cocoa-70">{friend.detail}</p>
 
-      {showOpenStop && (
+      {relationship.kind === 'future_overlap' && onOpenStop && (
         <Button variant="accent" size="sm" fullWidth onClick={onOpenStop}>
           <ArrowRight className="h-4 w-4" strokeWidth={2.2} aria-hidden />
-          Open {friend.zoneLabel} on your trip
-        </Button>
-      )}
-
-      {showAddToTrip && (
-        <Button variant="accent" size="sm" fullWidth onClick={onAddToTrip}>
-          <Plus className="h-4 w-4" strokeWidth={2.2} aria-hidden />
-          Add {friend.zoneLabel} to my trip
+          Open {relationship.stopName} on your trip
         </Button>
       )}
 
       {onMessage && (
-        <Button variant="ghost" size="sm" fullWidth onClick={onMessage}>
+        <Button
+          variant={
+            relationship.kind === 'future_overlap' ? 'ghost' : 'accent'
+          }
+          size="sm"
+          fullWidth
+          onClick={onMessage}
+        >
           <MessageCircle className="h-4 w-4" strokeWidth={1.7} aria-hidden />
           Message {friend.friendName.split(' ')[0]}
         </Button>
@@ -108,4 +120,24 @@ export function FriendSheet({
       </p>
     </div>
   );
+}
+
+function eyebrowFor(r: FriendRelationship): string {
+  switch (r.kind) {
+    case 'present':
+      return `Here with you · ${r.zoneLabel}`;
+    case 'future_overlap':
+      return `Overlapping with you · ${r.stopName}`;
+    case 'traveling':
+      return `Traveling · ${r.city}`;
+  }
+}
+
+function dateLineFor(r: FriendRelationship): string | null {
+  if (r.kind === 'present') return null;
+  if (!r.start || !r.end) return null;
+  if (r.kind === 'future_overlap') {
+    return `${r.stopName} · ${formatDateRange(r.start, r.end)}`;
+  }
+  return `${r.city} · ${formatDateRange(r.start, r.end)}`;
 }

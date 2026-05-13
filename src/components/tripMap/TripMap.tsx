@@ -32,6 +32,14 @@ type Props = {
   places: Place[];
   /** Already filtered by friendsView upstream — drawn as-is. */
   friendOverlaps: FriendOverlap[];
+  /**
+   * Derived per-friend relationship to the user's trip. Drives the
+   * three bubble styles in drawFriendBubbles. Computed once in
+   * TripScreen and threaded through so map + sheet stay in sync.
+   */
+  getFriendRelationship: (
+    friend: FriendOverlap,
+  ) => import('./utils/relateFriend').FriendRelationship;
   presentLocation: LatLng;
   plannedStops: PlannedStop[];
   activeStopId?: string;
@@ -52,6 +60,7 @@ export const TripMap = forwardRef<TripMapHandle, Props>(function TripMap(
     activeFilters,
     places,
     friendOverlaps,
+    getFriendRelationship,
     presentLocation,
     plannedStops,
     activeStopId,
@@ -210,6 +219,7 @@ export const TripMap = forwardRef<TripMapHandle, Props>(function TripMap(
       drawFriendBubbles(
         map,
         friendOverlaps,
+        getFriendRelationship,
         isPick
           ? noopFriend
           : (friend) =>
@@ -227,6 +237,7 @@ export const TripMap = forwardRef<TripMapHandle, Props>(function TripMap(
     activeFilters,
     places,
     friendOverlaps,
+    getFriendRelationship,
     presentLocation,
     plannedStops,
     activeStopId,

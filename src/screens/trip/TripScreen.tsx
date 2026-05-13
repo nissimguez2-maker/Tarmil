@@ -1,4 +1,4 @@
-import { useReducer, useRef } from 'react';
+import { useCallback, useReducer, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
 import { Screen } from '../../components/Screen';
@@ -33,7 +33,11 @@ import {
 } from '../../components/tripMap/tripReducer';
 import type { PlannedStop } from '../../data/plannedStops';
 import { DEFAULT_ACTIVE_FILTERS } from '../../components/tripMap/utils/categoryLabel';
+import {
+  relateFriend,
+} from '../../components/tripMap/utils/relateFriend';
 import { useSupabaseData } from '../../lib/SupabaseDataProvider';
+import type { FriendOverlap } from '../../data/myTrip';
 import { LoadingPanel, ErrorPanel } from '../../components/DataState';
 
 /**
@@ -58,6 +62,15 @@ export function TripScreen() {
   );
   const navigate = useNavigate();
   const tripMapRef = useRef<TripMapHandle>(null);
+
+  // Build a stable per-friend relationship resolver. Memoise on the
+  // planned-stops reference so the TripMap effect only re-runs when the
+  // user actually adds / removes a stop, not on every render.
+  const plannedStops = data?.plannedStops ?? [];
+  const getFriendRelationship = useCallback(
+    (friend: FriendOverlap) => relateFriend(friend, plannedStops),
+    [plannedStops],
+  );
 
   if (loading) return <LoadingPanel />;
   if (error || !data) return <ErrorPanel error={error} />;
@@ -173,6 +186,7 @@ export function TripScreen() {
             activeFilters={state.activeFilters}
             places={data.places}
             friendOverlaps={visibleFriends}
+            getFriendRelationship={getFriendRelationship}
             presentLocation={data.myTrip.present}
             plannedStops={data.plannedStops}
             activeStopId={
@@ -248,30 +262,17 @@ export function TripScreen() {
             )}
             {sheet?.kind === 'friend' && (() => {
               const f = sheet.friend;
-              // Smart-routing: if the friend's destination is already a
-              // planned stop, jump into that stop instead of asking the
-              // user to "Add" the city they're already going to.
-              const matchingStop = f.destinationId
-                ? data.plannedStops.find((s) => s.id === f.destinationId)
-                : undefined;
+              const relationship = getFriendRelationship(f);
               const dm = data.dms.find((d) => d.friendId === f.id);
               return (
                 <FriendSheet
                   friend={f}
+                  relationship={relationship}
                   onClose={() => dispatch({ type: 'CLOSE_SHEET' })}
                   onOpenStop={
-                    matchingStop
-                      ? () => openPlannedStop(matchingStop.id)
+                    relationship.kind === 'future_overlap'
+                      ? () => openPlannedStop(relationship.stopId)
                       : undefined
-                  }
-                  onAddToTrip={
-                    matchingStop
-                      ? undefined
-                      : () =>
-                          dispatch({
-                            type: 'OPEN_SHEET',
-                            sheet: { kind: 'confirmFriendTrip', friend: f },
-                          })
                   }
                   onMessage={
                     dm
