@@ -1,34 +1,20 @@
-import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
-import clsx from 'clsx';
 import { Screen } from '../../../components/Screen';
 import { TopBar } from '../../../components/TopBar';
 import { LoadingPanel, ErrorPanel } from '../../../components/DataState';
 import { Avatar } from '../../../components/shared/Avatar';
 import { useSupabaseData } from '../../../lib/SupabaseDataProvider';
-import type { ForumSubject } from '../../../data/forumThreads';
-
-type SubjectFilter = ForumSubject | 'all';
-
-const SUBJECT_CHIPS: Array<{ id: SubjectFilter; label: string }> = [
-  { id: 'all', label: 'All' },
-  { id: 'kosher_chabad', label: 'Kosher & Chabad' },
-  { id: 'parties', label: 'Parties' },
-  { id: 'treks_activities', label: 'Treks & activities' },
-  { id: 'restaurants', label: 'Restaurants' },
-  { id: 'meetups', label: 'Meetups' },
-];
+import { SUBJECT_LABEL } from '../../../data/forums';
 
 /**
- * Single forum view — hero blurb + thread list. Each thread links into the
- * thread detail. The chip strip up top lets the user filter by one of five
- * standard subject buckets that every city forum carries.
+ * Single subject-forum view. v0.3 dropped the city-level forum + chip
+ * filter; every forum is now (city × subject), so the TopBar title is
+ * the subject label and the eyebrow is the city. Thread list is unfiltered.
  */
 export function ForumScreen() {
   const { forumId = '' } = useParams<{ forumId: string }>();
   const { data, loading, error } = useSupabaseData();
-  const [filter, setFilter] = useState<SubjectFilter>('all');
 
   if (loading) return <LoadingPanel />;
   if (error || !data) return <ErrorPanel error={error} />;
@@ -43,15 +29,12 @@ export function ForumScreen() {
     );
   }
 
-  const allThreads = data.forumThreads.filter((t) => t.forumId === forum.id);
-  const threads =
-    filter === 'all'
-      ? allThreads
-      : allThreads.filter((t) => t.subject === filter);
+  const threads = data.forumThreads.filter((t) => t.forumId === forum.id);
+  const title = forum.subject ? SUBJECT_LABEL[forum.subject] : forum.nameEn;
 
   return (
     <Screen>
-      <TopBar back title={forum.nameHe} eyebrow={forum.cityLabel} />
+      <TopBar back title={title} eyebrow={forum.cityLabel} />
 
       <div className="flex flex-col gap-md p-md">
         <p className="font-serif text-lede italic text-cocoa-70">
@@ -61,39 +44,10 @@ export function ForumScreen() {
           <span className="tnum">{forum.memberCount}</span> members
         </span>
 
-        <div role="tablist" aria-label="Filter by topic">
-          <ul className="flex flex-wrap items-center gap-2">
-            {SUBJECT_CHIPS.map((chip) => {
-              const active = chip.id === filter;
-              return (
-                <li key={chip.id}>
-                  <button
-                    type="button"
-                    role="tab"
-                    onClick={() => setFilter(chip.id)}
-                    aria-pressed={active}
-                    aria-selected={active}
-                    className={clsx(
-                      'inline-flex h-8 items-center rounded-full px-md text-small font-medium leading-none',
-                      'transition-[transform,background-color,border-color,color] duration-instant ease-out-quart',
-                      'active:scale-[0.96]',
-                      'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory',
-                      active
-                        ? 'bg-cocoa text-ivory shadow-card'
-                        : 'border border-cocoa-15 bg-ivory text-cocoa-70 hover:border-cocoa-30 hover:text-cocoa',
-                    )}
-                  >
-                    {chip.label}
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-
         {threads.length === 0 ? (
           <p className="rounded-2xl bg-sand shadow-card p-md text-small leading-snug text-cocoa-70">
-            No threads in this category yet. Kick the first one off with "New post" in Activity.
+            No threads in this forum yet. Kick the first one off with "New
+            post" in Activity.
           </p>
         ) : (
           <ul className="flex flex-col gap-sm">
@@ -101,7 +55,9 @@ export function ForumScreen() {
               const author = t.authorFriendId
                 ? data.friendOverlaps.find((f) => f.id === t.authorFriendId)
                 : null;
-              const authorName = author ? author.friendName.split(' ')[0] : 'You';
+              const authorName = author
+                ? author.friendName.split(' ')[0]
+                : 'You';
               return (
                 <li key={t.id}>
                   <Link

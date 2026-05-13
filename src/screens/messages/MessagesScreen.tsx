@@ -1,10 +1,11 @@
 import { useMemo, useState } from 'react';
 import { Screen } from '../../components/Screen';
 import { TopBar } from '../../components/TopBar';
+import { ToolsButton } from '../../components/shared/ToolsButton';
 import { LoadingPanel, ErrorPanel } from '../../components/DataState';
 import { SubNav } from '../../components/shared/SubNav';
 import { SearchBar } from '../../components/shared/SearchBar';
-import { ForumRow } from '../../components/messages/ForumRow';
+import { CityForumGroup, RecommendedForumRow } from '../../components/messages/ForumRow';
 import { GroupChatRow } from '../../components/messages/GroupChatRow';
 import { DMRow } from '../../components/messages/DMRow';
 import { useSupabaseData } from '../../lib/SupabaseDataProvider';
@@ -69,12 +70,29 @@ export function MessagesScreen() {
   const matches = (text: string) =>
     !lowerQuery || text.toLowerCase().includes(lowerQuery);
 
-  const joinedForums = data.forums
-    .filter((f) => !f.isRecommended)
-    .filter((f) => matches(f.nameHe));
+  // v0.3: forums are now one-per-(city, subject). Group joined forums
+  // by city so the UI renders Cities → 5 subject pills under each.
+  // Search matches against city label OR subject label so typing
+  // "kosher" or "rio" both narrow as expected.
+  type CityGroup = { cityLabel: string; forums: typeof data.forums };
+  const joinedCityGroups: CityGroup[] = (() => {
+    const groups = new Map<string, CityGroup>();
+    for (const f of data.forums) {
+      if (f.isRecommended) continue;
+      const cityLabel = f.cityLabel ?? f.nameEn;
+      if (!matches(cityLabel) && !matches(f.nameEn)) continue;
+      const existing = groups.get(cityLabel);
+      if (existing) {
+        existing.forums.push(f);
+      } else {
+        groups.set(cityLabel, { cityLabel, forums: [f] });
+      }
+    }
+    return Array.from(groups.values());
+  })();
   const recommendedForums = data.forums
     .filter((f) => f.isRecommended)
-    .filter((f) => matches(f.nameHe));
+    .filter((f) => matches(f.cityLabel ?? f.nameEn));
   const chats = data.groupChats.filter((c) => matches(c.nameHe));
   const dms = data.dms.filter((d) => {
     const friend = data.friendOverlaps.find((f) => f.id === d.friendId);
@@ -83,7 +101,7 @@ export function MessagesScreen() {
 
   return (
     <Screen>
-      <TopBar title="Messages" />
+      <TopBar title="Messages" end={<ToolsButton />} />
 
       <SubNav items={TABS} active={active} onChange={onChangeTab} />
 
@@ -96,12 +114,13 @@ export function MessagesScreen() {
 
         {active === 'forums' && (
           <>
-            <ul className="flex flex-col gap-sm">
-              {joinedForums.map((f) => (
-                <li key={f.id}>
-                  <ForumRow
-                    forum={f}
-                    previewTitle={lastThreadByForum.get(f.id)}
+            <ul className="flex flex-col gap-md">
+              {joinedCityGroups.map((group) => (
+                <li key={group.cityLabel}>
+                  <CityForumGroup
+                    cityLabel={group.cityLabel}
+                    forums={group.forums}
+                    previewByForumId={lastThreadByForum}
                   />
                 </li>
               ))}
@@ -112,9 +131,8 @@ export function MessagesScreen() {
                 <ul className="flex flex-col gap-sm">
                   {recommendedForums.map((f) => (
                     <li key={f.id}>
-                      <ForumRow
+                      <RecommendedForumRow
                         forum={f}
-                        recommended
                         onJoin={() => joinForum(f.id)}
                       />
                     </li>

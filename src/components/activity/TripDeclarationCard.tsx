@@ -2,7 +2,7 @@ import type { ActivityPost } from '../../data/activityPosts';
 import type { FriendOverlap } from '../../data/myTrip';
 import type { Reaction } from '../../data/reactions';
 import { Avatar } from '../shared/Avatar';
-import { RouteThumbnail } from './RouteThumbnail';
+import { TripMapPreview } from './TripMapPreview';
 import { ReactionPill } from './ReactionPill';
 import { groupReactions } from './reactionUtils';
 
@@ -21,7 +21,7 @@ type Props = {
 export function TripDeclarationCard({ post, author, reactions, onReact }: Props) {
   const grouped = groupReactions(reactions);
   return (
-    <article className="flex flex-col gap-sm rounded-2xl bg-ivory shadow-card p-md">
+    <article className="flex flex-col gap-sm rounded-2xl bg-sand shadow-card p-md">
       <header className="flex items-center gap-sm">
         <Avatar
           photoUrl={author?.photoUrl}
@@ -37,7 +37,14 @@ export function TripDeclarationCard({ post, author, reactions, onReact }: Props)
         </div>
       </header>
       <p className="text-body text-cocoa-70">{post.bodyHe}</p>
-      <RouteThumbnail cities={4} />
+      <TripMapPreview
+        destinationId={post.destinationId}
+        ariaLabel={
+          author
+            ? `${author.friendName}'s trip preview map`
+            : 'Trip preview map'
+        }
+      />
       <div className="flex flex-wrap items-center gap-2">
         {grouped.map((g) => (
           <ReactionPill

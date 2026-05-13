@@ -7,6 +7,8 @@ import { TopBar } from '../../components/TopBar';
 import { SectionLabel } from '../../components/SectionLabel';
 import { Button } from '../../components/Button';
 import { Dunes } from '../../components/Dunes';
+import { Avatar } from '../../components/shared/Avatar';
+import { StarRow } from '../../components/around/StarRow';
 import { useSupabaseData } from '../../lib/SupabaseDataProvider';
 import { LoadingPanel, ErrorPanel } from '../../components/DataState';
 import type { FriendVisit, PlaceCategory, Season } from '../../data/places';
@@ -18,7 +20,7 @@ import { MapsActionSheet } from './MapsActionSheet';
  */
 export function PlaceScreen() {
   const { id } = useParams<{ id: string }>();
-  const { data, loading, error } = useSupabaseData();
+  const { data, loading, error, submitPlaceReview } = useSupabaseData();
   const navigate = useNavigate();
   const [mapsOpen, setMapsOpen] = useState(false);
   if (loading) return <LoadingPanel />;
@@ -31,6 +33,11 @@ export function PlaceScreen() {
   }
 
   const visits = place.friendVisits ?? [];
+  const placeReviews = data.placeReviews.filter((r) => r.placeId === place.id);
+  const friendReviews = placeReviews.filter(
+    (r) => r.reviewerFriendId !== null,
+  );
+  const selfReview = placeReviews.find((r) => r.reviewerFriendId === null);
 
   return (
     <Screen>
@@ -107,7 +114,32 @@ export function PlaceScreen() {
           </p>
         )}
 
-        <SectionLabel number="03" label="Reviews from Israeli travelers." />
+        <SectionLabel number="03" label="Friend ratings." />
+        <FriendRatings
+          friendReviews={friendReviews}
+          friends={data.friendOverlaps}
+        />
+
+        <SectionLabel number="04" label="Your rating." />
+        <div className="flex items-center justify-between gap-sm rounded-2xl bg-sand shadow-card px-md py-sm">
+          <span className="text-body text-cocoa">
+            {selfReview
+              ? 'You rated this place. Tap a star to change it.'
+              : 'Tap a star to rate.'}
+          </span>
+          <StarRow
+            rating={selfReview?.rating ?? 0}
+            size={20}
+            interactive
+            onPick={(r) => {
+              submitPlaceReview(place.id, r).catch((e) =>
+                console.error('Failed to submit review:', e),
+              );
+            }}
+          />
+        </div>
+
+        <SectionLabel number="05" label="Reviews from Israeli travelers." />
         <div className="flex flex-col gap-sm">
           <ReviewCard
             reviewer="Yoni A."
@@ -252,6 +284,51 @@ function ReviewCard({
         {text}
       </p>
     </article>
+  );
+}
+
+function FriendRatings({
+  friendReviews,
+  friends,
+}: {
+  friendReviews: import('../../data/placeReviews').PlaceReview[];
+  friends: import('../../data/myTrip').FriendOverlap[];
+}) {
+  if (friendReviews.length === 0) {
+    return (
+      <p className="text-body text-cocoa-55">
+        None of your friends have rated this place yet.
+      </p>
+    );
+  }
+  return (
+    <ul className="flex flex-col">
+      {friendReviews.map((r, i) => {
+        const friend = friends.find((f) => f.id === r.reviewerFriendId);
+        return (
+          <li
+            key={`${r.placeId}-${r.reviewerFriendId}-${i}`}
+            className={clsx(
+              'flex items-center justify-between gap-md py-2',
+              i < friendReviews.length - 1 && 'border-b border-cocoa-15',
+            )}
+          >
+            <span className="flex items-center gap-sm">
+              <Avatar
+                photoUrl={friend?.photoUrl}
+                initial={friend?.friendInitial ?? '·'}
+                name={friend?.friendName ?? 'Friend'}
+                size="sm"
+              />
+              <span className="text-body text-cocoa">
+                {friend?.friendName ?? 'Friend'}
+              </span>
+            </span>
+            <StarRow rating={r.rating} size={14} />
+          </li>
+        );
+      })}
+    </ul>
   );
 }
 

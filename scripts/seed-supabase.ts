@@ -66,6 +66,10 @@ async function main() {
     friends_know: p.friendsKnow,
     tarmil_pick: p.tarmilPick ?? false,
     friend_visits: p.friendVisits ?? [],
+    phone: p.phone ?? null,
+    reservation_url: p.reservationUrl ?? null,
+    image_url: p.imageUrl ?? null,
+    paid_placement: p.paidPlacement ?? false,
   }));
 
   const { error: placesErr } = await supabase.from('places').upsert(places);
@@ -147,10 +151,30 @@ async function main() {
     city_label: f.cityLabel ?? null,
     destination_id: f.destinationId ?? null,
     kind: f.kind,
+    subject: f.subject ?? null,
     member_count: f.memberCount,
     hero_blurb_he: f.heroBlurbHe,
     is_recommended: f.isRecommended,
   }));
+  // v0.3: forums migrated from one-per-city to one-per-(city,subject).
+  // Drop any forum row not in the new seed before upsert so threads
+  // re-linked to the new IDs don't show up under stale parents.
+  const keepIds = new Set(forumRows.map((f) => f.id));
+  const { data: existingForums, error: listForumsErr } = await supabase
+    .from('forums')
+    .select('id');
+  if (listForumsErr) throw listForumsErr;
+  const toDelete = (existingForums ?? [])
+    .map((r) => r.id)
+    .filter((id) => !keepIds.has(id));
+  if (toDelete.length > 0) {
+    const { error: delForumsErr } = await supabase
+      .from('forums')
+      .delete()
+      .in('id', toDelete);
+    if (delForumsErr) throw delForumsErr;
+    console.log(`  ${toDelete.length} stale forums removed`);
+  }
   const { error: forumsErr } = await supabase.from('forums').upsert(forumRows);
   if (forumsErr) throw forumsErr;
   console.log(`  ${forumRows.length} forums upserted`);
@@ -166,6 +190,7 @@ async function main() {
       reply_count: t.replyCount,
       follow_count: t.followCount,
       pinned: t.pinned,
+      subject: t.subject,
     })),
     /* spacingMs */ 6 * 60 * 60 * 1000, // 6 hours between threads
   );

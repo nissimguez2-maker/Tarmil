@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { Map, Newspaper, MessageSquare, Wrench, User } from 'lucide-react';
+import { Map, Newspaper, MessageSquare, Compass, User } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import clsx from 'clsx';
 
@@ -21,7 +21,7 @@ const TABS: Tab[] = [
   { to: '/trip', label: 'Trip', Icon: Map },
   { to: '/activity', label: 'Activity', Icon: Newspaper },
   { to: '/messages', label: 'Messages', Icon: MessageSquare },
-  { to: '/tools', label: 'Tools', Icon: Wrench },
+  { to: '/around', label: 'Around', Icon: Compass },
   { to: '/profile', label: 'Profile', Icon: User },
 ];
 

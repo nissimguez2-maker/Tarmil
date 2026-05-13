@@ -12,7 +12,6 @@ import './TripMap.css';
 import type { Place } from '../../data/places';
 import type { FriendOverlap, LatLng } from '../../data/myTrip';
 import type { PlannedStop } from '../../data/plannedStops';
-import { drawTripLine } from './layers/drawTripLine';
 import { drawPlaceMarkers } from './layers/drawPlaceMarkers';
 import { drawFriendBubbles } from './layers/drawFriendBubbles';
 import { drawPresentPin } from './layers/drawPresentPin';
@@ -33,7 +32,6 @@ type Props = {
   places: Place[];
   /** Already filtered by friendsView upstream — drawn as-is. */
   friendOverlaps: FriendOverlap[];
-  pastTrip: LatLng[];
   presentLocation: LatLng;
   plannedStops: PlannedStop[];
   activeStopId?: string;
@@ -54,7 +52,6 @@ export const TripMap = forwardRef<TripMapHandle, Props>(function TripMap(
     activeFilters,
     places,
     friendOverlaps,
-    pastTrip,
     presentLocation,
     plannedStops,
     activeStopId,
@@ -123,16 +120,22 @@ export const TripMap = forwardRef<TripMapHandle, Props>(function TripMap(
       ).addTo(map);
     }
 
-    const allCoords: [number, number][] = [
-      ...pastTrip,
+    // v0.3: bounds derive from the social canvas (present + planned stops),
+    // not the past polyline (which v0.3 stopped rendering). Falls back to
+    // present-only when there are no planned stops yet.
+    const focusCoords: [number, number][] = [
       presentLocation,
       ...plannedStops.map((s): [number, number] => [s.lat, s.lng]),
     ];
-    map.fitBounds(L.latLngBounds(allCoords), {
-      paddingTopLeft: [60, 80],
-      paddingBottomRight: [60, 60],
-      maxZoom: 4,
-    });
+    if (focusCoords.length === 1) {
+      map.setView(focusCoords[0], 4);
+    } else {
+      map.fitBounds(L.latLngBounds(focusCoords), {
+        paddingTopLeft: [60, 80],
+        paddingBottomRight: [60, 60],
+        maxZoom: 4,
+      });
+    }
 
     const handleMapClick = () => handlersRef.current.onCloseSheet();
     map.on('click', handleMapClick);
@@ -173,7 +176,6 @@ export const TripMap = forwardRef<TripMapHandle, Props>(function TripMap(
     const noopFriend = () => {};
     const noopStop = () => {};
 
-    cleanups.push(drawTripLine(map, pastTrip));
     cleanups.push(
       drawPlannedStops(
         map,
@@ -225,7 +227,6 @@ export const TripMap = forwardRef<TripMapHandle, Props>(function TripMap(
     activeFilters,
     places,
     friendOverlaps,
-    pastTrip,
     presentLocation,
     plannedStops,
     activeStopId,
