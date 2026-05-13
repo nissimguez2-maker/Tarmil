@@ -63,14 +63,6 @@ export function TripScreen() {
   if (error || !data) return <ErrorPanel error={error} />;
 
   const sheet = state.sheet;
-  // First-by-arrival stop, falling back to first by array order. v0.3
-  // sorts arrival_date ascending in the data provider, so [0] is "next".
-  const nextStop: PlannedStop | null = data.plannedStops[0] ?? null;
-  const nextStopFriends = nextStop
-    ? data.friendOverlaps.filter((f) =>
-        nextStop.friendOverlapIds?.includes(f.id),
-      )
-    : [];
   const isMapOnly = state.mode === 'mapOnly';
   const isHeat = state.heatmapEnabled;
   const headerCollapsed = sheet !== null || isMapOnly || isHeat;
@@ -167,9 +159,7 @@ export function TripScreen() {
         >
           <div className="overflow-hidden">
             <NextTripCard
-              stop={nextStop}
-              friends={nextStopFriends}
-              totalStops={data.plannedStops.length}
+              stops={data.plannedStops}
               onTap={openPlannedRoute}
               onAdd={openSearch}
             />
@@ -256,18 +246,41 @@ export function TripScreen() {
                 }
               />
             )}
-            {sheet?.kind === 'friend' && (
-              <FriendSheet
-                friend={sheet.friend}
-                onClose={() => dispatch({ type: 'CLOSE_SHEET' })}
-                onAddToTrip={() =>
-                  dispatch({
-                    type: 'OPEN_SHEET',
-                    sheet: { kind: 'confirmFriendTrip', friend: sheet.friend },
-                  })
-                }
-              />
-            )}
+            {sheet?.kind === 'friend' && (() => {
+              const f = sheet.friend;
+              // Smart-routing: if the friend's destination is already a
+              // planned stop, jump into that stop instead of asking the
+              // user to "Add" the city they're already going to.
+              const matchingStop = f.destinationId
+                ? data.plannedStops.find((s) => s.id === f.destinationId)
+                : undefined;
+              const dm = data.dms.find((d) => d.friendId === f.id);
+              return (
+                <FriendSheet
+                  friend={f}
+                  onClose={() => dispatch({ type: 'CLOSE_SHEET' })}
+                  onOpenStop={
+                    matchingStop
+                      ? () => openPlannedStop(matchingStop.id)
+                      : undefined
+                  }
+                  onAddToTrip={
+                    matchingStop
+                      ? undefined
+                      : () =>
+                          dispatch({
+                            type: 'OPEN_SHEET',
+                            sheet: { kind: 'confirmFriendTrip', friend: f },
+                          })
+                  }
+                  onMessage={
+                    dm
+                      ? () => navigate(`/messages/dms/${dm.id}`)
+                      : undefined
+                  }
+                />
+              );
+            })()}
             {sheet?.kind === 'confirmFriendTrip' && (
               <ConfirmFriendTripSheet
                 friend={sheet.friend}
