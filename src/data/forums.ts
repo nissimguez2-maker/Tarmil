@@ -1,14 +1,17 @@
 /**
- * Forums — city-scoped and interest-scoped discussion boards.
+ * Forums — city-scoped discussion boards. One row per city.
  *
  * SEED ONLY. Runtime data is read from the `forums` table in Supabase via
  * SupabaseDataProvider. Nothing in `src/` imports this array outside of
  * `scripts/seed-supabase.ts`.
  *
  * Distribution: 4 joined city forums tracking the user's LATAM trip (Rio,
- * Búzios, São Paulo, Jericoacoara) + 1 cross-cutting interest forum +
- * 1 recommended forum for Buenos Aires (their next stop they haven't joined
- * yet — demos the "join" CTA).
+ * Búzios, São Paulo, Jericoacoara) + 1 recommended forum for Buenos Aires
+ * (their next stop they haven't joined yet — demos the "join" CTA).
+ *
+ * Each forum carries the same 5 subject sub-categories on its threads:
+ * Kosher & Chabad, Parties, Treks & Activities, Restaurants, Meetups. The
+ * subject lives on `forum_threads.subject` (see `forumThreads.ts`).
  *
  * `member_count` realistic 80–240 range. `last_activity_at` is illustrative
  * — the seed writes `now()` server-side so it always looks recent.
@@ -81,16 +84,6 @@ export const forums: Forum[] = [
     kind: 'city',
     memberCount: 112,
     heroBlurbHe: 'קייטסרף, דיונות, ובוקרים יחפים. מי בא, מי יוצא, איפה לישון.',
-    isRecommended: false,
-  },
-  {
-    id: 'forum-latam-israelis',
-    slug: 'latam-israelis',
-    nameHe: 'ישראלים בדרום אמריקה',
-    nameEn: 'Israelis in South America',
-    kind: 'interest',
-    memberCount: 198,
-    heroBlurbHe: 'אוכל, ויזות, חבד, ביטוחים, וכל מה שלא נכנס לפורום עיר אחד.',
     isRecommended: false,
   },
   {

@@ -186,6 +186,7 @@ export type Database = {
           id: string
           pinned: boolean
           reply_count: number
+          subject: Database["public"]["Enums"]["forum_subject"]
           title: string
         }
         Insert: {
@@ -197,6 +198,7 @@ export type Database = {
           id: string
           pinned?: boolean
           reply_count?: number
+          subject?: Database["public"]["Enums"]["forum_subject"]
           title: string
         }
         Update: {
@@ -208,6 +210,7 @@ export type Database = {
           id?: string
           pinned?: boolean
           reply_count?: number
+          subject?: Database["public"]["Enums"]["forum_subject"]
           title?: string
         }
         Relationships: [
@@ -668,7 +671,12 @@ export type Database = {
       reset_demo_state: { Args: never; Returns: undefined }
     }
     Enums: {
-      [_ in never]: never
+      forum_subject:
+        | "kosher_chabad"
+        | "parties"
+        | "treks_activities"
+        | "restaurants"
+        | "meetups"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -795,6 +803,14 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      forum_subject: [
+        "kosher_chabad",
+        "parties",
+        "treks_activities",
+        "restaurants",
+        "meetups",
+      ],
+    },
   },
 } as const

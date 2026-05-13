@@ -13,19 +13,19 @@ import { FriendsScreen } from './screens/profile/friends/FriendsScreen';
 import { FriendProfileScreen } from './screens/profile/friends/FriendProfileScreen';
 import { SettingsScreen } from './screens/profile/settings/SettingsScreen';
 import { PlaceScreen } from './screens/place/PlaceScreen';
+import { ToolsScreen } from './screens/tools/ToolsScreen';
 
 /**
  * Route table.
  *
- * Tabs:
- *   /trip       — TripScreen (map)
+ * Tabs (5):
+ *   /trip       — TripScreen (map + planned route)
  *   /activity   — ActivityScreen (feed)
  *   /messages   — MessagesScreen (sub-nav: forums / chats / dms)
- *   /profile    — ProfileScreen (densified)
+ *   /tools      — ToolsScreen (8 tools for the road)
+ *   /profile    — ProfileScreen
  *
- * Drill-downs nest under their parent tab folder in src/screens/. The
- * standalone /friends path redirects to /profile/friends for muscle-memory
- * compatibility.
+ * Drill-downs nest under their parent tab folder in src/screens/.
  */
 export function AppRoutes() {
   return (
@@ -47,6 +47,8 @@ export function AppRoutes() {
         />
         <Route path="/messages/chats/:chatId" element={<GroupChatScreen />} />
         <Route path="/messages/dms/:dmId" element={<DMScreen />} />
+
+        <Route path="/tools" element={<ToolsScreen />} />
 
         <Route path="/profile" element={<ProfileScreen />} />
         <Route path="/profile/friends" element={<FriendsScreen />} />

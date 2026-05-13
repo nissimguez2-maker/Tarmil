@@ -37,7 +37,7 @@ export const dms: DM[] = [
   {
     id: 'dm-roi',
     friendId: 'roi-buzios',
-    lastMessagePreviewHe: 'שלחתי לך את הקואורדינטות של ההוסטל בבוזיוס.',
+    lastMessagePreviewHe: 'קיבלתי. תודה רועי.',
     unreadCount: 0,
   },
   {
@@ -49,7 +49,7 @@ export const dms: DM[] = [
   {
     id: 'dm-yotam',
     friendId: 'yotam-jericoacoara',
-    lastMessagePreviewHe: 'יעקב אישר 3 ימים. נשלח לי קישור בקרוב.',
+    lastMessagePreviewHe: 'בעיניי 🙏 אביא חלות מבית של דודה שלי בפורטלזה. נראה אותך ב־11.',
     unreadCount: 0,
   },
   {

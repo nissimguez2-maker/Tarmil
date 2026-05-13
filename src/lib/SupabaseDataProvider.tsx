@@ -209,6 +209,7 @@ const forumThreadRowToThread = (
   replyCount: r.reply_count,
   followCount: r.follow_count,
   pinned: r.pinned,
+  subject: r.subject,
 });
 
 const forumReplyRowToReply = (
