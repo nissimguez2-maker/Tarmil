@@ -26,17 +26,27 @@ export function ProfileScreen() {
   // Quick stats derived from existing data — countries via destination_id of
   // planned_stops + past leg seeding, places visited via friends_know-style
   // count, total nights from planned_stops.
-  const countriesCount = (() => {
-    const stops = data.plannedStops.map((s) => s.id);
-    return new Set(
-      stops.map((id) => {
-        if (id === 'buenos-aires' || id === 'punta-del-este') return 'sa';
-        return 'br';
-      }),
-    ).size;
-  })();
+  //
+  // Country mapping covers the seeded LATAM destinations. The +2 below comes
+  // from the past legs (Greece + France + Côte d'Azur + SE Asia stops) that
+  // aren't represented as planned_stops; replace once past trips also live
+  // in the table.
+  const COUNTRY_BY_DESTINATION_ID: Record<string, string> = {
+    buzios: 'br',
+    'sao-paulo': 'br',
+    jericoacoara: 'br',
+    'rio-de-janeiro': 'br',
+    'buenos-aires': 'ar',
+    'punta-del-este': 'uy',
+  };
+  const countriesCount = new Set(
+    data.plannedStops
+      .map((s) => COUNTRY_BY_DESTINATION_ID[s.id])
+      .filter(Boolean),
+  ).size;
   const placesCount = data.places.length;
   const totalNights = data.plannedStops.reduce((acc, s) => acc + s.nights, 0);
+  const stopsCount = data.plannedStops.length;
 
   const friendsForGrid = data.friendOverlaps.slice(0, 6);
 
@@ -58,25 +68,38 @@ export function ProfileScreen() {
         }
       />
 
-      <div className="flex flex-col gap-lg p-md pb-xl">
-        <header className="flex flex-col items-center gap-sm">
+      <div className="flex flex-col gap-lg pb-xl">
+        {/*
+          Warm gradient banner behind the avatar so the hero doesn't feel
+          stranded on ivory. The avatar pulls slightly into the gradient,
+          and the rest of the page falls back to standard padding.
+        */}
+        <header
+          className="relative flex flex-col items-center gap-sm px-md pt-lg pb-md"
+          style={{
+            background:
+              'linear-gradient(180deg, rgba(234,216,192,0.75) 0%, rgba(253,251,247,1) 100%)',
+          }}
+        >
           <Avatar
             photoUrl={null}
             initial="N"
-            name="Nissim Gez"
+            name="Nissim Guez"
             size="hero"
             copperBorder
           />
           <span className="font-serif text-sub leading-tight text-cocoa">
-            Nissim Gez
+            Nissim Guez
           </span>
           <span className="text-small text-cocoa-55">Traveling since summer 2024</span>
           <div className="mt-1 flex flex-wrap items-center justify-center gap-2">
-            <StatsPill label="Countries" value={countriesCount + 2} />
+            <StatsPill label="Countries" value={countriesCount + 4} />
             <StatsPill label="Places" value={placesCount} />
             <StatsPill label="Planned nights" value={totalNights} />
           </div>
         </header>
+
+        <div className="flex flex-col gap-lg px-md">
 
         <section className="flex flex-col gap-sm">
           <SectionLabel number="01" label="Your route." />
@@ -89,7 +112,9 @@ export function ProfileScreen() {
                 Your route
               </span>
               <span className="text-small text-cocoa-70">
-                Rio right now · 4 planned stops in LATAM
+                Rio right now ·{' '}
+                <span className="tnum">{stopsCount}</span> planned stop
+                {stopsCount === 1 ? '' : 's'} in LATAM
               </span>
             </span>
             <span className="meta-caps shrink-0 text-copper">Open map</span>
@@ -151,6 +176,7 @@ export function ProfileScreen() {
             ))}
           </ul>
         </section>
+        </div>
       </div>
     </Screen>
   );

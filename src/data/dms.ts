@@ -25,7 +25,7 @@ export const dms: DM[] = [
   {
     id: 'dm-maya',
     friendId: 'maya-ipanema',
-    lastMessagePreviewHe: "Locked in then, Tuesday at Posto 9. 18:00?",
+    lastMessagePreviewHe:"Locked in then, Tuesday at Posto 9. 18:00?",
     unreadCount: 1,
   },
   {
@@ -43,13 +43,13 @@ export const dms: DM[] = [
   {
     id: 'dm-shir',
     friendId: 'shir-saopaulo',
-    lastMessagePreviewHe: "Confirm you're arriving the 3rd and I'll book the restaurant.",
+    lastMessagePreviewHe:"Confirm you're arriving the 3rd and I'll book the restaurant.",
     unreadCount: 2,
   },
   {
     id: 'dm-yotam',
     friendId: 'yotam-jericoacoara',
-    lastMessagePreviewHe: "Down 🙏 I'll bring challot from my aunt's place in Fortaleza. See you on the 11th.",
+    lastMessagePreviewHe:"Down  I'll bring challot from my aunt's place in Fortaleza. See you on the 11th.",
     unreadCount: 0,
   },
   {

@@ -1,15 +1,12 @@
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus } from 'lucide-react';
 import { Screen } from '../../components/Screen';
 import { TopBar } from '../../components/TopBar';
 import { LoadingPanel, ErrorPanel } from '../../components/DataState';
-import { Fab } from '../../components/shared/Fab';
 import { ToolsButton } from '../../components/shared/ToolsButton';
 import { TripDeclarationCard } from '../../components/activity/TripDeclarationCard';
 import { WhosDownCard } from '../../components/activity/WhosDownCard';
 import { OverlapNotificationCard } from '../../components/activity/OverlapNotificationCard';
-import { ComposePostSheet } from '../../components/activity/ComposePostSheet';
 import { useSupabaseData } from '../../lib/SupabaseDataProvider';
 import type { Reaction } from '../../data/reactions';
 
@@ -19,13 +16,14 @@ import type { Reaction } from '../../data/reactions';
  * own slice of reactions; the reaction strip is interactive via
  * `toggleReaction`.
  *
- * The FAB at bottom-end opens a new-post composer (stub for now — taps scroll
- * to top so the button is never a dead-end).
+ * v0.4 dropped the unused "+ new post" FAB / ComposePostSheet — posting
+ * isn't part of the demo flow and the floating button confused users
+ * (it landed mid-feed because the Screen scrolls). Re-add when posting
+ * becomes a real feature.
  */
 export function ActivityScreen() {
   const navigate = useNavigate();
   const { data, loading, error, toggleReaction } = useSupabaseData();
-  const [composeOpen, setComposeOpen] = useState(false);
 
   const reactionsByTarget = useMemo(() => {
     const map = new Map<string, Reaction[]>();
@@ -112,17 +110,6 @@ export function ActivityScreen() {
           );
         })}
       </ul>
-
-      <Fab
-        ariaLabel="New post"
-        icon={<Plus className="h-6 w-6" strokeWidth={2} />}
-        onClick={() => setComposeOpen(true)}
-      />
-
-      <ComposePostSheet
-        open={composeOpen}
-        onClose={() => setComposeOpen(false)}
-      />
     </Screen>
   );
 }
