@@ -29,7 +29,7 @@ export function TabBar() {
     <nav
       aria-label="ניווט ראשי"
       className={clsx(
-        'relative z-10 grid grid-cols-5 border-t border-cocoa-15 bg-ivory',
+        'relative z-10 grid grid-cols-5 border-t border-cocoa-08 bg-ivory/95 backdrop-blur',
       )}
       style={{
         paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 8px)',
@@ -42,23 +42,34 @@ export function TabBar() {
           className={({ isActive }) =>
             clsx(
               'relative flex flex-col items-center justify-center gap-1 py-3',
-              'text-cocoa-55 transition-colors duration-instant ease-out-quart',
-              isActive && 'text-copper',
+              'transition-colors duration-instant ease-out-quart',
+              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory focus-visible:rounded-md',
+              isActive ? 'text-copper' : 'text-cocoa-55 hover:text-cocoa-70',
             )
           }
         >
           {({ isActive }) => (
             <>
               <Icon
-                className="h-5 w-5"
-                strokeWidth={isActive ? 2 : 1.5}
+                className={clsx(
+                  'h-[22px] w-[22px] transition-transform duration-instant ease-out-quart',
+                  isActive && 'scale-105',
+                )}
+                strokeWidth={isActive ? 2.2 : 1.6}
                 aria-hidden
               />
-              <span className="text-small font-medium">{label}</span>
+              <span
+                className={clsx(
+                  'text-small leading-none',
+                  isActive ? 'font-semibold' : 'font-medium',
+                )}
+              >
+                {label}
+              </span>
               {isActive && (
                 <span
                   aria-hidden
-                  className="absolute top-0 h-[2px] w-10 rounded-b-full bg-copper"
+                  className="absolute top-0 h-[3px] w-8 rounded-b-full bg-copper"
                 />
               )}
             </>

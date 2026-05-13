@@ -127,7 +127,7 @@ export function SettingsScreen() {
         {SECTIONS.map((section) => (
           <section key={section.number} className="flex flex-col gap-sm">
             <SectionLabel number={section.number} label={section.label} />
-            <ul className="overflow-hidden rounded-md border border-cocoa-15 bg-ivory">
+            <ul className="overflow-hidden rounded-2xl border border-cocoa-15 bg-ivory">
               {section.rows.map((row, i) => (
                 <li
                   key={row.label}
@@ -154,7 +154,7 @@ export function SettingsScreen() {
 
         <section className="flex flex-col gap-sm">
           <SectionLabel number="05" label="Demo controls." />
-          <div className="flex flex-col gap-sm rounded-md border border-cocoa-15 bg-sand p-md">
+          <div className="flex flex-col gap-sm rounded-2xl border border-cocoa-15 bg-sand shadow-card p-md">
             <p className="text-small text-cocoa-70">
               מאפס את היעדים המתוכננים למצב הדגמה הקנוני. שימוש בין הדגמות
               למשקיעים.
@@ -248,7 +248,7 @@ function SettingDetailSheet({
             })}
           </ul>
         ) : (
-          <div className="rounded-md bg-sand p-md">
+          <div className="rounded-2xl bg-sand p-md">
             <span className="meta-caps text-cocoa-55">ערך נוכחי</span>
             <p className="mt-xs text-body text-cocoa">{currentValue}</p>
           </div>

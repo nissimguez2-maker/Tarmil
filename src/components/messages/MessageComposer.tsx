@@ -13,7 +13,7 @@ type Props = {
  * submits; Shift+Enter inserts a newline. The input clears after a
  * successful send.
  */
-export function MessageComposer({ placeholder = 'הקלד הודעה...', onSend }: Props) {
+export function MessageComposer({ placeholder = 'הקלד הודעה…', onSend }: Props) {
   const [value, setValue] = useState('');
   const [sending, setSending] = useState(false);
 

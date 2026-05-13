@@ -140,11 +140,13 @@ function SegmentedControl<T extends string>({
             onClick={() => onChange(opt.value)}
             aria-pressed={active}
             className={clsx(
-              'flex-1 rounded-full px-sm py-1.5 text-body leading-none',
-              'transition-colors duration-instant ease-out-quart',
+              'flex-1 rounded-full px-sm py-2 text-body font-medium leading-none',
+              'transition-[transform,background-color,box-shadow,color] duration-instant ease-out-quart',
+              'active:scale-[0.97]',
+              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory',
               active
-                ? 'bg-cocoa text-ivory'
-                : 'text-cocoa-70 active:text-cocoa',
+                ? 'bg-cocoa text-ivory shadow-card'
+                : 'text-cocoa-70 hover:text-cocoa',
             )}
           >
             {opt.label}
@@ -174,12 +176,13 @@ function IOSToggle({
       className={clsx(
         'relative inline-flex h-7 w-12 shrink-0 items-center rounded-full',
         'transition-colors duration-instant ease-out-quart',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory',
         checked ? 'bg-copper' : 'bg-cocoa-30',
       )}
     >
       <span
         className={clsx(
-          'absolute top-0.5 start-0.5 h-6 w-6 rounded-full border border-cocoa-15 bg-ivory',
+          'absolute top-0.5 start-0.5 h-6 w-6 rounded-full bg-ivory shadow-card',
           'transition-transform duration-instant ease-out-quart',
           // In RTL, the knob sits at logical-start (physical right) when off;
           // translating physically left (negative X) moves it to the

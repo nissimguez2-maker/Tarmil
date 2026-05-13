@@ -41,7 +41,7 @@ export function MapsActionSheet({ open, place, onClose }: Props) {
     <div
       role="menu"
       aria-label="פתח באפליקציית מפות"
-      className="flex flex-col overflow-hidden rounded-md border border-cocoa-15 bg-sand"
+      className="flex flex-col overflow-hidden rounded-2xl border border-cocoa-15 bg-sand"
     >
       <div className="flex items-center justify-between border-b border-cocoa-15 px-md py-sm">
         <span className="meta-caps text-copper">פתח במפות</span>

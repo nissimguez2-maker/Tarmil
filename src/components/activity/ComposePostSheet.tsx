@@ -80,7 +80,7 @@ export function ComposePostSheet({ open, onClose, onPost }: Props) {
                   onClick={() => setKind(opt.value)}
                   aria-pressed={active}
                   className={clsx(
-                    'flex items-start gap-sm rounded-md border p-md text-start',
+                    'flex items-start gap-sm rounded-2xl border p-md text-start',
                     'transition-colors duration-instant ease-out-quart',
                     active
                       ? 'border-copper bg-sand'
@@ -120,7 +120,7 @@ export function ComposePostSheet({ open, onClose, onPost }: Props) {
             rows={5}
             dir="rtl"
             placeholder="שני משפטים זה הרבה. השאר את זה אמיתי."
-            className="resize-none rounded-md border border-cocoa-15 bg-sand p-md text-body text-cocoa placeholder:text-cocoa-55 transition-colors duration-instant ease-out-quart focus:border-copper focus:outline-none"
+            className="resize-none rounded-2xl border border-cocoa-15 bg-sand shadow-card p-md text-body text-cocoa placeholder:text-cocoa-55 transition-colors duration-instant ease-out-quart focus:border-copper focus:outline-none"
           />
         </div>
       </div>

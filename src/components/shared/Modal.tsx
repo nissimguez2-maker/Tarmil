@@ -61,19 +61,23 @@ export function Modal({ open, onClose, eyebrow, title, children, footer }: Props
         aria-label="סגירה"
         tabIndex={open ? 0 : -1}
         onClick={onClose}
-        className="absolute inset-0 cursor-default bg-cocoa-30"
+        className={clsx(
+          'absolute inset-0 cursor-default bg-cocoa-30',
+          'transition-opacity duration-considered ease-out-quart',
+          open ? 'opacity-100' : 'opacity-0',
+        )}
       />
 
       <div
         className={clsx(
-          'relative flex max-h-[88%] flex-col rounded-t-[20px] border-t border-cocoa-15 bg-ivory shadow-sheet',
+          'relative flex max-h-[88%] flex-col rounded-t-3xl bg-ivory shadow-sheet',
           'transition-transform duration-considered ease-out-quart',
           open ? 'translate-y-0' : 'translate-y-full',
         )}
       >
         <span
           aria-hidden
-          className="mx-auto mt-2 block h-1 w-10 shrink-0 rounded-full bg-cocoa-30"
+          className="mx-auto mt-2.5 block h-1 w-9 shrink-0 rounded-full bg-cocoa-15"
         />
 
         <header className="flex items-start justify-between gap-sm px-md pb-sm pt-sm">
@@ -81,7 +85,7 @@ export function Modal({ open, onClose, eyebrow, title, children, footer }: Props
             {eyebrow && (
               <span className="meta-caps text-copper">{eyebrow}</span>
             )}
-            <h2 className="font-serif text-lede leading-tight text-cocoa">
+            <h2 className="font-serif text-lede leading-tight text-balance text-cocoa">
               {title}
             </h2>
           </div>
@@ -89,17 +93,19 @@ export function Modal({ open, onClose, eyebrow, title, children, footer }: Props
             type="button"
             aria-label="סגור"
             onClick={onClose}
-            className="-me-1 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-cocoa-55 transition-colors duration-instant ease-out-quart hover:bg-cocoa-8 active:bg-cocoa-15"
+            className="-me-1 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-cocoa-55 transition-[transform,background-color] duration-instant ease-out-quart hover:bg-cocoa-8 hover:text-cocoa active:scale-95 active:bg-cocoa-15"
           >
             <X className="h-4 w-4" strokeWidth={1.8} aria-hidden />
           </button>
         </header>
 
-        <div className="flex-1 overflow-y-auto px-md pb-md">{children}</div>
+        <div className="flex-1 overflow-y-auto overscroll-contain px-md pb-md">
+          {children}
+        </div>
 
         {footer && (
           <div
-            className="border-t border-cocoa-15 px-md pt-sm"
+            className="border-t border-cocoa-08 px-md pt-sm"
             style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 16px)' }}
           >
             {footer}

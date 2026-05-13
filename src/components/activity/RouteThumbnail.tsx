@@ -30,7 +30,7 @@ export function RouteThumbnail({ cities = 4, className }: Props) {
   return (
     <div
       className={clsx(
-        'relative h-20 w-full overflow-hidden rounded-md bg-ivory',
+        'relative h-20 w-full overflow-hidden rounded-xl bg-ivory',
         className,
       )}
     >

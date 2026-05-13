@@ -19,11 +19,13 @@ export function ReactionPill({ emoji, count, active, onClick }: Props) {
       type="button"
       onClick={onClick}
       className={clsx(
-        'inline-flex h-7 items-center gap-1 rounded-full px-2 text-small',
-        'transition-colors duration-instant ease-out-quart',
+        'inline-flex h-7 items-center gap-1 rounded-full px-2.5 text-small',
+        'transition-[transform,background-color,box-shadow] duration-instant ease-out-quart',
+        'active:scale-[0.94]',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-1 focus-visible:ring-offset-ivory',
         active
-          ? 'bg-sand text-cocoa ring-1 ring-copper'
-          : 'bg-cocoa-8 text-cocoa-70 hover:bg-cocoa-15',
+          ? 'bg-sand text-cocoa shadow-[inset_0_0_0_1.5px_var(--copper)]'
+          : 'bg-cocoa-08 text-cocoa-70 hover:bg-cocoa-15 hover:text-cocoa',
       )}
       aria-pressed={!!active}
     >
