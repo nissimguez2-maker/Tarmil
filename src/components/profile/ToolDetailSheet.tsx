@@ -21,14 +21,14 @@ type Props = {
 };
 
 const TITLES: Record<ToolId, { title: string; eyebrow: string }> = {
-  currency: { title: 'ממיר מטבעות', eyebrow: 'כלי' },
-  checklist: { title: 'צ׳ק ליסט לפני יציאה', eyebrow: 'כלי' },
-  voice: { title: 'מתרגם קולי', eyebrow: 'כלי' },
-  menu: { title: 'מתרגם תפריט', eyebrow: 'כלי' },
-  signs: { title: 'סורק שלטים', eyebrow: 'כלי' },
-  balances: { title: 'יתרות בין חברים', eyebrow: 'כלי' },
-  esim: { title: 'eSIM וגלישה', eyebrow: 'כלי' },
-  jewish: { title: 'כלים יהודיים', eyebrow: 'כלי' },
+  currency: { title: 'Currency converter', eyebrow: 'Tool' },
+  checklist: { title: 'Pre-trip checklist', eyebrow: 'Tool' },
+  voice: { title: 'Voice translator', eyebrow: 'Tool' },
+  menu: { title: 'Menu translator', eyebrow: 'Tool' },
+  signs: { title: 'Sign scanner', eyebrow: 'Tool' },
+  balances: { title: 'Friend balances', eyebrow: 'Tool' },
+  esim: { title: 'eSIM & data', eyebrow: 'Tool' },
+  jewish: { title: 'Jewish tools', eyebrow: 'Tool' },
 };
 
 /**
@@ -64,12 +64,12 @@ export function ToolDetailSheet({ toolId, onClose }: Props) {
 type Currency = 'ILS' | 'USD' | 'EUR' | 'BRL' | 'ARS' | 'THB';
 
 const CURRENCY_LABEL: Record<Currency, string> = {
-  ILS: 'שקל · ₪',
-  USD: 'דולר · $',
-  EUR: 'יורו · €',
-  BRL: 'ריאל · R$',
-  ARS: 'פסו ארגנטינאי · $',
-  THB: 'באט · ฿',
+  ILS: 'Shekel · ₪',
+  USD: 'Dollar · $',
+  EUR: 'Euro · €',
+  BRL: 'Real · R$',
+  ARS: 'Argentine peso · $',
+  THB: 'Baht · ฿',
 };
 
 // Approximate May 2026 rates (relative to ILS). Mock — not live.
@@ -94,12 +94,12 @@ function CurrencyConverter() {
   return (
     <div className="flex flex-col gap-md">
       <p className="text-small text-cocoa-70">
-        שערים מקוונים. הערכים מתעדכנים אחת ליום ושומרים על השער האחרון גם בלי
-        רשת.
+        Live rates. Values update once a day and keep the last rate even when
+        offline.
       </p>
 
       <div className="flex flex-col gap-xs">
-        <label className="meta-caps text-cocoa-55">סכום</label>
+        <label className="meta-caps text-cocoa-55">Amount</label>
         <input
           type="text"
           inputMode="decimal"
@@ -111,17 +111,17 @@ function CurrencyConverter() {
 
       <div className="grid grid-cols-2 gap-sm">
         <div className="flex flex-col gap-xs">
-          <label className="meta-caps text-cocoa-55">ממטבע</label>
+          <label className="meta-caps text-cocoa-55">From</label>
           <CurrencySelect value={from} onChange={setFrom} />
         </div>
         <div className="flex flex-col gap-xs">
-          <label className="meta-caps text-cocoa-55">למטבע</label>
+          <label className="meta-caps text-cocoa-55">To</label>
           <CurrencySelect value={to} onChange={setTo} />
         </div>
       </div>
 
       <div className="rounded-2xl bg-sand shadow-card p-md">
-        <span className="meta-caps text-copper">תוצאה</span>
+        <span className="meta-caps text-copper">Result</span>
         <p className="mt-xs font-serif text-display leading-none text-cocoa">
           <span className="tnum">{formatNumber(result)}</span>
         </p>
@@ -165,14 +165,14 @@ function formatNumber(n: number): string {
 // ---------- Pre-trip checklist (interactive) ----------
 
 const CHECKLIST_ITEMS = [
-  { id: 'visa', label: 'ויזה לכל יעד במסלול' },
-  { id: 'vaccines', label: 'חיסונים — קדחת צהובה, צהבת A' },
-  { id: 'insurance', label: 'ביטוח נסיעות עם כיסוי ספורט אתגרי' },
-  { id: 'passport', label: 'דרכון בתוקף לפחות שישה חודשים' },
-  { id: 'cards', label: 'כרטיסי אשראי + מטבע מקומי במזומן' },
-  { id: 'esim', label: 'הזמנת eSIM מקומי' },
-  { id: 'documents', label: 'סריקת מסמכים לענן' },
-  { id: 'pharmacy', label: 'ערכת רוקח בסיסית' },
+  { id: 'visa', label: 'Visa for every stop on the route' },
+  { id: 'vaccines', label: 'Vaccines — yellow fever, hep A' },
+  { id: 'insurance', label: 'Travel insurance with extreme-sports cover' },
+  { id: 'passport', label: 'Passport valid at least six months' },
+  { id: 'cards', label: 'Credit cards + local cash' },
+  { id: 'esim', label: 'Local eSIM booked' },
+  { id: 'documents', label: 'Scan documents to the cloud' },
+  { id: 'pharmacy', label: 'Basic pharmacy kit' },
 ];
 
 function PreTripChecklist() {
@@ -186,7 +186,7 @@ function PreTripChecklist() {
     <div className="flex flex-col gap-md">
       <div className="flex items-baseline justify-between">
         <p className="text-small text-cocoa-70">
-          לפני שיוצאים — לעבור על הכל. ידאג שתישאר רגוע ביציאה.
+          Run through everything before you leave. Keeps your head clear on the way out.
         </p>
         <span className="text-small text-cocoa-55 tnum">
           {done}/{CHECKLIST_ITEMS.length}
@@ -247,14 +247,14 @@ function VoiceTranslator() {
   return (
     <div className="flex flex-col gap-md">
       <p className="text-small text-cocoa-70">
-        דבר בעברית, נתרגם לפורטוגזית, ספרדית, אנגלית, תאית או צרפתית. עובד
-        מקוון; אם אין רשת, יחזור על התרגום האחרון.
+        Speak English, we'll translate to Portuguese, Spanish, Hebrew, Thai or
+        French. Works online; offline it falls back to the last translation.
       </p>
 
       <div className="rounded-2xl bg-sand shadow-card p-md">
-        <span className="meta-caps text-cocoa-55">דוגמה אחרונה</span>
+        <span className="meta-caps text-cocoa-55">Last example</span>
         <p className="mt-xs font-serif text-lede italic text-cocoa">
-          איפה אפשר להזמין מונית?
+          Where can I get a taxi?
         </p>
         <p className="mt-xs text-body text-cocoa-70 ltr">
           Onde posso pedir um táxi?
@@ -270,13 +270,13 @@ function VoiceTranslator() {
           'shadow-fab active:scale-[0.96]',
           recording ? 'bg-copper text-ivory animate-pulse' : 'bg-cocoa text-ivory',
         )}
-        aria-label={recording ? 'עצור הקלטה' : 'התחל הקלטה'}
+        aria-label={recording ? 'Stop recording' : 'Start recording'}
       >
         <Mic className="h-7 w-7" strokeWidth={1.7} aria-hidden />
       </button>
 
       <p className="text-center text-small text-cocoa-55">
-        {recording ? 'מקליט…' : 'הקש להקלטה'}
+        {recording ? 'Recording…' : 'Tap to record'}
       </p>
     </div>
   );
@@ -285,25 +285,25 @@ function VoiceTranslator() {
 // ---------- Menu translator (mock) ----------
 
 const SAMPLE_MENU = [
-  { pt: 'Picanha grelhada', he: 'פיקניה צלויה', alert: null },
-  { pt: 'Feijoada completa', he: 'פייז׳ואדה מסורתית', alert: 'מכיל חזיר' },
-  { pt: 'Açaí na tigela', he: 'אסאי בקערה', alert: 'טבעוני' },
-  { pt: 'Pão de queijo', he: 'לחמניות גבינה', alert: null },
+  { pt: 'Picanha grelhada', he: 'Grilled picanha steak', alert: null },
+  { pt: 'Feijoada completa', he: 'Traditional feijoada', alert: 'Contains pork' },
+  { pt: 'Açaí na tigela', he: 'Açaí bowl', alert: 'Vegan' },
+  { pt: 'Pão de queijo', he: 'Cheese bread', alert: null },
 ];
 
 function MenuTranslator() {
   return (
     <div className="flex flex-col gap-md">
       <p className="text-small text-cocoa-70">
-        כיוון את המצלמה על תפריט. אנחנו נסמן מנות לא־טבעוניות, חזיר, ופירות
-        ים, לפי ההעדפות שלך.
+        Point the camera at a menu. We'll flag non-vegan dishes, pork and
+        seafood based on your preferences.
       </p>
 
       <div className="flex h-32 items-center justify-center rounded-2xl border-2 border-dashed border-cocoa-30 bg-sand">
         <Camera className="h-8 w-8 text-cocoa-55" strokeWidth={1.5} aria-hidden />
       </div>
 
-      <span className="meta-caps text-cocoa-55">סריקה אחרונה</span>
+      <span className="meta-caps text-cocoa-55">Last scan</span>
       <ul className="flex flex-col">
         {SAMPLE_MENU.map((dish, i) => (
           <li
@@ -321,7 +321,7 @@ function MenuTranslator() {
               <span
                 className={clsx(
                   'shrink-0 rounded-full px-2 py-1 meta-caps',
-                  dish.alert === 'טבעוני'
+                  dish.alert === 'Vegan'
                     ? 'bg-copper-70 text-ivory'
                     : 'bg-cocoa text-ivory',
                 )}
@@ -342,8 +342,8 @@ function SignScanner() {
   return (
     <div className="flex flex-col gap-md">
       <p className="text-small text-cocoa-70">
-        מתרגם שלטים, תפסי מידע ופלקטים בזמן אמת. כיוון, צלם, קבל את התרגום
-        ישר מעל הטקסט.
+        Translates signs, info boards and flyers in real time. Point, snap,
+        get the translation overlaid on the text.
       </p>
 
       <div className="flex h-32 items-center justify-center rounded-2xl border-2 border-dashed border-cocoa-30 bg-sand">
@@ -351,11 +351,11 @@ function SignScanner() {
       </div>
 
       <div className="rounded-2xl bg-sand shadow-card p-md">
-        <span className="meta-caps text-cocoa-55">דוגמה אחרונה</span>
+        <span className="meta-caps text-cocoa-55">Last example</span>
         <p className="mt-xs font-serif text-lede italic text-cocoa ltr">
           Cuidado: piso molhado
         </p>
-        <p className="mt-xs text-body text-cocoa-70">זהירות: רצפה רטובה</p>
+        <p className="mt-xs text-body text-cocoa-70">Caution: wet floor</p>
       </div>
     </div>
   );
@@ -382,8 +382,8 @@ function FriendBalances() {
   return (
     <div className="flex flex-col gap-md">
       <p className="text-small text-cocoa-70">
-        מעקב פתוח בין שני חברים. הסכומים מתעדכנים בזמן אמת — מי משלם, מי
-        חייב, מי שווה.
+        Open tab between friends. Live balances — who paid, who owes, who's
+        even.
       </p>
 
       <ul className="flex flex-col">
@@ -402,7 +402,7 @@ function FriendBalances() {
                   {b.friend.friendName}
                 </span>
                 <span className="text-small text-cocoa-55">
-                  {owesYou ? 'חייב לך' : 'אתה חייב'}
+                  {owesYou ? 'Owes you' : 'You owe'}
                 </span>
               </div>
               <span
@@ -421,7 +421,7 @@ function FriendBalances() {
 
       <Button variant="ghost" size="sm" fullWidth>
         <Wallet className="h-4 w-4" aria-hidden />
-        הוסף הוצאה משותפת
+        Add shared expense
       </Button>
     </div>
   );
@@ -430,18 +430,17 @@ function FriendBalances() {
 // ---------- eSIM (mock plans) ----------
 
 const ESIM_PLANS = [
-  { region: 'דרום אמריקה', days: 30, gb: 10, price: 89, popular: true },
-  { region: 'אירופה', days: 14, gb: 5, price: 49, popular: false },
-  { region: 'דרום־מזרח אסיה', days: 21, gb: 8, price: 65, popular: false },
-  { region: 'גלובלי', days: 30, gb: 15, price: 149, popular: false },
+  { region: 'South America', days: 30, gb: 10, price: 89, popular: true },
+  { region: 'Europe', days: 14, gb: 5, price: 49, popular: false },
+  { region: 'Southeast Asia', days: 21, gb: 8, price: 65, popular: false },
+  { region: 'Global', days: 30, gb: 15, price: 149, popular: false },
 ];
 
 function EsimPlans() {
   return (
     <div className="flex flex-col gap-md">
       <p className="text-small text-cocoa-70">
-        eSIM מותקן ב־30 שניות. עובד עם כל יצרני המכשירים החל מ־iPhone XS
-        וגלקסי S20.
+        eSIM installs in 30 seconds. Works on iPhone XS, Galaxy S20 and later.
       </p>
 
       <ul className="flex flex-col gap-sm">
@@ -462,12 +461,12 @@ function EsimPlans() {
                   {plan.region}
                 </span>
                 {plan.popular && (
-                  <span className="meta-caps text-copper">פופולרי</span>
+                  <span className="meta-caps text-copper">Popular</span>
                 )}
               </div>
               <span className="text-small text-cocoa-70">
                 <span className="tnum">{plan.gb}</span>GB ·{' '}
-                <span className="tnum">{plan.days}</span> ימים
+                <span className="tnum">{plan.days}</span> days
               </span>
             </div>
             <div className="flex shrink-0 flex-col items-end">
@@ -478,7 +477,7 @@ function EsimPlans() {
                 type="button"
                 className="meta-caps text-copper transition-colors duration-instant ease-out-quart active:text-copper-70"
               >
-                הזמן
+                Buy
               </button>
             </div>
           </li>
@@ -491,9 +490,9 @@ function EsimPlans() {
 // ---------- Jewish tools (mock) ----------
 
 const CHABAD_HOUSES = [
-  { name: 'חב״ד ריו דה ז׳נרו', dist: '1.2 ק״מ', address: 'Botafogo' },
-  { name: 'חב״ד סאו פאולו', dist: '442 ק״מ', address: 'Jardins' },
-  { name: 'חב״ד פלוריאנופוליס', dist: '1,180 ק״מ', address: 'Centro' },
+  { name: 'Chabad Rio de Janeiro', dist: '1.2 km', address: 'Botafogo' },
+  { name: 'Chabad São Paulo', dist: '442 km', address: 'Jardins' },
+  { name: 'Chabad Florianópolis', dist: '1,180 km', address: 'Centro' },
 ];
 
 function JewishTools() {
@@ -501,16 +500,16 @@ function JewishTools() {
     <div className="flex flex-col gap-md">
       <div className="rounded-2xl bg-sand shadow-card p-md">
         <div className="flex items-baseline justify-between">
-          <span className="meta-caps text-copper">שבת קרובה · ריו</span>
+          <span className="meta-caps text-copper">This Shabbat · Rio</span>
           <Globe className="h-4 w-4 text-cocoa-55" aria-hidden />
         </div>
         <p className="mt-xs font-serif text-lede italic text-cocoa">
-          כניסת שבת <span className="tnum">17:38</span> · יציאה{' '}
+          Candle lighting <span className="tnum">17:38</span> · Havdalah{' '}
           <span className="tnum">18:34</span>
         </p>
       </div>
 
-      <span className="meta-caps text-cocoa-55">בתי חב״ד בקרבת מקום</span>
+      <span className="meta-caps text-cocoa-55">Chabad houses nearby</span>
       <ul className="flex flex-col">
         {CHABAD_HOUSES.map((h, i) => (
           <li
@@ -534,14 +533,14 @@ function JewishTools() {
       <div className="flex items-center gap-sm rounded-2xl bg-ivory shadow-card p-md">
         <Star className="h-5 w-5 shrink-0 text-copper" aria-hidden fill="currentColor" strokeWidth={0} />
         <p className="text-small text-cocoa-70">
-          סורק כשרות — סרוק מוצר במכולת לבדיקה מהירה. כולל את כשרויות חו״ל
-          המקובלות.
+          Kosher scanner — scan a grocery item for a quick check. Includes the
+          major international hechshers.
         </p>
       </div>
 
       <Button variant="ghost" size="sm" fullWidth>
         <Smartphone className="h-4 w-4" aria-hidden />
-        פתח סורק כשרות
+        Open kosher scanner
       </Button>
     </div>
   );

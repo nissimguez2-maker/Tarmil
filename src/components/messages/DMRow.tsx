@@ -22,12 +22,12 @@ export function DMRow({ dm, friend }: Props) {
       <Avatar
         photoUrl={friend?.photoUrl}
         initial={friend?.friendInitial ?? '·'}
-        name={friend?.friendName ?? 'חבר'}
+        name={friend?.friendName ?? 'Friend'}
         size="md"
       />
       <div className="flex min-w-0 flex-1 flex-col gap-px">
         <span className="truncate font-serif text-lede italic text-cocoa">
-          {friend?.friendName ?? 'חבר'}
+          {friend?.friendName ?? 'Friend'}
         </span>
         <span className="line-clamp-1 text-small text-cocoa-70">
           {dm.lastMessagePreviewHe}
@@ -35,7 +35,7 @@ export function DMRow({ dm, friend }: Props) {
       </div>
       {dm.unreadCount > 0 && (
         <span
-          aria-label={`${dm.unreadCount} הודעות חדשות`}
+          aria-label={`${dm.unreadCount} new messages`}
           className="tnum inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-copper px-1 text-small font-medium text-ivory"
         >
           {dm.unreadCount}

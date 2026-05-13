@@ -26,8 +26,8 @@ export function TripDetailScreen() {
   if (!stop) {
     return (
       <Screen>
-        <TopBar back title="טיול לא נמצא" />
-        <div className="p-md text-cocoa-55">היעד הזה כבר לא במסלול שלך.</div>
+        <TopBar back title="Trip not found" />
+        <div className="p-md text-cocoa-55">This stop is no longer on your route.</div>
       </Screen>
     );
   }
@@ -44,7 +44,7 @@ export function TripDetailScreen() {
 
   return (
     <Screen>
-      <TopBar back title={stop.nameHe} eyebrow="טיול הבא" />
+      <TopBar back title={stop.nameHe} eyebrow="Next trip" />
 
       <div className="flex flex-col gap-lg p-md pb-xl">
         <section className="flex flex-col gap-xs rounded-2xl bg-sand shadow-card p-md">
@@ -53,7 +53,7 @@ export function TripDetailScreen() {
           </span>
           <span className="text-small text-cocoa-70">
             {formatDateRange(stop.arrivalDate, stop.departureDate)} ·{' '}
-            <span className="tnum">{stop.nights}</span> לילות
+            <span className="tnum">{stop.nights}</span> nights
           </span>
           {stop.note && (
             <p className="mt-xs text-body italic text-cocoa-70">{stop.note}</p>
@@ -63,7 +63,7 @@ export function TripDetailScreen() {
         {friends.length > 0 && (
           <section className="flex flex-col gap-sm">
             <h2 className="font-serif text-lede italic text-cocoa">
-              חברים שיהיו שם
+              Friends who'll be there
             </h2>
             <ul className="flex flex-col gap-sm">
               {friends.map((f) => (
@@ -97,7 +97,7 @@ export function TripDetailScreen() {
         {forum && threads.length > 0 && (
           <section className="flex flex-col gap-sm">
             <h2 className="font-serif text-lede italic text-cocoa">
-              {forum.nameHe} · מה מדברים
+              {forum.nameHe} · What people are talking about
             </h2>
             <ul className="flex flex-col gap-sm">
               {threads.slice(0, 3).map((t) => (
@@ -120,9 +120,9 @@ export function TripDetailScreen() {
         )}
 
         <section className="flex flex-col gap-sm">
-          <h2 className="font-serif text-lede italic text-cocoa">כלים ליעד</h2>
+          <h2 className="font-serif text-lede italic text-cocoa">Tools for this stop</h2>
           <div className="grid grid-cols-3 gap-sm">
-            {['ממיר מטבעות', 'eSIM', 'תרגום קולי'].map((tool) => (
+            {['Currency converter', 'eSIM', 'Voice translation'].map((tool) => (
               <div
                 key={tool}
                 className="rounded-2xl bg-ivory shadow-card p-sm text-center text-small text-cocoa"

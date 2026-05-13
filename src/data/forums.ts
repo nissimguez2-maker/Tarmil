@@ -31,9 +31,9 @@ export type Forum = {
   destinationId?: string;
   kind: ForumKind;
   memberCount: number;
-  /** 1-sentence Hebrew tagline in backpacker tone. */
+  /** 1-sentence tagline in backpacker tone. */
   heroBlurbHe: string;
-  /** True = surfaced under "מומלצים לך" with a join CTA. */
+  /** True = surfaced under "Recommended for you" with a join CTA. */
   isRecommended: boolean;
 };
 
@@ -41,61 +41,61 @@ export const forums: Forum[] = [
   {
     id: 'forum-rio',
     slug: 'rio',
-    nameHe: 'ריו דה ז׳נרו',
+    nameHe: 'Rio de Janeiro',
     nameEn: 'Rio de Janeiro',
-    cityLabel: 'ריו',
+    cityLabel: 'Rio',
     destinationId: 'rio-de-janeiro',
     kind: 'city',
     memberCount: 234,
-    heroBlurbHe: 'המקום של כל מי שעובר בריו. ביקורת על הוסטלים, חבר׳ה לחוף, ועזרה דחופה.',
+    heroBlurbHe: 'The spot for anyone passing through Rio. Hostel reviews, beach crew, and emergency help.',
     isRecommended: false,
   },
   {
     id: 'forum-buzios',
     slug: 'buzios',
-    nameHe: 'בוזיוס',
+    nameHe: 'Búzios',
     nameEn: 'Búzios',
-    cityLabel: 'בוזיוס',
+    cityLabel: 'Búzios',
     destinationId: 'buzios',
     kind: 'city',
     memberCount: 87,
-    heroBlurbHe: 'סופ״ש ים, סנוקלינג, ובאר ליד החוף. רוב הפעילות סופי שבוע.',
+    heroBlurbHe: 'Beach weekend, snorkelling, and a bar by the water. Mostly weekend traffic.',
     isRecommended: false,
   },
   {
     id: 'forum-sao-paulo',
     slug: 'sao-paulo',
-    nameHe: 'סאו פאולו',
+    nameHe: 'São Paulo',
     nameEn: 'São Paulo',
-    cityLabel: 'סאו פאולו',
+    cityLabel: 'São Paulo',
     destinationId: 'sao-paulo',
     kind: 'city',
     memberCount: 156,
-    heroBlurbHe: 'וילה מדלנה, אסאדו, וברים בעבירה. עיר ענקית, פורום קטן ובוטה.',
+    heroBlurbHe: 'Vila Madalena, churrasco, and bars in dodgy corners. Huge city, small blunt forum.',
     isRecommended: false,
   },
   {
     id: 'forum-jericoacoara',
     slug: 'jericoacoara',
-    nameHe: 'ז׳ריקואקוארה',
+    nameHe: 'Jericoacoara',
     nameEn: 'Jericoacoara',
-    cityLabel: 'ז׳רי',
+    cityLabel: 'Jeri',
     destinationId: 'jericoacoara',
     kind: 'city',
     memberCount: 112,
-    heroBlurbHe: 'קייטסרף, דיונות, ובוקרים יחפים. מי בא, מי יוצא, איפה לישון.',
+    heroBlurbHe: 'Kitesurf, dunes, and barefoot mornings. Who is coming, who is leaving, where to crash.',
     isRecommended: false,
   },
   {
     id: 'forum-buenos-aires',
     slug: 'buenos-aires',
-    nameHe: 'בואנוס איירס',
+    nameHe: 'Buenos Aires',
     nameEn: 'Buenos Aires',
-    cityLabel: 'בואנוס',
+    cityLabel: 'Buenos Aires',
     destinationId: 'buenos-aires',
     kind: 'city',
     memberCount: 142,
-    heroBlurbHe: 'פאלרמו, סן תלמו, אסאדו עד חצות. מצטרפים לפני שיוצאים.',
+    heroBlurbHe: 'Palermo, San Telmo, asado till midnight. Join before you go.',
     isRecommended: true,
   },
 ];

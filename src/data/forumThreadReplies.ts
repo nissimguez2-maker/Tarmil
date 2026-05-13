@@ -4,8 +4,8 @@
  * SEED ONLY. Runtime data lives in `forum_thread_replies`.
  *
  * Distribution is uneven — busy threads get 3 replies, sleeper threads get
- * 1–2. Authors mix friend personas and self (`authorFriendId: null`). All
- * Hebrew is idiomatic backpacker speech.
+ * 1–2. Authors mix friend personas and self (`authorFriendId: null`). Copy is
+ * idiomatic backpacker English.
  *
  * Reply IDs use the parent thread id + `-r{N}` so they're stable across reseeds.
  */
@@ -23,58 +23,58 @@ export const forumThreadReplies: ForumThreadReply[] = [
   // RIO
   // =====================================================================
 
-  // thread-rio-001 — חב״ד קופקבנה שבת (3 replies)
+  // thread-rio-001 — Chabad Copa Shabbat (3 replies)
   {
     id: 'thread-rio-001-r1',
     threadId: 'thread-rio-001',
     authorFriendId: null,
-    body: 'תודה מאיה. נרשמתי דרך הקישור. שלך לסעודה?',
+    body: 'Thanks Maya. Registered through the link. You staying for dinner?',
   },
   {
     id: 'thread-rio-001-r2',
     threadId: 'thread-rio-001',
     authorFriendId: 'yael-botafogo',
-    body: 'אני באה. סבבה לאסוף אותך מ־Posto 6 ב־18:30?',
+    body: "I'm coming. Cool to pick you up from Posto 6 at 18:30?",
   },
   {
     id: 'thread-rio-001-r3',
     threadId: 'thread-rio-001',
     authorFriendId: 'maya-ipanema',
-    body: 'יעל מצוין 🙏 ניפגש שם. נסים שווה לבוא אם אתה עדיין בעיר.',
+    body: "Yael, perfect 🙏 see you there. Nissim, you should come too if you're still in town.",
   },
 
-  // thread-rio-002 — בשר כשר בריו (2 replies)
+  // thread-rio-002 — kosher meat in Rio (2 replies)
   {
     id: 'thread-rio-002-r1',
     threadId: 'thread-rio-002',
     authorFriendId: 'maya-ipanema',
-    body: 'Kosher Rio פתוח 9:00–18:00 חוץ משבת. ברחוב Anita Garibaldi 49. יש להם גם המבורגרים קפואים, חבל לפספס.',
+    body: "Kosher Rio is open 9:00–18:00 except Shabbat. Rua Anita Garibaldi 49. They also have frozen burgers, don't sleep on those.",
   },
   {
     id: 'thread-rio-002-r2',
     threadId: 'thread-rio-002',
     authorFriendId: 'yael-botafogo',
-    body: 'Talmud Torah רחוק יותר אבל המחירים סבירים. אם מזמינים מראש הם מארגנים משלוח לקופה.',
+    body: 'Talmud Torah is farther but prices are reasonable. If you call ahead they organize delivery to Copa.',
   },
 
-  // thread-rio-003 — בלוקו רחוב (3 replies)
+  // thread-rio-003 — street bloco (3 replies)
   {
     id: 'thread-rio-003-r1',
     threadId: 'thread-rio-003',
     authorFriendId: 'maya-ipanema',
-    body: 'אני באה! אבל מ־23:00, יש לי דבר לפני. תחכי לי?',
+    body: "I'm coming! But not till 23:00, got something earlier. Wait for me?",
   },
   {
     id: 'thread-rio-003-r2',
     threadId: 'thread-rio-003',
     authorFriendId: null,
-    body: 'וואלה בא לי. צריך להביא משהו ספציפי או רק בירה?',
+    body: "Damn, down. Bring anything specific or just beer?",
   },
   {
     id: 'thread-rio-003-r3',
     threadId: 'thread-rio-003',
     authorFriendId: 'yael-botafogo',
-    body: 'מאיה אני שם עד 1:00 מקסימום, מחר בוקר אקדמיה. נסים בירה ופלפל, מים אם תזכור 🔥',
+    body: "Maya, I'm there till 1:00 max, training in the morning. Nissim, beer and a lighter, water if you remember 🔥",
   },
 
   // thread-rio-004 — Rio Scenarium (2 replies)
@@ -82,13 +82,13 @@ export const forumThreadReplies: ForumThreadReply[] = [
     id: 'thread-rio-004-r1',
     threadId: 'thread-rio-004',
     authorFriendId: 'roi-buzios',
-    body: 'תנסי Pedra do Sal יום שני בערב, סמבה אמיתית, חינם, מקומיים בלבד. Rio Scenarium כבר לא מה שהיה.',
+    body: 'Try Pedra do Sal on Monday night, real samba, free, locals only. Rio Scenarium is not what it was.',
   },
   {
     id: 'thread-rio-004-r2',
     threadId: 'thread-rio-004',
     authorFriendId: 'yael-botafogo',
-    body: 'גם Carioca da Gema ברחוב Mem de Sá. R$ 30 כניסה, סמבה לכל הערב, אווירה הכי לאפה.',
+    body: "Also Carioca da Gema on Rua Mem de Sá. R$ 30 cover, samba all night, most Lapa vibe you'll find.",
   },
 
   // thread-rio-005 — Pedra da Gávea (3 replies)
@@ -96,19 +96,19 @@ export const forumThreadReplies: ForumThreadReply[] = [
     id: 'thread-rio-005-r1',
     threadId: 'thread-rio-005',
     authorFriendId: 'maya-ipanema',
-    body: 'אני בעניין. שעה אגרסיבית אבל מצוין. צריך מדריך לחלק הזחילה האחרון?',
+    body: "I'm in. Aggressive hour but worth it. Do we need a guide for the scramble at the end?",
   },
   {
     id: 'thread-rio-005-r2',
     threadId: 'thread-rio-005',
     authorFriendId: null,
-    body: 'מאיה אחרון פעם עליתי בלי מדריך, יש חבלים קבועים. אבל אם את לא בטוחה, יש לי מספר של מדריך מקומי R$ 80.',
+    body: "Maya, last time I went up without a guide, there are fixed ropes. But if you're not sure, I have a local guide's number — R$ 80.",
   },
   {
     id: 'thread-rio-005-r3',
     threadId: 'thread-rio-005',
     authorFriendId: 'roi-buzios',
-    body: 'אחי תקפיד על נעלי הליכה אמיתיות, לא ספורט. הסלעים חלקלקים בבוקר.',
+    body: 'Bro, wear real hiking shoes, not running shoes. The rocks are slippery in the morning.',
   },
 
   // thread-rio-006 — Gracie Humaitá (2 replies)
@@ -116,13 +116,13 @@ export const forumThreadReplies: ForumThreadReply[] = [
     id: 'thread-rio-006-r1',
     threadId: 'thread-rio-006',
     authorFriendId: null,
-    body: 'הייתי שם פעמיים. R$ 90 ליום, מחייב חולצת לבן ובטיחות עצמית. עדיף להתקשר יום קודם.',
+    body: 'Been there twice. R$ 90 a day, white gi required and a waiver. Better to call a day ahead.',
   },
   {
     id: 'thread-rio-006-r2',
     threadId: 'thread-rio-006',
     authorFriendId: 'roi-buzios',
-    body: 'אם את רוצה משהו פחות פורמלי תנסי Checkmat ב־Ipanema. אווירה ישראלית, מדריך עברית, פחות שיפוט.',
+    body: 'If you want something less formal try Checkmat in Ipanema. Israeli vibe, instructors speak Hebrew, less judgement.',
   },
 
   // thread-rio-007 — Aconchego Carioca (3 replies)
@@ -130,99 +130,99 @@ export const forumThreadReplies: ForumThreadReply[] = [
     id: 'thread-rio-007-r1',
     threadId: 'thread-rio-007',
     authorFriendId: 'maya-ipanema',
-    body: 'שווה כל דקת נסיעה 🔥 הבולינוס של חצי שמינית R$ 35, והוא ענק. תזמיני מקום מראש לשישי.',
+    body: 'Worth every minute of the trip 🔥 the half-portion bolinhos at R$ 35 are huge. Reserve ahead for Friday.',
   },
   {
     id: 'thread-rio-007-r2',
     threadId: 'thread-rio-007',
     authorFriendId: null,
-    body: 'אני בא איתך! מתי את חושבת?',
+    body: "I'm in! When are you thinking?",
   },
   {
     id: 'thread-rio-007-r3',
     threadId: 'thread-rio-007',
     authorFriendId: 'yael-botafogo',
-    body: 'תזמינו ב־OpenTable, הם לא עונים בוואטסאפ. שישי 20:00 הכי טוב.',
+    body: 'Book through OpenTable, they don\'t answer WhatsApp. Friday 20:00 is the best slot.',
   },
 
-  // thread-rio-008 — אסאי אמיתי (2 replies)
+  // thread-rio-008 — real açaí (2 replies)
   {
     id: 'thread-rio-008-r1',
     threadId: 'thread-rio-008',
     authorFriendId: 'maya-ipanema',
-    body: 'BB Lanches על Rainha Elizabeth, פינת R. Almirante Gonçalves. R$ 18 לקערה. אמיתי, סמיך, בלי סוכר אם תבקש.',
+    body: "BB Lanches on Rainha Elizabeth, corner of R. Almirante Gonçalves. R$ 18 a bowl. Real, thick, no sugar if you ask.",
   },
   {
     id: 'thread-rio-008-r2',
     threadId: 'thread-rio-008',
     authorFriendId: 'yael-botafogo',
-    body: 'מסכימה עם מאיה. גם Polis Sucos בבוטפוגו אם את עוברת ⭐',
+    body: "Agreed with Maya. Polis Sucos in Botafogo is also great if you're passing ⭐",
   },
 
-  // thread-rio-009 — מי בקופקבנה (3 replies)
+  // thread-rio-009 — who is in Copa (3 replies)
   {
     id: 'thread-rio-009-r1',
     threadId: 'thread-rio-009',
     authorFriendId: 'maya-ipanema',
-    body: 'אני באיפנמה, מגיעה ל־Posto 9 רביעי בערב. שם.',
+    body: "I'm in Ipanema, coming to Posto 9 Wednesday night. See you there.",
   },
   {
     id: 'thread-rio-009-r2',
     threadId: 'thread-rio-009',
     authorFriendId: null,
-    body: 'אם זה לא יורד גשם, אני בא. תגידו על הקבוצה בוואטסאפ.',
+    body: "If it's not raining, I'm down. Drop in the WhatsApp group.",
   },
   {
     id: 'thread-rio-009-r3',
     threadId: 'thread-rio-009',
     authorFriendId: 'roi-buzios',
-    body: 'אני יוצא לבוזיוס בסוף השבוע, אבל אם זה ביום שני־שלישי אני בעניין.',
+    body: "I'm leaving for Búzios at the weekend, but if it's Mon or Tue I'm in.",
   },
 
-  // thread-rio-010 — מפגש Pavão Azul (3 replies)
+  // thread-rio-010 — Pavão Azul meetup (3 replies)
   {
     id: 'thread-rio-010-r1',
     threadId: 'thread-rio-010',
     authorFriendId: 'maya-ipanema',
-    body: 'אין מצב, רעיון מעולה 🙏 אני באה. מציעה גם להוסיף קבוצת ווצאפ לתיאומים.',
+    body: "No way, great idea 🙏 I'm in. Also: let's add a WhatsApp group for coordination.",
   },
   {
     id: 'thread-rio-010-r2',
     threadId: 'thread-rio-010',
     authorFriendId: 'yael-botafogo',
-    body: 'בעיני שלישי 19:00 מוקדם, אנשים יושבים על העבודה. 20:30 יותר ריאלי. אבל אני באה בכל מקרה.',
+    body: "Honestly 19:00 on a Tuesday is early, people are still working. 20:30 is more realistic. But I'm coming either way.",
   },
   {
     id: 'thread-rio-010-r3',
     threadId: 'thread-rio-010',
     authorFriendId: 'roi-buzios',
-    body: 'אני אעבור כשאחזור מבוזיוס. שמרו מקום.',
+    body: "I'll swing by when I'm back from Búzios. Save me a seat.",
   },
 
   // =====================================================================
   // BÚZIOS
   // =====================================================================
 
-  // thread-buzios-001 — חב״ד בבוזיוס (2 replies)
+  // thread-buzios-001 — Chabad in Búzios (2 replies)
   {
     id: 'thread-buzios-001-r1',
     threadId: 'thread-buzios-001',
     authorFriendId: 'roi-buzios',
-    body: 'אין חב״ד בבוזיוס. הקרוב ברצי״ו, שעתיים נסיעה. אם זה שבת חשוב לך, באמת עדיף לחזור.',
+    body: "No Chabad in Búzios. Nearest one is in Niterói, two hours away. If Shabbat matters to you, better head back.",
   },
   {
     id: 'thread-buzios-001-r2',
     threadId: 'thread-buzios-001',
     authorFriendId: 'maya-ipanema',
-    body: 'אופציה: לקבל שבת בבוזיוס בעצמך, להביא חלות מ־Kosher Rio. אווירה אחרת אבל אם זה רק 24 שעות זה אפשרי.',
+    body: "Option: make Shabbat in Búzios yourself, bring challot from Kosher Rio. Different vibe but if it's just 24 hours, doable.",
   },
 
-  // thread-buzios-002 — בשר כשר (1 reply)
+  // thread-buzios-002 — kosher meat (1 reply)
   {
     id: 'thread-buzios-002-r1',
     threadId: 'thread-buzios-002',
     authorFriendId: null,
-    body: 'אחי אני מצטרף. אביא ירקות, יין, ולחם פיתה. נסגור בDM.',
+    body: "Bro I'm in. I'll bring veggies, wine and pita. Let's sort it in DM.",
   },
 
   // thread-buzios-003 — Rua das Pedras (3 replies)
@@ -230,67 +230,67 @@ export const forumThreadReplies: ForumThreadReply[] = [
     id: 'thread-buzios-003-r1',
     threadId: 'thread-buzios-003',
     authorFriendId: 'maya-ipanema',
-    body: 'מתחילים ב־Privilege על הרוע, סמוך לים. הפצה של אנשים אחרי 23:00. כניסה R$ 50, יחסית סביר.',
+    body: 'Start at Privilege on the strip, right by the water. Most people flow in after 23:00. Cover R$ 50, fair.',
   },
   {
     id: 'thread-buzios-003-r2',
     threadId: 'thread-buzios-003',
     authorFriendId: null,
-    body: 'אני אהיה שם 29–31, נצא יחד? מסכים על Privilege להתחלה.',
+    body: "I'll be there 29–31, let's go together? Down for Privilege as the opener.",
   },
   {
     id: 'thread-buzios-003-r3',
     threadId: 'thread-buzios-003',
     authorFriendId: 'roi-buzios',
-    body: 'סבבה. גם Anexo Bar טוב, יותר רגוע, יותר זול. נתחיל שם, נעבור ל־Privilege לחצות.',
+    body: "Cool. Anexo Bar is also good — more chill, cheaper. Start there, move to Privilege around midnight.",
   },
 
-  // thread-buzios-004 — מסיבת ירח (2 replies)
+  // thread-buzios-004 — full moon party (2 replies)
   {
     id: 'thread-buzios-004-r1',
     threadId: 'thread-buzios-004',
     authorFriendId: 'roi-buzios',
-    body: 'עדיין קורה אבל פחות עניין, יותר תיירים. אם זה חופף ל־30 בחודש זה היום המלא. תביא רמקול ובירה.',
+    body: 'Still happens but less interesting, more tourists. If it lines up with the 30th of the month, that\'s the busy night. Bring a speaker and beer.',
   },
   {
     id: 'thread-buzios-004-r2',
     threadId: 'thread-buzios-004',
     authorFriendId: 'maya-ipanema',
-    body: 'הייתי לפני שנתיים, היה אגדי. עכשיו פחות אותנטי אבל עדיין שווה את ההליכה לחוף.',
+    body: 'I was there two years ago, it was legendary. Less authentic now but the walk down to the beach is still worth it.',
   },
 
-  // thread-buzios-005 — סנוקלינג Praia Azeda (3 replies)
+  // thread-buzios-005 — Praia Azeda snorkeling (3 replies)
   {
     id: 'thread-buzios-005-r1',
     threadId: 'thread-buzios-005',
     authorFriendId: null,
-    body: 'אני שם 29–31, מצטרף. יש לך משקפי שחייה לתת בהשאלה? שכחתי בריו.',
+    body: "I'm there 29–31, joining. Got an extra pair of goggles? Forgot mine in Rio.",
   },
   {
     id: 'thread-buzios-005-r2',
     threadId: 'thread-buzios-005',
     authorFriendId: 'shir-saopaulo',
-    body: 'אם המים שקטים בבוקר, גם Praia João Fernandes יפה. שווה לבדוק.',
+    body: 'If the water is calm in the morning, Praia João Fernandes is also gorgeous. Worth checking.',
   },
   {
     id: 'thread-buzios-005-r3',
     threadId: 'thread-buzios-005',
     authorFriendId: 'roi-buzios',
-    body: 'יש לי שני זוגות משקפי שחייה. נסגור פרטים בDM 🤿',
+    body: "I have two pairs of goggles. Sort the rest in DM 🤿",
   },
 
-  // thread-buzios-006 — סיור סירות (2 replies)
+  // thread-buzios-006 — boat tour (2 replies)
   {
     id: 'thread-buzios-006-r1',
     threadId: 'thread-buzios-006',
     authorFriendId: 'roi-buzios',
-    body: 'R$ 80 זה Schooner ענק עם 80 אנשים, R$ 200 זה לאנצ׳ה פרטית קטנה. ההבדל אמיתי לגמרי. תפזרו על 4–6 אנשים את העלות.',
+    body: "R$ 80 is the giant schooner with 80 people on it. R$ 200 is a small private lancha. Difference is real. Split it across 4–6 people.",
   },
   {
     id: 'thread-buzios-006-r2',
     threadId: 'thread-buzios-006',
     authorFriendId: null,
-    body: 'תודה. מחפש קבוצה לחלוק לאנצ׳ה. 29 בבוקר. כתבו לי בDM אם בא לכם.',
+    body: 'Thanks. Looking for a crew to share a lancha. Morning of the 29th. DM me if you\'re down.',
   },
 
   // thread-buzios-007 — Chez Michou (3 replies)
@@ -298,91 +298,91 @@ export const forumThreadReplies: ForumThreadReply[] = [
     id: 'thread-buzios-007-r1',
     threadId: 'thread-buzios-007',
     authorFriendId: 'roi-buzios',
-    body: 'בעיני עדיין שווה — אבל לקח אחרי 23:00. בצהריים תור מטורף, אחרי חצות יותר רגוע ויותר טוב.',
+    body: "Honestly still worth it — but go after 23:00. In the daytime the queue is crazy, after midnight it's chill and better.",
   },
   {
     id: 'thread-buzios-007-r2',
     threadId: 'thread-buzios-007',
     authorFriendId: null,
-    body: 'מאיה תני לי דעה לאחרונה? אני שוקלת להחליף ל־Bananaland או משהו אחר.',
+    body: "Maya, give me your latest take? I'm thinking of swapping to Bananaland or something else.",
   },
   {
     id: 'thread-buzios-007-r3',
     threadId: 'thread-buzios-007',
     authorFriendId: 'maya-ipanema',
-    body: 'הייתי שם בקיץ, היה בסדר. אבל Bananaland יותר טוב לארוחת בוקר. Chez Michou רק בלילה.',
+    body: 'I was there in summer, it was fine. But Bananaland is better for breakfast. Chez Michou only at night.',
   },
 
-  // thread-buzios-008 — פירות ים (2 replies)
+  // thread-buzios-008 — seafood (2 replies)
   {
     id: 'thread-buzios-008-r1',
     threadId: 'thread-buzios-008',
     authorFriendId: 'maya-ipanema',
-    body: 'Cigalon ב־Ferradurinha. שולחנות על החול, ארוחה R$ 90 לאדם, דייגים מקומיים מביאים בבוקר. הזהרה: סגור בשני.',
+    body: 'Cigalon at Ferradurinha. Tables on the sand, meal R$ 90 a person, fishermen bring in the catch every morning. Heads up: closed Mondays.',
   },
   {
     id: 'thread-buzios-008-r2',
     threadId: 'thread-buzios-008',
     authorFriendId: 'roi-buzios',
-    body: 'גם Sawasdee חזק. שניהם לא תיירותיים. תזמין מראש לסופ״ש.',
+    body: "Sawasdee is also strong. Both not touristy. Book ahead for the weekend.",
   },
 
-  // thread-buzios-009 — מי בבוזיוס (3 replies)
+  // thread-buzios-009 — who is in Búzios (3 replies)
   {
     id: 'thread-buzios-009-r1',
     threadId: 'thread-buzios-009',
     authorFriendId: 'roi-buzios',
-    body: 'אני שם, נסים. נסגור ארוחת ערב ב־Chez Michou לאחת מהלילות. סבבה?',
+    body: "I'm there, Nissim. Let's lock in dinner at Chez Michou for one of the nights. Down?",
   },
   {
     id: 'thread-buzios-009-r2',
     threadId: 'thread-buzios-009',
     authorFriendId: 'maya-ipanema',
-    body: 'אגיע ליום אחד בשבת, אחרי הסנוקלינג של הבוקר. אצטרף לארוחה אם זה בצהריים.',
+    body: "Coming up for one day on Saturday, after morning snorkeling. I'll join the meal if it's lunch.",
   },
   {
     id: 'thread-buzios-009-r3',
     threadId: 'thread-buzios-009',
     authorFriendId: 'shir-saopaulo',
-    body: 'מקנאה. תיהנו 🙏 שלחו תמונות.',
+    body: "Jealous. Have fun 🙏 send pics.",
   },
 
-  // thread-buzios-010 — יום בבוזיוס מריו (2 replies)
+  // thread-buzios-010 — day trip Búzios from Rio (2 replies)
   {
     id: 'thread-buzios-010-r1',
     threadId: 'thread-buzios-010',
     authorFriendId: 'yael-botafogo',
-    body: 'אני נכנסת. סנוקלינג בבוקר נשמע מושלם. אאסוף אותך ב־Novo Rio ב־6:45?',
+    body: "I'm in. Morning snorkeling sounds perfect. I'll pick you up at Novo Rio at 6:45?",
   },
   {
     id: 'thread-buzios-010-r2',
     threadId: 'thread-buzios-010',
     authorFriendId: 'maya-ipanema',
-    body: 'יעל מעולה. שתינו בקבוצת ווצאפ קטנה? אשלח קישור בDM.',
+    body: "Yael, perfect. Let's get a small WhatsApp group going? I'll DM you the link.",
   },
 
   // =====================================================================
   // SÃO PAULO
   // =====================================================================
 
-  // thread-sao-paulo-001 — חב״ד ז׳ארדינס (3 replies)
+  // thread-sao-paulo-001 — Chabad Jardins (3 replies)
   {
     id: 'thread-sao-paulo-001-r1',
     threadId: 'thread-sao-paulo-001',
     authorFriendId: 'shir-saopaulo',
-    body: 'בית חב״ד ז׳ארדינס מארח שולחנות פתוחים. מומלץ לאשר מראש דרך האתר. הרב מאיר מארח, אווירה ישראלית.',
+    body: 'Chabad Jardins runs open tables. Confirm ahead through their site. Rabbi Meir hosts, Israeli vibe.',
   },
   {
     id: 'thread-sao-paulo-001-r2',
     threadId: 'thread-sao-paulo-001',
     authorFriendId: null,
-    body: 'תודה שיר. אשלח מייל בשבוע הבא.',
+    body: "Thanks Shir. I'll email next week.",
   },
   {
     id: 'thread-sao-paulo-001-r3',
     threadId: 'thread-sao-paulo-001',
     authorFriendId: 'moshe-buenosaires',
-    body: 'אם תפספס שולחן, גם בית כנסת Cong. Israelita מארח לשבת. פחות חב״די, יותר מסורתי.',
+    body: "If you miss a table, the Cong. Israelita synagogue also hosts for Shabbat. Less Chabad, more traditional.",
   },
 
   // thread-sao-paulo-002 — Kosher Delícia (2 replies)
@@ -390,33 +390,33 @@ export const forumThreadReplies: ForumThreadReply[] = [
     id: 'thread-sao-paulo-002-r1',
     threadId: 'thread-sao-paulo-002',
     authorFriendId: null,
-    body: 'הייתי שם פעמיים — שווה הנסיעה. הצלעות שלהם מצוינות, R$ 95 ליחיד עם תוספות.',
+    body: "Been there twice — worth the trip. Their ribs are great, R$ 95 a person with sides.",
   },
   {
     id: 'thread-sao-paulo-002-r2',
     threadId: 'thread-sao-paulo-002',
     authorFriendId: 'moshe-buenosaires',
-    body: 'יש גם Kosher Express בז׳ארדינס יותר קרוב אליך. פחות מרשים אבל נוח.',
+    body: "There's also Kosher Express in Jardins closer to you. Less impressive but convenient.",
   },
 
-  // thread-sao-paulo-003 — באר בוילה (3 replies)
+  // thread-sao-paulo-003 — Vila bar (3 replies)
   {
     id: 'thread-sao-paulo-003-r1',
     threadId: 'thread-sao-paulo-003',
     authorFriendId: 'shir-saopaulo',
-    body: 'Coisa Linda בוילה. בירה מקומית, אוכל פשוט, בלי דיג׳יי. בערב חמישי־שישי מתמלא.',
+    body: 'Coisa Linda in Vila. Local beer, simple food, no DJ. Thursday-Friday nights it fills up.',
   },
   {
     id: 'thread-sao-paulo-003-r2',
     threadId: 'thread-sao-paulo-003',
     authorFriendId: null,
-    body: 'גם Veloso טוב — אבל יותר עמוס. תלוי אם אתה רוצה לפגוש מקומיים או רגוע.',
+    body: "Veloso is also good — but busier. Depends if you want to meet locals or chill.",
   },
   {
     id: 'thread-sao-paulo-003-r3',
     threadId: 'thread-sao-paulo-003',
     authorFriendId: 'yael-botafogo',
-    body: 'Coisa Linda. אני חוזרת שמה כל פעם 🍻',
+    body: "Coisa Linda. I go back there every single time 🍻",
   },
 
   // thread-sao-paulo-004 — D-Edge (2 replies)
@@ -424,47 +424,47 @@ export const forumThreadReplies: ForumThreadReply[] = [
     id: 'thread-sao-paulo-004-r1',
     threadId: 'thread-sao-paulo-004',
     authorFriendId: 'moshe-buenosaires',
-    body: 'אחי R$ 120 לכניסה זה שוד 😂 אבל הקולות שם הכי טובים בעיר. אם זה DJ ספציפי שאתה אוהב, שווה. אחרת — Mirante 9 de Julho חינם.',
+    body: "Bro R$ 120 cover is highway robbery 😂 but the sound there is the best in the city. If it's a DJ you actually like, worth it. Otherwise — Mirante 9 de Julho is free.",
   },
   {
     id: 'thread-sao-paulo-004-r2',
     threadId: 'thread-sao-paulo-004',
     authorFriendId: 'yael-botafogo',
-    body: 'אני הולכת שישי. רוצה להצטרף? נחלק טקסי, יוצא יותר זול.',
+    body: "I'm going Friday. Want to come along? Split a taxi, way cheaper.",
   },
 
-  // thread-sao-paulo-005 — איבירפואירה ריצה (2 replies)
+  // thread-sao-paulo-005 — Ibirapuera run (2 replies)
   {
     id: 'thread-sao-paulo-005-r1',
     threadId: 'thread-sao-paulo-005',
     authorFriendId: 'shir-saopaulo',
-    body: 'אני רצה שם כל שני וחמישי 7:00. תוסיף 30 דקות ונוכל לרוץ יחד. נפגשים ב־Portão 7?',
+    body: "I run there every Mon and Thu at 7:00. Push it 30 min and we can run together. Meet at Portão 7?",
   },
   {
     id: 'thread-sao-paulo-005-r2',
     threadId: 'thread-sao-paulo-005',
     authorFriendId: null,
-    body: 'שיר מצוין. שני 7:00 ב־Portão 7. אביא מים אקסטרה.',
+    body: "Shir, perfect. Monday 7:00 at Portão 7. I'll bring extra water.",
   },
 
-  // thread-sao-paulo-006 — פדרה גרנדה (3 replies)
+  // thread-sao-paulo-006 — Pedra Grande (3 replies)
   {
     id: 'thread-sao-paulo-006-r1',
     threadId: 'thread-sao-paulo-006',
     authorFriendId: null,
-    body: 'אני בעניין! יש לי תיק יומי וקנקן מים גדול. צריך להביא משהו לאוטו?',
+    body: "I'm in! Got a daypack and a big water bottle. Need to bring anything for the car?",
   },
   {
     id: 'thread-sao-paulo-006-r2',
     threadId: 'thread-sao-paulo-006',
     authorFriendId: 'yael-botafogo',
-    body: 'אני באה. שיר אם נשארים 4 מקומות אני שני מתוכם — מביאה את החברה שלי טל.',
+    body: "I'm coming. Shir, if there are still 4 seats, count me as two — bringing my friend Tal.",
   },
   {
     id: 'thread-sao-paulo-006-r3',
     threadId: 'thread-sao-paulo-006',
     authorFriendId: 'shir-saopaulo',
-    body: 'מצוין שניכם. אחד מקום פנוי. נחלק 70 ריאל לאדם לדלק. אשלח כתובת בDM בחמישי.',
+    body: "Perfect, both of you. One seat left. Split is 70 reais a head for gas. I'll DM the address Thursday.",
   },
 
   // thread-sao-paulo-007 — La Cabrera (3 replies)
@@ -472,139 +472,139 @@ export const forumThreadReplies: ForumThreadReply[] = [
     id: 'thread-sao-paulo-007-r1',
     threadId: 'thread-sao-paulo-007',
     authorFriendId: 'shir-saopaulo',
-    body: 'שווה — אבל רק אם אתה אוהב Bife de chorizo. הגעתי 18:30 בלי תור, נכנסתי תוך 20 דקות.',
+    body: "Worth it — but only if you love Bife de chorizo. I got there at 18:30 with no reservation, in within 20 min.",
   },
   {
     id: 'thread-sao-paulo-007-r2',
     threadId: 'thread-sao-paulo-007',
     authorFriendId: 'moshe-buenosaires',
-    body: 'לי דווקא Don Julio (אם תהיה בבואנוס) יותר מרשים. אבל בסאו פאולו, La Cabrera טוב.',
+    body: "Honestly Don Julio (if you make it to Buenos) is more impressive. But in São Paulo, La Cabrera is good.",
   },
   {
     id: 'thread-sao-paulo-007-r3',
     threadId: 'thread-sao-paulo-007',
     authorFriendId: 'yotam-jericoacoara',
-    body: 'תלך גם ל־A Casa do Porco באותו רחוב. שונה, אבל ברמה 🔥',
+    body: "Also try A Casa do Porco on the same street. Different but next level 🔥",
   },
 
-  // thread-sao-paulo-008 — מרקאדאו (2 replies)
+  // thread-sao-paulo-008 — Mercadão (2 replies)
   {
     id: 'thread-sao-paulo-008-r1',
     threadId: 'thread-sao-paulo-008',
     authorFriendId: 'shir-saopaulo',
-    body: 'כריך מורטדלה ב־Hocca Bar (R$ 65 גדול), פסטל בקלאו ב־Bar do Mané. שתי הקלאסיקות.',
+    body: 'Mortadella sandwich at Hocca Bar (R$ 65 huge), pastel de bacalhau at Bar do Mané. The two classics.',
   },
   {
     id: 'thread-sao-paulo-008-r2',
     threadId: 'thread-sao-paulo-008',
     authorFriendId: 'moshe-buenosaires',
-    body: 'גם פירות אקזוטיים בקומה הראשונה. תבקש לטעום cupuaçu לפני שאתה קונה — לא לכל אחד.',
+    body: "Also exotic fruits on the ground floor. Ask to taste the cupuaçu before you buy — not for everyone.",
   },
 
-  // thread-sao-paulo-009 — ערב פתוח (3 replies)
+  // thread-sao-paulo-009 — open evening (3 replies)
   {
     id: 'thread-sao-paulo-009-r1',
     threadId: 'thread-sao-paulo-009',
     authorFriendId: null,
-    body: 'אני בעיר 3–5. בא לערב 7. צריך להביא משהו?',
+    body: "I'm in town 3–5. Down for Friday the 7th. Should I bring anything?",
   },
   {
     id: 'thread-sao-paulo-009-r2',
     threadId: 'thread-sao-paulo-009',
     authorFriendId: 'yael-botafogo',
-    body: 'גם אני! מתי אתם נכנסים? אביא קאיפיריניות מוכנות מהבית.',
+    body: "Me too! When are you all arriving? I'll bring caipirinhas pre-made from home.",
   },
   {
     id: 'thread-sao-paulo-009-r3',
     threadId: 'thread-sao-paulo-009',
     authorFriendId: 'shir-saopaulo',
-    body: 'מצוין שניכם. נסים אם תוכל להביא יין אדום וגבינה זה יושלם. יעל קאיפיריניות מקובלות 🍹',
+    body: "Perfect, both of you. Nissim, if you can bring red wine and cheese that'd round it out. Yael, caipirinhas are very welcome 🍹",
   },
 
-  // thread-sao-paulo-010 — סנטוס (2 replies)
+  // thread-sao-paulo-010 — Santos (2 replies)
   {
     id: 'thread-sao-paulo-010-r1',
     threadId: 'thread-sao-paulo-010',
     authorFriendId: 'shir-saopaulo',
-    body: 'הייתי שם פעם, האקווריום מצוין, החוף בינוני. אם אתה מעוניין בכדורגל יש מוזיאון פלה. יום מלא.',
+    body: "Went there once, the aquarium is great, the beach is meh. If you like football there's a Pelé museum. Full day.",
   },
   {
     id: 'thread-sao-paulo-010-r2',
     threadId: 'thread-sao-paulo-010',
     authorFriendId: 'moshe-buenosaires',
-    body: 'אני מצטרף אם אני עוד פה בשבת. תשלח שעות, אשלים מאוחר יותר.',
+    body: "I'm in if I'm still around on Saturday. Send the times, I'll confirm later.",
   },
 
   // =====================================================================
   // JERICOACOARA
   // =====================================================================
 
-  // thread-jericoacoara-001 — אין חב״ד (3 replies)
+  // thread-jericoacoara-001 — no Chabad (3 replies)
   {
     id: 'thread-jericoacoara-001-r1',
     threadId: 'thread-jericoacoara-001',
     authorFriendId: null,
-    body: 'יותם אני יכול להביא חלות אם אגיע ב־9. תאשר תאריך ואסדר.',
+    body: "Yotam, I can bring challot if I arrive on the 9th. Confirm a date and I'll sort it.",
   },
   {
     id: 'thread-jericoacoara-001-r2',
     threadId: 'thread-jericoacoara-001',
     authorFriendId: 'roi-buzios',
-    body: 'מגיע ב־11 בנובמבר אחרי בוזיוס. אביא יין ומפה לבנה. נעשה קידוש על החוף, יהיה בלאגן.',
+    body: "Arriving Nov 11 after Búzios. Bringing wine and a white tablecloth. We'll do kiddush on the beach, it'll be a beautiful mess.",
   },
   {
     id: 'thread-jericoacoara-001-r3',
     threadId: 'thread-jericoacoara-001',
     authorFriendId: 'yotam-jericoacoara',
-    body: 'אגדי 🙏 נסים אם תביא חלות, רועי יין ומפה, אני מסדר דגים ואורז על האש. שבת בז׳רי.',
+    body: "Legendary 🙏 Nissim brings challot, Roi wine and the cloth, I'll do fish and rice on the fire. Shabbat in Jeri.",
   },
 
-  // thread-jericoacoara-002 — אוכל כשר ז׳רי (2 replies)
+  // thread-jericoacoara-002 — kosher food (2 replies)
   {
     id: 'thread-jericoacoara-002-r1',
     threadId: 'thread-jericoacoara-002',
     authorFriendId: 'yotam-jericoacoara',
-    body: 'אני מסתדר עם דגים טריים מהדייגים (כשר אחרי בדיקה), ירקות, ביצים, ולחם פיתה שאני אופה במיני־תנור. אפשר.',
+    body: "I manage with fresh fish from the fishermen (kosher after checking), veggies, eggs, and pita I bake in a mini oven. It works.",
   },
   {
     id: 'thread-jericoacoara-002-r2',
     threadId: 'thread-jericoacoara-002',
     authorFriendId: null,
-    body: 'תודה. נראה לי שאקנה משהו בפורטלזה ואביא איתי. הדגים זה רעיון טוב.',
+    body: "Thanks. I think I'll grab supplies in Fortaleza and bring them with me. The fish idea is solid.",
   },
 
-  // thread-jericoacoara-003 — פורו (3 replies)
+  // thread-jericoacoara-003 — forró (3 replies)
   {
     id: 'thread-jericoacoara-003-r1',
     threadId: 'thread-jericoacoara-003',
     authorFriendId: null,
-    body: 'הייתי שם בשני בערב חודש שעבר — היה אדיר. רביעי גם טוב, פחות אנשים.',
+    body: "Was there last month on a Monday night — wild. Wednesday is also good, fewer people.",
   },
   {
     id: 'thread-jericoacoara-003-r2',
     threadId: 'thread-jericoacoara-003',
     authorFriendId: 'roi-buzios',
-    body: 'שלישי הוא היום של הזקנים המקומיים. נגנים אמיתיים, פחות תיירים. הכי טוב בעיני.',
+    body: "Tuesday is the old-timer local night. Real musicians, fewer tourists. Best in my opinion.",
   },
   {
     id: 'thread-jericoacoara-003-r3',
     threadId: 'thread-jericoacoara-003',
     authorFriendId: 'yotam-jericoacoara',
-    body: 'מסכים עם רועי. שלישי גם פתוח עד 2:00 בלי קונפליקטים עם קייט בבוקר.',
+    body: "Agreed with Roi. Tuesday is also open till 2:00 without messing up the morning kite session.",
   },
 
-  // thread-jericoacoara-004 — מסיבת שקיעה (2 replies)
+  // thread-jericoacoara-004 — sunset party (2 replies)
   {
     id: 'thread-jericoacoara-004-r1',
     threadId: 'thread-jericoacoara-004',
     authorFriendId: 'yotam-jericoacoara',
-    body: 'אמיתי לחלוטין. אחרי שכולם זזים מהדיונה, נשארים כ־40 אנשים, מישהו מוציא רמקול. עד 22:00 בערך.',
+    body: "Totally real. After everyone clears off the dune, about 40 people stay behind, someone pulls out a speaker. Goes till maybe 22:00.",
   },
   {
     id: 'thread-jericoacoara-004-r2',
     threadId: 'thread-jericoacoara-004',
     authorFriendId: 'maya-ipanema',
-    body: 'הייתי לפני חצי שנה, אגדי. תביאו בירה משלכם, אין חנות קרובה.',
+    body: 'Was there half a year ago, legendary. Bring your own beers, no shops nearby.',
   },
 
   // thread-jericoacoara-005 — Pure Kite (3 replies)
@@ -612,159 +612,159 @@ export const forumThreadReplies: ForumThreadReply[] = [
     id: 'thread-jericoacoara-005-r1',
     threadId: 'thread-jericoacoara-005',
     authorFriendId: 'roi-buzios',
-    body: 'תאשר את התאריכים מראש, בשיא העונה הוא ממולא. הזמנתי כבר ל־11 בנובמבר.',
+    body: "Lock in the dates in advance, in peak season he books out. I already reserved for Nov 11.",
   },
   {
     id: 'thread-jericoacoara-005-r2',
     threadId: 'thread-jericoacoara-005',
     authorFriendId: null,
-    body: 'אני שולח לו מייל הערב. תודה יותם 🙏',
+    body: "I'll email him tonight. Thanks Yotam 🙏",
   },
   {
     id: 'thread-jericoacoara-005-r3',
     threadId: 'thread-jericoacoara-005',
     authorFriendId: 'shir-saopaulo',
-    body: 'מקנאה. בעוד 3 חודשים אגיע גם, רושמת אצלכם 🪁',
+    body: 'Jealous. Hitting Jeri in 3 months, signing up with you 🪁',
   },
 
-  // thread-jericoacoara-006 — שקיעה בדיונה (2 replies)
+  // thread-jericoacoara-006 — dune sunset (2 replies)
   {
     id: 'thread-jericoacoara-006-r1',
     threadId: 'thread-jericoacoara-006',
     authorFriendId: 'yotam-jericoacoara',
-    body: 'תגיע 40 דקות לפני, תקנה קוקטייל מהבר בתחילת הדיונה. שיא של הטיול.',
+    body: 'Get there 40 min before, grab a caipirinha from the bar at the base of the dune. Best moment of the whole trip.',
   },
   {
     id: 'thread-jericoacoara-006-r2',
     threadId: 'thread-jericoacoara-006',
     authorFriendId: null,
-    body: 'נשמע אגדי. תודה רועי 🙏',
+    body: "Sounds amazing. Thanks Roi 🙏",
   },
 
-  // thread-jericoacoara-007 — דגים טריים (2 replies)
+  // thread-jericoacoara-007 — fresh fish (2 replies)
   {
     id: 'thread-jericoacoara-007-r1',
     threadId: 'thread-jericoacoara-007',
     authorFriendId: 'yotam-jericoacoara',
-    body: 'תגיע לחוף הדייגים ב־17:00 כשהסירות חוזרות. אישה בשם דונה זלמירה מבשלת בבית שלה — R$ 45 לאדם, צריך לתאם יום קודם.',
+    body: "Head to the fishermen's beach at 17:00 when the boats come back. A woman named Dona Zelmira cooks at her place — R$ 45 a head, book a day ahead.",
   },
   {
     id: 'thread-jericoacoara-007-r2',
     threadId: 'thread-jericoacoara-007',
     authorFriendId: 'roi-buzios',
-    body: 'אישרתי 🐟 דונה זלמירה הכי טובה בז׳רי. תזכיר את יותם, היא יודעת.',
+    body: "Confirmed 🐟 Dona Zelmira is the best in Jeri. Drop Yotam's name, she'll know.",
   },
 
-  // thread-jericoacoara-008 — ארוחת בוקר (2 replies)
+  // thread-jericoacoara-008 — breakfast (2 replies)
   {
     id: 'thread-jericoacoara-008-r1',
     threadId: 'thread-jericoacoara-008',
     authorFriendId: null,
-    body: 'יותם תודה — נרשם. שמעתי גם על Camões, מה דעתך?',
+    body: "Yotam, thanks — noted. Also heard about Camões, what do you think?",
   },
   {
     id: 'thread-jericoacoara-008-r2',
     threadId: 'thread-jericoacoara-008',
     authorFriendId: 'yotam-jericoacoara',
-    body: 'Camões יקר יותר, אוכל בסדר. אם אתה רעב באמת תלך ל־Cantinho. אם רוצה אקסטרה תפנוקים, Camões.',
+    body: "Camões is pricier, food is fine. If you're actually hungry, go to Cantinho. If you want extra treats, Camões.",
   },
 
-  // thread-jericoacoara-009 — איך להגיע (3 replies)
+  // thread-jericoacoara-009 — how to get there (3 replies)
   {
     id: 'thread-jericoacoara-009-r1',
     threadId: 'thread-jericoacoara-009',
     authorFriendId: 'yotam-jericoacoara',
-    body: 'טיסה לפורטלזה ואז ג׳יפ־משותף ל־Jijoca ומשם ג׳יפ לז׳רי. כ־180 ריאל סה״כ אם תזמן לבד.',
+    body: "Fly to Fortaleza then shared jeep to Jijoca and another jeep to Jeri. About 180 reais all-in if you book solo.",
   },
   {
     id: 'thread-jericoacoara-009-r2',
     threadId: 'thread-jericoacoara-009',
     authorFriendId: 'shir-saopaulo',
-    body: 'אופציה זולה יותר: אוטובוס לילה מפורטלזה ל־Jijoca, ואז ג׳יפ. ארוך אבל פחות מ־100 ריאל.',
+    body: 'Cheaper option: night bus from Fortaleza to Jijoca, then jeep. Long but under 100 reais.',
   },
   {
     id: 'thread-jericoacoara-009-r3',
     threadId: 'thread-jericoacoara-009',
     authorFriendId: null,
-    body: 'נראה לי שאני הולך על ג׳יפ־משותף, לא אקח את הסיכון של אוטובוס לילה עם תרמיל גדול.',
+    body: "Going with the shared jeep, I don't want to risk a night bus with a big pack.",
   },
 
-  // thread-jericoacoara-010 — קרו קייט (3 replies)
+  // thread-jericoacoara-010 — kite crew (3 replies)
   {
     id: 'thread-jericoacoara-010-r1',
     threadId: 'thread-jericoacoara-010',
     authorFriendId: 'roi-buzios',
-    body: 'אני בעניין 100%. נוחת ב־11 ב־14:00. נארגן ארוחת ערב באותו ערב ב־Tamandaré? 20:30?',
+    body: "100% in. Landing Nov 11 at 14:00. Let's lock in dinner that night at Tamandaré? 20:30?",
   },
   {
     id: 'thread-jericoacoara-010-r2',
     threadId: 'thread-jericoacoara-010',
     authorFriendId: null,
-    body: 'גם אני בא. עוד מתחיל. נסגור Tamandaré 20:30 ב־11. שיר ועוד יבואו בנובמבר הבא ✓',
+    body: "I'm coming. Another beginner. Locking in Tamandaré 20:30 on Nov 11. Shir and more coming next November ✓",
   },
   {
     id: 'thread-jericoacoara-010-r3',
     threadId: 'thread-jericoacoara-010',
     authorFriendId: 'yotam-jericoacoara',
-    body: 'מושלם. אזמין שולחן ל־3 ב־Tamandaré. אם מישהו עוד מצטרף — תכתבו עד יום קודם.',
+    body: "Perfect. I'll book a table for 3 at Tamandaré. If anyone else joins, message the day before.",
   },
 
   // =====================================================================
   // BUENOS AIRES
   // =====================================================================
 
-  // thread-buenos-aires-001 — חב״ד אבסטו (3 replies)
+  // thread-buenos-aires-001 — Chabad Abasto (3 replies)
   {
     id: 'thread-buenos-aires-001-r1',
     threadId: 'thread-buenos-aires-001',
     authorFriendId: null,
-    body: 'משה תודה. נרשמתי לשבת 21 בנובמבר. תפגוש אותי שם?',
+    body: "Moshe, thanks. Registered for Shabbat Nov 21. You'll meet me there?",
   },
   {
     id: 'thread-buenos-aires-001-r2',
     threadId: 'thread-buenos-aires-001',
     authorFriendId: 'yael-botafogo',
-    body: 'גם אני באה לשבת ההיא. אאסוף אותך נסים מהאוסטל אם תרצה?',
+    body: "I'm also coming that Shabbat. Nissim, I can pick you up from the hostel if you want?",
   },
   {
     id: 'thread-buenos-aires-001-r3',
     threadId: 'thread-buenos-aires-001',
     authorFriendId: 'moshe-buenosaires',
-    body: 'מצוין שניכם. הסעודה ב־20:30, אנשים מתחילים להגיע מ־19:30. תגיעו עם תיק קטן, אסור עם כבדים אצלם.',
+    body: "Perfect, both of you. Dinner at 20:30, people start arriving from 19:30. Come with a small bag, they don't allow big ones inside.",
   },
 
-  // thread-buenos-aires-002 — בשר כשר (2 replies)
+  // thread-buenos-aires-002 — kosher meat (2 replies)
   {
     id: 'thread-buenos-aires-002-r1',
     threadId: 'thread-buenos-aires-002',
     authorFriendId: 'moshe-buenosaires',
-    body: 'Al Galope. צ׳וריסו ופיקנייה ברמה אחרת. R$ קצת יותר אבל שווה. Levi בסדר אבל פחות בחירה.',
+    body: "Al Galope. Their chorizo and picaña are on another level. R$ a bit more but worth it. Levi is fine but less variety.",
   },
   {
     id: 'thread-buenos-aires-002-r2',
     threadId: 'thread-buenos-aires-002',
     authorFriendId: 'dana-punta',
-    body: 'תודה משה. אעבור שם מחר. את הצ׳וריסו אני אוהבת כבר 🥩',
+    body: "Thanks Moshe. I'll swing by tomorrow. Already a fan of their chorizo 🥩",
   },
 
-  // thread-buenos-aires-003 — La Catedral מילונגה (3 replies)
+  // thread-buenos-aires-003 — La Catedral milonga (3 replies)
   {
     id: 'thread-buenos-aires-003-r1',
     threadId: 'thread-buenos-aires-003',
     authorFriendId: null,
-    body: 'משה אני בעיר עד 25. אבוא לשישי הקרוב. נעליים מיוחדות חובה או רק סוליה חלקה?',
+    body: "Moshe, I'm in town till the 25th. Coming this Friday. Are special shoes required or just smooth soles?",
   },
   {
     id: 'thread-buenos-aires-003-r2',
     threadId: 'thread-buenos-aires-003',
     authorFriendId: 'moshe-buenosaires',
-    body: 'סוליה חלקה מספיק לטירונים. אל תבוא בנעלי ספורט, ירשו אותך לרקוד אבל זה לא נעים.',
+    body: "Smooth soles are enough for beginners. Don't come in trainers, they'll let you dance but it's not nice.",
   },
   {
     id: 'thread-buenos-aires-003-r3',
     threadId: 'thread-buenos-aires-003',
     authorFriendId: 'yael-botafogo',
-    body: 'אני באה גם 🙋‍♀️ פעם ראשונה במילונגה, פוחדת קצת. אבל בא לי.',
+    body: "I'm coming too 🙋‍♀️ first time at a milonga, a little scared. But I'm down.",
   },
 
   // thread-buenos-aires-004 — Niceto (2 replies)
@@ -772,114 +772,114 @@ export const forumThreadReplies: ForumThreadReply[] = [
     id: 'thread-buenos-aires-004-r1',
     threadId: 'thread-buenos-aires-004',
     authorFriendId: 'moshe-buenosaires',
-    body: 'Club 69 קרנבל ב־Niceto, רביעי בלילה. כניסה AR$ 15,000, פותח 1:00. לבוש: שחור, יותר חופשי יותר טוב 🔥',
+    body: "Club 69 Carnaval at Niceto, Wednesday night. Cover AR$ 15,000, opens 1:00. Dress: black, looser the better 🔥",
   },
   {
     id: 'thread-buenos-aires-004-r2',
     threadId: 'thread-buenos-aires-004',
     authorFriendId: null,
-    body: 'משה איך אני נכנס בלי שיכמת אותי? יש רשימה?',
+    body: "Moshe, how do I get in without them giving me a hard time? Is there a list?",
   },
 
-  // thread-buenos-aires-005 — אופניים (2 replies)
+  // thread-buenos-aires-005 — bikes (2 replies)
   {
     id: 'thread-buenos-aires-005-r1',
     threadId: 'thread-buenos-aires-005',
     authorFriendId: 'moshe-buenosaires',
-    body: 'EcoBici חינם אבל הרישום מסובך לתיירים, צריך מסמך מקומי. Rent a Bike AR$ 8,000 ליום, שווה ללא הכאב ראש.',
+    body: "EcoBici is free but registration is a pain for tourists, you need a local document. Rent a Bike is AR$ 8,000 a day, worth the lack of headache.",
   },
   {
     id: 'thread-buenos-aires-005-r2',
     threadId: 'thread-buenos-aires-005',
     authorFriendId: 'dana-punta',
-    body: 'גם BA Bikes על Sarmiento. R$ 6,000 ליום, יותר זול ופחות עומס.',
+    body: 'Also BA Bikes on Sarmiento. AR$ 6,000 a day, cheaper and less busy.',
   },
 
-  // thread-buenos-aires-006 — מנדוסה (3 replies)
+  // thread-buenos-aires-006 — Mendoza (3 replies)
   {
     id: 'thread-buenos-aires-006-r1',
     threadId: 'thread-buenos-aires-006',
     authorFriendId: null,
-    body: 'נטע איך הסיורים? יש סיור ספציפי שאת ממליצה? איזה יקבים?',
+    body: "Neta, how are the tours? Any specific one you'd recommend? Which wineries?",
   },
   {
     id: 'thread-buenos-aires-006-r2',
     threadId: 'thread-buenos-aires-006',
     authorFriendId: 'neta-mendoza',
-    body: 'Trout & Wine סיור ביום מצוין. 4 יקבים, ארוחת צהריים, AR$ 35,000. Catena Zapata חובה, Bodega Lagarde יותר אישי.',
+    body: "Trout & Wine's day tour is great. 4 wineries, lunch included, AR$ 35,000. Catena Zapata is a must, Bodega Lagarde is more personal.",
   },
   {
     id: 'thread-buenos-aires-006-r3',
     threadId: 'thread-buenos-aires-006',
     authorFriendId: 'moshe-buenosaires',
-    body: 'אם זה רק 3 ימים — תטוס לא תיסע. טיסה AR$ 60,000, ה־12 שעות באוטו לא שווה.',
+    body: "If it's only 3 days — fly, don't bus. Flight is AR$ 60,000, the 12-hour bus is not worth it.",
   },
 
-  // thread-buenos-aires-007 — Don Julio או La Cabrera (3 replies)
+  // thread-buenos-aires-007 — Don Julio vs La Cabrera (3 replies)
   {
     id: 'thread-buenos-aires-007-r1',
     threadId: 'thread-buenos-aires-007',
     authorFriendId: 'moshe-buenosaires',
-    body: 'Don Julio. נקודה. La Cabrera נחמד אבל Don Julio אסאדו אמיתי. תזמין שולחן 3 שבועות מראש דרך CoverManager.',
+    body: 'Don Julio. Full stop. La Cabrera is nice but Don Julio is real asado. Book through CoverManager 3 weeks ahead.',
   },
   {
     id: 'thread-buenos-aires-007-r2',
     threadId: 'thread-buenos-aires-007',
     authorFriendId: null,
-    body: 'תודה. אבל מה אם אין תור? La Cabrera גיבוי או יש משהו אחר?',
+    body: 'Thanks. What if there is no slot? La Cabrera as a backup, or anything else?',
   },
   {
     id: 'thread-buenos-aires-007-r3',
     threadId: 'thread-buenos-aires-007',
     authorFriendId: 'dana-punta',
-    body: 'אם Don Julio תפוס, El Pobre Luis. פחות מפורסם, יותר מקומי, בשר ברמה. אני עבדה בארגנטינה והייתי שם 5 פעמים.',
+    body: "If Don Julio is full, El Pobre Luis. Less famous, more local, top-tier meat. I lived in Argentina and was there 5 times.",
   },
 
-  // thread-buenos-aires-008 — אמפנדאס (2 replies)
+  // thread-buenos-aires-008 — empanadas (2 replies)
   {
     id: 'thread-buenos-aires-008-r1',
     threadId: 'thread-buenos-aires-008',
     authorFriendId: 'moshe-buenosaires',
-    body: 'La Cocina ברחוב Pueyrredón. אמפנדאס מסלטה אמיתיים, R$ 2,800 לאחד. שווה הנסיעה.',
+    body: "La Cocina on Pueyrredón. Real salteña empanadas, R$ 2,800 each. Worth the trip.",
   },
   {
     id: 'thread-buenos-aires-008-r2',
     threadId: 'thread-buenos-aires-008',
     authorFriendId: 'neta-mendoza',
-    body: 'אחי תאמין לי — La Mexicana ב־San Telmo, R$ 1,200 לאחד, מטוגנים בבית. הולכת לשם כל יום שישי 🙏',
+    body: "Bro trust me — La Mexicana in San Telmo, R$ 1,200 each, fried in-house. I go every Friday 🙏",
   },
 
-  // thread-buenos-aires-009 — פאלרמו אסאדו (3 replies)
+  // thread-buenos-aires-009 — Palermo asado (3 replies)
   {
     id: 'thread-buenos-aires-009-r1',
     threadId: 'thread-buenos-aires-009',
     authorFriendId: 'yael-botafogo',
-    body: 'אני נוחתת ב־18 לחודש. אקפוץ אליך לקפה.',
+    body: "I land on the 18th. Will swing by for a coffee.",
   },
   {
     id: 'thread-buenos-aires-009-r2',
     threadId: 'thread-buenos-aires-009',
     authorFriendId: null,
-    body: 'גם אני שם ב־16–25. נסגור אסאדו אחד בטח.',
+    body: "Also there 16–25. We'll definitely lock in one asado.",
   },
   {
     id: 'thread-buenos-aires-009-r3',
     threadId: 'thread-buenos-aires-009',
     authorFriendId: 'moshe-buenosaires',
-    body: 'מעולה. אני שולח קישור לקבוצת וואטסאפ ב־DM למי שכתב.',
+    body: "Perfect. I'll DM a WhatsApp group link to everyone who posted.",
   },
 
-  // thread-buenos-aires-010 — בריילוצ׳ה (2 replies)
+  // thread-buenos-aires-010 — Bariloche (2 replies)
   {
     id: 'thread-buenos-aires-010-r1',
     threadId: 'thread-buenos-aires-010',
     authorFriendId: null,
-    body: 'אורי קורא לזה תוספת של 3 ימים, אבל זה טיסה שלישית בארץ. תקציב מתפוצץ.',
+    body: "Uri, you're calling it 'just 3 extra days', but it's a third domestic flight. Budget gets wild.",
   },
   {
     id: 'thread-buenos-aires-010-r2',
     threadId: 'thread-buenos-aires-010',
     authorFriendId: 'uri-bariloche',
-    body: 'אחי אוטובוס לילה מ־Retiro AR$ 45,000, 22 שעות אבל נחמד. תיסע לפחות פעם אחת בחיים. הקצי לטה מטורף.',
+    body: "Bro, night bus from Retiro AR$ 45,000, 22 hours but actually pleasant. Do it once in your life. Seven Lakes is insane.",
   },
 ];

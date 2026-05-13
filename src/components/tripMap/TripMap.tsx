@@ -148,14 +148,21 @@ export const TripMap = forwardRef<TripMapHandle, Props>(function TripMap(
 
   // Re-run draw layers when state or data changes. Density-heat mode replaces
   // the regular layers wholesale — we don't draw the trip line, planned stops,
-  // places, friends, or present pin while heat is on.
+  // places, friends, or present pin while heat is on. Max zoom is also clamped
+  // to 5 so the gradient doesn't magnify into giant blobs at street-level.
   useEffect(() => {
     if (!mapRef.current) return;
     const map = mapRef.current;
     const cleanups: Array<() => void> = [];
 
     if (heatmapEnabled) {
+      const prevMax = map.getMaxZoom();
+      map.setMaxZoom(5);
+      if (map.getZoom() > 5) map.setZoom(5);
       cleanups.push(drawDensityHeat(map, DENSITY_POINTS));
+      cleanups.push(() => {
+        map.setMaxZoom(prevMax);
+      });
       return () => {
         cleanups.reverse().forEach((fn) => fn());
       };

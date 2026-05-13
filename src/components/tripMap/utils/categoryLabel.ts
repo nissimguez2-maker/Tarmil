@@ -3,23 +3,23 @@ import type { Place, PlaceCategory } from '../../../data/places';
 export function categoryLabel(c: Place['category']): string {
   switch (c) {
     case 'beach':
-      return 'חוף';
+      return 'Beach';
     case 'hostel':
-      return 'הוסטל';
+      return 'Hostel';
     case 'cafe':
-      return 'קפה';
+      return 'Café';
     case 'restaurant':
-      return 'מסעדה';
+      return 'Restaurant';
     case 'bar':
-      return 'בר';
+      return 'Bar';
     case 'club':
-      return 'מועדון';
+      return 'Club';
     case 'chabad':
-      return 'חב״ד';
+      return 'Chabad';
     case 'kosher':
-      return 'כשר';
+      return 'Kosher';
     case 'landmark':
-      return 'נקודת ציון';
+      return 'Landmark';
   }
 }
 
@@ -48,21 +48,21 @@ const FILTER_TO_CATEGORIES: Record<
 export function filterLabel(id: FilterId): string {
   switch (id) {
     case 'hostels':
-      return 'הוסטלים';
+      return 'Hostels';
     case 'food':
-      return 'אוכל';
+      return 'Food';
     case 'beaches':
-      return 'חופים';
+      return 'Beaches';
     case 'nightlife':
-      return 'חיי לילה';
+      return 'Nightlife';
     case 'kosher':
-      return 'כשר';
+      return 'Kosher';
     case 'chabad':
-      return 'חב״ד';
+      return 'Chabad';
     case 'picks':
-      return 'בחירות תרמיל';
+      return 'Tarmil picks';
     case 'friends':
-      return 'חברים מכירים';
+      return 'Friends know';
   }
 }
 

@@ -22,13 +22,13 @@ const SECTIONS: { number: string; label: string; rows: Row[] }[] = [
     number: '01',
     label: 'Account.',
     rows: [
-      { label: 'שם', value: 'נסים גז', detail: 'השם שמופיע לחברים שלך באפליקציה.' },
-      { label: 'טלפון', value: '+972 ··· (מאומת)', detail: 'אומת בעת ההרשמה. שינוי דורש אימות מחדש.' },
+      { label: 'Name', value: 'Nissim Gez', detail: 'The name your friends see in the app.' },
+      { label: 'Phone', value: '+972 ··· (verified)', detail: 'Verified at signup. Changing it requires re-verification.' },
       {
-        label: 'שפה',
-        value: 'עברית',
-        choices: ['עברית', 'English', 'Português'],
-        detail: 'שפת הממשק. תאריכים, מטבעות וכיווניות מתעדכנים אוטומטית.',
+        label: 'Language',
+        value: 'English',
+        choices: ['English', 'עברית', 'Português'],
+        detail: 'Interface language. Dates, currencies and writing direction update automatically.',
       },
     ],
   },
@@ -37,25 +37,25 @@ const SECTIONS: { number: string; label: string; rows: Row[] }[] = [
     label: 'Privacy.',
     rows: [
       {
-        label: 'מצב מחתרת',
-        value: 'כבוי',
-        choices: ['כבוי', 'דקה', 'שעה', 'יום', 'עד שאחזור'],
+        label: 'Stealth mode',
+        value: 'Off',
+        choices: ['Off', 'A minute', 'An hour', 'A day', 'Until I come back'],
         detail:
-          'במצב מחתרת המסלול שלך לא מופיע אצל אף חבר, וחפיפות לא נחשבות. שקט מוחלט.',
+          'In stealth mode your route disappears from every friend, and overlaps don\'t register. Total silence.',
       },
       {
-        label: 'גלוי לחברי חברים',
-        value: 'מופעל',
-        choices: ['מופעל', 'כבוי'],
+        label: 'Visible to friends of friends',
+        value: 'On',
+        choices: ['On', 'Off'],
         detail:
-          'מאפשר לחברים של חברים לזהות חפיפה רק כאשר מסלול שלך באמת חופף בעיר משותפת.',
+          'Lets friends of friends spot an overlap only when your route actually crosses theirs in a shared city.',
       },
       {
-        label: 'רזולוציית מיקום',
-        value: 'ברמת עיר בלבד',
-        choices: ['ברמת עיר בלבד', 'ברמת אזור (וריאציה רחבה יותר)'],
+        label: 'Location resolution',
+        value: 'City level only',
+        choices: ['City level only', 'Region level (wider buffer)'],
         detail:
-          'תרמיל לעולם לא חושף לחברים את הכתובת המדויקת שלך. הרזולוציה ברמת עיר היא ברירת המחדל.',
+          'Tarmil never exposes your exact address to friends. City-level resolution is the default and stays that way.',
       },
     ],
   },
@@ -64,19 +64,19 @@ const SECTIONS: { number: string; label: string; rows: Row[] }[] = [
     label: 'Notifications.',
     rows: [
       {
-        label: 'פעילות',
-        value: 'הכל',
-        choices: ['הכל', 'רק חברים בקרבת מקום', 'כבוי'],
+        label: 'Activity',
+        value: 'All',
+        choices: ['All', 'Only friends nearby', 'Off'],
       },
       {
-        label: 'פורומים',
-        value: 'תגובות אליי',
-        choices: ['הכל', 'תגובות אליי', 'כבוי'],
+        label: 'Forums',
+        value: 'Replies to me',
+        choices: ['All', 'Replies to me', 'Off'],
       },
       {
-        label: 'הודעות',
-        value: 'הכל',
-        choices: ['הכל', 'מהחברים בלבד', 'כבוי'],
+        label: 'Messages',
+        value: 'All',
+        choices: ['All', 'Friends only', 'Off'],
       },
     ],
   },
@@ -84,9 +84,9 @@ const SECTIONS: { number: string; label: string; rows: Row[] }[] = [
     number: '04',
     label: 'About.',
     rows: [
-      { label: 'גרסה', value: 'beta · 2026.05.11', detail: 'מהדורת ההדגמה הנוכחית. נושאים פתוחים מתועדים בדוקס.' },
-      { label: 'פרטיות', value: 'מסמך', detail: 'תרמיל אוסף רק את המינימום הנדרש להפעלת חפיפות וטיולים. ראה מסמך מלא לדוגמה.' },
-      { label: 'תנאים', value: 'מסמך', detail: 'תנאי שימוש מעוגנים בפרוטוקול ברירת המחדל של ברקלייז. ראה מסמך מלא.' },
+      { label: 'Version', value: 'beta · 2026.05.11', detail: 'Current demo build. Open items live in the design docs.' },
+      { label: 'Privacy', value: 'Document', detail: 'Tarmil collects only what overlaps and trips actually need. Full document available.' },
+      { label: 'Terms', value: 'Document', detail: 'Terms of service. Full document available.' },
     ],
   },
 ];
@@ -109,9 +109,9 @@ export function SettingsScreen() {
     setResetMessage(null);
     try {
       await resetDemo();
-      setResetMessage('מצב ההדגמה אופס.');
+      setResetMessage('Demo state reset.');
     } catch (e) {
-      setResetMessage(e instanceof Error ? e.message : 'נכשל לאפס.');
+      setResetMessage(e instanceof Error ? e.message : 'Reset failed.');
     } finally {
       setResetting(false);
     }
@@ -121,7 +121,7 @@ export function SettingsScreen() {
 
   return (
     <Screen>
-      <TopBar back title="הגדרות" />
+      <TopBar back title="Settings" />
 
       <div className="flex flex-col gap-lg p-md pb-xl">
         {SECTIONS.map((section) => (
@@ -156,8 +156,8 @@ export function SettingsScreen() {
           <SectionLabel number="05" label="Demo controls." />
           <div className="flex flex-col gap-sm rounded-2xl bg-sand shadow-card p-md">
             <p className="text-small text-cocoa-70">
-              מאפס את היעדים המתוכננים למצב הדגמה הקנוני. שימוש בין הדגמות
-              למשקיעים.
+              Restores the planned stops to the canonical demo state. Useful
+              between investor demos.
             </p>
             <Button
               variant="ghost"
@@ -166,7 +166,7 @@ export function SettingsScreen() {
               disabled={resetting}
             >
               <RotateCcw className="h-4 w-4" aria-hidden />
-              {resetting ? 'מאפס…' : 'אפס מצב הדגמה'}
+              {resetting ? 'Resetting…' : 'Reset demo state'}
             </Button>
             {resetMessage && (
               <p className="text-small text-cocoa-55">{resetMessage}</p>
@@ -175,7 +175,7 @@ export function SettingsScreen() {
         </section>
 
         <Button variant="ghost" fullWidth onClick={() => setSignoutOpen(true)}>
-          התנתקות
+          Sign out
         </Button>
       </div>
 
@@ -214,7 +214,7 @@ function SettingDetailSheet({
     <Modal
       open={row !== null}
       onClose={onClose}
-      eyebrow="הגדרה"
+      eyebrow="Setting"
       title={row?.label ?? ''}
     >
       <div className="flex flex-col gap-md">
@@ -240,7 +240,7 @@ function SettingDetailSheet({
                   >
                     <span className="text-body text-cocoa">{choice}</span>
                     {active && (
-                      <span className="meta-caps text-copper">נבחר</span>
+                      <span className="meta-caps text-copper">Selected</span>
                     )}
                   </button>
                 </li>
@@ -249,7 +249,7 @@ function SettingDetailSheet({
           </ul>
         ) : (
           <div className="rounded-2xl bg-sand p-md">
-            <span className="meta-caps text-cocoa-55">ערך נוכחי</span>
+            <span className="meta-caps text-cocoa-55">Current value</span>
             <p className="mt-xs text-body text-cocoa">{currentValue}</p>
           </div>
         )}
@@ -269,12 +269,12 @@ function SignOutConfirm({
     <Modal
       open={open}
       onClose={onClose}
-      eyebrow="התנתקות"
-      title="להתנתק מתרמיל?"
+      eyebrow="Sign out"
+      title="Sign out of Tarmil?"
       footer={
         <div className="flex gap-sm">
           <Button variant="ghost" size="sm" fullWidth onClick={onClose}>
-            לא עכשיו
+            Not now
           </Button>
           <Button
             variant="accent"
@@ -285,16 +285,16 @@ function SignOutConfirm({
               onClose();
             }}
           >
-            התנתק
+            Sign out
           </Button>
         </div>
       }
     >
       <p className="text-body leading-snug text-cocoa-70">
-        תוכל לחזור בכל רגע. המסלול שלך, החברים והודעות נשמרים בשרתי תרמיל.
+        You can come back any time. Your route, friends and messages stay on Tarmil's servers.
       </p>
       <p className="mt-sm text-small leading-snug text-cocoa-55">
-        מהדורת ההדגמה — הניתוק כאן לא מבצע פעולה אמיתית.
+        Demo build — sign-out here is a no-op.
       </p>
     </Modal>
   );

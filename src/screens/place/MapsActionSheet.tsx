@@ -17,9 +17,9 @@ const PROVIDERS: Array<{
   meta: string;
   Icon: LucideIcon;
 }> = [
-  { id: 'apple', label: 'Apple Maps', meta: 'ברירת המחדל באייפון', Icon: MapPin },
-  { id: 'google', label: 'Google Maps', meta: 'טוב לחיפוש בחו״ל', Icon: Map },
-  { id: 'waze', label: 'Waze', meta: 'נסיעה עם טראפיק חי', Icon: NavIcon },
+  { id: 'apple', label: 'Apple Maps', meta: 'Default on iPhone', Icon: MapPin },
+  { id: 'google', label: 'Google Maps', meta: 'Best for searching abroad', Icon: Map },
+  { id: 'waze', label: 'Waze', meta: 'Driving with live traffic', Icon: NavIcon },
 ];
 
 /**
@@ -40,18 +40,18 @@ export function MapsActionSheet({ open, place, onClose }: Props) {
   return (
     <div
       role="menu"
-      aria-label="פתח באפליקציית מפות"
+      aria-label="Open in a maps app"
       className="flex flex-col overflow-hidden rounded-2xl border border-cocoa-15 bg-sand"
     >
       <div className="flex items-center justify-between border-b border-cocoa-15 px-md py-sm">
-        <span className="meta-caps text-copper">פתח במפות</span>
+        <span className="meta-caps text-copper">Open in maps</span>
         <button
           type="button"
           onClick={onClose}
-          aria-label="סגירה"
+          aria-label="Dismiss"
           className="text-small text-cocoa-55 transition-colors duration-instant ease-out-quart hover:text-cocoa"
         >
-          ביטול
+          Cancel
         </button>
       </div>
       <ul className="flex flex-col">

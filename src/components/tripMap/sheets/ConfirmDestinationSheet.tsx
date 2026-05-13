@@ -41,7 +41,7 @@ export function ConfirmDestinationSheet({
   const isEditing = !!editingStop;
 
   const handleSave = () => {
-    const trimmedName = name.trim() || candidate.nameHe || 'יעד חדש';
+    const trimmedName = name.trim() || candidate.nameHe || 'New destination';
     const stop: PlannedStop = {
       id: editingStop?.id ?? `stop-${Date.now()}`,
       nameHe: trimmedName,
@@ -65,15 +65,15 @@ export function ConfirmDestinationSheet({
       <div className="flex items-start justify-between gap-sm">
         <div className="flex min-w-0 flex-1 flex-col gap-px">
           <span className="meta-caps text-copper">
-            {isEditing ? 'ערוך יעד' : 'יעד חדש'}
+            {isEditing ? 'Edit destination' : 'New destination'}
           </span>
           <h3 className="font-serif text-lede leading-tight text-cocoa">
-            פרטי היעד
+            Destination details
           </h3>
         </div>
         <button
           type="button"
-          aria-label="סגור"
+          aria-label="Close"
           onClick={onClose}
           className="-me-1 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-cocoa-55 transition-colors duration-instant ease-out-quart hover:bg-cocoa-8 active:bg-cocoa-15"
         >
@@ -82,51 +82,51 @@ export function ConfirmDestinationSheet({
       </div>
 
       <div className="flex flex-col gap-xs">
-        <span className="meta-caps text-cocoa-55">שם היעד</span>
+        <span className="meta-caps text-cocoa-55">Destination name</span>
         <input
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          dir="rtl"
+          dir="ltr"
           className="h-10 w-full rounded-full border border-cocoa-15 bg-sand px-md text-body text-cocoa transition-colors duration-instant ease-out-quart focus:border-copper focus:outline-none"
         />
       </div>
 
       <div className="flex flex-col gap-xs">
-        <span className="meta-caps text-cocoa-55">מתי תהיה שם?</span>
+        <span className="meta-caps text-cocoa-55">When will you be there?</span>
         <div className="flex flex-col gap-2">
           <DateField
-            label="תאריך הגעה"
+            label="Arrival"
             value={arrivalDate}
             onChange={setArrivalDate}
           />
           <DateField
-            label="תאריך יציאה"
+            label="Departure"
             value={departureDate}
             onChange={setDepartureDate}
           />
         </div>
         <span className="text-small text-cocoa-70">
-          <span className="tnum">{nights}</span> לילות
+          <span className="tnum">{nights}</span> nights
         </span>
       </div>
 
       <PrivacyRadios value={privacy} onChange={setPrivacy} />
 
       <div className="flex flex-col gap-xs">
-        <span className="meta-caps text-cocoa-55">הערה (אופציונלי)</span>
+        <span className="meta-caps text-cocoa-55">Note (optional)</span>
         <textarea
           value={note}
           onChange={(e) => setNote(e.target.value)}
           rows={2}
-          dir="rtl"
-          placeholder="לדוגמה: לבדוק טיסה מבנגקוק…"
+          dir="ltr"
+          placeholder="e.g. check flight from Bangkok…"
           className="resize-none rounded-xl border border-cocoa-15 bg-sand p-sm text-body text-cocoa placeholder:text-cocoa-55 transition-colors duration-instant ease-out-quart focus:border-copper focus:outline-none"
         />
       </div>
 
       <Button variant="accent" onClick={handleSave} fullWidth>
-        {isEditing ? 'שמור שינויים' : 'שמור לנסיעה'}
+        {isEditing ? 'Save changes' : 'Save to trip'}
       </Button>
     </div>
   );

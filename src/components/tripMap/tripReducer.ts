@@ -109,7 +109,7 @@ export function tripReducer(state: TripState, action: TripAction): TripState {
         sheet: {
           kind: 'confirmDest',
           candidate: {
-            nameHe: state.pickPrefillName ?? 'יעד חדש',
+            nameHe: state.pickPrefillName ?? 'New destination',
             latlng: action.latlng,
           },
         },

@@ -43,7 +43,7 @@ export function DMScreen() {
   if (!dm) {
     return (
       <Screen>
-        <TopBar back title="הודעה לא נמצאה" />
+        <TopBar back title="Message not found" />
       </Screen>
     );
   }
@@ -52,7 +52,7 @@ export function DMScreen() {
     <Screen className="flex flex-col">
       <TopBar
         back
-        title={friend?.friendName ?? 'חבר'}
+        title={friend?.friendName ?? 'Friend'}
         eyebrow={friend?.zoneLabel}
         end={
           friend ? (

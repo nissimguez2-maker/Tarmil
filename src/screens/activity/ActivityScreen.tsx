@@ -43,7 +43,7 @@ export function ActivityScreen() {
 
   return (
     <Screen className="relative">
-      <TopBar title="פעילות" />
+      <TopBar title="Activity" />
 
       <ul className="flex flex-col gap-sm p-md pb-32">
         {data.activityPosts.map((post) => {
@@ -104,7 +104,7 @@ export function ActivityScreen() {
       </ul>
 
       <Fab
-        ariaLabel="פוסט חדש"
+        ariaLabel="New post"
         icon={<Plus className="h-6 w-6" strokeWidth={2} />}
         onClick={() => setComposeOpen(true)}
       />

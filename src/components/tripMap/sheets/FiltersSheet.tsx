@@ -19,15 +19,15 @@ type Props = {
 };
 
 const FRIENDS_OPTIONS: Array<{ value: FriendsView; label: string }> = [
-  { value: 'all', label: 'כולם' },
-  { value: 'overlaps', label: 'חפיפות' },
-  { value: 'none', label: 'כבוי' },
+  { value: 'all', label: 'All' },
+  { value: 'overlaps', label: 'Overlaps' },
+  { value: 'none', label: 'Off' },
 ];
 
 const FRIENDS_HINT: Record<FriendsView, string> = {
-  all: 'מציג את כל החברים שהמסע שלהם נוגע במסע שלך.',
-  overlaps: 'רק חברים שמקושרים ליעד בתכנון שלך.',
-  none: 'אין סיכות של חברים על המפה.',
+  all: 'Showing every friend whose trip touches yours.',
+  overlaps: 'Only friends tied to a stop on your plan.',
+  none: 'No friend pins on the map.',
 };
 
 export function FiltersSheet({
@@ -44,14 +44,14 @@ export function FiltersSheet({
     <div className="flex h-full flex-col">
       <header className="flex items-center justify-between gap-sm px-md pb-sm pt-sm">
         <div className="flex flex-col">
-          <span className="meta-caps text-copper">מפת המסע</span>
+          <span className="meta-caps text-copper">Trip map</span>
           <h2 className="font-serif text-lede leading-tight text-cocoa">
-            סינון
+            Filters
           </h2>
         </div>
         <button
           type="button"
-          aria-label="סגור"
+          aria-label="Close"
           onClick={onClose}
           className="-me-1 inline-flex h-9 w-9 items-center justify-center rounded-full text-cocoa-55 transition-colors duration-instant ease-out-quart hover:bg-cocoa-8 active:bg-cocoa-15"
         >
@@ -61,7 +61,7 @@ export function FiltersSheet({
 
       <div className="flex-1 overflow-y-auto px-md pb-lg pt-sm">
         <section className="flex flex-col gap-sm">
-          <h3 className="text-body font-medium text-cocoa">חברים על המפה</h3>
+          <h3 className="text-body font-medium text-cocoa">Friends on the map</h3>
           <SegmentedControl
             value={friendsView}
             onChange={onSetFriendsView}
@@ -76,7 +76,7 @@ export function FiltersSheet({
 
         <section className="flex flex-col gap-sm">
           <div className="flex items-baseline justify-between">
-            <h3 className="text-body font-medium text-cocoa">מקומות על המפה</h3>
+            <h3 className="text-body font-medium text-cocoa">Places on the map</h3>
             <button
               type="button"
               onClick={() =>
@@ -86,7 +86,7 @@ export function FiltersSheet({
               }
               className="text-small text-copper transition-colors duration-instant ease-out-quart active:text-copper-70"
             >
-              {allOn ? 'בטל הכל' : 'ברירת מחדל'}
+              {allOn ? 'Clear all' : 'Default'}
             </button>
           </div>
 
@@ -111,7 +111,7 @@ export function FiltersSheet({
 
           {noneOn && (
             <p className="text-small leading-snug text-cocoa-70">
-              כל הסיכות כבויות — לא יוצגו מקומות על המפה.
+              Every pin is off — no places will show on the map.
             </p>
           )}
         </section>

@@ -53,7 +53,7 @@ export function GroupChatScreen() {
   if (!chat) {
     return (
       <Screen>
-        <TopBar back title="קבוצה לא נמצאה" />
+        <TopBar back title="Group not found" />
       </Screen>
     );
   }
@@ -63,7 +63,7 @@ export function GroupChatScreen() {
       <TopBar
         back
         title={chat.nameHe}
-        eyebrow={`${memberIds.length} משתתפים`}
+        eyebrow={`${memberIds.length} members`}
       />
 
       <div className="flex flex-1 flex-col gap-sm overflow-y-auto p-md">

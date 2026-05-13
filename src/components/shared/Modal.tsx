@@ -58,7 +58,7 @@ export function Modal({ open, onClose, eyebrow, title, children, footer }: Props
     >
       <button
         type="button"
-        aria-label="סגירה"
+        aria-label="Dismiss"
         tabIndex={open ? 0 : -1}
         onClick={onClose}
         className={clsx(
@@ -91,7 +91,7 @@ export function Modal({ open, onClose, eyebrow, title, children, footer }: Props
           </div>
           <button
             type="button"
-            aria-label="סגור"
+            aria-label="Close"
             onClick={onClose}
             className="-me-1 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-cocoa-55 transition-[transform,background-color] duration-instant ease-out-quart hover:bg-cocoa-8 hover:text-cocoa active:scale-95 active:bg-cocoa-15"
           >

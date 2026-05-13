@@ -16,10 +16,10 @@ type RawPastTrip = {
 };
 
 const SEASON_HE: Record<string, string> = {
-  spring: 'אביב',
-  summer: 'קיץ',
-  autumn: 'סתיו',
-  winter: 'חורף',
+  spring: 'Spring',
+  summer: 'Summer',
+  autumn: 'Autumn',
+  winter: 'Winter',
 };
 
 /**
@@ -42,15 +42,15 @@ export function FriendProfileScreen() {
   if (!friend) {
     return (
       <Screen>
-        <TopBar back title="חבר לא נמצא" />
+        <TopBar back title="Friend not found" />
       </Screen>
     );
   }
 
   const status =
     friend.status === 'present'
-      ? `כרגע ב${friend.zoneLabel}`
-      : `מתכנן ${friend.zoneLabel}`;
+      ? `Currently in ${friend.zoneLabel}`
+      : `Planning ${friend.zoneLabel}`;
 
   // Sanitize past_trips from JSONB: only render rows that pass the privacy
   // filter (season + year + durationLabel — no raw dates).
@@ -94,21 +94,21 @@ export function FriendProfileScreen() {
             {status}
           </span>
           <div className="mt-1 flex flex-wrap items-center justify-center gap-2">
-            <StatsPill label="טיולים" value={Math.max(pastTrips.length, 3)} />
-            <StatsPill label="חברים משותפים" value={4} />
-            <StatsPill label="מקומות" value={12} />
+            <StatsPill label="Trips" value={Math.max(pastTrips.length, 3)} />
+            <StatsPill label="Mutual friends" value={4} />
+            <StatsPill label="Places" value={12} />
           </div>
         </header>
 
         <section className="flex flex-col gap-sm">
-          <h2 className="font-serif text-lede italic text-cocoa">מסלולי עבר</h2>
+          <h2 className="font-serif text-lede italic text-cocoa">Past routes</h2>
           <p className="text-small text-cocoa-55">
-            תאריכים תמיד ברמת עונה ושנה — תרמיל לא חושף תאריכים מדויקים של חברים.
+            Dates always at season + year resolution — Tarmil never exposes a friend's exact dates.
           </p>
           <ul className="flex flex-col gap-sm">
             {pastTrips.length === 0 && (
               <li className="rounded-2xl bg-sand p-md text-small text-cocoa-70">
-                אין עדיין מסלולי עבר משותפים. תוסיף כשיוצאת לכם חפיפה.
+                No shared past routes yet. We'll add them as overlaps come up.
               </li>
             )}
             {pastTrips.map((t, i) => (
@@ -137,10 +137,10 @@ export function FriendProfileScreen() {
             else navigate('/messages');
           }}
         >
-          שלח הודעה
+          Send message
         </Button>
         <Button variant="ghost" onClick={() => navigate('/messages#chats')}>
-          הוסף לקבוצה
+          Add to a group
         </Button>
       </div>
     </Screen>
@@ -154,36 +154,36 @@ export function FriendProfileScreen() {
  */
 const DEMO_PAST_TRIPS: Record<string, { destinationHe: string; metaLine: string }[]> = {
   'maya-ipanema': [
-    { destinationHe: 'מקסיקו — סן קריסטובל', metaLine: 'חורף 2025 · 18 ימים' },
-    { destinationHe: 'הודו — דלהי, גואה', metaLine: 'אביב 2024 · 32 ימים' },
+    { destinationHe: 'Mexico — San Cristóbal', metaLine: 'Winter 2025 · 18 days' },
+    { destinationHe: 'India — Delhi, Goa', metaLine: 'Spring 2024 · 32 days' },
   ],
   'yael-botafogo': [
-    { destinationHe: 'פרו — קוסקו, מאצ׳ו פיצ׳ו', metaLine: 'סתיו 2024 · 12 ימים' },
-    { destinationHe: 'תאילנד — צפון', metaLine: 'קיץ 2023 · 21 ימים' },
+    { destinationHe: 'Peru — Cusco, Machu Picchu', metaLine: 'Autumn 2024 · 12 days' },
+    { destinationHe: 'Thailand — the north', metaLine: 'Summer 2023 · 21 days' },
   ],
   'roi-buzios': [
-    { destinationHe: 'ארגנטינה — באריצ׳ה', metaLine: 'חורף 2025 · 14 ימים' },
-    { destinationHe: 'אקוודור — אנדים', metaLine: 'אביב 2024 · 24 ימים' },
+    { destinationHe: 'Argentina — Bariloche', metaLine: 'Winter 2025 · 14 days' },
+    { destinationHe: 'Ecuador — the Andes', metaLine: 'Spring 2024 · 24 days' },
   ],
   'shir-saopaulo': [
-    { destinationHe: 'קולומביה — מדז׳ין', metaLine: 'סתיו 2025 · 10 ימים' },
-    { destinationHe: 'צ׳ילה — אטקמה', metaLine: 'אביב 2024 · 8 ימים' },
+    { destinationHe: 'Colombia — Medellín', metaLine: 'Autumn 2025 · 10 days' },
+    { destinationHe: 'Chile — Atacama', metaLine: 'Spring 2024 · 8 days' },
   ],
   'yotam-jericoacoara': [
-    { destinationHe: 'בוליביה — לה פאז, סלאר', metaLine: 'קיץ 2024 · 16 ימים' },
-    { destinationHe: 'הוואי — מאוי', metaLine: 'חורף 2023 · 12 ימים' },
+    { destinationHe: 'Bolivia — La Paz, Uyuni', metaLine: 'Summer 2024 · 16 days' },
+    { destinationHe: 'Hawaii — Maui', metaLine: 'Winter 2023 · 12 days' },
   ],
   'moshe-buenosaires': [
-    { destinationHe: 'אורוגוואי — מונטווידאו', metaLine: 'סתיו 2025 · 6 ימים' },
-    { destinationHe: 'פטגוניה הצ׳יליאנית', metaLine: 'אביב 2024 · 15 ימים' },
+    { destinationHe: 'Uruguay — Montevideo', metaLine: 'Autumn 2025 · 6 days' },
+    { destinationHe: 'Chilean Patagonia', metaLine: 'Spring 2024 · 15 days' },
   ],
   'dana-punta': [
-    { destinationHe: 'אורוגוואי — קולוניה', metaLine: 'קיץ 2024 · 8 ימים' },
+    { destinationHe: 'Uruguay — Colonia', metaLine: 'Summer 2024 · 8 days' },
   ],
   'neta-mendoza': [
-    { destinationHe: 'ארגנטינה — מנדוסה', metaLine: 'אביב 2025 · 7 ימים' },
+    { destinationHe: 'Argentina — Mendoza', metaLine: 'Spring 2025 · 7 days' },
   ],
   'uri-bariloche': [
-    { destinationHe: 'ארגנטינה — באריצ׳ה', metaLine: 'חורף 2025 · 10 ימים' },
+    { destinationHe: 'Argentina — Bariloche', metaLine: 'Winter 2025 · 10 days' },
   ],
 };

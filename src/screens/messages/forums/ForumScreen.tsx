@@ -12,12 +12,12 @@ import type { ForumSubject } from '../../../data/forumThreads';
 type SubjectFilter = ForumSubject | 'all';
 
 const SUBJECT_CHIPS: Array<{ id: SubjectFilter; label: string }> = [
-  { id: 'all', label: 'הכל' },
-  { id: 'kosher_chabad', label: 'כשרות וחב״ד' },
-  { id: 'parties', label: 'מסיבות' },
-  { id: 'treks_activities', label: 'טרקים ופעילויות' },
-  { id: 'restaurants', label: 'מסעדות' },
-  { id: 'meetups', label: 'מיטאפים' },
+  { id: 'all', label: 'All' },
+  { id: 'kosher_chabad', label: 'Kosher & Chabad' },
+  { id: 'parties', label: 'Parties' },
+  { id: 'treks_activities', label: 'Treks & activities' },
+  { id: 'restaurants', label: 'Restaurants' },
+  { id: 'meetups', label: 'Meetups' },
 ];
 
 /**
@@ -37,8 +37,8 @@ export function ForumScreen() {
   if (!forum) {
     return (
       <Screen>
-        <TopBar back title="פורום לא נמצא" />
-        <div className="p-md text-cocoa-55">הפורום הזה לא קיים בעונה.</div>
+        <TopBar back title="Forum not found" />
+        <div className="p-md text-cocoa-55">This forum isn't active right now.</div>
       </Screen>
     );
   }
@@ -58,13 +58,13 @@ export function ForumScreen() {
           {forum.heroBlurbHe}
         </p>
         <span className="text-small text-cocoa-55">
-          <span className="tnum">{forum.memberCount}</span> חברים
+          <span className="tnum">{forum.memberCount}</span> members
         </span>
 
         <div
           className="-mx-md overflow-x-auto px-md [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           role="tablist"
-          aria-label="סנן לפי נושא"
+          aria-label="Filter by topic"
         >
           <ul className="flex w-max items-center gap-2">
             {SUBJECT_CHIPS.map((chip) => {
@@ -97,7 +97,7 @@ export function ForumScreen() {
 
         {threads.length === 0 ? (
           <p className="rounded-2xl bg-sand shadow-card p-md text-small leading-snug text-cocoa-70">
-            עדיין אין שרשורים בקטגוריה הזו. תתחיל את הראשון מ"פוסט חדש" בפעילות.
+            No threads in this category yet. Kick the first one off with "New post" in Activity.
           </p>
         ) : (
           <ul className="flex flex-col gap-sm">
@@ -105,7 +105,7 @@ export function ForumScreen() {
               const author = t.authorFriendId
                 ? data.friendOverlaps.find((f) => f.id === t.authorFriendId)
                 : null;
-              const authorName = author ? author.friendName.split(' ')[0] : 'את';
+              const authorName = author ? author.friendName.split(' ')[0] : 'You';
               return (
                 <li key={t.id}>
                   <Link
@@ -114,8 +114,8 @@ export function ForumScreen() {
                   >
                     <Avatar
                       photoUrl={author?.photoUrl}
-                      initial={author?.friendInitial ?? 'א'}
-                      name={author?.friendName ?? 'את'}
+                      initial={author?.friendInitial ?? 'Y'}
+                      name={author?.friendName ?? 'You'}
                       size="sm"
                     />
                     <div className="flex min-w-0 flex-1 flex-col gap-px">
@@ -127,7 +127,7 @@ export function ForumScreen() {
                       </span>
                       <span className="text-small text-cocoa-55">
                         {authorName} ·{' '}
-                        <span className="tnum">{t.replyCount}</span> תגובות
+                        <span className="tnum">{t.replyCount}</span> replies
                       </span>
                     </div>
                     <ChevronLeft

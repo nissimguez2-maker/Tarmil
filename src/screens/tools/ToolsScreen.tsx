@@ -26,14 +26,14 @@ type Tool = {
 };
 
 const TOOLS: Tool[] = [
-  { id: 'currency', name: 'ממיר מטבעות', meta: 'עובד גם בלי רשת', Icon: Coins },
-  { id: 'checklist', name: 'צ׳ק ליסט לפני יציאה', meta: 'ויזה, חיסונים, ביטוח', Icon: ListChecks },
-  { id: 'voice', name: 'מתרגם קולי', meta: 'דיבור-לדיבור, מיידי', Icon: Languages },
-  { id: 'menu', name: 'מתרגם תפריט', meta: 'סורק רכיבים והעדפות', Icon: ScanText },
-  { id: 'signs', name: 'סורק שלטים', meta: 'מתרגם שילוט בזמן אמת', Icon: ScanLine },
-  { id: 'balances', name: 'יתרות בין חברים', meta: 'חוב פתוח בין שני חברים', Icon: Wallet },
-  { id: 'esim', name: 'eSIM וגלישה', meta: 'תמיכה בעברית בחו״ל', Icon: Smartphone },
-  { id: 'jewish', name: 'כלים יהודיים', meta: 'חב״ד, כשרות, שבת', Icon: Star },
+  { id: 'currency', name: 'Currency converter', meta: 'Works offline too', Icon: Coins },
+  { id: 'checklist', name: 'Pre-trip checklist', meta: 'Visa, vaccines, insurance', Icon: ListChecks },
+  { id: 'voice', name: 'Voice translator', meta: 'Speech to speech, instant', Icon: Languages },
+  { id: 'menu', name: 'Menu translator', meta: 'Scans ingredients & preferences', Icon: ScanText },
+  { id: 'signs', name: 'Sign scanner', meta: 'Live signage translation', Icon: ScanLine },
+  { id: 'balances', name: 'Friend balances', meta: 'Open tab between friends', Icon: Wallet },
+  { id: 'esim', name: 'eSIM & data', meta: 'English-friendly support abroad', Icon: Smartphone },
+  { id: 'jewish', name: 'Jewish tools', meta: 'Chabad, kosher, Shabbat', Icon: Star },
 ];
 
 /**
@@ -47,14 +47,14 @@ export function ToolsScreen() {
 
   return (
     <Screen>
-      <TopBar title="כלים" />
+      <TopBar title="Tools" />
 
       <div className="flex flex-col gap-lg p-md pb-xl">
         <section className="flex flex-col gap-sm">
           <SectionLabel number="01" label="Tools for the road." />
           <p className="max-w-body text-small leading-snug text-cocoa-70">
-            כלים יומיומיים לטיול בחו״ל. כל כלי עומד לבד — נפתח, בשימוש, נסגר.
-            הכל עובד גם בלי רשת.
+            Everyday tools for trips abroad. Each one stands alone — open, use,
+            close. Works offline too.
           </p>
         </section>
 

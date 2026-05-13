@@ -22,11 +22,11 @@ type Tab = {
  * page below scrolls under it with a soft fade.
  */
 const TABS: Tab[] = [
-  { to: '/trip', label: 'טיול', Icon: Map },
-  { to: '/activity', label: 'פעילות', Icon: Newspaper },
-  { to: '/messages', label: 'הודעות', Icon: MessageSquare },
-  { to: '/tools', label: 'כלים', Icon: Wrench },
-  { to: '/profile', label: 'פרופיל', Icon: User },
+  { to: '/trip', label: 'Trip', Icon: Map },
+  { to: '/activity', label: 'Activity', Icon: Newspaper },
+  { to: '/messages', label: 'Messages', Icon: MessageSquare },
+  { to: '/tools', label: 'Tools', Icon: Wrench },
+  { to: '/profile', label: 'Profile', Icon: User },
 ];
 
 export function TabBar() {
@@ -36,10 +36,10 @@ export function TabBar() {
       style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 14px)' }}
     >
       <nav
-        aria-label="ניווט ראשי"
+        aria-label="Main navigation"
         className={clsx(
           'pointer-events-auto relative grid w-full max-w-[360px] grid-cols-5',
-          'rounded-full bg-cocoa/95 backdrop-blur-md shadow-fab',
+          'rounded-full bg-cocoa shadow-fab',
         )}
       >
         {TABS.map(({ to, label, Icon }) => (

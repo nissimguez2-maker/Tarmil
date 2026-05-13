@@ -9,7 +9,7 @@ type Props = {
   place: Place;
   onClose: () => void;
   onOpen: () => void;
-  /** When provided, shows the "שמור ליעד" CTA; tapping opens the stop picker. */
+  /** When provided, shows the "Save to a stop" CTA; tapping opens the stop picker. */
   onSaveToStop?: () => void;
 };
 
@@ -25,7 +25,7 @@ export function PlaceSheet({ place, onClose, onOpen, onSaveToStop }: Props) {
               {place.hebrewName}
             </h3>
             {place.tarmilPick && (
-              <span className="meta-caps text-copper">בחירת תרמיל</span>
+              <span className="meta-caps text-copper">Tarmil pick</span>
             )}
           </div>
           <span className="text-small text-cocoa-55">
@@ -34,7 +34,7 @@ export function PlaceSheet({ place, onClose, onOpen, onSaveToStop }: Props) {
         </div>
         <button
           type="button"
-          aria-label="סגור"
+          aria-label="Close"
           onClick={onClose}
           className="-me-1 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-cocoa-55 transition-colors duration-instant ease-out-quart hover:bg-cocoa-8 active:bg-cocoa-15"
         >
@@ -55,14 +55,14 @@ export function PlaceSheet({ place, onClose, onOpen, onSaveToStop }: Props) {
         </span>
         {place.friendsKnow > 0 && (
           <span className="text-small text-cocoa-70">
-            <span className="tnum">{place.friendsKnow}</span> חברים מכירים
+            <span className="tnum">{place.friendsKnow}</span> friends know it
           </span>
         )}
       </div>
 
       {visits.length > 0 && (
         <section className="flex flex-col gap-sm border-t border-cocoa-08 pt-sm">
-          <span className="meta-caps text-cocoa-55">מה החברים אומרים</span>
+          <span className="meta-caps text-cocoa-55">What friends say</span>
           <div className="flex flex-col gap-sm">
             {visits.map((v, i) => (
               <div key={i} className="flex items-start gap-sm">
@@ -107,11 +107,11 @@ export function PlaceSheet({ place, onClose, onOpen, onSaveToStop }: Props) {
         {onSaveToStop && (
           <Button variant="ghost" size="sm" fullWidth onClick={onSaveToStop}>
             <Bookmark className="h-4 w-4" aria-hidden />
-            <span>שמור ליעד</span>
+            <span>Save to a stop</span>
           </Button>
         )}
         <Button variant="primary" size="sm" fullWidth onClick={onOpen}>
-          <span className="flex-1 text-start">פרטים מלאים</span>
+          <span className="flex-1 text-start">Full details</span>
           <ChevronLeft className="h-4 w-4" aria-hidden />
         </Button>
       </div>

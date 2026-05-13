@@ -25,8 +25,8 @@ export function ForumThreadScreen() {
   if (!thread) {
     return (
       <Screen>
-        <TopBar back title="שרשור לא נמצא" />
-        <div className="p-md text-cocoa-55">הוסר או לא קיים יותר.</div>
+        <TopBar back title="Thread not found" />
+        <div className="p-md text-cocoa-55">Removed or no longer exists.</div>
       </Screen>
     );
   }
@@ -51,12 +51,12 @@ export function ForumThreadScreen() {
           <header className="flex items-center gap-sm">
             <Avatar
               photoUrl={author?.photoUrl}
-              initial={author?.friendInitial ?? 'א'}
-              name={author?.friendName ?? 'את'}
+              initial={author?.friendInitial ?? 'Y'}
+              name={author?.friendName ?? 'You'}
               size="md"
             />
             <span className="min-w-0 flex-1 truncate font-serif text-lede italic text-cocoa">
-              {author?.friendName ?? 'את'}
+              {author?.friendName ?? 'You'}
             </span>
           </header>
           <p className="text-body text-cocoa">{thread.body}</p>
@@ -94,13 +94,13 @@ export function ForumThreadScreen() {
               >
                 <Avatar
                   photoUrl={replyAuthor?.photoUrl}
-                  initial={replyAuthor?.friendInitial ?? 'א'}
-                  name={replyAuthor?.friendName ?? 'את'}
+                  initial={replyAuthor?.friendInitial ?? 'Y'}
+                  name={replyAuthor?.friendName ?? 'You'}
                   size="sm"
                 />
                 <div className="flex min-w-0 flex-1 flex-col gap-px">
                   <span className="truncate font-serif text-body italic text-cocoa">
-                    {replyAuthor?.friendName ?? 'את'}
+                    {replyAuthor?.friendName ?? 'You'}
                   </span>
                   <p className="text-body text-cocoa">{r.body}</p>
                 </div>
@@ -111,7 +111,7 @@ export function ForumThreadScreen() {
       </div>
 
       <MessageComposer
-        placeholder="הגב לשרשור…"
+        placeholder="Reply to thread…"
         onSend={(body) => postForumReply(thread.id, body)}
       />
     </Screen>

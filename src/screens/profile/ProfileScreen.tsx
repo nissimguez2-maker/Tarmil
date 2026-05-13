@@ -42,11 +42,11 @@ export function ProfileScreen() {
     <Screen>
       <TopBar
        
-        title="פרופיל"
+        title="Profile"
         end={
           <Link
             to="/profile/settings"
-            aria-label="הגדרות"
+            aria-label="Settings"
             className="inline-flex h-9 w-9 items-center justify-center rounded-full text-cocoa transition-colors duration-instant ease-out-quart hover:bg-cocoa-8 active:bg-cocoa-15"
           >
             <Settings className="h-5 w-5" aria-hidden />
@@ -58,19 +58,19 @@ export function ProfileScreen() {
         <header className="flex flex-col items-center gap-sm">
           <Avatar
             photoUrl={null}
-            initial="נ"
-            name="נסים גז"
+            initial="N"
+            name="Nissim Gez"
             size="hero"
             copperBorder
           />
           <span className="font-serif text-sub leading-tight text-cocoa">
-            נסים גז
+            Nissim Gez
           </span>
-          <span className="text-small text-cocoa-55">מטייל מאז קיץ 2024</span>
+          <span className="text-small text-cocoa-55">Traveling since summer 2024</span>
           <div className="mt-1 flex flex-wrap items-center justify-center gap-2">
-            <StatsPill label="ארצות" value={countriesCount + 2} />
-            <StatsPill label="מקומות" value={placesCount} />
-            <StatsPill label="לילות מתוכננים" value={totalNights} />
+            <StatsPill label="Countries" value={countriesCount + 2} />
+            <StatsPill label="Places" value={placesCount} />
+            <StatsPill label="Planned nights" value={totalNights} />
           </div>
         </header>
 
@@ -82,13 +82,13 @@ export function ProfileScreen() {
           >
             <span className="flex min-w-0 flex-1 flex-col gap-px">
               <span className="truncate font-serif text-lede italic text-cocoa">
-                המסלול שלך
+                Your route
               </span>
               <span className="text-small text-cocoa-70">
-                ריו עכשיו · 4 יעדים מתוכננים בלאטם
+                Rio right now · 4 planned stops in LATAM
               </span>
             </span>
-            <span className="meta-caps shrink-0 text-copper">פתח מפה</span>
+            <span className="meta-caps shrink-0 text-copper">Open map</span>
           </Link>
         </section>
 
@@ -97,29 +97,29 @@ export function ProfileScreen() {
           <ul className="flex flex-col gap-sm">
             <li>
               <PastTripCard
-                destinationHe="ברזיל — ריו, פטרופוליס"
-                metaLine="חורף 2026 · 21 ימים"
+                destinationHe="Brazil — Rio, Petrópolis"
+                metaLine="Winter 2026 · 21 days"
                 flag="🇧🇷"
               />
             </li>
             <li>
               <PastTripCard
-                destinationHe="דרום־מזרח אסיה"
-                metaLine="סתיו 2025 · בנגקוק, קראבי, צ׳יאנג מאי"
+                destinationHe="Southeast Asia"
+                metaLine="Autumn 2025 · Bangkok, Krabi, Chiang Mai"
                 flag="🇹🇭"
               />
             </li>
             <li>
               <PastTripCard
-                destinationHe="קוט ד׳אזור"
-                metaLine="קיץ 2025 · ניס, קאן, מונקו"
+                destinationHe="Côte d'Azur"
+                metaLine="Summer 2025 · Nice, Cannes, Monaco"
                 flag="🇫🇷"
               />
             </li>
             <li>
               <PastTripCard
-                destinationHe="יוון — הקיקלאדס"
-                metaLine="קיץ 2024 · אתונה, סנטוריני, מיקונוס"
+                destinationHe="Greece — the Cyclades"
+                metaLine="Summer 2024 · Athens, Santorini, Mykonos"
                 flag="🇬🇷"
               />
             </li>
@@ -133,7 +133,7 @@ export function ProfileScreen() {
               to="/profile/friends"
               className="text-small text-copper transition-colors duration-instant ease-out-quart hover:text-copper-85"
             >
-              ראה הכל
+              See all
             </Link>
           </div>
           <ul className="grid grid-cols-3 gap-sm">

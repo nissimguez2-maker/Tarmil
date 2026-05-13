@@ -18,7 +18,7 @@ type Props = {
  * List row for a group chat. Composite avatar: stacked overlapping photos of
  * up to 3 members. Last-message preview is prefixed with the sender's name.
  */
-export function GroupChatRow({ chat, members, lastMessage, selfLabel = 'אני' }: Props) {
+export function GroupChatRow({ chat, members, lastMessage, selfLabel = 'Me' }: Props) {
   const previewMembers = members.slice(0, 3);
   const senderName = (() => {
     if (!lastMessage) return null;

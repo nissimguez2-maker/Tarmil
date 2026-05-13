@@ -13,7 +13,7 @@ type Props = {
  * submits; Shift+Enter inserts a newline. The input clears after a
  * successful send.
  */
-export function MessageComposer({ placeholder = 'הקלד הודעה…', onSend }: Props) {
+export function MessageComposer({ placeholder = 'Type a message…', onSend }: Props) {
   const [value, setValue] = useState('');
   const [sending, setSending] = useState(false);
 
@@ -50,7 +50,7 @@ export function MessageComposer({ placeholder = 'הקלד הודעה…', onSend
       />
       <button
         type="submit"
-        aria-label="שליחה"
+        aria-label="Send"
         disabled={!value.trim() || sending}
         className={clsx(
           'inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full',

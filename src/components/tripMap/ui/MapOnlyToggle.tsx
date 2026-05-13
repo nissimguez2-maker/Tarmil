@@ -18,7 +18,7 @@ export function MapOnlyToggle({ active, onClick }: Props) {
   return (
     <button
       type="button"
-      aria-label={active ? 'צא ממסך מלא' : 'מסך מלא'}
+      aria-label={active ? 'Exit fullscreen map' : 'Fullscreen map'}
       aria-pressed={active}
       onClick={onClick}
       className={clsx(

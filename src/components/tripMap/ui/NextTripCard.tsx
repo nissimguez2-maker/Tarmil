@@ -30,18 +30,10 @@ export function NextTripCard({ stop, friends, onTap }: Props) {
         'focus-visible:outline-none focus-visible:bg-sand/80',
       )}
     >
-      <div className="flex flex-col gap-xs px-md pb-sm pt-md">
-        <div className="flex items-baseline justify-between gap-sm">
-          <span className="meta-caps text-copper">הטיול הבא</span>
-          <span
-            aria-hidden
-            className="text-small text-cocoa-30 transition-transform duration-instant ease-out-quart group-hover/card:-translate-x-1"
-          >
-            ‹
-          </span>
-        </div>
+      <div className="flex flex-col gap-1 px-md pb-sm pt-md">
+        <span className="meta-caps text-copper">Next trip</span>
 
-        <h2 className="font-serif text-sub leading-[1.02] tracking-[-0.02em] text-balance text-cocoa">
+        <h2 className="font-serif text-sub font-bold leading-[1] tracking-[-0.022em] text-balance text-cocoa">
           {stop.nameHe}
         </h2>
 
@@ -51,7 +43,7 @@ export function NextTripCard({ stop, friends, onTap }: Props) {
           <span className="text-cocoa-70">{dateRange}</span>
           <span aria-hidden className="px-1.5 text-cocoa-30">·</span>
           <span>
-            <span className="tnum">{stop.nights}</span> לילות
+            <span className="tnum">{stop.nights}</span> nights
           </span>
         </p>
       </div>
@@ -64,18 +56,18 @@ export function NextTripCard({ stop, friends, onTap }: Props) {
 function DaysUntilLine({ days }: { days: number }) {
   if (days < 0) {
     return (
-      <p className="text-small font-medium text-copper">בטיול עכשיו</p>
+      <p className="text-small font-medium text-copper">On the trip now</p>
     );
   }
   if (days === 0) {
-    return <p className="text-small font-medium text-copper">יוצאים היום</p>;
+    return <p className="text-small font-medium text-copper">Leaving today</p>;
   }
   if (days === 1) {
-    return <p className="text-small font-medium text-copper">מחר יוצאים</p>;
+    return <p className="text-small font-medium text-copper">Leaving tomorrow</p>;
   }
   return (
     <p className="text-small text-cocoa-70">
-      <span className="tnum text-cocoa">{days}</span> ימים לדרך
+      <span className="tnum text-cocoa">{days}</span> days to go
     </p>
   );
 }
@@ -122,11 +114,11 @@ function summarize(friends: FriendOverlap[], stop: PlannedStop): string {
     const f = friends[0];
     if (f.overlapStart && f.overlapEnd) {
       const window = formatOverlapWindow(f.overlapStart, f.overlapEnd);
-      return `${f.friendName} יחפוף איתך ${window}`;
+      return `${f.friendName} overlaps with you ${window}`;
     }
-    return `${f.friendName} יהיה ב${stop.nameHe}`;
+    return `${f.friendName} will be in ${stop.nameHe}`;
   }
-  return `${friends.length} חברים יחפפו איתך`;
+  return `${friends.length} friends overlap with you`;
 }
 
 function formatOverlapWindow(fromIso: string, toIso: string): string {

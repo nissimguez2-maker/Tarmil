@@ -5,76 +5,76 @@ export type FriendVisit = {
   friendInitial: string;
   /** 1–5. */
   rating: number;
-  /** Single line of Hebrew. */
+  /** Single line of copy. */
   comment: string;
 };
 
 /** Friend pool for deterministic place reviews — overlaps the friendOverlaps roster. */
 const POOL: Array<{ name: string; initial: string }> = [
-  { name: 'מאיה לוי', initial: 'מ' },
-  { name: 'יעל אברהם', initial: 'י' },
-  { name: 'רועי בן עמי', initial: 'ר' },
-  { name: 'שיר כהן', initial: 'ש' },
-  { name: 'יותם הררי', initial: 'ה' },
-  { name: 'תום פרידמן', initial: 'ת' },
-  { name: 'אביב גוטמן', initial: 'א' },
-  { name: 'דניאל לוי', initial: 'ד' },
+  { name: 'Maya Levi', initial: 'M' },
+  { name: 'Yael Abraham', initial: 'Y' },
+  { name: 'Roi Ben Ami', initial: 'R' },
+  { name: 'Shir Cohen', initial: 'S' },
+  { name: 'Yotam Harari', initial: 'H' },
+  { name: 'Tom Friedman', initial: 'T' },
+  { name: 'Aviv Gutman', initial: 'A' },
+  { name: 'Daniel Levi', initial: 'D' },
 ];
 
 const COMMENTS: Record<PlaceCategory, string[]> = {
   beach: [
-    'חוף בלי גמר, חבר׳ה, וים שמרגיש כאילו הוא רק שלך.',
-    'הגענו עם מטקות, יצאנו עם שקיעה ועוד שני חברים חדשים.',
-    'נקי, רגוע ביום חול, בערב הופך לאלף אנשים על הטיילת.',
-    'הים לפעמים פראי, אבל החול עצמו מושלם להתחפר עם ספר.',
+    'Endless beach, good crew, and a sea that felt like it was just ours.',
+    'Showed up with paddles, left at sunset with two new friends.',
+    'Clean and chill on weekdays, turns into a thousand-person promenade at night.',
+    'The water can get wild, but the sand itself is perfect for burying yourself with a book.',
   ],
   hostel: [
-    'חצר עם ערסלים והרבה ישראלים, אווירה משפחתית מההתחלה.',
-    'חדרים סבירים, מטבח עובד, אנשים נוחים — בדיוק מה שצריך.',
-    'מיקום מצוין, חמש דקות הליכה לכל מה שחשוב.',
-    'קצת עמוס בקיץ, אבל הצוות תמיד עוזרים לסדר משהו.',
+    'Courtyard full of hammocks and Israelis, felt like family from minute one.',
+    'Rooms are fine, kitchen actually works, people are easy — exactly what you need.',
+    'Killer location, five minutes walk to anything that matters.',
+    'Bit crowded in summer but the staff always sort something out.',
   ],
   cafe: [
-    'קפה כיף, ויי-פיי טוב לסידור טיסות והיסטריות.',
-    'אסאי מטורף, ישבתי שעה והשארתי גם לצהריים.',
-    'מקום שקט באמצע הבלגן, כיף לעצור ולשבת לבד.',
-    'בריסטה אדיר, הסביר לי הכל ועדיין הזמנתי את הרגיל.',
+    'Solid coffee, wifi good enough to book flights and lose your mind.',
+    'Insane açaí, I camped here for an hour and stayed for lunch.',
+    'Quiet spot in the middle of the chaos, great place to sit alone.',
+    'Barista is a legend, explained everything and I still ordered the usual.',
   ],
   restaurant: [
-    'מנה אחת הספיקה לשניים, אכלנו עד שלא יכולנו לקום.',
-    'אוכל ביתי טעים, יחס חמים, ירדנו מהמחירים של הטיולים.',
-    'תפריט קצת מבלבל, סמכנו על המלצרית והיא צדקה.',
-    'הכי קרוב לארוחה של אמא בלי לעלות על טיסה.',
+    'One dish was plenty for two, we ate till we couldn\'t stand up.',
+    'Home cooking, warm vibes, way cheaper than the tour-trail places.',
+    'Menu is a bit confusing, trusted the waitress and she nailed it.',
+    'Closest thing to mum\'s food without booking a flight home.',
   ],
   bar: [
-    'בירה זולה, מוזיקה מתאימה, ולא צריך הרבה כדי להתחיל לרקוד.',
-    'מקום קטן, ישראלים על אותו השולחן בתוך עשר דקות.',
-    'בירת מקומית מצוינת, סנדוויץ׳ חם בעצם הלילה.',
-    'אווירה רגועה לפני שיוצאים למועדון, התחלה טובה.',
+    'Cheap beer, right music, doesn\'t take much to start dancing.',
+    'Small place, Israelis at your table within ten minutes.',
+    'Solid local brew, hot sandwich at midnight saved my life.',
+    'Mellow before going out clubbing, perfect warm-up.',
   ],
   club: [
-    'רחבה לוהטת, סאונד טוב, יצאנו ב־5 וחצי שמחים.',
-    'תור מטורף בכניסה אבל בפנים נסחפנו לגמרי.',
-    'שתי קומות, מוזיקות שונות, כל אחד מצא את שלו.',
-    'ערב פתיחה גבוה, חבר׳ה מקומיים נחמדים והכי לא קלאסיים.',
+    'Dance floor on fire, sound is great, we walked out at 5:30 happy.',
+    'Crazy line outside but inside we were gone completely.',
+    'Two floors, different music on each, everyone finds their thing.',
+    'Strong opening, locals were super friendly and not the usual scene.',
   ],
   chabad: [
-    'שולחן שבת עם ישראלים מכל העולם, הרגשנו בבית מיד.',
-    'הרב סבבה, הסביר את האזור, חיבר אותנו לעוד תרמילאים.',
-    'אוכל ביתי, פתרון מושלם אחרי שבוע רץ של אטרקציות.',
-    'כיף שיש את זה רחוק מהבית, ההזמנה קמה כמעט מאליה.',
+    'Shabbat table with Israelis from everywhere, felt like home instantly.',
+    'The rabbi is solid, explained the area, hooked us up with more travelers.',
+    'Home cooked food, perfect reset after a packed week of sights.',
+    'Nice having this far from home, the meal kind of takes care of itself.',
   ],
   kosher: [
-    'אוכל כשר ביתי, מחיר סביר, ויש גם תוספות לקחת.',
-    'שניצל ופירה אחרי שבוע פיג׳מות — חוויה מטהרת.',
-    'התור זז מהר, דיברו איתנו עברית, ההמלצות היו זהב.',
-    'אופים על המקום, ריח של בית סבתא בלי להישבר.',
+    'Homestyle kosher, fair price, and you can grab sides to take away.',
+    'Schnitzel and mash after a week of plain food — religious experience.',
+    'Line moves fast, they spoke Hebrew with us, recommendations were gold.',
+    'They bake on site, smell of grandma\'s kitchen without breaking down.',
   ],
   landmark: [
-    'נקודה חובה לפעם אחת, צילמנו והמשכנו הלאה רגועים.',
-    'שווה את ההליכה, האווירה דווקא מורגשת בערב.',
-    'כיכר חיה, מוזיקאים, הרבה צבע, מתאים לבוקר עצלן.',
-    'תצפית שמשגעת, באים בשקיעה אם אפשר ולא מתחרטים.',
+    'Must-see once, snapped a photo and moved on relaxed.',
+    'Worth the walk, the vibe actually hits harder in the evening.',
+    'Lively square, musicians, lots of colour, perfect for a lazy morning.',
+    'Mind-blowing viewpoint, come at sunset if you can and you won\'t regret it.',
   ],
 };
 
