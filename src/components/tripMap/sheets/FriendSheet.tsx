@@ -1,4 +1,4 @@
-import { X, Plus } from 'lucide-react';
+import { X, Plus, ArrowRight, MessageCircle } from 'lucide-react';
 import clsx from 'clsx';
 import { Button } from '../../Button';
 import type { FriendOverlap } from '../../../data/myTrip';
@@ -8,17 +8,35 @@ type Props = {
   friend: FriendOverlap;
   onClose: () => void;
   /**
-   * Opens the "join your friend's trip" flow. When provided AND the friend has
-   * a concrete overlap window, render a copper CTA that calls this. Otherwise
-   * the sheet stays informational.
+   * Opens the "join your friend's trip" flow. Shown when the friend has a
+   * concrete overlap window AND their destination isn't already on the
+   * user's plan. Otherwise the smarter `onOpenStop` / `onMessage` CTAs win.
    */
   onAddToTrip?: () => void;
+  /**
+   * The friend's destination is already a planned stop. Tapping the CTA
+   * opens that stop's sheet instead of "Add to my trip" — no double-add.
+   */
+  onOpenStop?: () => void;
+  /** Opens a DM thread with the friend. Always shown when provided. */
+  onMessage?: () => void;
 };
 
-export function FriendSheet({ friend, onClose, onAddToTrip }: Props) {
+export function FriendSheet({
+  friend,
+  onClose,
+  onAddToTrip,
+  onOpenStop,
+  onMessage,
+}: Props) {
   const hasExactOverlap =
     friend.status === 'future' && !!friend.overlapStart && !!friend.overlapEnd;
-  const showAddToTripCta = hasExactOverlap && !!onAddToTrip;
+
+  // Smart routing — if the destination is already on the plan, suppress the
+  // "Add to my trip" CTA and offer the stop sheet instead. Friends in the
+  // present (same city as the user) skip both since there's nothing to add.
+  const showOpenStop = !!onOpenStop;
+  const showAddToTrip = hasExactOverlap && !!onAddToTrip && !showOpenStop;
 
   return (
     <div className="flex flex-col gap-sm px-md pb-md pt-sm">
@@ -64,10 +82,24 @@ export function FriendSheet({ friend, onClose, onAddToTrip }: Props) {
 
       <p className="text-body text-cocoa-70">{friend.detail}</p>
 
-      {showAddToTripCta && (
+      {showOpenStop && (
+        <Button variant="accent" size="sm" fullWidth onClick={onOpenStop}>
+          <ArrowRight className="h-4 w-4" strokeWidth={2.2} aria-hidden />
+          Open {friend.zoneLabel} on your trip
+        </Button>
+      )}
+
+      {showAddToTrip && (
         <Button variant="accent" size="sm" fullWidth onClick={onAddToTrip}>
           <Plus className="h-4 w-4" strokeWidth={2.2} aria-hidden />
           Add {friend.zoneLabel} to my trip
+        </Button>
+      )}
+
+      {onMessage && (
+        <Button variant="ghost" size="sm" fullWidth onClick={onMessage}>
+          <MessageCircle className="h-4 w-4" strokeWidth={1.7} aria-hidden />
+          Message {friend.friendName.split(' ')[0]}
         </Button>
       )}
 

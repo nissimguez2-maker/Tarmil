@@ -2,11 +2,9 @@ import clsx from 'clsx';
 import { X } from 'lucide-react';
 import {
   ALL_FILTERS,
-  DEFAULT_ACTIVE_FILTERS,
   filterLabel,
   type FilterId,
 } from '../utils/categoryLabel';
-import { isAllFiltersActive } from '../tripReducer';
 import type { FriendsView } from '../tripReducer';
 
 type Props = {
@@ -38,8 +36,8 @@ export function FiltersSheet({
   onSetFilters,
   onClose,
 }: Props) {
-  const allOn = isAllFiltersActive(activeFilters);
   const noneOn = activeFilters.size === 0;
+  const allOn = activeFilters.size === ALL_FILTERS.length;
   return (
     <div className="flex h-full flex-col">
       <header className="flex items-center justify-between gap-sm px-md pb-sm pt-sm">
@@ -75,19 +73,46 @@ export function FiltersSheet({
         <hr className="my-md border-t border-cocoa-15" />
 
         <section className="flex flex-col gap-sm">
-          <div className="flex items-baseline justify-between">
+          <div className="flex items-center justify-between gap-sm">
             <h3 className="text-body font-medium text-cocoa">Places on the map</h3>
-            <button
-              type="button"
-              onClick={() =>
-                onSetFilters(
-                  allOn ? new Set() : new Set(DEFAULT_ACTIVE_FILTERS),
-                )
-              }
-              className="text-small text-copper transition-colors duration-instant ease-out-quart active:text-copper-70"
+            <div
+              role="group"
+              aria-label="Bulk toggle places"
+              className="inline-flex rounded-full bg-cocoa-08 p-0.5"
             >
-              {allOn ? 'Clear all' : 'Default'}
-            </button>
+              <button
+                type="button"
+                onClick={() => onSetFilters(new Set(ALL_FILTERS))}
+                aria-pressed={allOn}
+                className={clsx(
+                  'inline-flex h-7 items-center rounded-full px-sm text-small font-medium leading-none',
+                  'transition-[transform,background-color,color] duration-instant ease-out-quart',
+                  'active:scale-[0.96]',
+                  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper',
+                  allOn
+                    ? 'bg-cocoa text-ivory shadow-card'
+                    : 'text-cocoa-70 hover:text-cocoa',
+                )}
+              >
+                All
+              </button>
+              <button
+                type="button"
+                onClick={() => onSetFilters(new Set())}
+                aria-pressed={noneOn}
+                className={clsx(
+                  'inline-flex h-7 items-center rounded-full px-sm text-small font-medium leading-none',
+                  'transition-[transform,background-color,color] duration-instant ease-out-quart',
+                  'active:scale-[0.96]',
+                  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper',
+                  noneOn
+                    ? 'bg-cocoa text-ivory shadow-card'
+                    : 'text-cocoa-70 hover:text-cocoa',
+                )}
+              >
+                None
+              </button>
+            </div>
           </div>
 
           <ul className="flex flex-col">

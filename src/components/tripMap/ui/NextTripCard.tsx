@@ -1,17 +1,13 @@
+import { useState } from 'react';
 import clsx from 'clsx';
-import { Plus, MapPin } from 'lucide-react';
+import { Plus, MapPin, ChevronUp } from 'lucide-react';
 import type { PlannedStop } from '../../../data/plannedStops';
-import type { FriendOverlap } from '../../../data/myTrip';
-import { formatDateRange, formatDateChip } from '../utils/formatDateRange';
+import { formatDateChip } from '../utils/formatDateRange';
 import { daysUntil } from '../utils/daysUntil';
 
 type Props = {
-  /** Upcoming stop. `null` renders the empty-state CTA. */
-  stop: PlannedStop | null;
-  /** Future-status friend overlaps that align with this stop. */
-  friends: FriendOverlap[];
-  /** Total number of planned stops. Renders "+N more" tail when > 1. */
-  totalStops: number;
+  /** All planned stops in arrival order. Empty = empty-state CTA. */
+  stops: PlannedStop[];
   /** Opens the planned-route sheet to view / reorder. */
   onTap: () => void;
   /** Opens the destination-search sheet to add a new stop. */
@@ -20,30 +16,53 @@ type Props = {
 
 /**
  * Pinned strip at the top of the Trip tab — the always-visible
- * "where will you be?" surface for v0.3.
+ * "where will you be?" surface.
  *
- * Three states:
- *  - No stops: inline CTA prompting the user to declare a stop.
- *  - 1 stop:   the next stop, with a trailing `+` to add a follow-on.
- *  - 2+ stops: the next stop, with a trailing `+N` chip that opens the
- *              planned-route sheet (and a separate `+` to add more).
+ * States:
+ *  - No stops:    empty-state CTA prompting to add the first stop.
+ *  - Stops:       multi-stop summary — title joins the first 2 cities
+ *                 (Búzios → São Paulo) plus "+N more" tail when there
+ *                 are 3+. Dates span the full trip (first arrival to
+ *                 last departure). Trailing `+` adds a follow-on.
  *
- * Tapping the body opens the planned-route sheet.
+ * Collapsible: tap the chevron to fold the card down to a thin pill so
+ * the map gets the full canvas. Tap the pill to expand again.
  */
-export function NextTripCard({
-  stop,
-  friends,
-  totalStops,
-  onTap,
-  onAdd,
-}: Props) {
-  if (!stop) {
+export function NextTripCard({ stops, onTap, onAdd }: Props) {
+  const [collapsed, setCollapsed] = useState(false);
+
+  if (stops.length === 0) {
     return <EmptyState onAdd={onAdd} />;
   }
 
-  const days = daysUntil(stop.arrivalDate);
-  const dateRange = formatDateRange(stop.arrivalDate, stop.departureDate);
-  const followOnCount = Math.max(totalStops - 1, 0);
+  const title = formatTripTitle(stops);
+  const span = formatTripSpan(stops);
+  const totalNights = stops.reduce((acc, s) => acc + s.nights, 0);
+  const days = daysUntil(stops[0].arrivalDate);
+
+  if (collapsed) {
+    return (
+      <button
+        type="button"
+        onClick={() => setCollapsed(false)}
+        aria-label="Expand trip details"
+        aria-expanded={false}
+        className="block w-full border-b border-cocoa-08 bg-sand text-start transition-colors duration-instant ease-out-quart hover:bg-sand/80 active:bg-rope/40 focus-visible:outline-none focus-visible:bg-sand/80"
+      >
+        <div className="flex items-center gap-sm px-md py-2">
+          <span className="meta-caps shrink-0 text-copper">Trip</span>
+          <span className="line-clamp-1 flex-1 font-serif text-body italic text-cocoa">
+            {title}
+          </span>
+          <ChevronUp
+            className="h-4 w-4 shrink-0 rotate-180 text-cocoa-55"
+            strokeWidth={1.7}
+            aria-hidden
+          />
+        </div>
+      </button>
+    );
+  }
 
   return (
     <div
@@ -60,41 +79,41 @@ export function NextTripCard({
         >
           <span className="meta-caps text-copper">Next trip</span>
 
-          <h2 className="font-serif text-sub font-bold leading-[1] tracking-[-0.022em] text-balance text-cocoa">
-            {stop.nameEn}
+          <h2 className="font-serif text-sub font-bold leading-[1.05] tracking-[-0.022em] text-balance text-cocoa">
+            {title}
           </h2>
 
           <DaysUntilLine days={days} />
 
           <p className="text-small text-cocoa-55">
-            <span className="text-cocoa-70">{dateRange}</span>
+            <span className="text-cocoa-70">{span}</span>
             <span aria-hidden className="px-1.5 text-cocoa-30">·</span>
             <span>
-              <span className="tnum">{stop.nights}</span> nights
+              <span className="tnum">{totalNights}</span> nights
             </span>
-            {followOnCount > 0 && (
-              <>
-                <span aria-hidden className="px-1.5 text-cocoa-30">·</span>
-                <span className="font-medium text-cocoa">
-                  +<span className="tnum">{followOnCount}</span> more stop
-                  {followOnCount > 1 ? 's' : ''}
-                </span>
-              </>
-            )}
           </p>
         </button>
 
-        <button
-          type="button"
-          onClick={onAdd}
-          aria-label="Add a stop"
-          className="me-md inline-flex h-10 w-10 shrink-0 items-center justify-center self-center rounded-full bg-copper text-ivory shadow-card transition-[transform,background-color] duration-instant ease-out-quart hover:bg-copper-85 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-sand"
-        >
-          <Plus className="h-5 w-5" strokeWidth={2.2} aria-hidden />
-        </button>
+        <div className="me-md flex shrink-0 flex-col items-center justify-center gap-1 self-stretch py-sm">
+          <button
+            type="button"
+            onClick={onAdd}
+            aria-label="Add a stop"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-copper text-ivory shadow-card transition-[transform,background-color] duration-instant ease-out-quart hover:bg-copper-85 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-sand"
+          >
+            <Plus className="h-5 w-5" strokeWidth={2.2} aria-hidden />
+          </button>
+          <button
+            type="button"
+            onClick={() => setCollapsed(true)}
+            aria-label="Collapse trip details"
+            aria-expanded={true}
+            className="inline-flex h-7 w-7 items-center justify-center rounded-full text-cocoa-55 transition-colors duration-instant ease-out-quart hover:bg-cocoa-8 hover:text-cocoa"
+          >
+            <ChevronUp className="h-4 w-4" strokeWidth={1.7} aria-hidden />
+          </button>
+        </div>
       </div>
-
-      {friends.length > 0 && <FriendsRow friends={friends} stop={stop} />}
     </div>
   );
 }
@@ -146,63 +165,38 @@ function DaysUntilLine({ days }: { days: number }) {
   );
 }
 
-function FriendsRow({
-  friends,
-  stop,
-}: {
-  friends: FriendOverlap[];
-  stop: PlannedStop;
-}) {
-  return (
-    <div className="flex items-center gap-sm border-t border-cocoa-08 px-md py-sm">
-      <FriendDots friends={friends.slice(0, 3)} />
-      <span className="text-small text-cocoa-70">
-        {summarize(friends, stop)}
-      </span>
-    </div>
-  );
+/**
+ * Title rule:
+ *  - 1 stop : "São Paulo"
+ *  - 2 stops: "Búzios → São Paulo"
+ *  - 3+     : "Búzios → São Paulo · +N more"
+ *
+ * Two-name cap keeps the card readable at any width. The planned-route
+ * sheet still exposes the full sequence.
+ */
+function formatTripTitle(stops: PlannedStop[]): string {
+  if (stops.length === 1) return stops[0].nameEn;
+  const first = stops[0].nameEn;
+  const second = stops[1].nameEn;
+  if (stops.length === 2) return `${first} → ${second}`;
+  return `${first} → ${second} · +${stops.length - 2} more`;
 }
 
-function FriendDots({ friends }: { friends: FriendOverlap[] }) {
-  return (
-    <div className="flex">
-      {friends.map((f, i) => (
-        <span
-          key={f.id}
-          className={clsx(
-            '-me-2 inline-flex h-7 w-7 items-center justify-center rounded-full',
-            'border-2 border-sand bg-cocoa font-serif text-body leading-none text-ivory',
-          )}
-          style={{ zIndex: friends.length - i }}
-          aria-hidden
-        >
-          {f.friendInitial}
-        </span>
-      ))}
-    </div>
-  );
-}
-
-function summarize(friends: FriendOverlap[], stop: PlannedStop): string {
-  if (friends.length === 1) {
-    const f = friends[0];
-    if (f.overlapStart && f.overlapEnd) {
-      const window = formatOverlapWindow(f.overlapStart, f.overlapEnd);
-      return `${f.friendName} overlaps with you ${window}`;
+/**
+ * Span rule: from the first arrival_date to the last departure_date.
+ * "Nov 1–6" for a single stop, "Oct 28 – Nov 14" for multi-stop.
+ */
+function formatTripSpan(stops: PlannedStop[]): string {
+  if (stops.length === 1) {
+    const s = stops[0];
+    const from = new Date(s.arrivalDate + 'T00:00:00Z');
+    const to = new Date(s.departureDate + 'T00:00:00Z');
+    if (from.getUTCMonth() === to.getUTCMonth()) {
+      return `${formatDateChip(s.arrivalDate)}–${to.getUTCDate()}`;
     }
-    return `${f.friendName} will be in ${stop.nameEn}`;
+    return `${formatDateChip(s.arrivalDate)} – ${formatDateChip(s.departureDate)}`;
   }
-  return `${friends.length} friends overlap with you`;
-}
-
-function formatOverlapWindow(fromIso: string, toIso: string): string {
-  const from = new Date(fromIso + 'T00:00:00Z');
-  const to = new Date(toIso + 'T00:00:00Z');
-  const sameMonth =
-    from.getUTCMonth() === to.getUTCMonth() &&
-    from.getUTCFullYear() === to.getUTCFullYear();
-  if (sameMonth) {
-    return `${from.getUTCDate()}–${to.getUTCDate()}`;
-  }
-  return `${formatDateChip(fromIso)} – ${formatDateChip(toIso)}`;
+  const first = stops[0];
+  const last = stops[stops.length - 1];
+  return `${formatDateChip(first.arrivalDate)} – ${formatDateChip(last.departureDate)}`;
 }

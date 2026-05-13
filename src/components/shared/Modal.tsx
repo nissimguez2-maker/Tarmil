@@ -14,6 +14,13 @@ type Props = {
   children: React.ReactNode;
   /** Optional footer pinned to the bottom of the sheet (e.g., a CTA). */
   footer?: React.ReactNode;
+  /**
+   * Stacking layer within the device-portal. 0 is the default modal layer
+   * (Tools wrench, settings drill-down, compose). 1 is for modals opened
+   * from inside another modal (tool detail tile → its own sheet) so the
+   * inner one paints above the outer regardless of mount order.
+   */
+  level?: 0 | 1;
 };
 
 /**
@@ -26,7 +33,15 @@ type Props = {
  * Closed: not portaled (returns null). Open: backdrop + sheet, with focus
  * locked away from the underlying screen via aria-modal. Escape closes.
  */
-export function Modal({ open, onClose, eyebrow, title, children, footer }: Props) {
+export function Modal({
+  open,
+  onClose,
+  eyebrow,
+  title,
+  children,
+  footer,
+  level = 0,
+}: Props) {
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
@@ -51,6 +66,7 @@ export function Modal({ open, onClose, eyebrow, title, children, footer }: Props
       className={clsx(
         'absolute inset-0 flex flex-col justify-end',
         'transition-opacity duration-considered ease-out-quart',
+        level === 1 ? 'z-10' : 'z-0',
         open
           ? 'pointer-events-auto opacity-100'
           : 'pointer-events-none opacity-0',

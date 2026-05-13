@@ -46,6 +46,7 @@ export function ToolDetailSheet({ toolId, onClose }: Props) {
       onClose={onClose}
       eyebrow={meta?.eyebrow}
       title={meta?.title ?? ''}
+      level={1}
     >
       {toolId === 'currency' && <CurrencyConverter />}
       {toolId === 'checklist' && <PreTripChecklist />}
