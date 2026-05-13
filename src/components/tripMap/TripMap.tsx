@@ -100,7 +100,7 @@ export const TripMap = forwardRef<TripMapHandle, Props>(function TripMap(
       worldCopyJump: false,
     });
 
-    const tomtomKey = import.meta.env.VITE_TOMTOM_KEY;
+    const tomtomKey = import.meta.env.VITE_TOMTOM_API_KEY;
     if (tomtomKey) {
       L.tileLayer(
         `https://api.tomtom.com/map/1/tile/basic/main/{z}/{x}/{y}.png?key=${tomtomKey}&tileSize=512`,
@@ -112,7 +112,7 @@ export const TripMap = forwardRef<TripMapHandle, Props>(function TripMap(
         },
       ).addTo(map);
     } else {
-      // Build-time fallback so a deploy without VITE_TOMTOM_KEY still ships a map.
+      // Build-time fallback so a deploy without VITE_TOMTOM_API_KEY still ships a map.
       L.tileLayer(
         'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
         {

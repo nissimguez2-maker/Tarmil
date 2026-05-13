@@ -36,9 +36,12 @@ export function Fab({
   style,
   ...rest
 }: Props) {
+  // Tab capsule sits at safe-bottom + 14px + 56px tall. FAB needs to clear that
+  // with breathing room. Without the tab bar (chat / detail screens), hug the
+  // bottom safe area.
   const bottom = liftAboveTabBar
     ? 'calc(env(safe-area-inset-bottom, 0px) + 90px)'
-    : '8mm';
+    : 'calc(env(safe-area-inset-bottom, 0px) + 16px)';
 
   return (
     <button

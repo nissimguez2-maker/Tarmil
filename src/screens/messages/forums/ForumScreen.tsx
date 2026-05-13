@@ -96,7 +96,7 @@ export function ForumScreen() {
         </div>
 
         {threads.length === 0 ? (
-          <p className="rounded-2xl border border-cocoa-15 bg-sand shadow-card p-md text-small leading-snug text-cocoa-70">
+          <p className="rounded-2xl bg-sand shadow-card p-md text-small leading-snug text-cocoa-70">
             עדיין אין שרשורים בקטגוריה הזו. תתחיל את הראשון מ"פוסט חדש" בפעילות.
           </p>
         ) : (
@@ -110,7 +110,7 @@ export function ForumScreen() {
                 <li key={t.id}>
                   <Link
                     to={`/messages/forums/${forum.id}/${t.id}`}
-                    className="flex items-start gap-sm rounded-2xl border border-cocoa-15 bg-ivory shadow-card p-md transition-colors duration-instant ease-out-quart hover:bg-sand/40 active:bg-sand/60"
+                    className="flex items-start gap-sm rounded-2xl bg-ivory shadow-card p-md transition-colors duration-instant ease-out-quart hover:bg-sand/40 active:bg-sand/60"
                   >
                     <Avatar
                       photoUrl={author?.photoUrl}

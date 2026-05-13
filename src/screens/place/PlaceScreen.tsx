@@ -41,7 +41,7 @@ export function PlaceScreen() {
       />
 
       <div className="flex flex-col gap-lg p-md pb-xl">
-        <div className="flex flex-col gap-sm rounded-2xl border border-cocoa-15 bg-sand shadow-card p-md">
+        <div className="flex flex-col gap-sm rounded-2xl bg-sand shadow-card p-md">
           <div className="flex items-baseline justify-between gap-sm">
             <h1 className="font-serif text-sub leading-tight text-cocoa">
               {place.hebrewName}
@@ -229,7 +229,7 @@ function ReviewCard({
   text: string;
 }) {
   return (
-    <article className="flex flex-col gap-xs rounded-2xl border border-cocoa-15 bg-sand shadow-card p-md">
+    <article className="flex flex-col gap-xs rounded-2xl bg-sand shadow-card p-md">
       <div className="flex items-center justify-between gap-sm">
         <span className="text-small font-medium text-cocoa">{reviewer}</span>
         <span aria-label={`${stars} כוכבים`} className="flex shrink-0 gap-0.5">

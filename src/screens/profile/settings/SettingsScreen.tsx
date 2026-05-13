@@ -121,7 +121,7 @@ export function SettingsScreen() {
 
   return (
     <Screen>
-      <TopBar back title="הגדרות" eyebrow="Tarmil" />
+      <TopBar back title="הגדרות" />
 
       <div className="flex flex-col gap-lg p-md pb-xl">
         {SECTIONS.map((section) => (
@@ -154,7 +154,7 @@ export function SettingsScreen() {
 
         <section className="flex flex-col gap-sm">
           <SectionLabel number="05" label="Demo controls." />
-          <div className="flex flex-col gap-sm rounded-2xl border border-cocoa-15 bg-sand shadow-card p-md">
+          <div className="flex flex-col gap-sm rounded-2xl bg-sand shadow-card p-md">
             <p className="text-small text-cocoa-70">
               מאפס את היעדים המתוכננים למצב הדגמה הקנוני. שימוש בין הדגמות
               למשקיעים.

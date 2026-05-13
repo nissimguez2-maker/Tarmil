@@ -62,7 +62,7 @@ export function ForumRow({ forum, previewTitle, recommended, onJoin }: Props) {
   return (
     <Link
       to={`/messages/forums/${forum.id}`}
-      className="flex items-center gap-sm rounded-2xl border border-cocoa-15 bg-ivory shadow-card p-md transition-colors duration-instant ease-out-quart hover:bg-sand/40 active:bg-sand/60"
+      className="flex items-center gap-sm rounded-2xl bg-ivory shadow-card p-md transition-colors duration-instant ease-out-quart hover:bg-sand/40 active:bg-sand/60"
     >
       {body}
     </Link>
