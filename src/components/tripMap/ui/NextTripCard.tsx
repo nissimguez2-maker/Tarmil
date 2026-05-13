@@ -79,7 +79,7 @@ export function NextTripCard({ stops, onTap, onAdd }: Props) {
         >
           <span className="meta-caps text-copper">Next trip</span>
 
-          <h2 className="font-serif text-sub font-bold leading-[1.05] tracking-[-0.022em] text-balance text-cocoa">
+          <h2 className="truncate font-serif text-sub font-bold leading-[1.05] tracking-[-0.022em] text-cocoa">
             {title}
           </h2>
 
@@ -166,20 +166,22 @@ function DaysUntilLine({ days }: { days: number }) {
 }
 
 /**
- * Title rule:
+ * Title rule — single short line, never wraps.
  *  - 1 stop : "São Paulo"
  *  - 2 stops: "Búzios → São Paulo"
- *  - 3+     : "Búzios → São Paulo · +N more"
+ *  - 3+     : "Búzios + N more"
  *
- * Two-name cap keeps the card readable at any width. The planned-route
- * sheet still exposes the full sequence.
+ * For 3+ stops we collapse to "first + N more" because trying to fit two
+ * arrows and a tail in a `text-sub` (22pt) headline wraps to three lines
+ * on the card width. The full sequence is still in the planned-route
+ * sheet (tap the title).
  */
 function formatTripTitle(stops: PlannedStop[]): string {
   if (stops.length === 1) return stops[0].nameEn;
-  const first = stops[0].nameEn;
-  const second = stops[1].nameEn;
-  if (stops.length === 2) return `${first} → ${second}`;
-  return `${first} → ${second} · +${stops.length - 2} more`;
+  if (stops.length === 2) {
+    return `${stops[0].nameEn} → ${stops[1].nameEn}`;
+  }
+  return `${stops[0].nameEn} + ${stops.length - 1} more`;
 }
 
 /**

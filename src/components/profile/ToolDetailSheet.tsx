@@ -1,5 +1,14 @@
 import { useState, useMemo } from 'react';
-import { Check, Globe, Mic, Camera, Wallet, Smartphone, Star } from 'lucide-react';
+import {
+  Check,
+  Globe,
+  Mic,
+  Camera,
+  Wallet,
+  Smartphone,
+  Star,
+  ExternalLink,
+} from 'lucide-react';
 import clsx from 'clsx';
 import { Modal } from '../shared/Modal';
 import { Button } from '../Button';
@@ -428,62 +437,124 @@ function FriendBalances() {
   );
 }
 
-// ---------- eSIM (mock plans) ----------
+// ---------- eSIM (Airalo hand-off, pre-filled from the trip) ----------
 
-const ESIM_PLANS = [
-  { region: 'South America', days: 30, gb: 10, price: 89, popular: true },
-  { region: 'Europe', days: 14, gb: 5, price: 49, popular: false },
-  { region: 'Southeast Asia', days: 21, gb: 8, price: 65, popular: false },
-  { region: 'Global', days: 30, gb: 15, price: 149, popular: false },
-];
+/**
+ * Pulls the user's planned trip (region + duration) and hands them off to
+ * Airalo's matching regional eSIM page. No prices, no plan list — Airalo
+ * owns that surface. We pre-fill the region and a day-count so the user
+ * lands one tap away from buying the right plan.
+ *
+ * v0.3 demo data only spans South America, so the region inference is a
+ * static map of every seeded destination_id → continent slug. Extend the
+ * table when adding new destinations.
+ */
+const COUNTRY_BY_DESTINATION_ID: Record<string, string> = {
+  buzios: 'Brazil',
+  'sao-paulo': 'Brazil',
+  jericoacoara: 'Brazil',
+  'rio-de-janeiro': 'Brazil',
+  'buenos-aires': 'Argentina',
+  'punta-del-este': 'Uruguay',
+};
+
+type EsimRegion = {
+  /** Display label for the summary card. */
+  label: string;
+  /** Airalo regional / global deep-link target. */
+  url: string;
+};
+
+const REGIONS: Record<string, EsimRegion> = {
+  'south-america': {
+    label: 'South America',
+    url: 'https://www.airalo.com/south-america-esim',
+  },
+  global: {
+    label: 'Global',
+    url: 'https://www.airalo.com/global-esims',
+  },
+};
 
 function EsimPlans() {
+  const { data } = useSupabaseData();
+  const stops = data?.plannedStops ?? [];
+
+  const trip = useMemo(() => {
+    if (stops.length === 0) return null;
+    const countries = new Set<string>();
+    for (const s of stops) {
+      const country = COUNTRY_BY_DESTINATION_ID[s.id];
+      if (country) countries.add(country);
+    }
+    const first = stops[0];
+    const last = stops[stops.length - 1];
+    const arr = new Date(first.arrivalDate + 'T00:00:00Z');
+    const dep = new Date(last.departureDate + 'T00:00:00Z');
+    const days = Math.max(
+      1,
+      Math.round((dep.getTime() - arr.getTime()) / 86_400_000),
+    );
+    const allSouthAmerica = [...countries].every((c) =>
+      ['Brazil', 'Argentina', 'Uruguay', 'Chile', 'Peru', 'Colombia'].includes(c),
+    );
+    const region = allSouthAmerica ? REGIONS['south-america'] : REGIONS.global;
+    return { countries: [...countries], region, days };
+  }, [stops]);
+
   return (
     <div className="flex flex-col gap-md">
       <p className="text-small text-cocoa-70">
-        eSIM installs in 30 seconds. Works on iPhone XS, Galaxy S20 and later.
+        eSIM in 30 seconds — no SIM swap, no roaming fees. Pulls your trip
+        region and duration so Airalo lands you on the matching plan page.
       </p>
 
-      <ul className="flex flex-col gap-sm">
-        {ESIM_PLANS.map((plan) => (
-          <li
-            key={plan.region}
-            className={clsx(
-              'flex items-center justify-between gap-sm rounded-2xl border p-md',
-              'transition-colors duration-instant ease-out-quart active:bg-cocoa-08',
-              plan.popular
-                ? 'border-copper bg-sand'
-                : 'border-cocoa-15 bg-ivory',
+      {trip ? (
+        <div className="rounded-2xl bg-sand shadow-card p-md">
+          <span className="meta-caps text-copper">Your trip</span>
+          <p className="mt-xs font-serif text-lede italic leading-tight text-cocoa">
+            {trip.region.label}
+          </p>
+          <p className="mt-xs text-small text-cocoa-70">
+            <span className="tnum">{trip.days}</span> days ·{' '}
+            <span className="tnum">{stops.length}</span> stops
+            {trip.countries.length > 0 && (
+              <>
+                {' · '}
+                {trip.countries.join(' · ')}
+              </>
             )}
-          >
-            <div className="flex min-w-0 flex-1 flex-col gap-px">
-              <div className="flex items-baseline gap-2">
-                <span className="font-serif text-lede italic text-cocoa">
-                  {plan.region}
-                </span>
-                {plan.popular && (
-                  <span className="meta-caps text-copper">Popular</span>
-                )}
-              </div>
-              <span className="text-small text-cocoa-70">
-                <span className="tnum">{plan.gb}</span>GB ·{' '}
-                <span className="tnum">{plan.days}</span> days
-              </span>
-            </div>
-            <div className="flex shrink-0 flex-col items-end">
-              <span className="font-serif text-sub leading-none text-cocoa tnum">
-                ₪{plan.price}
-              </span>
-              <button
-                type="button"
-                className="meta-caps text-copper transition-colors duration-instant ease-out-quart active:text-copper-70"
-              >
-                Buy
-              </button>
-            </div>
-          </li>
-        ))}
-      </ul>
+          </p>
+        </div>
+      ) : (
+        <div className="rounded-2xl bg-sand shadow-card p-md text-small leading-snug text-cocoa-70">
+          Add a stop to your trip first — we'll pre-fill the region and
+          duration so Airalo opens on the right plan.
+        </div>
+      )}
+
+      {trip && (
+        <a
+          href={`${trip.region.url}?days=${trip.days}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={clsx(
+            'inline-flex w-full items-center justify-center gap-2 rounded-full bg-copper px-md py-3 text-body font-medium text-ivory shadow-card',
+            'transition-[transform,background-color] duration-instant ease-out-quart',
+            'hover:bg-copper-85 active:scale-[0.98]',
+            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory',
+          )}
+        >
+          <ExternalLink className="h-4 w-4" strokeWidth={1.8} aria-hidden />
+          Open in Airalo
+        </a>
+      )}
+
+      <p className="text-small leading-snug text-cocoa-55">
+        Pre-fills the {trip ? trip.region.label : 'matching'} region and{' '}
+        {trip ? `${trip.days}-day` : 'your trip'} window. Confirm the plan in
+        Airalo, pay, install in one tap.
+      </p>
     </div>
   );
 }
