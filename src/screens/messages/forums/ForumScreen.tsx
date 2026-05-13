@@ -61,12 +61,8 @@ export function ForumScreen() {
           <span className="tnum">{forum.memberCount}</span> members
         </span>
 
-        <div
-          className="-mx-md overflow-x-auto px-md [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-          role="tablist"
-          aria-label="Filter by topic"
-        >
-          <ul className="flex w-max items-center gap-2">
+        <div role="tablist" aria-label="Filter by topic">
+          <ul className="flex flex-wrap items-center gap-2">
             {SUBJECT_CHIPS.map((chip) => {
               const active = chip.id === filter;
               return (
@@ -110,7 +106,7 @@ export function ForumScreen() {
                 <li key={t.id}>
                   <Link
                     to={`/messages/forums/${forum.id}/${t.id}`}
-                    className="flex items-start gap-sm rounded-2xl bg-ivory shadow-card p-md transition-colors duration-instant ease-out-quart hover:bg-sand/40 active:bg-sand/60"
+                    className="flex items-start gap-sm rounded-2xl bg-sand shadow-card p-md transition-colors duration-instant ease-out-quart hover:bg-sand/80 active:bg-rope/50"
                   >
                     <Avatar
                       photoUrl={author?.photoUrl}

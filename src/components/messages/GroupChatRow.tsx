@@ -30,7 +30,7 @@ export function GroupChatRow({ chat, members, lastMessage, selfLabel = 'Me' }: P
   return (
     <Link
       to={`/messages/chats/${chat.id}`}
-      className="flex items-center gap-sm rounded-2xl bg-ivory shadow-card p-md transition-colors duration-instant ease-out-quart hover:bg-sand/40 active:bg-sand/60"
+      className="flex items-center gap-sm rounded-2xl bg-sand shadow-card p-md transition-colors duration-instant ease-out-quart hover:bg-sand/80 active:bg-rope/50"
     >
       <span className="relative inline-flex h-12 w-12 shrink-0 items-center">
         {previewMembers.map((m, i) => (
