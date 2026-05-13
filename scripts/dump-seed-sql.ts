@@ -13,6 +13,12 @@ import { forumThreadReplies } from '../src/data/forumThreadReplies';
 import { dms } from '../src/data/dms';
 import { dmMessages } from '../src/data/dmMessages';
 import { groupMessages } from '../src/data/groupMessages';
+import { groupChats } from '../src/data/groupChats';
+import { friendOverlaps } from '../src/data/myTrip';
+import { plannedStops } from '../src/data/plannedStops';
+import { activityPosts } from '../src/data/activityPosts';
+import { rioPlaces } from '../src/data/rioPlaces';
+import { globalPlaces } from '../src/data/globalPlaces';
 
 const NOW = Date.now();
 
@@ -32,6 +38,74 @@ function nullable<T>(v: T | null | undefined): string {
 const lines: string[] = [];
 
 lines.push('BEGIN;');
+lines.push('');
+
+// --- Places (UPDATE only — schema is read-only for anon, but execute_sql
+// runs as service role, so direct UPDATEs by id are fine) ---
+lines.push(`-- places: update Hebrew/English text columns on ${rioPlaces.length + globalPlaces.length} rows`);
+for (const p of [...rioPlaces, ...globalPlaces]) {
+  lines.push(
+    `UPDATE places SET ` +
+      `hebrew_name = '${esc(p.hebrewName)}', ` +
+      `english_name = '${esc(p.englishName)}', ` +
+      `hebrew_description = '${esc(p.hebrewDescription)}', ` +
+      `english_description = '${esc(p.englishDescription)}', ` +
+      `friend_visits = '${esc(JSON.stringify(p.friendVisits ?? []))}'::jsonb ` +
+      `WHERE id = '${esc(p.id)}';`,
+  );
+}
+lines.push('');
+
+// --- Friend overlaps (UPDATE text columns) ---
+lines.push(`-- friend_overlaps: update text columns on ${friendOverlaps.length} rows`);
+for (const f of friendOverlaps) {
+  lines.push(
+    `UPDATE friend_overlaps SET ` +
+      `friend_name = '${esc(f.friendName)}', ` +
+      `friend_initial = '${esc(f.friendInitial)}', ` +
+      `zone_label = '${esc(f.zoneLabel)}', ` +
+      `detail = '${esc(f.detail)}' ` +
+      `WHERE id = '${esc(f.id)}';`,
+  );
+}
+lines.push('');
+
+// --- Planned stops (UPDATE text columns; rows seeded by reset_demo_state RPC) ---
+lines.push(`-- planned_stops: update text columns on ${plannedStops.length} rows`);
+for (const s of plannedStops) {
+  lines.push(
+    `UPDATE planned_stops SET ` +
+      `name_he = '${esc(s.nameHe)}', ` +
+      `name_en = '${esc(s.nameEn)}', ` +
+      `note = ${nullable(s.note)} ` +
+      `WHERE id = '${esc(s.id)}';`,
+  );
+}
+lines.push('');
+
+// --- Group chats (UPDATE name_he + city_label) ---
+lines.push(`-- group_chats: update text columns on ${groupChats.length} rows`);
+for (const c of groupChats) {
+  lines.push(
+    `UPDATE group_chats SET ` +
+      `name_he = '${esc(c.nameHe)}', ` +
+      `city_label = ${nullable(c.cityLabel)} ` +
+      `WHERE id = '${esc(c.id)}';`,
+  );
+}
+lines.push('');
+
+// --- Activity posts (UPDATE body_he + payload) ---
+lines.push(`-- activity_posts: replace ${activityPosts.length} rows wholesale`);
+lines.push('DELETE FROM activity_posts;');
+activityPosts.forEach((p, i) => {
+  const offset = (activityPosts.length - i) * 60 * 4; // 4-hour spacing
+  lines.push(
+    `INSERT INTO activity_posts (id, kind, author_friend_id, destination_id, body_he, payload, reply_count, created_at) VALUES (` +
+      `'${esc(p.id)}', '${esc(p.kind)}', ${nullable(p.authorFriendId)}, ${nullable(p.destinationId)}, ` +
+      `'${esc(p.bodyHe)}', '${esc(JSON.stringify(p.payload))}'::jsonb, ${p.replyCount}, '${ts(offset)}');`,
+  );
+});
 lines.push('');
 
 // --- Forums ---
