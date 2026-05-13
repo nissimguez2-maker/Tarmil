@@ -17,7 +17,9 @@ import { drawPlaceMarkers } from './layers/drawPlaceMarkers';
 import { drawFriendBubbles } from './layers/drawFriendBubbles';
 import { drawPresentPin } from './layers/drawPresentPin';
 import { drawPlannedStops } from './layers/drawPlannedStops';
+import { drawDensityHeat } from './layers/drawDensityHeat';
 import { placeMatchesFilters, type FilterId } from './utils/categoryLabel';
+import { DENSITY_POINTS } from '../../data/densityCities';
 import type { SheetState } from './tripReducer';
 
 export type TripMapHandle = {
@@ -26,7 +28,7 @@ export type TripMapHandle = {
 };
 
 type Props = {
-  mode: 'default' | 'pick';
+  mode: 'default' | 'pick' | 'mapOnly';
   activeFilters: Set<FilterId>;
   places: Place[];
   /** Already filtered by friendsView upstream — drawn as-is. */
@@ -35,6 +37,8 @@ type Props = {
   presentLocation: LatLng;
   plannedStops: PlannedStop[];
   activeStopId?: string;
+  /** When true, hide the regular layers and render the density heat instead. */
+  heatmapEnabled: boolean;
   onOpenSheet: (sheet: SheetState) => void;
   onCloseSheet: () => void;
 };
@@ -54,6 +58,7 @@ export const TripMap = forwardRef<TripMapHandle, Props>(function TripMap(
     presentLocation,
     plannedStops,
     activeStopId,
+    heatmapEnabled,
     onOpenSheet,
     onCloseSheet,
   },
@@ -141,11 +146,20 @@ export const TripMap = forwardRef<TripMapHandle, Props>(function TripMap(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Re-run draw layers when state or data changes.
+  // Re-run draw layers when state or data changes. Density-heat mode replaces
+  // the regular layers wholesale — we don't draw the trip line, planned stops,
+  // places, friends, or present pin while heat is on.
   useEffect(() => {
     if (!mapRef.current) return;
     const map = mapRef.current;
     const cleanups: Array<() => void> = [];
+
+    if (heatmapEnabled) {
+      cleanups.push(drawDensityHeat(map, DENSITY_POINTS));
+      return () => {
+        cleanups.reverse().forEach((fn) => fn());
+      };
+    }
 
     const isPick = mode === 'pick';
     const noopPlace = () => {};
@@ -208,6 +222,7 @@ export const TripMap = forwardRef<TripMapHandle, Props>(function TripMap(
     presentLocation,
     plannedStops,
     activeStopId,
+    heatmapEnabled,
   ]);
 
   return <div ref={containerRef} className="tarmil-map h-full w-full" />;

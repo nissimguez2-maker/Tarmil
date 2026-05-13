@@ -22,6 +22,10 @@ import { PlannedStopSheet } from '../../components/tripMap/sheets/PlannedStopShe
 import { SavePlaceToStopSheet } from '../../components/tripMap/sheets/SavePlaceToStopSheet';
 import { ArrivalConfirmSheet } from '../../components/tripMap/sheets/ArrivalConfirmSheet';
 import { FiltersSheet } from '../../components/tripMap/sheets/FiltersSheet';
+import { ConfirmFriendTripSheet } from '../../components/tripMap/sheets/ConfirmFriendTripSheet';
+import { MapOnlyToggle } from '../../components/tripMap/ui/MapOnlyToggle';
+import { DensityFab } from '../../components/tripMap/ui/DensityFab';
+import { DensityLegend } from '../../components/tripMap/ui/DensityLegend';
 import {
   tripReducer,
   makeInitialTripState,
@@ -64,7 +68,11 @@ export function TripScreen() {
         nextStop.friendOverlapIds?.includes(f.id),
       )
     : [];
-  const floatersVisible = sheet === null && state.mode === 'default';
+  const isMapOnly = state.mode === 'mapOnly';
+  const isHeat = state.heatmapEnabled;
+  const headerCollapsed = sheet !== null || isMapOnly || isHeat;
+  const floatersVisible = sheet === null && state.mode !== 'pick' && !isHeat;
+  const addDestVisible = floatersVisible && !isMapOnly;
   const isTallSheet = sheet?.kind === 'plannedStop' || sheet?.kind === 'filters';
 
   const plannedFriendIds = new Set(
@@ -147,12 +155,12 @@ export function TripScreen() {
 
         {nextStop && (
           <div
-            aria-hidden={sheet !== null}
+            aria-hidden={headerCollapsed}
             className={clsx(
               'grid transition-[grid-template-rows,opacity] duration-considered ease-out-quart',
-              sheet === null
-                ? 'grid-rows-[1fr] opacity-100'
-                : 'grid-rows-[0fr] opacity-0',
+              headerCollapsed
+                ? 'grid-rows-[0fr] opacity-0'
+                : 'grid-rows-[1fr] opacity-100',
             )}
           >
             <div className="overflow-hidden">
@@ -178,9 +186,17 @@ export function TripScreen() {
             activeStopId={
               sheet?.kind === 'plannedStop' ? sheet.stopId : undefined
             }
+            heatmapEnabled={isHeat}
             onOpenSheet={(s) => dispatch({ type: 'OPEN_SHEET', sheet: s })}
             onCloseSheet={() => dispatch({ type: 'CLOSE_SHEET' })}
           />
+
+          {state.mode !== 'pick' && (
+            <MapOnlyToggle
+              active={isMapOnly}
+              onClick={() => dispatch({ type: 'TOGGLE_MAP_ONLY' })}
+            />
+          )}
 
           {floatersVisible && (
             <>
@@ -190,7 +206,21 @@ export function TripScreen() {
                   dispatch({ type: 'OPEN_SHEET', sheet: { kind: 'filters' } })
                 }
               />
-              <AddDestinationFab onClick={openSearch} />
+              <DensityFab
+                active={isHeat}
+                onClick={() => dispatch({ type: 'TOGGLE_HEATMAP' })}
+              />
+              {addDestVisible && <AddDestinationFab onClick={openSearch} />}
+            </>
+          )}
+
+          {isHeat && (
+            <>
+              <DensityFab
+                active={isHeat}
+                onClick={() => dispatch({ type: 'TOGGLE_HEATMAP' })}
+              />
+              <DensityLegend />
             </>
           )}
 
@@ -227,6 +257,19 @@ export function TripScreen() {
             {sheet?.kind === 'friend' && (
               <FriendSheet
                 friend={sheet.friend}
+                onClose={() => dispatch({ type: 'CLOSE_SHEET' })}
+                onAddToTrip={() =>
+                  dispatch({
+                    type: 'OPEN_SHEET',
+                    sheet: { kind: 'confirmFriendTrip', friend: sheet.friend },
+                  })
+                }
+              />
+            )}
+            {sheet?.kind === 'confirmFriendTrip' && (
+              <ConfirmFriendTripSheet
+                friend={sheet.friend}
+                onSave={handleSaveStop}
                 onClose={() => dispatch({ type: 'CLOSE_SHEET' })}
               />
             )}

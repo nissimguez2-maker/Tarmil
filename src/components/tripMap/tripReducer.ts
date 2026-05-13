@@ -15,6 +15,7 @@ export type SheetState =
       candidate: { nameHe: string; latlng: [number, number] };
       editingStopId?: string;
     }
+  | { kind: 'confirmFriendTrip'; friend: FriendOverlap }
   | { kind: 'plannedRoute' }
   | { kind: 'plannedStop'; stopId: string }
   | { kind: 'savePlaceToStop'; place: Place | Place }
@@ -33,12 +34,17 @@ export type FriendsView = 'all' | 'overlaps' | 'none';
 // fetched by SupabaseDataProvider; mutators on that hook handle add/edit/
 // remove. This reducer covers only ephemeral session state.
 export type TripState = {
-  mode: 'default' | 'pick';
+  // 'default' = normal map with header + sheets
+  // 'pick'    = pick-a-point mode (reticle + bottom action bar)
+  // 'mapOnly' = focus mode, NextTripCard collapsed, no sheets open
+  mode: 'default' | 'pick' | 'mapOnly';
   activeFilters: Set<FilterId>;
   sheet: SheetState | null;
   pickPrefillName?: string;
   arrivalDismissed: boolean;
   friendsView: FriendsView;
+  /** When true, regular map layers are hidden and the global density heat replaces them. */
+  heatmapEnabled: boolean;
 };
 
 export type TripAction =
@@ -50,7 +56,9 @@ export type TripAction =
   | { type: 'CANCEL_PICK' }
   | { type: 'CONFIRM_PICK'; latlng: [number, number] }
   | { type: 'DISMISS_ARRIVAL' }
-  | { type: 'SET_FRIENDS_VIEW'; view: FriendsView };
+  | { type: 'SET_FRIENDS_VIEW'; view: FriendsView }
+  | { type: 'TOGGLE_MAP_ONLY' }
+  | { type: 'TOGGLE_HEATMAP' };
 
 export function makeInitialTripState(): TripState {
   return {
@@ -59,13 +67,21 @@ export function makeInitialTripState(): TripState {
     sheet: null,
     arrivalDismissed: false,
     friendsView: 'all',
+    heatmapEnabled: false,
   };
 }
 
 export function tripReducer(state: TripState, action: TripAction): TripState {
   switch (action.type) {
     case 'OPEN_SHEET':
-      return { ...state, sheet: action.sheet };
+      // Opening a sheet exits map-only focus and density modes — both are
+      // map-focus modes that compete with sheets.
+      return {
+        ...state,
+        mode: state.mode === 'mapOnly' ? 'default' : state.mode,
+        heatmapEnabled: false,
+        sheet: action.sheet,
+      };
     case 'CLOSE_SHEET':
       return { ...state, sheet: null };
     case 'TOGGLE_FILTER': {
@@ -102,6 +118,24 @@ export function tripReducer(state: TripState, action: TripAction): TripState {
       return { ...state, sheet: null, arrivalDismissed: true };
     case 'SET_FRIENDS_VIEW':
       return { ...state, friendsView: action.view };
+    case 'TOGGLE_MAP_ONLY':
+      // Map-only is a focus mode; entering it dismisses any open sheet and
+      // disables the heatmap (which is the other focus mode).
+      return {
+        ...state,
+        mode: state.mode === 'mapOnly' ? 'default' : 'mapOnly',
+        sheet: null,
+        heatmapEnabled: false,
+      };
+    case 'TOGGLE_HEATMAP':
+      // Heat is a focus mode like map-only — closes sheets and overrides
+      // the regular pin layers in TripMap.
+      return {
+        ...state,
+        heatmapEnabled: !state.heatmapEnabled,
+        sheet: null,
+        mode: state.mode === 'pick' ? state.mode : 'default',
+      };
   }
 }
 

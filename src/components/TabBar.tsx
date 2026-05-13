@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { Map, Newspaper, MessageSquare, User } from 'lucide-react';
+import { Map, Newspaper, MessageSquare, Wrench, User } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import clsx from 'clsx';
 
@@ -10,17 +10,17 @@ type Tab = {
 };
 
 /**
- * Tab order in source = Trip → Activity → Messages → Profile.
+ * Tab order in source = Trip → Activity → Messages → Tools → Profile.
  * Because <html dir="rtl">, this renders visually right-to-left:
  * Trip is rightmost (Hebrew "first"), Profile leftmost.
  *
- * Friends moved under /profile/friends as a Profile drill-down per the Figma
- * structure. Tools live in a slide-in panel triggered by the wrench in <TopBar>.
+ * Friends moved under /profile/friends as a Profile drill-down.
  */
 const TABS: Tab[] = [
   { to: '/trip', label: 'טיול', Icon: Map },
   { to: '/activity', label: 'פעילות', Icon: Newspaper },
   { to: '/messages', label: 'הודעות', Icon: MessageSquare },
+  { to: '/tools', label: 'כלים', Icon: Wrench },
   { to: '/profile', label: 'פרופיל', Icon: User },
 ];
 
@@ -29,7 +29,7 @@ export function TabBar() {
     <nav
       aria-label="ניווט ראשי"
       className={clsx(
-        'relative z-10 grid grid-cols-4 border-t border-cocoa-15 bg-ivory',
+        'relative z-10 grid grid-cols-5 border-t border-cocoa-15 bg-ivory',
       )}
       style={{
         paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 8px)',
