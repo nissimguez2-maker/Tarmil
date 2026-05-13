@@ -1,9 +1,17 @@
 import { Link } from 'react-router-dom';
 import type { FriendOverlap } from '../../data/myTrip';
+import type { FriendRelationship } from '../tripMap/utils/relateFriend';
 import { Avatar } from '../shared/Avatar';
 
 type Props = {
   friend: FriendOverlap;
+  /**
+   * Pre-computed relationship from `relateFriend()`. When provided the
+   * status line uses the same vocabulary the trip map + friend sheet
+   * use (Here / Overlap / Traveling). Falls back to the legacy
+   * present/planning label when omitted.
+   */
+  relationship?: FriendRelationship;
 };
 
 /**
@@ -12,11 +20,8 @@ type Props = {
  * Status text reuses `friend.detail`'s short phrasing trimmed to ~22 chars,
  * which keeps the grid uniform. Tap drills to /profile/friend/:id.
  */
-export function FriendGridItem({ friend }: Props) {
-  const status =
-    friend.status === 'present'
-      ? `In ${friend.zoneLabel}`
-      : `Planning ${friend.zoneLabel}`;
+export function FriendGridItem({ friend, relationship }: Props) {
+  const status = statusFor(friend, relationship);
 
   return (
     <Link
@@ -38,4 +43,23 @@ export function FriendGridItem({ friend }: Props) {
       </span>
     </Link>
   );
+}
+
+function statusFor(
+  friend: FriendOverlap,
+  relationship?: FriendRelationship,
+): string {
+  if (!relationship) {
+    return friend.status === 'present'
+      ? `In ${friend.zoneLabel}`
+      : `Planning ${friend.zoneLabel}`;
+  }
+  switch (relationship.kind) {
+    case 'present':
+      return `In ${relationship.zoneLabel}`;
+    case 'future_overlap':
+      return `Overlap · ${relationship.stopName}`;
+    case 'traveling':
+      return `Traveling · ${relationship.city}`;
+  }
 }

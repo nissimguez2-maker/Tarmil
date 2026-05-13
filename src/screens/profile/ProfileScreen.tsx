@@ -10,6 +10,7 @@ import { StatsPill } from '../../components/profile/StatsPill';
 import { FriendGridItem } from '../../components/profile/FriendGridItem';
 import { PastTripCard } from '../../components/profile/PastTripCard';
 import { useSupabaseData } from '../../lib/SupabaseDataProvider';
+import { relateFriend } from '../../components/tripMap/utils/relateFriend';
 
 /**
  * Profile tab. Three editorial sections — route, past trips, friends in
@@ -142,7 +143,10 @@ export function ProfileScreen() {
           <ul className="grid grid-cols-3 gap-sm">
             {friendsForGrid.map((f) => (
               <li key={f.id}>
-                <FriendGridItem friend={f} />
+                <FriendGridItem
+                  friend={f}
+                  relationship={relateFriend(f, data.plannedStops)}
+                />
               </li>
             ))}
           </ul>
