@@ -17,7 +17,7 @@ export function DMRow({ dm, friend }: Props) {
   return (
     <Link
       to={`/messages/dms/${dm.id}`}
-      className="flex items-center gap-sm rounded-2xl bg-ivory shadow-card p-md transition-colors duration-instant ease-out-quart hover:bg-sand/40 active:bg-sand/60"
+      className="flex items-center gap-sm rounded-2xl bg-sand shadow-card p-md transition-colors duration-instant ease-out-quart hover:bg-sand/80 active:bg-rope/50"
     >
       <Avatar
         photoUrl={friend?.photoUrl}

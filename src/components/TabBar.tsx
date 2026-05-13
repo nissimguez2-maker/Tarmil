@@ -34,7 +34,7 @@ export function TabBar() {
       <nav
         aria-label="Main navigation"
         className={clsx(
-          'pointer-events-auto relative grid w-full max-w-[360px] grid-cols-5',
+          'pointer-events-auto relative isolate grid w-full max-w-[360px] grid-cols-5',
           'rounded-full bg-cocoa shadow-fab',
         )}
       >
