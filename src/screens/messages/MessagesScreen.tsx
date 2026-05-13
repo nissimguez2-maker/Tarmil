@@ -83,7 +83,7 @@ export function MessagesScreen() {
 
   return (
     <Screen>
-      <TopBar eyebrow="Tarmil" title="הודעות" />
+      <TopBar title="הודעות" />
 
       <SubNav items={TABS} active={active} onChange={onChangeTab} />
 

@@ -47,7 +47,7 @@ export function TripDetailScreen() {
       <TopBar back title={stop.nameHe} eyebrow="טיול הבא" />
 
       <div className="flex flex-col gap-lg p-md pb-xl">
-        <section className="flex flex-col gap-xs rounded-2xl border border-cocoa-15 bg-sand shadow-card p-md">
+        <section className="flex flex-col gap-xs rounded-2xl bg-sand shadow-card p-md">
           <span className="font-serif text-display leading-none text-cocoa">
             {stop.nameHe}
           </span>
@@ -70,7 +70,7 @@ export function TripDetailScreen() {
                 <li key={f.id}>
                   <Link
                     to={`/profile/friend/${f.id}`}
-                    className="flex items-center gap-sm rounded-2xl border border-cocoa-15 bg-ivory shadow-card p-md transition-colors duration-instant ease-out-quart hover:bg-sand/40 active:bg-sand/60"
+                    className="flex items-center gap-sm rounded-2xl bg-ivory shadow-card p-md transition-colors duration-instant ease-out-quart hover:bg-sand/40 active:bg-sand/60"
                   >
                     <Avatar
                       photoUrl={f.photoUrl}
@@ -104,7 +104,7 @@ export function TripDetailScreen() {
                 <li key={t.id}>
                   <Link
                     to={`/messages/forums/${forum.id}/${t.id}`}
-                    className="flex flex-col gap-px rounded-2xl border border-cocoa-15 bg-ivory shadow-card p-md transition-colors duration-instant ease-out-quart hover:bg-sand/40 active:bg-sand/60"
+                    className="flex flex-col gap-px rounded-2xl bg-ivory shadow-card p-md transition-colors duration-instant ease-out-quart hover:bg-sand/40 active:bg-sand/60"
                   >
                     <span className="font-serif text-lede italic text-cocoa">
                       {t.title}
@@ -125,7 +125,7 @@ export function TripDetailScreen() {
             {['ממיר מטבעות', 'eSIM', 'תרגום קולי'].map((tool) => (
               <div
                 key={tool}
-                className="rounded-2xl border border-cocoa-15 bg-ivory shadow-card p-sm text-center text-small text-cocoa"
+                className="rounded-2xl bg-ivory shadow-card p-sm text-center text-small text-cocoa"
               >
                 {tool}
               </div>

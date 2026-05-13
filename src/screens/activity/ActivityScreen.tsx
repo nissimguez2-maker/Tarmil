@@ -43,7 +43,7 @@ export function ActivityScreen() {
 
   return (
     <Screen className="relative">
-      <TopBar eyebrow="Tarmil" title="פעילות" />
+      <TopBar title="פעילות" />
 
       <ul className="flex flex-col gap-sm p-md pb-32">
         {data.activityPosts.map((post) => {

@@ -1,21 +1,27 @@
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import { DeviceFrame } from '../components/DeviceFrame';
 import { TabBar } from '../components/TabBar';
 
 /**
- * App-shell layout. The <Outlet/> renders the active screen; <TabBar/> persists
- * across routes. Wrapped by <DeviceFrame/> so the iPhone shell shows on
- * desktop/tablet and full-bleed on phone.
- *
- * Tools used to live in a slide-down panel triggered by a wrench in the top
- * bar — they're now a section inside the Profile tab so the top bar can
- * breathe and the tools have a logical home.
+ * Routes that hide the floating tab capsule. Used for drill-downs where the
+ * screen owns the bottom edge (chat composers, friend-profile sticky CTAs).
+ * iOS-standard pattern — the bar reappears when the user goes back.
  */
+const HIDE_TAB_PATTERNS: RegExp[] = [
+  /^\/messages\/forums\/[^/]+\/[^/]+$/,
+  /^\/messages\/chats\/[^/]+$/,
+  /^\/messages\/dms\/[^/]+$/,
+  /^\/profile\/friend\/[^/]+$/,
+];
+
 export function AppLayout() {
+  const { pathname } = useLocation();
+  const showTab = !HIDE_TAB_PATTERNS.some((re) => re.test(pathname));
+
   return (
     <DeviceFrame>
       <Outlet />
-      <TabBar />
+      {showTab && <TabBar />}
     </DeviceFrame>
   );
 }

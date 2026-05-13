@@ -37,7 +37,7 @@ export function PlaceCard({
       type="button"
       onClick={onClick}
       className={clsx(
-        'group flex w-full flex-col gap-xs rounded-2xl border border-cocoa-15 bg-sand shadow-card p-md text-start',
+        'group flex w-full flex-col gap-xs rounded-2xl bg-sand shadow-card p-md text-start',
         'transition-colors duration-instant ease-out-quart hover:bg-sand/80 active:bg-rope',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory',
         className,

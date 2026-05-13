@@ -10,11 +10,16 @@ type Tab = {
 };
 
 /**
+ * Floating dark tab capsule — the signature premium-app move.
+ *
  * Tab order in source = Trip → Activity → Messages → Tools → Profile.
  * Because <html dir="rtl">, this renders visually right-to-left:
  * Trip is rightmost (Hebrew "first"), Profile leftmost.
  *
- * Friends moved under /profile/friends as a Profile drill-down.
+ * The capsule floats above the page (8mm above the safe-area bottom), sits
+ * on the cocoa fill with ivory icons, and lifts the active tab into a
+ * copper-filled inner pill. No edge-to-edge bar, no hard top border. The
+ * page below scrolls under it with a soft fade.
  */
 const TABS: Tab[] = [
   { to: '/trip', label: 'טיול', Icon: Map },
@@ -26,56 +31,60 @@ const TABS: Tab[] = [
 
 export function TabBar() {
   return (
-    <nav
-      aria-label="ניווט ראשי"
-      className={clsx(
-        'relative z-10 grid grid-cols-5 border-t border-cocoa-08 bg-ivory/95 backdrop-blur',
-      )}
-      style={{
-        paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 8px)',
-      }}
+    <div
+      className="pointer-events-none absolute inset-x-0 bottom-0 z-20 flex justify-center px-md"
+      style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 14px)' }}
     >
-      {TABS.map(({ to, label, Icon }) => (
-        <NavLink
-          key={to}
-          to={to}
-          className={({ isActive }) =>
-            clsx(
-              'relative flex flex-col items-center justify-center gap-1 py-3',
-              'transition-colors duration-instant ease-out-quart',
-              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory focus-visible:rounded-md',
-              isActive ? 'text-copper' : 'text-cocoa-55 hover:text-cocoa-70',
-            )
-          }
-        >
-          {({ isActive }) => (
-            <>
-              <Icon
-                className={clsx(
-                  'h-[22px] w-[22px] transition-transform duration-instant ease-out-quart',
-                  isActive && 'scale-105',
+      <nav
+        aria-label="ניווט ראשי"
+        className={clsx(
+          'pointer-events-auto relative grid w-full max-w-[360px] grid-cols-5',
+          'rounded-full bg-cocoa/95 backdrop-blur-md shadow-fab',
+        )}
+      >
+        {TABS.map(({ to, label, Icon }) => (
+          <NavLink
+            key={to}
+            to={to}
+            aria-label={label}
+            className={({ isActive }) =>
+              clsx(
+                'group relative flex h-14 flex-col items-center justify-center gap-0.5',
+                'transition-[transform,color] duration-instant ease-out-quart',
+                'active:scale-[0.94]',
+                'focus-visible:outline-none focus-visible:rounded-full focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-cocoa',
+                isActive
+                  ? 'text-ivory'
+                  : 'text-ivory/45 hover:text-ivory/75',
+              )
+            }
+          >
+            {({ isActive }) => (
+              <>
+                {isActive && (
+                  <span
+                    aria-hidden
+                    className="absolute inset-x-2 inset-y-1.5 -z-10 rounded-full bg-copper"
+                  />
                 )}
-                strokeWidth={isActive ? 2.2 : 1.6}
-                aria-hidden
-              />
-              <span
-                className={clsx(
-                  'text-small leading-none',
-                  isActive ? 'font-semibold' : 'font-medium',
-                )}
-              >
-                {label}
-              </span>
-              {isActive && (
-                <span
+                <Icon
+                  className="h-[20px] w-[20px]"
+                  strokeWidth={isActive ? 2.2 : 1.7}
                   aria-hidden
-                  className="absolute top-0 h-[3px] w-8 rounded-b-full bg-copper"
                 />
-              )}
-            </>
-          )}
-        </NavLink>
-      ))}
-    </nav>
+                <span
+                  className={clsx(
+                    'text-[9pt] leading-none',
+                    isActive ? 'font-semibold' : 'font-medium',
+                  )}
+                >
+                  {label}
+                </span>
+              </>
+            )}
+          </NavLink>
+        ))}
+      </nav>
+    </div>
   );
 }

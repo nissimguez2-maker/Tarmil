@@ -51,10 +51,12 @@ export function TopBar({ title, eyebrow, back, end, className }: Props) {
         </button>
       )}
 
-      <div className="flex flex-col items-center gap-[1px]">
-        {eyebrow && <span className="meta-caps text-copper">{eyebrow}</span>}
+      <div className="flex flex-col items-center gap-px">
+        {eyebrow && (
+          <span className="text-meta text-cocoa-55">{eyebrow}</span>
+        )}
         {title && (
-          <h1 className="font-serif text-lede font-semibold leading-none tracking-[-0.01em] text-cocoa">
+          <h1 className="font-serif text-[17pt] font-bold leading-none tracking-[-0.018em] text-cocoa">
             {title}
           </h1>
         )}

@@ -47,7 +47,7 @@ export function ForumThreadScreen() {
       <TopBar back title={thread.title} />
 
       <div className="flex flex-1 flex-col gap-md overflow-y-auto p-md">
-        <article className="flex flex-col gap-sm rounded-2xl border border-cocoa-15 bg-ivory shadow-card p-md">
+        <article className="flex flex-col gap-sm rounded-2xl bg-ivory shadow-card p-md">
           <header className="flex items-center gap-sm">
             <Avatar
               photoUrl={author?.photoUrl}

@@ -41,7 +41,7 @@ export function ProfileScreen() {
   return (
     <Screen>
       <TopBar
-        eyebrow="Tarmil"
+       
         title="פרופיל"
         end={
           <Link
@@ -78,7 +78,7 @@ export function ProfileScreen() {
           <SectionLabel number="01" label="Your route." />
           <Link
             to="/trip"
-            className="flex items-center justify-between gap-sm rounded-2xl border border-cocoa-15 bg-sand shadow-card p-md transition-colors duration-instant ease-out-quart hover:bg-sand/70 active:bg-sand"
+            className="flex items-center justify-between gap-sm rounded-2xl bg-sand shadow-card p-md transition-colors duration-instant ease-out-quart hover:bg-sand/70 active:bg-sand"
           >
             <span className="flex min-w-0 flex-1 flex-col gap-px">
               <span className="truncate font-serif text-lede italic text-cocoa">

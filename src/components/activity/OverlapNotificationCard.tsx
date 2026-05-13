@@ -17,7 +17,7 @@ type Props = {
  */
 export function OverlapNotificationCard({ post, friend, onOpenChat }: Props) {
   return (
-    <article className="flex flex-col gap-sm rounded-2xl border border-cocoa-15 bg-sand shadow-card p-md">
+    <article className="flex flex-col gap-sm rounded-2xl bg-sand shadow-card p-md">
       <header className="flex items-center gap-sm">
         <Avatar
           photoUrl={friend?.photoUrl}

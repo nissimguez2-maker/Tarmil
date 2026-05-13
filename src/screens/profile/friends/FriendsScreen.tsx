@@ -21,7 +21,7 @@ export function FriendsScreen() {
 
   return (
     <Screen>
-      <TopBar back eyebrow="Tarmil" title="חברים" />
+      <TopBar back title="חברים" />
 
       <div className="flex flex-col gap-lg p-md">
         <SectionLabel number="01" label="Where trips touch." />
@@ -43,7 +43,7 @@ export function FriendsScreen() {
                 <Link
                   to={`/profile/friend/${friend.id}`}
                   className={clsx(
-                    'flex items-start gap-sm rounded-2xl border border-cocoa-15 bg-sand shadow-card p-md',
+                    'flex items-start gap-sm rounded-2xl bg-sand shadow-card p-md',
                     'transition-colors duration-instant ease-out-quart hover:bg-sand/70 active:bg-sand',
                   )}
                 >
