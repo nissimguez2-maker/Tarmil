@@ -10,6 +10,12 @@ type Props = {
   place: Place;
   reviews: PlaceReview[];
   friends: FriendOverlap[];
+  /**
+   * Optional city tag rendered next to the category — useful in search
+   * results, where the user is scanning across multiple destinations.
+   * Omit on the trip + now lists where the city is already obvious.
+   */
+  cityLabel?: string;
 };
 
 const CATEGORY_LABEL: Record<string, string> = {
@@ -30,7 +36,12 @@ const CATEGORY_LABEL: Record<string, string> = {
  * inferred from `reservation_url`. Tap area outside the CTA drills into
  * the existing `/place/:id` route.
  */
-export function BusinessCard({ place, reviews, friends }: Props) {
+export function BusinessCard({
+  place,
+  reviews,
+  friends,
+  cityLabel,
+}: Props) {
   const placeReviews = reviews.filter((r) => r.placeId === place.id);
   const ctaKind = inferCtaKind(place.reservationUrl);
   const category = CATEGORY_LABEL[place.category] ?? place.category;
@@ -44,7 +55,15 @@ export function BusinessCard({ place, reviews, friends }: Props) {
         <Hero imageUrl={place.imageUrl} alt={place.englishName} />
         <div className="flex items-start gap-sm p-md">
           <div className="flex min-w-0 flex-1 flex-col gap-px">
-            <span className="meta-caps text-copper">{category}</span>
+            <span className="meta-caps text-copper">
+              {category}
+              {cityLabel && (
+                <>
+                  <span aria-hidden className="px-1 text-cocoa-30">·</span>
+                  <span className="text-cocoa-55">{cityLabel}</span>
+                </>
+              )}
+            </span>
             <h3 className="font-serif text-lede italic leading-tight text-cocoa">
               {place.englishName}
             </h3>
