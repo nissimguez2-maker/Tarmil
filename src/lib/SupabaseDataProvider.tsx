@@ -21,6 +21,7 @@ import type { DM } from '../data/dms';
 import type { DMMessage } from '../data/dmMessages';
 import type { ActivityPost, ActivityPostKind } from '../data/activityPosts';
 import type { Reaction, ReactionTargetType } from '../data/reactions';
+import type { PlaceReview } from '../data/placeReviews';
 
 export type TripData = {
   places: Place[];
@@ -37,6 +38,7 @@ export type TripData = {
   dmMessages: DMMessage[];
   activityPosts: ActivityPost[];
   reactions: Reaction[];
+  placeReviews: PlaceReview[];
 };
 
 type Mutators = {
@@ -59,6 +61,12 @@ type Mutators = {
     destinationId?: string,
     payload?: Record<string, unknown>,
   ) => Promise<void>;
+  /**
+   * Upsert the demo user's 1–5 star rating for a place. There's exactly one
+   * "self" review per place (`reviewer_friend_id = null`); existing rows are
+   * updated in place.
+   */
+  submitPlaceReview: (placeId: string, rating: 1 | 2 | 3 | 4 | 5) => Promise<void>;
 };
 
 type ContextValue = {
@@ -136,6 +144,18 @@ const placeRowToPlace = (r: Tables<'places'>): Place => ({
   friendsKnow: r.friends_know,
   tarmilPick: r.tarmil_pick || undefined,
   friendVisits: parseFriendVisits(r.friend_visits),
+  phone: r.phone ?? undefined,
+  reservationUrl: r.reservation_url ?? undefined,
+  imageUrl: r.image_url ?? undefined,
+  paidPlacement: r.paid_placement || undefined,
+});
+
+const placeReviewRowToReview = (
+  r: Tables<'place_reviews'>,
+): PlaceReview => ({
+  placeId: r.place_id,
+  reviewerFriendId: r.reviewer_friend_id,
+  rating: r.rating,
 });
 
 const friendRowToOverlap = (r: Tables<'friend_overlaps'>): FriendOverlap => ({
@@ -193,6 +213,7 @@ const forumRowToForum = (r: Tables<'forums'>): Forum => ({
   cityLabel: r.city_label ?? undefined,
   destinationId: r.destination_id ?? undefined,
   kind: r.kind as ForumKind,
+  subject: r.subject ?? undefined,
   memberCount: r.member_count,
   heroBlurbHe: r.hero_blurb_he,
   isRecommended: r.is_recommended,
@@ -400,6 +421,7 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
           dmMessagesRes,
           activityPostsRes,
           reactionsRes,
+          placeReviewsRes,
         ] = await Promise.all([
           supabase.from('places').select('*'),
           supabase.from('friend_overlaps').select('*'),
@@ -415,6 +437,7 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
           supabase.from('dm_messages').select('*').order('created_at'),
           supabase.from('activity_posts').select('*').order('created_at', { ascending: false }),
           supabase.from('reactions').select('*'),
+          supabase.from('place_reviews').select('*'),
         ]);
         if (placesRes.error) throw placesRes.error;
         if (friendsRes.error) throw friendsRes.error;
@@ -430,6 +453,7 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
         if (dmMessagesRes.error) throw dmMessagesRes.error;
         if (activityPostsRes.error) throw activityPostsRes.error;
         if (reactionsRes.error) throw reactionsRes.error;
+        if (placeReviewsRes.error) throw placeReviewsRes.error;
 
         const places = placesRes.data.map(placeRowToPlace);
         const friendOverlaps = friendsRes.data.map(friendRowToOverlap);
@@ -460,6 +484,7 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
             dmMessages: dmMessagesRes.data.map(dmMessageRowToMessage),
             activityPosts: activityPostsRes.data.map(activityPostRowToPost),
             reactions: reactionsRes.data.map(reactionRowToReaction),
+            placeReviews: placeReviewsRes.data.map(placeReviewRowToReview),
           });
           setLoading(false);
         }
@@ -759,6 +784,45 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
     [refetchActivity],
   );
 
+  const refetchPlaceReviews = useCallback(async () => {
+    const { data: rows, error: fetchErr } = await supabase
+      .from('place_reviews')
+      .select('*');
+    if (fetchErr) return;
+    setData((prev) =>
+      prev
+        ? { ...prev, placeReviews: rows.map(placeReviewRowToReview) }
+        : prev,
+    );
+  }, []);
+
+  const submitPlaceReview = useCallback(
+    async (placeId: string, rating: 1 | 2 | 3 | 4 | 5) => {
+      // The demo user's review uses reviewer_friend_id = NULL. The DB
+      // doesn't have a unique constraint on (place_id, NULL) — manage the
+      // "one-per-user" rule app-side: find the existing self-review and
+      // update, else insert.
+      const existing = (dataRef.current?.placeReviews ?? []).find(
+        (r) => r.placeId === placeId && r.reviewerFriendId === null,
+      );
+      if (existing) {
+        const { error: updErr } = await supabase
+          .from('place_reviews')
+          .update({ rating })
+          .eq('place_id', placeId)
+          .is('reviewer_friend_id', null);
+        if (updErr) throw updErr;
+      } else {
+        const { error: insErr } = await supabase
+          .from('place_reviews')
+          .insert({ place_id: placeId, reviewer_friend_id: null, rating });
+        if (insErr) throw insErr;
+      }
+      await refetchPlaceReviews();
+    },
+    [refetchPlaceReviews],
+  );
+
   return (
     <Context.Provider
       value={{
@@ -775,6 +839,7 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
         sendDM,
         toggleReaction,
         postActivity,
+        submitPlaceReview,
       }}
     >
       {children}

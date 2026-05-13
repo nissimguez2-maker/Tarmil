@@ -5,6 +5,7 @@ import { Screen } from '../../components/Screen';
 import { TopBar } from '../../components/TopBar';
 import { LoadingPanel, ErrorPanel } from '../../components/DataState';
 import { Fab } from '../../components/shared/Fab';
+import { ToolsButton } from '../../components/shared/ToolsButton';
 import { TripDeclarationCard } from '../../components/activity/TripDeclarationCard';
 import { WhosDownCard } from '../../components/activity/WhosDownCard';
 import { OverlapNotificationCard } from '../../components/activity/OverlapNotificationCard';
@@ -43,7 +44,7 @@ export function ActivityScreen() {
 
   return (
     <Screen className="relative">
-      <TopBar title="Activity" />
+      <TopBar title="Activity" end={<ToolsButton />} />
 
       <ul className="flex flex-col gap-sm p-md pb-32">
         {data.activityPosts.map((post) => {

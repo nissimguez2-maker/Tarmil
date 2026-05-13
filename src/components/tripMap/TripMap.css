@@ -221,6 +221,47 @@
     0 1px 6px rgba(53, 40, 24, 0.40);
 }
 
+/*
+ * Side label chip — city name + date range floating to the right of the
+ * stay-bubble. The marker icon is positioned by Leaflet; the label is a
+ * sibling div absolutely positioned to the right of the circle. Capped
+ * width so long city names wrap, with a subtle backdrop so the chip
+ * stays legible over coastline / land transitions.
+ */
+.tarmil-planned-label {
+  position: absolute;
+  top: 50%;
+  left: calc(100% - 4px);
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 4px 8px;
+  border-radius: 9999px;
+  background: rgba(253, 251, 247, 0.92);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  box-shadow: 0 1px 3px rgba(53, 40, 24, 0.18);
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.tarmil-planned-label-name {
+  font-family: 'Fraunces', 'Frank Ruhl Libre', 'Times New Roman', serif;
+  font-weight: 700;
+  font-size: 10pt;
+  line-height: 1.1;
+  color: var(--cocoa);
+}
+
+.tarmil-planned-label-dates {
+  font-family: 'Heebo', 'Google Sans Text', system-ui, sans-serif;
+  font-size: 8pt;
+  font-feature-settings: 'tnum' 1;
+  line-height: 1.1;
+  color: var(--copper);
+}
+
 /* ─── Pick-on-map reticle ────────────────────────────────────────────── */
 /*
  * Centered crosshair shown when the trip map is in pick mode. The map's

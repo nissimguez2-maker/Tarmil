@@ -1,47 +1,43 @@
 import L from 'leaflet';
-import { mapColors } from '../../../utils/mapColors';
 import type { LatLng } from '../../../data/myTrip';
 import type { PlannedStop } from '../../../data/plannedStops';
+import { formatDateRange } from '../utils/formatDateRange';
 
 /**
- * Hollow copper rings at each planned stop, plus the dashed connector
- * present → stop[0] → stop[1] → … → stop[N]. The active stop (when the
- * planned-route sheet highlights one) gets a halo via .is-active.
+ * Stay-bubbles for the user's planned stops. Each bubble is the copper
+ * hollow ring (`tarmil-planned-circle`) plus a side label chip showing
+ * the city name and date range — e.g., "São Paulo · Nov 1–6". Tapping
+ * the bubble opens the planned-stop sheet.
  *
- * Returns a cleanup that removes everything from the map.
+ * No connector line: v0.3 removed the personal polyline so the map
+ * reads as a who-and-where canvas, not a drawn itinerary. The
+ * `present` argument is kept on the signature for compatibility but
+ * intentionally unused.
+ *
+ * Returns a cleanup that removes the markers from the map.
  */
 export function drawPlannedStops(
   map: L.Map,
-  present: LatLng,
+  _present: LatLng,
   stops: PlannedStop[],
   activeStopId: string | undefined,
   onClickStop: (stop: PlannedStop) => void,
 ): () => void {
   const layers: L.Layer[] = [];
 
-  if (stops.length > 0) {
-    const lineCoords: LatLng[] = [
-      present,
-      ...stops.map((s): LatLng => [s.lat, s.lng]),
-    ];
-    layers.push(
-      L.polyline(lineCoords, {
-        color: mapColors.cocoa,
-        weight: 1.5,
-        opacity: 0.35,
-        dashArray: '3 5',
-        lineCap: 'round',
-      }).addTo(map),
-    );
-  }
-
   stops.forEach((stop) => {
     const isActive = stop.id === activeStopId;
+    const dates = formatDateRange(stop.arrivalDate, stop.departureDate);
+
     const icon = L.divIcon({
       className: 'tarmil-planned-marker',
-      html: `<div class="tarmil-planned-circle${
-        isActive ? ' is-active' : ''
-      }"></div>`,
+      html: `
+        <div class="tarmil-planned-circle${isActive ? ' is-active' : ''}"></div>
+        <div class="tarmil-planned-label">
+          <span class="tarmil-planned-label-name">${escapeHtml(stop.nameEn)}</span>
+          <span class="tarmil-planned-label-dates">${escapeHtml(dates)}</span>
+        </div>
+      `,
       iconSize: [40, 40],
       iconAnchor: [20, 20],
     });
@@ -57,4 +53,13 @@ export function drawPlannedStops(
   return () => {
     layers.forEach((layer) => map.removeLayer(layer));
   };
+}
+
+function escapeHtml(s: string): string {
+  return s
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }

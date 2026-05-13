@@ -244,6 +244,7 @@ export type Database = {
           name_en: string
           name_he: string
           slug: string
+          subject: Database["public"]["Enums"]["forum_subject"] | null
         }
         Insert: {
           city_label?: string | null
@@ -258,6 +259,7 @@ export type Database = {
           name_en: string
           name_he: string
           slug: string
+          subject?: Database["public"]["Enums"]["forum_subject"] | null
         }
         Update: {
           city_label?: string | null
@@ -272,6 +274,7 @@ export type Database = {
           name_en?: string
           name_he?: string
           slug?: string
+          subject?: Database["public"]["Enums"]["forum_subject"] | null
         }
         Relationships: []
       }
@@ -422,6 +425,45 @@ export type Database = {
           },
         ]
       }
+      place_reviews: {
+        Row: {
+          created_at: string
+          id: number
+          place_id: string
+          rating: number
+          reviewer_friend_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: never
+          place_id: string
+          rating: number
+          reviewer_friend_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: never
+          place_id?: string
+          rating?: number
+          reviewer_friend_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "place_reviews_place_id_fkey"
+            columns: ["place_id"]
+            isOneToOne: false
+            referencedRelation: "places"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "place_reviews_reviewer_friend_id_fkey"
+            columns: ["reviewer_friend_id"]
+            isOneToOne: false
+            referencedRelation: "friend_overlaps"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       places: {
         Row: {
           category: string
@@ -433,9 +475,13 @@ export type Database = {
           hebrew_description: string
           hebrew_name: string
           id: string
+          image_url: string | null
           lat: number
           lng: number
+          paid_placement: boolean
+          phone: string | null
           rating: number
+          reservation_url: string | null
           tarmil_pick: boolean
         }
         Insert: {
@@ -448,9 +494,13 @@ export type Database = {
           hebrew_description: string
           hebrew_name: string
           id: string
+          image_url?: string | null
           lat: number
           lng: number
+          paid_placement?: boolean
+          phone?: string | null
           rating: number
+          reservation_url?: string | null
           tarmil_pick?: boolean
         }
         Update: {
@@ -463,9 +513,13 @@ export type Database = {
           hebrew_description?: string
           hebrew_name?: string
           id?: string
+          image_url?: string | null
           lat?: number
           lng?: number
+          paid_placement?: boolean
+          phone?: string | null
           rating?: number
+          reservation_url?: string | null
           tarmil_pick?: boolean
         }
         Relationships: []

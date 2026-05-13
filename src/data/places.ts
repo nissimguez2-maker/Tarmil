@@ -52,4 +52,16 @@ export type Place = {
   tarmilPick?: boolean;
   /** Friends' past visits, season+year+duration only. Default empty. */
   friendVisits?: FriendVisit[];
+  /** Public phone number for direct contact. Optional. */
+  phone?: string;
+  /** Reservation / contact URL — `tel:`, `https://wa.me/...`, or external link. */
+  reservationUrl?: string;
+  /** Hero image (CDN URL). Falls back to a warm-sand gradient on the card. */
+  imageUrl?: string;
+  /**
+   * v0.3 paid-placement flag — true for curated businesses surfaced in the
+   * Around me tab. Existing seed places stay false; only the new business
+   * directory entries opt in.
+   */
+  paidPlacement?: boolean;
 };

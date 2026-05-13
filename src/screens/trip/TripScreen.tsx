@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
 import { Screen } from '../../components/Screen';
 import { TopBar } from '../../components/TopBar';
+import { ToolsButton } from '../../components/shared/ToolsButton';
 import {
   TripMap,
   type TripMapHandle,
@@ -62,7 +63,9 @@ export function TripScreen() {
   if (error || !data) return <ErrorPanel error={error} />;
 
   const sheet = state.sheet;
-  const nextStop = data.plannedStops[0];
+  // First-by-arrival stop, falling back to first by array order. v0.3
+  // sorts arrival_date ascending in the data provider, so [0] is "next".
+  const nextStop: PlannedStop | null = data.plannedStops[0] ?? null;
   const nextStopFriends = nextStop
     ? data.friendOverlaps.filter((f) =>
         nextStop.friendOverlapIds?.includes(f.id),
@@ -151,27 +154,27 @@ export function TripScreen() {
   return (
     <Screen noScroll>
       <div className="flex h-full flex-col">
-        <TopBar title="Your trip" />
+        <TopBar title="Your trip" end={<ToolsButton />} />
 
-        {nextStop && (
-          <div
-            aria-hidden={headerCollapsed}
-            className={clsx(
-              'grid transition-[grid-template-rows,opacity] duration-considered ease-out-quart',
-              headerCollapsed
-                ? 'grid-rows-[0fr] opacity-0'
-                : 'grid-rows-[1fr] opacity-100',
-            )}
-          >
-            <div className="overflow-hidden">
-              <NextTripCard
-                stop={nextStop}
-                friends={nextStopFriends}
-                onTap={openPlannedRoute}
-              />
-            </div>
+        <div
+          aria-hidden={headerCollapsed}
+          className={clsx(
+            'grid transition-[grid-template-rows,opacity] duration-considered ease-out-quart',
+            headerCollapsed
+              ? 'grid-rows-[0fr] opacity-0'
+              : 'grid-rows-[1fr] opacity-100',
+          )}
+        >
+          <div className="overflow-hidden">
+            <NextTripCard
+              stop={nextStop}
+              friends={nextStopFriends}
+              totalStops={data.plannedStops.length}
+              onTap={openPlannedRoute}
+              onAdd={openSearch}
+            />
           </div>
-        )}
+        </div>
 
         <div className="relative flex-1 overflow-hidden">
           <TripMap
@@ -180,7 +183,6 @@ export function TripScreen() {
             activeFilters={state.activeFilters}
             places={data.places}
             friendOverlaps={visibleFriends}
-            pastTrip={data.myTrip.past}
             presentLocation={data.myTrip.present}
             plannedStops={data.plannedStops}
             activeStopId={

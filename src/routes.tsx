@@ -14,6 +14,7 @@ import { FriendProfileScreen } from './screens/profile/friends/FriendProfileScre
 import { SettingsScreen } from './screens/profile/settings/SettingsScreen';
 import { PlaceScreen } from './screens/place/PlaceScreen';
 import { ToolsScreen } from './screens/tools/ToolsScreen';
+import { AroundMeScreen } from './screens/around/AroundMeScreen';
 
 /**
  * Route table.
@@ -48,6 +49,7 @@ export function AppRoutes() {
         <Route path="/messages/chats/:chatId" element={<GroupChatScreen />} />
         <Route path="/messages/dms/:dmId" element={<DMScreen />} />
 
+        <Route path="/around" element={<AroundMeScreen />} />
         <Route path="/tools" element={<ToolsScreen />} />
 
         <Route path="/profile" element={<ProfileScreen />} />
