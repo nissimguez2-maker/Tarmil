@@ -39,7 +39,7 @@ export function TabBar() {
         aria-label="ניווט ראשי"
         className={clsx(
           'pointer-events-auto relative grid w-full max-w-[360px] grid-cols-5',
-          'rounded-full bg-cocoa/95 backdrop-blur-md shadow-fab',
+          'rounded-full bg-cocoa shadow-fab',
         )}
       >
         {TABS.map(({ to, label, Icon }) => (

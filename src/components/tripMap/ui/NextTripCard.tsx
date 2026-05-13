@@ -30,18 +30,10 @@ export function NextTripCard({ stop, friends, onTap }: Props) {
         'focus-visible:outline-none focus-visible:bg-sand/80',
       )}
     >
-      <div className="flex flex-col gap-xs px-md pb-sm pt-md">
-        <div className="flex items-baseline justify-between gap-sm">
-          <span className="meta-caps text-copper">הטיול הבא</span>
-          <span
-            aria-hidden
-            className="text-small text-cocoa-30 transition-transform duration-instant ease-out-quart group-hover/card:-translate-x-1"
-          >
-            ‹
-          </span>
-        </div>
+      <div className="flex flex-col gap-1 px-md pb-sm pt-md">
+        <span className="meta-caps text-copper">הטיול הבא</span>
 
-        <h2 className="font-serif text-sub leading-[1.02] tracking-[-0.02em] text-balance text-cocoa">
+        <h2 className="font-serif text-sub font-bold leading-[1] tracking-[-0.022em] text-balance text-cocoa">
           {stop.nameHe}
         </h2>
 
