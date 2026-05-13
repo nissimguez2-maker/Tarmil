@@ -29,26 +29,26 @@ export type GroupChatMember = {
 export const groupChats: GroupChat[] = [
   {
     id: 'chat-buzios-weekend',
-    nameHe: 'בוזיוס סופ״ש',
-    cityLabel: 'בוזיוס · 29–31.10',
+    nameHe: 'Búzios weekend',
+    cityLabel: 'Búzios · Oct 29–31',
     destinationId: 'buzios',
   },
   {
     id: 'chat-sao-paulo-asado',
-    nameHe: 'סאו פאולו אסאדו 11/26',
-    cityLabel: 'סאו פאולו · 03–05.11',
+    nameHe: 'São Paulo asado · Nov 26',
+    cityLabel: 'São Paulo · Nov 3–5',
     destinationId: 'sao-paulo',
   },
   {
     id: 'chat-jeri-kite',
-    nameHe: 'ז׳רי קייטסרף קרו',
-    cityLabel: 'ז׳ריקואקוארה · 10–13.11',
+    nameHe: 'Jeri kite crew',
+    cityLabel: 'Jericoacoara · Nov 10–13',
     destinationId: 'jericoacoara',
   },
   {
     id: 'chat-buenos-palermo',
-    nameHe: 'בואנוס פאלרמו',
-    cityLabel: 'בואנוס איירס · נובמבר',
+    nameHe: 'Buenos Palermo',
+    cityLabel: 'Buenos Aires · November',
     destinationId: 'buenos-aires',
   },
 ];

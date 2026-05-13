@@ -47,7 +47,7 @@ export function PlaceScreen() {
               {place.hebrewName}
             </h1>
             {place.tarmilPick && (
-              <span className="meta-caps shrink-0 text-copper">בחירת תרמיל</span>
+              <span className="meta-caps shrink-0 text-copper">Tarmil pick</span>
             )}
           </div>
 
@@ -63,7 +63,7 @@ export function PlaceScreen() {
                 aria-hidden
               />
               <span className="tnum font-medium">{place.rating.toFixed(1)}</span>
-              <span className="text-cocoa-55">· תרמיל</span>
+              <span className="text-cocoa-55">· Tarmil</span>
             </span>
             <span className="inline-flex items-center gap-1 text-body text-cocoa-70">
               <Star
@@ -72,7 +72,7 @@ export function PlaceScreen() {
                 aria-hidden
               />
               <span className="tnum">4.5</span>
-              <span className="text-cocoa-55">· גוגל</span>
+              <span className="text-cocoa-55">· Google</span>
             </span>
           </div>
         </div>
@@ -92,31 +92,32 @@ export function PlaceScreen() {
               <span className="tnum font-medium text-cocoa">
                 {place.friendsKnow}
               </span>{' '}
-              חברים שלך היו כאן
+              of your friends have been here
             </span>
           </div>
         ) : (
           <p className="text-body text-cocoa-55">
-            עדיין אף חבר שלך לא היה כאן.
+            None of your friends have been here yet.
           </p>
         )}
         {visits.length > 0 && (
           <p className="text-small text-cocoa-55">
-            תרמיל מציג ביקורי חברים ברמת עונה ושנה בלבד — לא תאריכים מדויקים.
+            Tarmil shows friend visits at season + year resolution only — never
+            exact dates.
           </p>
         )}
 
         <SectionLabel number="03" label="Reviews from Israeli travelers." />
         <div className="flex flex-col gap-sm">
           <ReviewCard
-            reviewer="יוני א."
+            reviewer="Yoni A."
             stars={5}
-            text="היינו כאן בשקיעה, פגשנו ישראלים אחרים, הכי טוב שיש."
+            text="Came here at sunset, ran into other Israelis, can't beat it."
           />
           <ReviewCard
-            reviewer="שירה ב."
+            reviewer="Shira B."
             stars={4}
-            text="שווה את ההגעה. תכננו זמן, קל לרכז כמה דברים באותו יום."
+            text="Worth the trip. Block out time, easy to combine a few things in one day."
           />
         </div>
 
@@ -127,7 +128,7 @@ export function PlaceScreen() {
           onClick={() => setMapsOpen((o) => !o)}
         >
           <Navigation className="h-4 w-4" aria-hidden />
-          קבל הוראות הגעה
+          Get directions
         </Button>
 
         <MapsActionSheet
@@ -142,7 +143,7 @@ export function PlaceScreen() {
           onClick={() => navigate('/trip')}
         >
           <MapPin className="h-4 w-4" aria-hidden />
-          חזרה למפה
+          Back to map
         </Button>
       </div>
 
@@ -169,10 +170,10 @@ function FriendDots({ count }: { count: number }) {
 }
 
 const SEASON_HE: Record<Season, string> = {
-  spring: 'אביב',
-  summer: 'קיץ',
-  autumn: 'סתיו',
-  winter: 'חורף',
+  spring: 'Spring',
+  summer: 'Summer',
+  autumn: 'Autumn',
+  winter: 'Winter',
 };
 
 function FriendVisitsList({
@@ -212,7 +213,7 @@ function FriendVisitsList({
       </ul>
       {additional > 0 && (
         <span className="text-small text-cocoa-55">
-          ועוד <span className="tnum">{additional}</span> חברים שלך היו כאן.
+          And <span className="tnum">{additional}</span> more friends have been here.
         </span>
       )}
     </div>
@@ -232,7 +233,7 @@ function ReviewCard({
     <article className="flex flex-col gap-xs rounded-2xl bg-sand shadow-card p-md">
       <div className="flex items-center justify-between gap-sm">
         <span className="text-small font-medium text-cocoa">{reviewer}</span>
-        <span aria-label={`${stars} כוכבים`} className="flex shrink-0 gap-0.5">
+        <span aria-label={`${stars} stars`} className="flex shrink-0 gap-0.5">
           {Array.from({ length: 5 }).map((_, i) => (
             <Star
               key={i}
@@ -257,23 +258,23 @@ function ReviewCard({
 function categoryLabel(c: PlaceCategory): string {
   switch (c) {
     case 'beach':
-      return 'חוף';
+      return 'Beach';
     case 'hostel':
-      return 'הוסטל';
+      return 'Hostel';
     case 'cafe':
-      return 'קפה';
+      return 'Café';
     case 'restaurant':
-      return 'מסעדה';
+      return 'Restaurant';
     case 'bar':
-      return 'בר';
+      return 'Bar';
     case 'club':
-      return 'מועדון';
+      return 'Club';
     case 'chabad':
-      return 'חב״ד';
+      return 'Chabad';
     case 'kosher':
-      return 'כשר';
+      return 'Kosher';
     case 'landmark':
-      return 'נקודת ציון';
+      return 'Landmark';
     default:
       return '';
   }

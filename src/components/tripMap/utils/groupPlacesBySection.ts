@@ -17,13 +17,13 @@ const SECTION_ORDER = [
 ] as const;
 
 const SECTION_LABELS: Record<(typeof SECTION_ORDER)[number], string> = {
-  hotels: 'הוסטלים ומלונות',
-  food: 'אוכל',
-  beaches: 'חופים',
-  nightlife: 'חיי לילה',
-  kosher: 'כשר',
-  chabad: 'בית חב״ד',
-  other: 'נוסף',
+  hotels: 'Hostels & hotels',
+  food: 'Food',
+  beaches: 'Beaches',
+  nightlife: 'Nightlife',
+  kosher: 'Kosher',
+  chabad: 'Chabad house',
+  other: 'More',
 };
 
 function sectionFor(c: PlaceCategory): (typeof SECTION_ORDER)[number] {

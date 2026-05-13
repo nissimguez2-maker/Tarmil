@@ -5,7 +5,7 @@
  * array feeds `scripts/seed-supabase.ts`; nothing in `src/` imports it at
  * runtime. Edit here, re-run the seed (or edit via the dashboard).
  *
- * Hebrew copy in the natural voice of a 22-year-old post-army backpacker
+ * Copy in the natural voice of a 22-year-old post-army backpacker
  * (sentence cap ~14 words). Coordinates verified against Google Maps.
  */
 
@@ -16,53 +16,53 @@ export const rioPlaces: Place[] = [
   {
     id: 'copa-beach',
     destinationId: 'rio-de-janeiro',
-    hebrewName: 'חוף קופקבנה',
+    hebrewName: 'Copacabana Beach',
     englishName: 'Copacabana Beach',
     category: 'beach',
     lat: -22.9711779,
     lng: -43.1825439,
-    hebrewDescription: 'חוף ענק, מלא דוכנים, כדורגל וחיים שלמים על הטיילת.',
+    hebrewDescription: 'Huge beach with stalls, football games and nonstop life on the promenade.',
     englishDescription:
       'Huge beach with stalls, football games and nonstop life on the promenade.',
     rating: 4.7,
     friendsKnow: 12,
     tarmilPick: true,
     friendVisits: [
-      { friendInitial: 'מ', friendName: 'מאיה לוי', season: 'summer', year: 2024, durationLabel: 'שבוע' },
-      { friendInitial: 'י', friendName: 'יעל אברהם', season: 'winter', year: 2025, durationLabel: 'שבועיים' },
+      { friendInitial: 'M', friendName: 'Maya Levi', season: 'summer', year: 2024, durationLabel: 'a week' },
+      { friendInitial: 'Y', friendName: 'Yael Abraham', season: 'winter', year: 2025, durationLabel: 'two weeks' },
     ],
   },
   {
     id: 'ipanema-beach',
     destinationId: 'rio-de-janeiro',
-    hebrewName: 'חוף איפנמה',
+    hebrewName: 'Ipanema Beach',
     englishName: 'Ipanema Beach',
     category: 'beach',
     lat: -22.9868585,
     lng: -43.2059651,
     hebrewDescription:
-      'חוף יותר רגוע ומצוחצח, שקיעות פסיכיות וים קצת יותר פראי.',
+      'Slightly calmer, cleaner beach with crazy sunsets and a slightly wilder sea.',
     englishDescription:
       'Slightly calmer, cleaner beach with crazy sunsets and a slightly wilder sea.',
     rating: 4.8,
     friendsKnow: 11,
     tarmilPick: true,
     friendVisits: [
-      { friendInitial: 'ר', friendName: 'רועי בן עמי', season: 'autumn', year: 2025, durationLabel: 'סוף שבוע' },
-      { friendInitial: 'ש', friendName: 'שיר כהן', season: 'summer', year: 2024, durationLabel: 'שבוע' },
-      { friendInitial: 'ד', friendName: 'דניאל שמש', season: 'spring', year: 2025, durationLabel: 'שבוע' },
+      { friendInitial: 'R', friendName: 'Roi Ben Ami', season: 'autumn', year: 2025, durationLabel: 'a weekend' },
+      { friendInitial: 'S', friendName: 'Shir Cohen', season: 'summer', year: 2024, durationLabel: 'a week' },
+      { friendInitial: 'D', friendName: 'Daniel Shemesh', season: 'spring', year: 2025, durationLabel: 'a week' },
     ],
   },
   {
     id: 'leblon-beach',
     destinationId: 'rio-de-janeiro',
-    hebrewName: 'חוף לבלאון',
+    hebrewName: 'Leblon Beach',
     englishName: 'Leblon Beach',
     category: 'beach',
     lat: -22.9876212,
     lng: -43.2195852,
     hebrewDescription:
-      'חוף יוקרתי יותר, שקט, מרגיש כמו שכונת צפון תל אביב על הים.',
+      'More upscale and quiet, feels like a north Tel Aviv neighborhood on the sea.',
     englishDescription:
       'More upscale and quiet, feels like a north Tel Aviv neighborhood on the sea.',
     rating: 4.5,
@@ -71,13 +71,13 @@ export const rioPlaces: Place[] = [
   {
     id: 'barra-beach',
     destinationId: 'rio-de-janeiro',
-    hebrewName: 'חוף ברה דה טיז׳וקה',
+    hebrewName: 'Barra da Tijuca Beach',
     englishName: 'Barra da Tijuca Beach',
     category: 'beach',
     lat: -23.012043,
     lng: -43.365414,
     hebrewDescription:
-      'רצועת חוף אינסופית, גלים טובים לגלישה, מרגיש פחות תיירותי.',
+      'Endless stretch of sand with good surf waves, feels less touristy.',
     englishDescription:
       'Endless stretch of sand with good surf waves, feels less touristy.',
     rating: 4.4,
@@ -86,13 +86,13 @@ export const rioPlaces: Place[] = [
   {
     id: 'praia-vermelha',
     destinationId: 'rio-de-janeiro',
-    hebrewName: 'חוף ורמליה',
+    hebrewName: 'Praia Vermelha',
     englishName: 'Praia Vermelha',
     category: 'beach',
     lat: -22.9531023,
     lng: -43.1663914,
     hebrewDescription:
-      'חוף קטן מתחת לשוגרלוף, מים רגועים, אחלה צ׳יל מההמולה.',
+      'Small beach under Sugarloaf with calm water, perfect chill escape from the crowds.',
     englishDescription:
       'Small beach under Sugarloaf with calm water, perfect chill escape from the crowds.',
     rating: 4.5,
@@ -101,13 +101,13 @@ export const rioPlaces: Place[] = [
   {
     id: 'arpoador-beach',
     destinationId: 'rio-de-janeiro',
-    hebrewName: 'חוף ארפואדור',
+    hebrewName: 'Arpoador Beach',
     englishName: 'Arpoador Beach',
     category: 'beach',
     lat: -22.9884128,
     lng: -43.2006988,
     hebrewDescription:
-      'הנקודה הכי חזקה לשקיעה, כולם מוחאים כפיים כשהשמש נעלמת.',
+      "Strongest sunset spot, everyone claps when the sun disappears.",
     englishDescription:
       "Strongest sunset spot, everyone claps when the sun disappears.",
     rating: 4.8,
@@ -117,13 +117,13 @@ export const rioPlaces: Place[] = [
   {
     id: 'botafogo-beach',
     destinationId: 'rio-de-janeiro',
-    hebrewName: 'חוף בוטפוגו',
+    hebrewName: 'Botafogo Beach',
     englishName: 'Botafogo Beach',
     category: 'beach',
     lat: -22.9448788,
     lng: -43.1828477,
     hebrewDescription:
-      'לא לשחייה, אבל נוף מטורף למפרץ ולשוגרלוף לצילומי אינסטה.',
+      'Not for swimming but insane bay and Sugarloaf views for Instagram shots.',
     englishDescription:
       'Not for swimming but insane bay and Sugarloaf views for Instagram shots.',
     rating: 4.3,
@@ -132,13 +132,13 @@ export const rioPlaces: Place[] = [
   {
     id: 'flamengo-beach',
     destinationId: 'rio-de-janeiro',
-    hebrewName: 'חוף פלמנגו',
+    hebrewName: 'Praia do Flamengo',
     englishName: 'Praia do Flamengo',
     category: 'beach',
     lat: -22.9369924,
     lng: -43.1706352,
     hebrewDescription:
-      'פארק ענק ליד החוף, ברזילאים עושים על האש, אחלה לריצה בוקר.',
+      'Huge park by the beach with locals barbecuing, great for a morning run.',
     englishDescription:
       'Huge park by the beach with locals barbecuing, great for a morning run.',
     rating: 4.4,
@@ -147,13 +147,13 @@ export const rioPlaces: Place[] = [
   {
     id: 'grumari-beach',
     destinationId: 'rio-de-janeiro',
-    hebrewName: 'חוף גרומארי',
+    hebrewName: 'Praia de Grumari',
     englishName: 'Praia de Grumari',
     category: 'beach',
     lat: -23.0470477,
     lng: -43.5264265,
     hebrewDescription:
-      'שמורת טבע עם חוף פראי, מרגיש כמו ברזיל לפני אינסטגרם.',
+      'Nature reserve with wild beach, feels like Brazil before Instagram.',
     englishDescription:
       'Nature reserve with wild beach, feels like Brazil before Instagram.',
     rating: 4.7,
@@ -163,13 +163,13 @@ export const rioPlaces: Place[] = [
   {
     id: 'joatinga-beach',
     destinationId: 'rio-de-janeiro',
-    hebrewName: 'חוף ז׳ואטינגה',
+    hebrewName: 'Praia da Joatinga',
     englishName: 'Praia da Joatinga',
     category: 'beach',
     lat: -23.0103152,
     lng: -43.2968764,
     hebrewDescription:
-      'מסתתרים בין הצוקים, חוף קטן שמרגיש סודי למרות שכולם מכירים.',
+      'Hidden between cliffs, small beach that feels secret even though everyone knows it.',
     englishDescription:
       'Hidden between cliffs, small beach that feels secret even though everyone knows it.',
     rating: 4.5,
@@ -178,13 +178,13 @@ export const rioPlaces: Place[] = [
   {
     id: 'niteroi-icarai',
     destinationId: 'rio-de-janeiro',
-    hebrewName: 'חוף איקראי ניטרוי',
+    hebrewName: 'Praia de Icaraí',
     englishName: 'Praia de Icaraí',
     category: 'beach',
     lat: -22.9077803,
     lng: -43.1116486,
     hebrewDescription:
-      'חוף עירוני בניטרוי, נוף מעולה לריו מהצד השני של המפרץ.',
+      'City beach in Niterói with great views of Rio from across the bay.',
     englishDescription:
       'City beach in Niterói with great views of Rio from across the bay.',
     rating: 4.2,
@@ -193,13 +193,13 @@ export const rioPlaces: Place[] = [
   {
     id: 'buzios-geriba-beach',
     destinationId: 'buzios',
-    hebrewName: 'חוף ז׳ריבה בוזיוס',
+    hebrewName: 'Praia de Geribá',
     englishName: 'Praia de Geribá',
     category: 'beach',
     lat: -22.7691753,
     lng: -41.9485308,
     hebrewDescription:
-      'החוף של הצעירים בבוזיוס, גלים, מוזיקה ואווירת מסיבה כל היום.',
+      'Youthful Búzios beach with waves, music and all-day party vibes.',
     englishDescription:
       'Youthful Búzios beach with waves, music and all-day party vibes.',
     rating: 4.7,
@@ -211,33 +211,33 @@ export const rioPlaces: Place[] = [
   {
     id: 'discovery-hostel',
     destinationId: 'rio-de-janeiro',
-    hebrewName: 'דיסקאברי הוסטל',
+    hebrewName: 'Discovery Hostel',
     englishName: 'Discovery Hostel',
     category: 'hostel',
     lat: -22.9192053,
     lng: -43.177984,
     hebrewDescription:
-      'הוסטל ביתי בגלוריה, מלא ישראלים בתקציב נמוך וקבוצות וואטסאפ לכל טיול.',
+      'Homey hostel in Glória packed with Israelis on a budget and WhatsApp trip groups.',
     englishDescription:
       'Homey hostel in Glória packed with Israelis on a budget and WhatsApp trip groups.',
     rating: 4.6,
     friendsKnow: 14,
     tarmilPick: true,
     friendVisits: [
-      { friendInitial: 'ד', friendName: 'דניאל שמש', season: 'autumn', year: 2024, durationLabel: 'שבועיים' },
-      { friendInitial: 'מ', friendName: 'מאיה לוי', season: 'summer', year: 2024, durationLabel: 'שבוע' },
+      { friendInitial: 'D', friendName: 'Daniel Shemesh', season: 'autumn', year: 2024, durationLabel: 'two weeks' },
+      { friendInitial: 'M', friendName: 'Maya Levi', season: 'summer', year: 2024, durationLabel: 'a week' },
     ],
   },
   {
     id: 'lemix-hostel',
     destinationId: 'rio-de-janeiro',
-    hebrewName: 'למיקס הוסטל',
+    hebrewName: 'Lemix Hostel',
     englishName: 'Lemix Hostel',
     category: 'hostel',
     lat: -22.9789846,
     lng: -43.189884,
     hebrewDescription:
-      'הוסטל קטן באיפנמה, מרחק דקה מהים, כולם חולקים סיפורי צבא בלובי.',
+      'Small Ipanema hostel a minute from the beach, lobby full of army stories.',
     englishDescription:
       'Small Ipanema hostel a minute from the beach, lobby full of army stories.',
     rating: 4.5,
@@ -246,13 +246,13 @@ export const rioPlaces: Place[] = [
   {
     id: 'cabana-copa',
     destinationId: 'rio-de-janeiro',
-    hebrewName: 'קבנה קופה הוסטל',
+    hebrewName: 'CabanaCopa Hostel',
     englishName: 'CabanaCopa Hostel',
     category: 'hostel',
     lat: -22.9675353,
     lng: -43.181306,
     hebrewDescription:
-      'הוסטל קלאסי לקופקבנה, מטבח גדול, תמיד מישהו שמכיר עוד טרק שווה.',
+      'Classic Copacabana hostel with big kitchen and someone always knows another good trek.',
     englishDescription:
       'Classic Copacabana hostel with big kitchen and someone always knows another good trek.',
     rating: 4.5,
@@ -262,13 +262,13 @@ export const rioPlaces: Place[] = [
   {
     id: 'leblon-beach-hostel',
     destinationId: 'rio-de-janeiro',
-    hebrewName: 'לבלאון ביץ׳ הוסטל',
+    hebrewName: 'Leblon Beach Hostel',
     englishName: 'Leblon Beach Hostel',
     category: 'hostel',
     lat: -22.9857573,
     lng: -43.2262613,
     hebrewDescription:
-      'אזור מפונק יותר, מרגיש בטוח, מושלם להתחלה רגועה בריו.',
+      'More pampered area, feels safe, perfect for a soft landing in Rio.',
     englishDescription:
       'More pampered area, feels safe, perfect for a soft landing in Rio.',
     rating: 4.4,
@@ -277,13 +277,13 @@ export const rioPlaces: Place[] = [
   {
     id: 'mojo-hostel',
     destinationId: 'rio-de-janeiro',
-    hebrewName: 'מוג׳ו הוסטל ריו',
+    hebrewName: 'Mojo Hostel & Lounge',
     englishName: 'Mojo Hostel & Lounge',
     category: 'hostel',
     lat: -22.9822157,
     lng: -43.1984707,
     hebrewDescription:
-      'הוסטל חברתית באיפנמה, בר למטה, ישראלים מתארגנים שם ליציאות.',
+      'Social Ipanema hostel with downstairs bar where Israelis team up for nights out.',
     englishDescription:
       'Social Ipanema hostel with downstairs bar where Israelis team up for nights out.',
     rating: 4.4,
@@ -292,13 +292,13 @@ export const rioPlaces: Place[] = [
   {
     id: 'walk-on-beach',
     destinationId: 'rio-de-janeiro',
-    hebrewName: 'ווק און דה ביץ׳',
+    hebrewName: 'Walk On The Beach Hostel',
     englishName: 'Walk On The Beach Hostel',
     category: 'hostel',
     lat: -22.9696407,
     lng: -43.1829379,
     hebrewDescription:
-      'הוסטל פשוט אבל חי, קרוב לים, אחלה בסיס לפני טיולים ארוכים.',
+      'Simple but lively hostel near the sea, solid base before longer trips.',
     englishDescription:
       'Simple but lively hostel near the sea, solid base before longer trips.',
     rating: 4.3,
@@ -309,13 +309,13 @@ export const rioPlaces: Place[] = [
   {
     id: 'confeitaria-colombo',
     destinationId: 'rio-de-janeiro',
-    hebrewName: 'קונפייטריה קולומבו',
+    hebrewName: 'Confeitaria Colombo',
     englishName: 'Confeitaria Colombo',
     category: 'cafe',
     lat: -22.9056931,
     lng: -43.1794736,
     hebrewDescription:
-      'בית קפה עתיק במרכז, מרגיש כמו לחזור בזמן עם עוגה ביד.',
+      'Old-school downtown cafe, feels like time travel while you smash cake.',
     englishDescription:
       'Old-school downtown cafe, feels like time travel while you smash cake.',
     rating: 4.7,
@@ -325,13 +325,13 @@ export const rioPlaces: Place[] = [
   {
     id: 'cafe-seu-jorge',
     destinationId: 'rio-de-janeiro',
-    hebrewName: 'קפה דו סאו ז׳ורז׳',
+    hebrewName: 'Café do Seu Jorge Santa Teresa',
     englishName: 'Café do Seu Jorge Santa Teresa',
     category: 'cafe',
     lat: -22.9206463,
     lng: -43.1894906,
     hebrewDescription:
-      'קפה קטן בסנטה תרזה, נוף ירוק, מושלם לשבת עם מחברת ויומני מסע.',
+      'Tiny Santa Teresa cafe with green views, perfect for journaling backpack drama.',
     englishDescription:
       'Tiny Santa Teresa cafe with green views, perfect for journaling backpack drama.',
     rating: 4.6,
@@ -340,13 +340,13 @@ export const rioPlaces: Place[] = [
   {
     id: 'curto-cafe',
     destinationId: 'rio-de-janeiro',
-    hebrewName: 'קורטו קפה',
+    hebrewName: 'Curto Café',
     englishName: 'Curto Café',
     category: 'cafe',
     lat: -22.9096614,
     lng: -43.1917843,
     hebrewDescription:
-      'קפה מגניב בלי מחיר קבוע, אתה משלם כמה שבא לך על האספרסו.',
+      'Cool pay-what-you-want spot where you decide how much your espresso costs.',
     englishDescription:
       'Cool pay-what-you-want spot where you decide how much your espresso costs.',
     rating: 4.5,
@@ -356,13 +356,13 @@ export const rioPlaces: Place[] = [
   {
     id: 'cafe-seleto-lapa',
     destinationId: 'rio-de-janeiro',
-    hebrewName: 'קפה סלייטו לאפה',
+    hebrewName: 'Café Seleto Lapa',
     englishName: 'Café Seleto Lapa',
     category: 'cafe',
     lat: -22.9124491,
     lng: -43.178564,
     hebrewDescription:
-      'עצירת קפה לפני או אחרי המסיבות בלפה, מלא תרמילאים מכל העולם.',
+      'Pre or post party coffee stop in Lapa full of backpackers from everywhere.',
     englishDescription:
       'Pre or post party coffee stop in Lapa full of backpackers from everywhere.',
     rating: 4.3,
@@ -371,13 +371,13 @@ export const rioPlaces: Place[] = [
   {
     id: 'brooklyn-cafe',
     destinationId: 'rio-de-janeiro',
-    hebrewName: 'ברוקלין קפה ריו',
+    hebrewName: 'Brooklyn Café',
     englishName: 'Brooklyn Café',
     category: 'cafe',
     lat: -22.9828879,
     lng: -43.1941013,
     hebrewDescription:
-      'קפה שכונתי באיפנמה, וייב ניו יורקי, אחלה ויי-פיי לתכנון המשך הטיול.',
+      'Neighborhood Ipanema cafe with New York vibe and solid wifi for planning routes.',
     englishDescription:
       'Neighborhood Ipanema cafe with New York vibe and solid wifi for planning routes.',
     rating: 4.5,
@@ -386,13 +386,13 @@ export const rioPlaces: Place[] = [
   {
     id: 'bibi-sucos',
     destinationId: 'rio-de-janeiro',
-    hebrewName: 'ביבי סוקוס',
+    hebrewName: 'Bibi Sucos Copacabana',
     englishName: 'Bibi Sucos Copacabana',
     category: 'cafe',
     lat: -22.9680897,
     lng: -43.1808652,
     hebrewDescription:
-      'מיצים טבעיים, אסאי וסנדביצ׳ים, פתרון מהיר אחרי ים כשמתים מרעב.',
+      'Natural juices, açaí and sandwiches, quick fix after the beach hunger hits.',
     englishDescription:
       'Natural juices, açaí and sandwiches, quick fix after the beach hunger hits.',
     rating: 4.5,
@@ -403,13 +403,13 @@ export const rioPlaces: Place[] = [
   {
     id: 'cafe-lamas',
     destinationId: 'rio-de-janeiro',
-    hebrewName: 'קפה לאמס',
+    hebrewName: 'Café Lamas',
     englishName: 'Café Lamas',
     category: 'restaurant',
     lat: -22.9317031,
     lng: -43.1819892,
     hebrewDescription:
-      'מוסד ברזילאי קלאסי, ישראלים באים לטעום פז׳ואדה ולדבר פוליטיקה.',
+      'Classic Brazilian joint where Israelis try feijoada and end up debating politics.',
     englishDescription:
       'Classic Brazilian joint where Israelis try feijoada and end up debating politics.',
     rating: 4.5,
@@ -418,13 +418,13 @@ export const rioPlaces: Place[] = [
   {
     id: 'boteco-belmonte',
     destinationId: 'rio-de-janeiro',
-    hebrewName: 'בוטקו בלמונטה',
+    hebrewName: 'Boteco Belmonte Flamengo',
     englishName: 'Boteco Belmonte Flamengo',
     category: 'restaurant',
     lat: -22.9364568,
     lng: -43.1769614,
     hebrewDescription:
-      'בר ומסעדה ברזילאית, בירות קרות ופסטלים, ישראלים יושבים פה שעות.',
+      'Brazilian bar restaurant with cold beers and pastéis where Israelis linger for hours.',
     englishDescription:
       'Brazilian bar restaurant with cold beers and pastéis where Israelis linger for hours.',
     rating: 4.4,
@@ -435,13 +435,13 @@ export const rioPlaces: Place[] = [
   {
     id: 'sindicato-chopp',
     destinationId: 'rio-de-janeiro',
-    hebrewName: 'סינדיקטו דו צ׳ופ',
+    hebrewName: 'Sindicato do Chopp Ipanema',
     englishName: 'Sindicato do Chopp Ipanema',
     category: 'bar',
     lat: -22.9834044,
     lng: -43.2055577,
     hebrewDescription:
-      'בר צ׳ופ קלאסי, מוזיקה חיה לפעמים, מקום טוב להתחיל ערב.',
+      "Classic draft beer bar with occasional live music, good place to kick off the night.",
     englishDescription:
       "Classic draft beer bar with occasional live music, good place to kick off the night.",
     rating: 4.3,
@@ -450,13 +450,13 @@ export const rioPlaces: Place[] = [
   {
     id: 'bar-astor-ipanema',
     destinationId: 'rio-de-janeiro',
-    hebrewName: 'בר אסטור איפנמה',
+    hebrewName: 'Bar Astor Ipanema',
     englishName: 'Bar Astor Ipanema',
     category: 'bar',
     lat: -22.9853562,
     lng: -43.2046247,
     hebrewDescription:
-      'בר על החוף עם נוף לשקיעה, קוקטיילים קצת יקרים אבל שווה לאווירה.',
+      'Beachfront bar with sunset views, cocktails pricey but the vibe pays for it.',
     englishDescription:
       'Beachfront bar with sunset views, cocktails pricey but the vibe pays for it.',
     rating: 4.4,
@@ -465,13 +465,13 @@ export const rioPlaces: Place[] = [
   {
     id: 'lapa-steps-bar',
     destinationId: 'rio-de-janeiro',
-    hebrewName: 'בר המדרגות בלפה',
+    hebrewName: 'Bar da Boa Lapa',
     englishName: 'Bar da Boa Lapa',
     category: 'bar',
     lat: -22.9133971,
     lng: -43.1787404,
     hebrewDescription:
-      'מקום קלאסי לפני קפיצה לרחוב, מוזיקה, בירות וזרים מכל מקום.',
+      'Classic warmup spot before the street parties with music, beers and random foreigners.',
     englishDescription:
       'Classic warmup spot before the street parties with music, beers and random foreigners.',
     rating: 4.3,
@@ -480,13 +480,13 @@ export const rioPlaces: Place[] = [
   {
     id: 'leviano-bar',
     destinationId: 'rio-de-janeiro',
-    hebrewName: 'לביאנו בר',
+    hebrewName: 'Leviano Bar',
     englishName: 'Leviano Bar',
     category: 'bar',
     lat: -22.9123283,
     lng: -43.1784319,
     hebrewDescription:
-      'בר עם הופעות חיות וסמבה בלפה, נוח להכיר אנשים ורקדנים.',
+      'Lapa bar with live bands and samba, easy place to meet people and dancers.',
     englishDescription:
       'Lapa bar with live bands and samba, easy place to meet people and dancers.',
     rating: 4.5,
@@ -495,13 +495,13 @@ export const rioPlaces: Place[] = [
   {
     id: 'mureta-urca',
     destinationId: 'rio-de-janeiro',
-    hebrewName: 'מורטה דה אורקה',
+    hebrewName: 'Mureta da Urca',
     englishName: 'Mureta da Urca',
     category: 'bar',
     lat: -22.9512391,
     lng: -43.1686204,
     hebrewDescription:
-      'יושבים על החומה עם בירה מהקיוסק, נוף מושלם לשקיעה במפרץ.',
+      'Sit on the wall with kiosk beer and perfect bay sunset views.',
     englishDescription:
       'Sit on the wall with kiosk beer and perfect bay sunset views.',
     rating: 4.7,
@@ -511,13 +511,13 @@ export const rioPlaces: Place[] = [
   {
     id: 'canastra-bar',
     destinationId: 'rio-de-janeiro',
-    hebrewName: 'קנסטרא בר',
+    hebrewName: 'Canastra Bar',
     englishName: 'Canastra Bar',
     category: 'bar',
     lat: -22.9841219,
     lng: -43.2051636,
     hebrewDescription:
-      'בר יין באיפנמה, ימי שלישי מתפוצצים בישראלים ובלוקאלים אחרי החוף.',
+      'Ipanema wine bar, Tuesdays packed with Israelis and locals fresh from the beach.',
     englishDescription:
       'Ipanema wine bar, Tuesdays packed with Israelis and locals fresh from the beach.',
     rating: 4.6,
@@ -529,13 +529,13 @@ export const rioPlaces: Place[] = [
   {
     id: 'rio-scenarium',
     destinationId: 'rio-de-janeiro',
-    hebrewName: 'ריו סצנריום',
+    hebrewName: 'Rio Scenarium',
     englishName: 'Rio Scenarium',
     category: 'club',
     lat: -22.9127148,
     lng: -43.1830503,
     hebrewDescription:
-      'מועדון סמבה ענק בשלוש קומות, גם תיירים וגם מקומיים רוקדים עד מאוחר.',
+      "Huge three-floor samba club mixing tourists and locals dancing until stupid o'clock.",
     englishDescription:
       "Huge three-floor samba club mixing tourists and locals dancing until stupid o'clock.",
     rating: 4.6,
@@ -545,13 +545,13 @@ export const rioPlaces: Place[] = [
   {
     id: 'circo-voador',
     destinationId: 'rio-de-janeiro',
-    hebrewName: 'סרקו וואדור',
+    hebrewName: 'Circo Voador',
     englishName: 'Circo Voador',
     category: 'club',
     lat: -22.9131533,
     lng: -43.1800298,
     hebrewDescription:
-      'מקום הופעות פתוח, ליינים של רוק, רגאיי ואלקטרוני, קהל צעיר בטירוף.',
+      'Open-air concert venue with rock, reggae and electronic nights, super young crowd.',
     englishDescription:
       'Open-air concert venue with rock, reggae and electronic nights, super young crowd.',
     rating: 4.5,
@@ -560,13 +560,13 @@ export const rioPlaces: Place[] = [
   {
     id: 'fundicao-progresso',
     destinationId: 'rio-de-janeiro',
-    hebrewName: 'פונדיסאו פרוגרסו',
+    hebrewName: 'Fundição Progresso',
     englishName: 'Fundição Progresso',
     category: 'club',
     lat: -22.9135688,
     lng: -43.1793293,
     hebrewDescription:
-      'האנגר ענק למסיבות והופעות, קופצים שם כל קרנבל וכל סוף שבוע.',
+      'Massive warehouse for parties and shows, explodes every Carnival and most weekends.',
     englishDescription:
       'Massive warehouse for parties and shows, explodes every Carnival and most weekends.',
     rating: 4.4,
@@ -575,13 +575,13 @@ export const rioPlaces: Place[] = [
   {
     id: 'fosfobox',
     destinationId: 'rio-de-janeiro',
-    hebrewName: 'פוספובוקס קלאב',
+    hebrewName: 'Fosfobox',
     englishName: 'Fosfobox',
     category: 'club',
     lat: -22.9691156,
     lng: -43.1812892,
     hebrewDescription:
-      'מועדון אנדרגראונדי בקופקבנה, טכנו ואינדית, מרגיש קצת כמו דרום תל אביב.',
+      'Underground Copacabana club with techno and indie, feels a bit like south Tel Aviv.',
     englishDescription:
       'Underground Copacabana club with techno and indie, feels a bit like south Tel Aviv.',
     rating: 4.4,
@@ -592,13 +592,13 @@ export const rioPlaces: Place[] = [
   {
     id: 'chabad-leblon',
     destinationId: 'rio-de-janeiro',
-    hebrewName: 'חב״ד לבלאון',
+    hebrewName: 'Beit Lubavitch Chabad Rio de Janeiro',
     englishName: 'Beit Lubavitch Chabad Rio De Janeiro',
     category: 'chabad',
     lat: -22.9837226,
     lng: -43.2195597,
     hebrewDescription:
-      'בית חב״ד המרכזי, ארוחות שבת מלאות ישראלים וסטודנטים מכל העולם.',
+      'Main Chabad house, Shabbat meals packed with Israelis and students from everywhere.',
     englishDescription:
       'Main Chabad house, Shabbat meals packed with Israelis and students from everywhere.',
     rating: 4.7,
@@ -608,13 +608,13 @@ export const rioPlaces: Place[] = [
   {
     id: 'chabad-copa',
     destinationId: 'rio-de-janeiro',
-    hebrewName: 'חב״ד קופקבנה',
+    hebrewName: 'Beit Lubavitch Copacabana',
     englishName: 'Beit Lubavitch Copacabana',
     category: 'chabad',
     lat: -22.9673023,
     lng: -43.1866841,
     hebrewDescription:
-      'חב״ד על יד החוף, אחלה מקום לנשום יהדות אחרי שבוע של מסיבות.',
+      'Chabad near the beach, good spot to breathe some Judaism after a week of parties.',
     englishDescription:
       'Chabad near the beach, good spot to breathe some Judaism after a week of parties.',
     rating: 4.6,
@@ -625,13 +625,13 @@ export const rioPlaces: Place[] = [
   {
     id: 'shaq-shuq',
     destinationId: 'rio-de-janeiro',
-    hebrewName: 'שק שוק',
+    hebrewName: 'Shaq Shuq',
     englishName: 'Shaq Shuq',
     category: 'kosher',
     lat: -22.9686483,
     lng: -43.1861939,
     hebrewDescription:
-      'מסעדה כשרה בקופקבנה, אוכל ביתי בסגנון ישראלי כשמתגעגעים לאוכל של אמא.',
+      'Kosher Copacabana spot with Israeli style home food for when you miss mom.',
     englishDescription:
       'Kosher Copacabana spot with Israeli style home food for when you miss mom.',
     rating: 4.5,
@@ -641,13 +641,13 @@ export const rioPlaces: Place[] = [
   {
     id: 'cib-kosher-bistro',
     destinationId: 'rio-de-janeiro',
-    hebrewName: 'ביסטרו כשר סי איי בי',
+    hebrewName: 'CIB Kosher Bistro',
     englishName: 'CIB Kosher Bistro',
     category: 'kosher',
     lat: -22.968587,
     lng: -43.186254,
     hebrewDescription:
-      'ביסטרו כשר במועדון היהודי, אחלה לפגוש עוד ישראלים ומשפחות מקומיות.',
+      'Kosher bistro inside the Jewish club, easy place to meet Israelis and local families.',
     englishDescription:
       'Kosher bistro inside the Jewish club, easy place to meet Israelis and local families.',
     rating: 4.4,
@@ -658,32 +658,32 @@ export const rioPlaces: Place[] = [
   {
     id: 'cristo-redentor',
     destinationId: 'rio-de-janeiro',
-    hebrewName: 'ישו הגואל',
+    hebrewName: 'Christ the Redeemer',
     englishName: 'Christ the Redeemer',
     category: 'landmark',
     lat: -22.951916,
     lng: -43.2104872,
     hebrewDescription:
-      'האייקון של ריו, תמונה חובה עם הידיים פרושות כמו פסל.',
+      "Rio's main icon, mandatory photo with arms stretched like the statue.",
     englishDescription:
       "Rio's main icon, mandatory photo with arms stretched like the statue.",
     rating: 4.7,
     friendsKnow: 13,
     tarmilPick: true,
     friendVisits: [
-      { friendInitial: 'ת', friendName: 'תום פרידמן', season: 'autumn', year: 2025, durationLabel: 'סוף שבוע' },
+      { friendInitial: 'T', friendName: 'Tom Friedman', season: 'autumn', year: 2025, durationLabel: 'a weekend' },
     ],
   },
   {
     id: 'sugarloaf',
     destinationId: 'rio-de-janeiro',
-    hebrewName: 'שוגרלוף',
+    hebrewName: 'Sugarloaf Mountain',
     englishName: 'Sugarloaf Mountain',
     category: 'landmark',
     lat: -22.9493486,
     lng: -43.1563408,
     hebrewDescription:
-      'הר עם נוף 360, עולים ברכבל, שקיעות שנראות כמו מסך ירוק.',
+      'A 360-degree view mountain with a cable car ride and sunsets that look CGI fake.',
     englishDescription:
       'A 360-degree view mountain with a cable car ride and sunsets that look CGI fake.',
     rating: 4.7,
@@ -692,13 +692,13 @@ export const rioPlaces: Place[] = [
   {
     id: 'lapa-arches',
     destinationId: 'rio-de-janeiro',
-    hebrewName: 'קשתות לפה',
+    hebrewName: 'Arcos da Lapa',
     englishName: 'Arcos da Lapa',
     category: 'landmark',
     lat: -22.91358,
     lng: -43.17902,
     hebrewDescription:
-      'אקוודוקט לבן באמצע לפה, נקודת מפגש לכל המסיבות והבלוקים.',
+      'White aqueduct in Lapa that doubles as the meeting point for parties and blocos.',
     englishDescription:
       'White aqueduct in Lapa that doubles as the meeting point for parties and blocos.',
     rating: 4.5,
@@ -707,13 +707,13 @@ export const rioPlaces: Place[] = [
   {
     id: 'selaron-steps',
     destinationId: 'rio-de-janeiro',
-    hebrewName: 'מדרגות סלרון',
+    hebrewName: 'Escadaria Selarón',
     englishName: 'Escadaria Selarón',
     category: 'landmark',
     lat: -22.9134394,
     lng: -43.179456,
     hebrewDescription:
-      'גרפיטי של אריחים צבעוניים, כולם מחפשים אריח של ישראל לצילום.',
+      'Colorful tiled steps where everyone hunts for the Israel tile photo.',
     englishDescription:
       'Colorful tiled steps where everyone hunts for the Israel tile photo.',
     rating: 4.6,
@@ -723,13 +723,13 @@ export const rioPlaces: Place[] = [
   {
     id: 'parque-lage',
     destinationId: 'rio-de-janeiro',
-    hebrewName: 'פארקי לאז׳י',
+    hebrewName: 'Parque Lage',
     englishName: 'Parque Lage',
     category: 'landmark',
     lat: -22.9682391,
     lng: -43.2102638,
     hebrewDescription:
-      'ארמון ישן עם בריכה מול היער, צילומי אינסטה ברמה של קליפ.',
+      'Old mansion with a pool facing the forest, Instagram shots on full music-video level.',
     englishDescription:
       'Old mansion with a pool facing the forest, Instagram shots on full music-video level.',
     rating: 4.6,
@@ -738,13 +738,13 @@ export const rioPlaces: Place[] = [
   {
     id: 'pedra-gavea',
     destinationId: 'rio-de-janeiro',
-    hebrewName: 'פדרה דה גאבה',
+    hebrewName: 'Pedra da Gávea',
     englishName: 'Pedra da Gávea',
     category: 'landmark',
     lat: -23.0019858,
     lng: -43.2922647,
     hebrewDescription:
-      'טרק קשה אבל נוף פסיכי על העיר, הישראלים תמיד עולים מהר מדי.',
+      'Hard hike with insane views of the city, Israelis always power up too fast.',
     englishDescription:
       'Hard hike with insane views of the city, Israelis always power up too fast.',
     rating: 4.7,
@@ -753,13 +753,13 @@ export const rioPlaces: Place[] = [
   {
     id: 'dois-irmaos',
     destinationId: 'rio-de-janeiro',
-    hebrewName: 'מורו דויס אירמאוס',
+    hebrewName: 'Morro Dois Irmãos',
     englishName: 'Morro Dois Irmãos',
     category: 'landmark',
     lat: -22.9994517,
     lng: -43.2341364,
     hebrewDescription:
-      'עלייה יחסית קצרה מעל ווידיגל, נוף משוגע על איפנמה ולבלאון.',
+      'Relatively short hike above Vidigal with crazy views over Ipanema and Leblon.',
     englishDescription:
       'Relatively short hike above Vidigal with crazy views over Ipanema and Leblon.',
     rating: 4.7,
@@ -768,13 +768,13 @@ export const rioPlaces: Place[] = [
   {
     id: 'santa-teresa',
     destinationId: 'rio-de-janeiro',
-    hebrewName: 'שכונת סנטה תרזה',
+    hebrewName: 'Santa Teresa neighborhood',
     englishName: 'Santa Teresa neighborhood',
     category: 'landmark',
     lat: -22.9229157,
     lng: -43.1901305,
     hebrewDescription:
-      'שכונה בוהמית על הגבעה, ברים, גרפיטי וחשמלית צהובה לקטע.',
+      'Bohemian hill neighborhood with bars, graffiti and a cute yellow tram.',
     englishDescription:
       'Bohemian hill neighborhood with bars, graffiti and a cute yellow tram.',
     rating: 4.5,
@@ -783,13 +783,13 @@ export const rioPlaces: Place[] = [
   {
     id: 'museu-amanha',
     destinationId: 'rio-de-janeiro',
-    hebrewName: 'מוזיאון המחר',
+    hebrewName: 'Museu do Amanhã',
     englishName: 'Museu do Amanhã',
     category: 'landmark',
     lat: -22.8930924,
     lng: -43.1796111,
     hebrewDescription:
-      'מבנה עתידני על המים, אזור נייס להסתובב בו בשקיעה בנמל.',
+      'Futuristic building on the water, chill sunset walk area by the port.',
     englishDescription:
       'Futuristic building on the water, chill sunset walk area by the port.',
     rating: 4.4,
@@ -798,13 +798,13 @@ export const rioPlaces: Place[] = [
   {
     id: 'mac-niteroi',
     destinationId: 'rio-de-janeiro',
-    hebrewName: 'מוזיאון ניטרוי',
+    hebrewName: 'MAC Niterói',
     englishName: 'MAC Niterói',
     category: 'landmark',
     lat: -22.907042,
     lng: -43.1255708,
     hebrewDescription:
-      'מוזיאון בצורת צלחת מעופפת, נוף חזרה לריו פשוט מפחיד.',
+      "UFO-looking museum with ridiculous views back toward Rio's skyline.",
     englishDescription:
       "UFO-looking museum with ridiculous views back toward Rio's skyline.",
     rating: 4.5,
@@ -813,13 +813,13 @@ export const rioPlaces: Place[] = [
   {
     id: 'mirante-dona-marta',
     destinationId: 'rio-de-janeiro',
-    hebrewName: 'מירנטה דונה מרטה',
+    hebrewName: 'Mirante Dona Marta',
     englishName: 'Mirante Dona Marta',
     category: 'landmark',
     lat: -22.9404395,
     lng: -43.1964393,
     hebrewDescription:
-      'תצפית זולה מהכריסטו, פחות תורים, נוף דומה ואפילו יותר יפה.',
+      'Cheaper Cristo-style viewpoint with fewer lines and arguably better views.',
     englishDescription:
       'Cheaper Cristo-style viewpoint with fewer lines and arguably better views.',
     rating: 4.6,
@@ -828,13 +828,13 @@ export const rioPlaces: Place[] = [
   {
     id: 'pedra-telegrafo',
     destinationId: 'rio-de-janeiro',
-    hebrewName: 'פדרה דו טלגרפו',
+    hebrewName: 'Pedra do Telégrafo',
     englishName: 'Pedra do Telégrafo',
     category: 'landmark',
     lat: -23.0539217,
     lng: -43.0606362,
     hebrewDescription:
-      'הסלע המפורסם לתמונות "נפילה מצוק", תור של אינסטה ווריורס.',
+      'Famous rock for fake cliff-hanging photos, queue of hardcore Instagram warriors.',
     englishDescription:
       'Famous rock for fake cliff-hanging photos, queue of hardcore Instagram warriors.',
     rating: 4.4,

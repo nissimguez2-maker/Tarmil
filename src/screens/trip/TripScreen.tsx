@@ -151,7 +151,7 @@ export function TripScreen() {
   return (
     <Screen noScroll>
       <div className="flex h-full flex-col">
-        <TopBar title="המסע שלך" />
+        <TopBar title="Your trip" />
 
         {nextStop && (
           <div

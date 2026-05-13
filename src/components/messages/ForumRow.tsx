@@ -7,7 +7,7 @@ type Props = {
   forum: Forum;
   /** Recent thread title to show as a preview line. */
   previewTitle?: string;
-  /** When true, render a "הצטרף" CTA instead of the chevron. */
+  /** When true, render a "Join" CTA instead of the chevron. */
   recommended?: boolean;
   onJoin?: () => void;
 };

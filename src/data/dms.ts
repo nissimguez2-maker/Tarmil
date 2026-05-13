@@ -25,37 +25,37 @@ export const dms: DM[] = [
   {
     id: 'dm-maya',
     friendId: 'maya-ipanema',
-    lastMessagePreviewHe: 'אז סגרנו, יום שלישי בפוסטו 9. 18:00?',
+    lastMessagePreviewHe: "Locked in then, Tuesday at Posto 9. 18:00?",
     unreadCount: 1,
   },
   {
     id: 'dm-yael',
     friendId: 'yael-botafogo',
-    lastMessagePreviewHe: 'בא אליי לבירה הערב? פתחתי דלת.',
+    lastMessagePreviewHe: 'Come over for a beer tonight? Door is open.',
     unreadCount: 1,
   },
   {
     id: 'dm-roi',
     friendId: 'roi-buzios',
-    lastMessagePreviewHe: 'קיבלתי. תודה רועי.',
+    lastMessagePreviewHe: 'Got it. Thanks Roi.',
     unreadCount: 0,
   },
   {
     id: 'dm-shir',
     friendId: 'shir-saopaulo',
-    lastMessagePreviewHe: 'תאשרי לי שמגיעה ב-3, אזמין למסעדה.',
+    lastMessagePreviewHe: "Confirm you're arriving the 3rd and I'll book the restaurant.",
     unreadCount: 2,
   },
   {
     id: 'dm-yotam',
     friendId: 'yotam-jericoacoara',
-    lastMessagePreviewHe: 'בעיניי 🙏 אביא חלות מבית של דודה שלי בפורטלזה. נראה אותך ב־11.',
+    lastMessagePreviewHe: "Down 🙏 I'll bring challot from my aunt's place in Fortaleza. See you on the 11th.",
     unreadCount: 0,
   },
   {
     id: 'dm-moshe',
     friendId: 'moshe-buenosaires',
-    lastMessagePreviewHe: 'הכתובת: Honduras 5450. קוד בכניסה 4837.',
+    lastMessagePreviewHe: 'Address: Honduras 5450. Entry code 4837.',
     unreadCount: 1,
   },
 ];

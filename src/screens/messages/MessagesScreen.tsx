@@ -13,9 +13,9 @@ import type { GroupMessage } from '../../data/groupMessages';
 type SubTab = 'forums' | 'chats' | 'dms';
 
 const TABS = [
-  { id: 'forums' as const, label: 'פורומים' },
-  { id: 'chats' as const, label: 'קבוצות' },
-  { id: 'dms' as const, label: 'הודעות' },
+  { id: 'forums' as const, label: 'Forums' },
+  { id: 'chats' as const, label: 'Groups' },
+  { id: 'dms' as const, label: 'Messages' },
 ];
 
 /**
@@ -83,7 +83,7 @@ export function MessagesScreen() {
 
   return (
     <Screen>
-      <TopBar title="הודעות" />
+      <TopBar title="Messages" />
 
       <SubNav items={TABS} active={active} onChange={onChangeTab} />
 
@@ -91,7 +91,7 @@ export function MessagesScreen() {
         <SearchBar
           value={query}
           onChange={setQuery}
-          placeholder="חפש פורום, קבוצה או חבר"
+          placeholder="Search forum, group or friend"
         />
 
         {active === 'forums' && (
@@ -108,7 +108,7 @@ export function MessagesScreen() {
             </ul>
             {recommendedForums.length > 0 && (
               <>
-                <span className="meta-caps text-cocoa-55">מומלצים לך</span>
+                <span className="meta-caps text-cocoa-55">Recommended for you</span>
                 <ul className="flex flex-col gap-sm">
                   {recommendedForums.map((f) => (
                     <li key={f.id}>

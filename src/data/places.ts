@@ -30,7 +30,7 @@ export type FriendVisit = {
   friendName: string;
   season: Season;
   year: number;
-  /** Hebrew duration label, e.g. "שבועיים", "סוף שבוע". Rendered verbatim. */
+  /** Duration label, e.g. "two weeks", "a weekend". Rendered verbatim. */
   durationLabel: string;
 };
 

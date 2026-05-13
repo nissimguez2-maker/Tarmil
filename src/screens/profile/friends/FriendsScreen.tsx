@@ -9,9 +9,9 @@ import { LoadingPanel, ErrorPanel } from '../../../components/DataState';
 import { Avatar } from '../../../components/shared/Avatar';
 
 /**
- * Full friends list, reached from the Profile tab via the "ראה הכל" link.
+ * Full friends list, reached from the Profile tab via the "See all" link.
  * Fed by the same `friendOverlaps` table the trip map uses. Present-status
- * friends are tagged "איתך כאן"; future-status friends show city + exact
+ * friends are tagged "Here with you"; future-status friends show city + exact
  * overlap dates. Each row links to /profile/friend/:id.
  */
 export function FriendsScreen() {
@@ -21,14 +21,14 @@ export function FriendsScreen() {
 
   return (
     <Screen>
-      <TopBar back title="חברים" />
+      <TopBar back title="Friends" />
 
       <div className="flex flex-col gap-lg p-md">
         <SectionLabel number="01" label="Where trips touch." />
 
         <p className="max-w-body text-body text-cocoa-70">
-          תמיד תראה רק את הרגעים שבהם הטיול שלך נוגע בטיול של חבר. לא היסטוריה,
-          לא מעקב — רק חפיפה.
+          You only see the moments where your trip touches a friend's. No history,
+          no tracking — just overlap.
         </p>
 
         <ul className="flex flex-col gap-sm">
@@ -60,7 +60,7 @@ export function FriendsScreen() {
                         {friend.friendName}
                       </span>
                       <span className="meta-caps text-copper">
-                        {isPresent ? 'איתך כאן' : 'חופף בעתיד'}
+                        {isPresent ? 'Here with you' : 'Future overlap'}
                       </span>
                     </span>
                     <span className="text-small text-cocoa-70">
@@ -78,8 +78,8 @@ export function FriendsScreen() {
         </ul>
 
         <p className="text-small leading-snug text-cocoa-55">
-          מיקום ברמת עיר בלבד. תרמיל לעולם לא חושף לחברים את הכתובת המדויקת
-          שלך — חפיפות מוצגות ברמת עיר בלבד.
+          City-level location only. Tarmil never shows friends your exact address —
+          overlaps appear at city level only.
         </p>
       </div>
     </Screen>

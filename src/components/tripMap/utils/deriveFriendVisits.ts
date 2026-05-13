@@ -5,7 +5,7 @@ export type FriendVisit = {
   friendInitial: string;
   /** 1–5. */
   rating: number;
-  /** Single line of Hebrew. */
+  /** Single line of copy. */
   comment: string;
 };
 
