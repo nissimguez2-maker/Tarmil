@@ -1,4 +1,4 @@
-import { X, ChevronLeft } from 'lucide-react';
+import { X, ChevronRight } from 'lucide-react';
 import { Button } from '../../Button';
 import type { PlannedStop } from '../../../data/plannedStops';
 import { formatDateRange } from '../utils/formatDateRange';
@@ -73,7 +73,7 @@ export function PlannedRouteSheet({
                   </span>
                 )}
               </div>
-              <ChevronLeft
+              <ChevronRight
                 className="mt-1 h-4 w-4 shrink-0 text-cocoa-55"
                 aria-hidden
               />

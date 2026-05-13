@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ChevronLeft } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 import type { Forum } from '../../data/forums';
 import { Button } from '../Button';
 
@@ -16,10 +16,6 @@ type Props = {
  * Row in the Forums list. Tap drills into /messages/forums/:slug. When the
  * forum is recommended (not yet joined), the chevron is replaced by a copper
  * accent "Join" button that calls `onJoin` and stops navigation.
- *
- * Chevron points left visually because in RTL the "forward into a detail"
- * direction is the start side, which is right — so the chevron points away
- * from the start side. Lucide's ChevronLeft is correct here.
  */
 export function ForumRow({ forum, previewTitle, recommended, onJoin }: Props) {
   const body = (
@@ -50,7 +46,7 @@ export function ForumRow({ forum, previewTitle, recommended, onJoin }: Props) {
           Join
         </Button>
       ) : (
-        <ChevronLeft
+        <ChevronRight
           className="h-5 w-5 shrink-0 text-cocoa-55"
           strokeWidth={1.5}
           aria-hidden

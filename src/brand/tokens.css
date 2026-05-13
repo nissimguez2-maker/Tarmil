@@ -5,14 +5,17 @@
  */
 
 :root {
-  /* surface scale */
-  --ivory: #fdfbf7;
-  --sand: #ead8c0;
-  --rope: #d1bb9e;
-  --stone: #a79277;
+  /* surface scale — stored as `R G B` space-separated so Tailwind can
+   * splice `<alpha-value>` into rgb() at consumption sites. Pre-blended
+   * tints below (cocoa-70 / copper-85 / etc.) stay as full hex with
+   * baked alpha — they're used without the `/N` modifier. */
+  --ivory: 253 251 247;
+  --sand: 234 216 192;
+  --rope: 209 187 158;
+  --stone: 167 146 119;
 
   /* type & structure */
-  --cocoa: #352818;
+  --cocoa: 53 40 24;
   --cocoa-70: #352818b3;
   --cocoa-55: #3528188c;
   --cocoa-30: #3528184d;
@@ -20,7 +23,7 @@
   --cocoa-08: #35281814;
 
   /* vibrant accent — never below 70% opacity */
-  --copper: #c75d24;
+  --copper: 199 93 36;
   --copper-85: #c75d24d9;
   --copper-70: #c75d24b3;
 

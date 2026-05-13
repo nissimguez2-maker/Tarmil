@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ChevronLeft, RotateCcw } from 'lucide-react';
+import { ChevronRight, RotateCcw } from 'lucide-react';
 import clsx from 'clsx';
 import { Screen } from '../../../components/Screen';
 import { TopBar } from '../../../components/TopBar';
@@ -143,7 +143,7 @@ export function SettingsScreen() {
                     <span className="text-body text-cocoa">{row.label}</span>
                     <span className="flex shrink-0 items-center gap-2 text-small text-cocoa-55">
                       {valueFor(row)}
-                      <ChevronLeft className="h-4 w-4" aria-hidden />
+                      <ChevronRight className="h-4 w-4" aria-hidden />
                     </span>
                   </button>
                 </li>

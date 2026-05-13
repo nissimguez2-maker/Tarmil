@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { ChevronLeft, Map, MapPin, Navigation as NavIcon } from 'lucide-react';
+import { ChevronRight, Map, MapPin, Navigation as NavIcon } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import type { Place } from '../../data/places';
 
@@ -76,7 +76,7 @@ export function MapsActionSheet({ open, place, onClose }: Props) {
                 </span>
                 <span className="text-small text-cocoa-55">{meta}</span>
               </span>
-              <ChevronLeft className="h-4 w-4 shrink-0 text-cocoa-55" aria-hidden />
+              <ChevronRight className="h-4 w-4 shrink-0 text-cocoa-55" aria-hidden />
             </button>
           </li>
         ))}
