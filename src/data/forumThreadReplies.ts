@@ -11,26 +11,26 @@
  */
 
 export type ForumThreadReply = {
-  id: string;
-  threadId: string;
-  /** null = self. FK to friend_overlaps when present. */
-  authorFriendId: string | null;
-  body: string;
+ id: string;
+ threadId: string;
+ /** null = self. FK to friend_overlaps when present. */
+ authorFriendId: string | null;
+ body: string;
 };
 
 export const forumThreadReplies: ForumThreadReply[] = [
-  // =====================================================================
-  // RIO
-  // =====================================================================
+ // =====================================================================
+ // RIO
+ // =====================================================================
 
-      
-    
-  // thread-rio-003 — street bloco (3 replies)
-  {
-    id: 'thread-rio-003-r1',
-    threadId: 'thread-rio-003',
-    authorFriendId: 'maya-ipanema',
-    body:"I'm coming! But not till 23:00, got something earlier. Wait for me?",
+ 
+ 
+ // thread-rio-003 — street bloco (3 replies)
+ {
+ id: 'thread-rio-003-r1',
+ threadId: 'thread-rio-003',
+ authorFriendId: 'maya-ipanema',
+ body:"I'm coming! But not till 23:00, got something earlier. Wait for me?",
   },
   {
     id: 'thread-rio-003-r2',
@@ -43,20 +43,20 @@ export const forumThreadReplies: ForumThreadReply[] = [
     threadId: 'thread-rio-003',
     authorFriendId: 'yael-botafogo',
     body:"Maya, I'm there till 1:00 max, training in the morning. Nissim, beer and a lighter, water if you remember",
-  },
+ },
 
-  // thread-rio-004 — Rio Scenarium (2 replies)
-  {
-    id: 'thread-rio-004-r1',
-    threadId: 'thread-rio-004',
-    authorFriendId: 'roi-buzios',
-    body: 'Try Pedra do Sal on Monday night, real samba, free, locals only. Rio Scenarium is not what it was.',
-  },
-  {
-    id: 'thread-rio-004-r2',
-    threadId: 'thread-rio-004',
-    authorFriendId: 'yael-botafogo',
-    body:"Also Carioca da Gema on Rua Mem de Sá. R$ 30 cover, samba all night, most Lapa vibe you'll find.",
+ // thread-rio-004 — Rio Scenarium (2 replies)
+ {
+ id: 'thread-rio-004-r1',
+ threadId: 'thread-rio-004',
+ authorFriendId: 'roi-buzios',
+ body: 'Try Pedra do Sal on Monday night, real samba, free, locals only. Rio Scenarium is not what it was.',
+ },
+ {
+ id: 'thread-rio-004-r2',
+ threadId: 'thread-rio-004',
+ authorFriendId: 'yael-botafogo',
+ body:"Also Carioca da Gema on Rua Mem de Sá. R$ 30 cover, samba all night, most Lapa vibe you'll find.",
   },
 
   // thread-rio-005 — Pedra da Gávea (3 replies)
@@ -65,66 +65,66 @@ export const forumThreadReplies: ForumThreadReply[] = [
     threadId: 'thread-rio-005',
     authorFriendId: 'maya-ipanema',
     body:"I'm in. Aggressive hour but worth it. Do we need a guide for the scramble at the end?",
-  },
-  {
-    id: 'thread-rio-005-r2',
-    threadId: 'thread-rio-005',
-    authorFriendId: null,
-    body:"Maya, last time I went up without a guide, there are fixed ropes. But if you're not sure, I have a local guide's number — R$ 80.",
-  },
-  {
-    id: 'thread-rio-005-r3',
-    threadId: 'thread-rio-005',
-    authorFriendId: 'roi-buzios',
-    body: 'Bro, wear real hiking shoes, not running shoes. The rocks are slippery in the morning.',
-  },
+ },
+ {
+ id: 'thread-rio-005-r2',
+ threadId: 'thread-rio-005',
+ authorFriendId: null,
+ body:"Maya, last time I went up without a guide, there are fixed ropes. But if you're not sure, I have a local guide's number — R$ 80.",
+ },
+ {
+ id: 'thread-rio-005-r3',
+ threadId: 'thread-rio-005',
+ authorFriendId: 'roi-buzios',
+ body: 'Bro, wear real hiking shoes, not running shoes. The rocks are slippery in the morning.',
+ },
 
-  // thread-rio-006 — Gracie Humaitá (2 replies)
-  {
-    id: 'thread-rio-006-r1',
-    threadId: 'thread-rio-006',
-    authorFriendId: null,
-    body: 'Been there twice. R$ 90 a day, white gi required and a waiver. Better to call a day ahead.',
-  },
-  {
-    id: 'thread-rio-006-r2',
-    threadId: 'thread-rio-006',
-    authorFriendId: 'roi-buzios',
-    body: 'If you want something less formal try Checkmat in Ipanema. Israeli vibe, instructors speak Hebrew, less judgement.',
-  },
+ // thread-rio-006 — Gracie Humaitá (2 replies)
+ {
+ id: 'thread-rio-006-r1',
+ threadId: 'thread-rio-006',
+ authorFriendId: null,
+ body: 'Been there twice. R$ 90 a day, white gi required and a waiver. Better to call a day ahead.',
+ },
+ {
+ id: 'thread-rio-006-r2',
+ threadId: 'thread-rio-006',
+ authorFriendId: 'roi-buzios',
+ body: 'If you want something less formal try Checkmat in Ipanema. Israeli vibe, instructors speak Hebrew, less judgement.',
+ },
 
-  // thread-rio-007 — Aconchego Carioca (3 replies)
-  {
-    id: 'thread-rio-007-r1',
-    threadId: 'thread-rio-007',
-    authorFriendId: 'maya-ipanema',
-    body: 'Worth every minute of the trip  the half-portion bolinhos at R$ 35 are huge. Reserve ahead for Friday.',
-  },
-  {
-    id: 'thread-rio-007-r2',
-    threadId: 'thread-rio-007',
-    authorFriendId: null,
-    body:"I'm in! When are you thinking?",
+ // thread-rio-007 — Aconchego Carioca (3 replies)
+ {
+ id: 'thread-rio-007-r1',
+ threadId: 'thread-rio-007',
+ authorFriendId: 'maya-ipanema',
+ body: 'Worth every minute of the trip  the half-portion bolinhos at R$ 35 are huge. Reserve ahead for Friday.',
+ },
+ {
+ id: 'thread-rio-007-r2',
+ threadId: 'thread-rio-007',
+ authorFriendId: null,
+ body:"I'm in! When are you thinking?",
   },
   {
     id: 'thread-rio-007-r3',
     threadId: 'thread-rio-007',
     authorFriendId: 'yael-botafogo',
     body: 'Book through OpenTable, they don\'t answer WhatsApp. Friday 20:00 is the best slot.',
-  },
+ },
 
-  // thread-rio-008 — real açaí (2 replies)
-  {
-    id: 'thread-rio-008-r1',
-    threadId: 'thread-rio-008',
-    authorFriendId: 'maya-ipanema',
-    body:"BB Lanches on Rainha Elizabeth, corner of R. Almirante Gonçalves. R$ 18 a bowl. Real, thick, no sugar if you ask.",
-  },
-  {
-    id: 'thread-rio-008-r2',
-    threadId: 'thread-rio-008',
-    authorFriendId: 'yael-botafogo',
-    body:"Agreed with Maya. Polis Sucos in Botafogo is also great if you're passing ⭐",
+ // thread-rio-008 — real açaí (2 replies)
+ {
+ id: 'thread-rio-008-r1',
+ threadId: 'thread-rio-008',
+ authorFriendId: 'maya-ipanema',
+ body:"BB Lanches on Rainha Elizabeth, corner of R. Almirante Gonçalves. R$ 18 a bowl. Real, thick, no sugar if you ask.",
+ },
+ {
+ id: 'thread-rio-008-r2',
+ threadId: 'thread-rio-008',
+ authorFriendId: 'yael-botafogo',
+ body:"Agreed with Maya. Polis Sucos in Botafogo is also great if you're passing ⭐",
   },
 
   // thread-rio-009 — who is in Copa (3 replies)
@@ -133,18 +133,18 @@ export const forumThreadReplies: ForumThreadReply[] = [
     threadId: 'thread-rio-009',
     authorFriendId: 'maya-ipanema',
     body:"I'm in Ipanema, coming to Posto 9 Wednesday night. See you there.",
-  },
-  {
-    id: 'thread-rio-009-r2',
-    threadId: 'thread-rio-009',
-    authorFriendId: null,
-    body:"If it's not raining, I'm down. Drop in the WhatsApp group.",
-  },
-  {
-    id: 'thread-rio-009-r3',
-    threadId: 'thread-rio-009',
-    authorFriendId: 'roi-buzios',
-    body:"I'm leaving for Búzios at the weekend, but if it's Mon or Tue I'm in.",
+ },
+ {
+ id: 'thread-rio-009-r2',
+ threadId: 'thread-rio-009',
+ authorFriendId: null,
+ body:"If it's not raining, I'm down. Drop in the WhatsApp group.",
+ },
+ {
+ id: 'thread-rio-009-r3',
+ threadId: 'thread-rio-009',
+ authorFriendId: 'roi-buzios',
+ body:"I'm leaving for Búzios at the weekend, but if it's Mon or Tue I'm in.",
   },
 
   // thread-rio-010 — Pavão Azul meetup (3 replies)
@@ -152,53 +152,53 @@ export const forumThreadReplies: ForumThreadReply[] = [
     id: 'thread-rio-010-r1',
     threadId: 'thread-rio-010',
     authorFriendId: 'maya-ipanema',
-    body:"No way, great idea  I'm in. Also: let's add a WhatsApp group for coordination.",
+    body:"No way, great idea I'm in. Also: let's add a WhatsApp group for coordination.",
   },
   {
     id: 'thread-rio-010-r2',
     threadId: 'thread-rio-010',
     authorFriendId: 'yael-botafogo',
     body:"Honestly 19:00 on a Tuesday is early, people are still working. 20:30 is more realistic. But I'm coming either way.",
-  },
-  {
-    id: 'thread-rio-010-r3',
-    threadId: 'thread-rio-010',
-    authorFriendId: 'roi-buzios',
-    body:"I'll swing by when I'm back from Búzios. Save me a seat.",
-  },
+ },
+ {
+ id: 'thread-rio-010-r3',
+ threadId: 'thread-rio-010',
+ authorFriendId: 'roi-buzios',
+ body:"I'll swing by when I'm back from Búzios. Save me a seat.",
+ },
 
-  // =====================================================================
-  // BÚZIOS
-  // =====================================================================
+ // =====================================================================
+ // BÚZIOS
+ // =====================================================================
 
-    
-  
-  // thread-buzios-003 — Rua das Pedras (3 replies)
-  {
-    id: 'thread-buzios-003-r1',
-    threadId: 'thread-buzios-003',
-    authorFriendId: 'maya-ipanema',
-    body: 'Start at Privilege on the strip, right by the water. Most people flow in after 23:00. Cover R$ 50, fair.',
-  },
-  {
-    id: 'thread-buzios-003-r2',
-    threadId: 'thread-buzios-003',
-    authorFriendId: null,
-    body:"I'll be there 29–31, let's go together? Down for Privilege as the opener.",
-  },
-  {
-    id: 'thread-buzios-003-r3',
-    threadId: 'thread-buzios-003',
-    authorFriendId: 'roi-buzios',
-    body:"Cool. Anexo Bar is also good — more chill, cheaper. Start there, move to Privilege around midnight.",
-  },
+ 
+ 
+ // thread-buzios-003 — Rua das Pedras (3 replies)
+ {
+ id: 'thread-buzios-003-r1',
+ threadId: 'thread-buzios-003',
+ authorFriendId: 'maya-ipanema',
+ body: 'Start at Privilege on the strip, right by the water. Most people flow in after 23:00. Cover R$ 50, fair.',
+ },
+ {
+ id: 'thread-buzios-003-r2',
+ threadId: 'thread-buzios-003',
+ authorFriendId: null,
+ body:"I'll be there 29–31, let's go together? Down for Privilege as the opener.",
+ },
+ {
+ id: 'thread-buzios-003-r3',
+ threadId: 'thread-buzios-003',
+ authorFriendId: 'roi-buzios',
+ body:"Cool. Anexo Bar is also good — more chill, cheaper. Start there, move to Privilege around midnight.",
+ },
 
-  // thread-buzios-004 — full moon party (2 replies)
-  {
-    id: 'thread-buzios-004-r1',
-    threadId: 'thread-buzios-004',
-    authorFriendId: 'roi-buzios',
-    body: 'Still happens but less interesting, more tourists. If it lines up with the 30th of the month, that\'s the busy night. Bring a speaker and beer.',
+ // thread-buzios-004 — full moon party (2 replies)
+ {
+ id: 'thread-buzios-004-r1',
+ threadId: 'thread-buzios-004',
+ authorFriendId: 'roi-buzios',
+ body: 'Still happens but less interesting, more tourists. If it lines up with the 30th of the month, that\'s the busy night. Bring a speaker and beer.',
   },
   {
     id: 'thread-buzios-004-r2',
@@ -213,32 +213,32 @@ export const forumThreadReplies: ForumThreadReply[] = [
     threadId: 'thread-buzios-005',
     authorFriendId: null,
     body:"I'm there 29–31, joining. Got an extra pair of goggles? Forgot mine in Rio.",
-  },
-  {
-    id: 'thread-buzios-005-r2',
-    threadId: 'thread-buzios-005',
-    authorFriendId: 'shir-saopaulo',
-    body: 'If the water is calm in the morning, Praia João Fernandes is also gorgeous. Worth checking.',
-  },
-  {
-    id: 'thread-buzios-005-r3',
-    threadId: 'thread-buzios-005',
-    authorFriendId: 'roi-buzios',
-    body:"I have two pairs of goggles. Sort the rest in DM",
-  },
+ },
+ {
+ id: 'thread-buzios-005-r2',
+ threadId: 'thread-buzios-005',
+ authorFriendId: 'shir-saopaulo',
+ body: 'If the water is calm in the morning, Praia João Fernandes is also gorgeous. Worth checking.',
+ },
+ {
+ id: 'thread-buzios-005-r3',
+ threadId: 'thread-buzios-005',
+ authorFriendId: 'roi-buzios',
+ body:"I have two pairs of goggles. Sort the rest in DM",
+ },
 
-  // thread-buzios-006 — boat tour (2 replies)
-  {
-    id: 'thread-buzios-006-r1',
-    threadId: 'thread-buzios-006',
-    authorFriendId: 'roi-buzios',
-    body:"R$ 80 is the giant schooner with 80 people on it. R$ 200 is a small private lancha. Difference is real. Split it across 4–6 people.",
-  },
-  {
-    id: 'thread-buzios-006-r2',
-    threadId: 'thread-buzios-006',
-    authorFriendId: null,
-    body: 'Thanks. Looking for a crew to share a lancha. Morning of the 29th. DM me if you\'re down.',
+ // thread-buzios-006 — boat tour (2 replies)
+ {
+ id: 'thread-buzios-006-r1',
+ threadId: 'thread-buzios-006',
+ authorFriendId: 'roi-buzios',
+ body:"R$ 80 is the giant schooner with 80 people on it. R$ 200 is a small private lancha. Difference is real. Split it across 4–6 people.",
+ },
+ {
+ id: 'thread-buzios-006-r2',
+ threadId: 'thread-buzios-006',
+ authorFriendId: null,
+ body: 'Thanks. Looking for a crew to share a lancha. Morning of the 29th. DM me if you\'re down.',
   },
 
   // thread-buzios-007 — Chez Michou (3 replies)
@@ -247,12 +247,12 @@ export const forumThreadReplies: ForumThreadReply[] = [
     threadId: 'thread-buzios-007',
     authorFriendId: 'roi-buzios',
     body:"Honestly still worth it — but go after 23:00. In the daytime the queue is crazy, after midnight it's chill and better.",
-  },
-  {
-    id: 'thread-buzios-007-r2',
-    threadId: 'thread-buzios-007',
-    authorFriendId: null,
-    body:"Maya, give me your latest take? I'm thinking of swapping to Bananaland or something else.",
+ },
+ {
+ id: 'thread-buzios-007-r2',
+ threadId: 'thread-buzios-007',
+ authorFriendId: null,
+ body:"Maya, give me your latest take? I'm thinking of swapping to Bananaland or something else.",
   },
   {
     id: 'thread-buzios-007-r3',
@@ -292,7 +292,7 @@ export const forumThreadReplies: ForumThreadReply[] = [
     id: 'thread-buzios-009-r3',
     threadId: 'thread-buzios-009',
     authorFriendId: 'shir-saopaulo',
-    body:"Jealous. Have fun  send pics.",
+    body:"Jealous. Have fun send pics.",
   },
 
   // thread-buzios-010 — day trip Búzios from Rio (2 replies)
@@ -340,13 +340,13 @@ export const forumThreadReplies: ForumThreadReply[] = [
     id: 'thread-sao-paulo-004-r1',
     threadId: 'thread-sao-paulo-004',
     authorFriendId: 'moshe-buenosaires',
-    body:"Bro R$ 120 cover is highway robbery  but the sound there is the best in the city. If it's a DJ you actually like, worth it. Otherwise — Mirante 9 de Julho is free.",
-  },
-  {
-    id: 'thread-sao-paulo-004-r2',
-    threadId: 'thread-sao-paulo-004',
-    authorFriendId: 'yael-botafogo',
-    body:"I'm going Friday. Want to come along? Split a taxi, way cheaper.",
+    body:"Bro R$ 120 cover is highway robbery but the sound there is the best in the city. If it's a DJ you actually like, worth it. Otherwise — Mirante 9 de Julho is free.",
+ },
+ {
+ id: 'thread-sao-paulo-004-r2',
+ threadId: 'thread-sao-paulo-004',
+ authorFriendId: 'yael-botafogo',
+ body:"I'm going Friday. Want to come along? Split a taxi, way cheaper.",
   },
 
   // thread-sao-paulo-005 — Ibirapuera run (2 replies)
@@ -361,26 +361,26 @@ export const forumThreadReplies: ForumThreadReply[] = [
     threadId: 'thread-sao-paulo-005',
     authorFriendId: null,
     body:"Shir, perfect. Monday 7:00 at Portão 7. I'll bring extra water.",
-  },
+ },
 
-  // thread-sao-paulo-006 — Pedra Grande (3 replies)
-  {
-    id: 'thread-sao-paulo-006-r1',
-    threadId: 'thread-sao-paulo-006',
-    authorFriendId: null,
-    body:"I'm in! Got a daypack and a big water bottle. Need to bring anything for the car?",
+ // thread-sao-paulo-006 — Pedra Grande (3 replies)
+ {
+ id: 'thread-sao-paulo-006-r1',
+ threadId: 'thread-sao-paulo-006',
+ authorFriendId: null,
+ body:"I'm in! Got a daypack and a big water bottle. Need to bring anything for the car?",
   },
   {
     id: 'thread-sao-paulo-006-r2',
     threadId: 'thread-sao-paulo-006',
     authorFriendId: 'yael-botafogo',
     body:"I'm coming. Shir, if there are still 4 seats, count me as two — bringing my friend Tal.",
-  },
-  {
-    id: 'thread-sao-paulo-006-r3',
-    threadId: 'thread-sao-paulo-006',
-    authorFriendId: 'shir-saopaulo',
-    body:"Perfect, both of you. One seat left. Split is 70 reais a head for gas. I'll DM the address Thursday.",
+ },
+ {
+ id: 'thread-sao-paulo-006-r3',
+ threadId: 'thread-sao-paulo-006',
+ authorFriendId: 'shir-saopaulo',
+ body:"Perfect, both of you. One seat left. Split is 70 reais a head for gas. I'll DM the address Thursday.",
   },
 
   // thread-sao-paulo-007 — La Cabrera (3 replies)
@@ -423,86 +423,86 @@ export const forumThreadReplies: ForumThreadReply[] = [
     threadId: 'thread-sao-paulo-009',
     authorFriendId: null,
     body:"I'm in town 3–5. Down for Friday the 7th. Should I bring anything?",
-  },
-  {
-    id: 'thread-sao-paulo-009-r2',
-    threadId: 'thread-sao-paulo-009',
-    authorFriendId: 'yael-botafogo',
-    body:"Me too! When are you all arriving? I'll bring caipirinhas pre-made from home.",
+ },
+ {
+ id: 'thread-sao-paulo-009-r2',
+ threadId: 'thread-sao-paulo-009',
+ authorFriendId: 'yael-botafogo',
+ body:"Me too! When are you all arriving? I'll bring caipirinhas pre-made from home.",
   },
   {
     id: 'thread-sao-paulo-009-r3',
     threadId: 'thread-sao-paulo-009',
     authorFriendId: 'shir-saopaulo',
     body:"Perfect, both of you. Nissim, if you can bring red wine and cheese that'd round it out. Yael, caipirinhas are very welcome",
-  },
+ },
 
-  // thread-sao-paulo-010 — Santos (2 replies)
-  {
-    id: 'thread-sao-paulo-010-r1',
-    threadId: 'thread-sao-paulo-010',
-    authorFriendId: 'shir-saopaulo',
-    body:"Went there once, the aquarium is great, the beach is meh. If you like football there's a Pelé museum. Full day.",
+ // thread-sao-paulo-010 — Santos (2 replies)
+ {
+ id: 'thread-sao-paulo-010-r1',
+ threadId: 'thread-sao-paulo-010',
+ authorFriendId: 'shir-saopaulo',
+ body:"Went there once, the aquarium is great, the beach is meh. If you like football there's a Pelé museum. Full day.",
   },
   {
     id: 'thread-sao-paulo-010-r2',
     threadId: 'thread-sao-paulo-010',
     authorFriendId: 'moshe-buenosaires',
     body:"I'm in if I'm still around on Saturday. Send the times, I'll confirm later.",
-  },
+ },
 
-  // =====================================================================
-  // JERICOACOARA
-  // =====================================================================
+ // =====================================================================
+ // JERICOACOARA
+ // =====================================================================
 
-      
-    
-  // thread-jericoacoara-003 — forró (3 replies)
-  {
-    id: 'thread-jericoacoara-003-r1',
-    threadId: 'thread-jericoacoara-003',
-    authorFriendId: null,
-    body:"Was there last month on a Monday night — wild. Wednesday is also good, fewer people.",
-  },
-  {
-    id: 'thread-jericoacoara-003-r2',
-    threadId: 'thread-jericoacoara-003',
-    authorFriendId: 'roi-buzios',
-    body:"Tuesday is the old-timer local night. Real musicians, fewer tourists. Best in my opinion.",
-  },
-  {
-    id: 'thread-jericoacoara-003-r3',
-    threadId: 'thread-jericoacoara-003',
-    authorFriendId: 'yotam-jericoacoara',
-    body:"Agreed with Roi. Tuesday is also open till 2:00 without messing up the morning kite session.",
-  },
+ 
+ 
+ // thread-jericoacoara-003 — forró (3 replies)
+ {
+ id: 'thread-jericoacoara-003-r1',
+ threadId: 'thread-jericoacoara-003',
+ authorFriendId: null,
+ body:"Was there last month on a Monday night — wild. Wednesday is also good, fewer people.",
+ },
+ {
+ id: 'thread-jericoacoara-003-r2',
+ threadId: 'thread-jericoacoara-003',
+ authorFriendId: 'roi-buzios',
+ body:"Tuesday is the old-timer local night. Real musicians, fewer tourists. Best in my opinion.",
+ },
+ {
+ id: 'thread-jericoacoara-003-r3',
+ threadId: 'thread-jericoacoara-003',
+ authorFriendId: 'yotam-jericoacoara',
+ body:"Agreed with Roi. Tuesday is also open till 2:00 without messing up the morning kite session.",
+ },
 
-  // thread-jericoacoara-004 — sunset party (2 replies)
-  {
-    id: 'thread-jericoacoara-004-r1',
-    threadId: 'thread-jericoacoara-004',
-    authorFriendId: 'yotam-jericoacoara',
-    body:"Totally real. After everyone clears off the dune, about 40 people stay behind, someone pulls out a speaker. Goes till maybe 22:00.",
-  },
-  {
-    id: 'thread-jericoacoara-004-r2',
-    threadId: 'thread-jericoacoara-004',
-    authorFriendId: 'maya-ipanema',
-    body: 'Was there half a year ago, legendary. Bring your own beers, no shops nearby.',
-  },
+ // thread-jericoacoara-004 — sunset party (2 replies)
+ {
+ id: 'thread-jericoacoara-004-r1',
+ threadId: 'thread-jericoacoara-004',
+ authorFriendId: 'yotam-jericoacoara',
+ body:"Totally real. After everyone clears off the dune, about 40 people stay behind, someone pulls out a speaker. Goes till maybe 22:00.",
+ },
+ {
+ id: 'thread-jericoacoara-004-r2',
+ threadId: 'thread-jericoacoara-004',
+ authorFriendId: 'maya-ipanema',
+ body: 'Was there half a year ago, legendary. Bring your own beers, no shops nearby.',
+ },
 
-  // thread-jericoacoara-005 — Pure Kite (3 replies)
-  {
-    id: 'thread-jericoacoara-005-r1',
-    threadId: 'thread-jericoacoara-005',
-    authorFriendId: 'roi-buzios',
-    body:"Lock in the dates in advance, in peak season he books out. I already reserved for Nov 11.",
-  },
-  {
-    id: 'thread-jericoacoara-005-r2',
-    threadId: 'thread-jericoacoara-005',
-    authorFriendId: null,
-    body:"I'll email him tonight. Thanks Yotam",
+ // thread-jericoacoara-005 — Pure Kite (3 replies)
+ {
+ id: 'thread-jericoacoara-005-r1',
+ threadId: 'thread-jericoacoara-005',
+ authorFriendId: 'roi-buzios',
+ body:"Lock in the dates in advance, in peak season he books out. I already reserved for Nov 11.",
+ },
+ {
+ id: 'thread-jericoacoara-005-r2',
+ threadId: 'thread-jericoacoara-005',
+ authorFriendId: null,
+ body:"I'll email him tonight. Thanks Yotam",
   },
   {
     id: 'thread-jericoacoara-005-r3',
@@ -531,26 +531,26 @@ export const forumThreadReplies: ForumThreadReply[] = [
     threadId: 'thread-jericoacoara-007',
     authorFriendId: 'yotam-jericoacoara',
     body:"Head to the fishermen's beach at 17:00 when the boats come back. A woman named Dona Zelmira cooks at her place — R$ 45 a head, book a day ahead.",
-  },
-  {
-    id: 'thread-jericoacoara-007-r2',
-    threadId: 'thread-jericoacoara-007',
-    authorFriendId: 'roi-buzios',
-    body:"Confirmed  Dona Zelmira is the best in Jeri. Drop Yotam's name, she'll know.",
-  },
+ },
+ {
+ id: 'thread-jericoacoara-007-r2',
+ threadId: 'thread-jericoacoara-007',
+ authorFriendId: 'roi-buzios',
+ body:"Confirmed Dona Zelmira is the best in Jeri. Drop Yotam's name, she'll know.",
+ },
 
-  // thread-jericoacoara-008 — breakfast (2 replies)
-  {
-    id: 'thread-jericoacoara-008-r1',
-    threadId: 'thread-jericoacoara-008',
-    authorFriendId: null,
-    body:"Yotam, thanks — noted. Also heard about Camões, what do you think?",
-  },
-  {
-    id: 'thread-jericoacoara-008-r2',
-    threadId: 'thread-jericoacoara-008',
-    authorFriendId: 'yotam-jericoacoara',
-    body:"Camões is pricier, food is fine. If you're actually hungry, go to Cantinho. If you want extra treats, Camões.",
+ // thread-jericoacoara-008 — breakfast (2 replies)
+ {
+ id: 'thread-jericoacoara-008-r1',
+ threadId: 'thread-jericoacoara-008',
+ authorFriendId: null,
+ body:"Yotam, thanks — noted. Also heard about Camões, what do you think?",
+ },
+ {
+ id: 'thread-jericoacoara-008-r2',
+ threadId: 'thread-jericoacoara-008',
+ authorFriendId: 'yotam-jericoacoara',
+ body:"Camões is pricier, food is fine. If you're actually hungry, go to Cantinho. If you want extra treats, Camões.",
   },
 
   // thread-jericoacoara-009 — how to get there (3 replies)
@@ -571,26 +571,26 @@ export const forumThreadReplies: ForumThreadReply[] = [
     threadId: 'thread-jericoacoara-009',
     authorFriendId: null,
     body:"Going with the shared jeep, I don't want to risk a night bus with a big pack.",
-  },
+ },
 
-  // thread-jericoacoara-010 — kite crew (3 replies)
-  {
-    id: 'thread-jericoacoara-010-r1',
-    threadId: 'thread-jericoacoara-010',
-    authorFriendId: 'roi-buzios',
-    body:"100% in. Landing Nov 11 at 14:00. Let's lock in dinner that night at Tamandaré? 20:30?",
+ // thread-jericoacoara-010 — kite crew (3 replies)
+ {
+ id: 'thread-jericoacoara-010-r1',
+ threadId: 'thread-jericoacoara-010',
+ authorFriendId: 'roi-buzios',
+ body:"100% in. Landing Nov 11 at 14:00. Let's lock in dinner that night at Tamandaré? 20:30?",
   },
   {
     id: 'thread-jericoacoara-010-r2',
     threadId: 'thread-jericoacoara-010',
     authorFriendId: null,
     body:"I'm coming. Another beginner. Locking in Tamandaré 20:30 on Nov 11. Shir and more coming next November",
-  },
-  {
-    id: 'thread-jericoacoara-010-r3',
-    threadId: 'thread-jericoacoara-010',
-    authorFriendId: 'yotam-jericoacoara',
-    body:"Perfect. I'll book a table for 3 at Tamandaré. If anyone else joins, message the day before.",
+ },
+ {
+ id: 'thread-jericoacoara-010-r3',
+ threadId: 'thread-jericoacoara-010',
+ authorFriendId: 'yotam-jericoacoara',
+ body:"Perfect. I'll book a table for 3 at Tamandaré. If anyone else joins, message the day before.",
   },
 
   // =====================================================================
@@ -603,32 +603,32 @@ export const forumThreadReplies: ForumThreadReply[] = [
     threadId: 'thread-buenos-aires-001',
     authorFriendId: null,
     body:"Moshe, thanks. Registered for Shabbat Nov 21. You'll meet me there?",
-  },
-  {
-    id: 'thread-buenos-aires-001-r2',
-    threadId: 'thread-buenos-aires-001',
-    authorFriendId: 'yael-botafogo',
-    body:"I'm also coming that Shabbat. Nissim, I can pick you up from the hostel if you want?",
+ },
+ {
+ id: 'thread-buenos-aires-001-r2',
+ threadId: 'thread-buenos-aires-001',
+ authorFriendId: 'yael-botafogo',
+ body:"I'm also coming that Shabbat. Nissim, I can pick you up from the hostel if you want?",
   },
   {
     id: 'thread-buenos-aires-001-r3',
     threadId: 'thread-buenos-aires-001',
     authorFriendId: 'moshe-buenosaires',
     body:"Perfect, both of you. Dinner at 20:30, people start arriving from 19:30. Come with a small bag, they don't allow big ones inside.",
-  },
+ },
 
-  // thread-buenos-aires-002 — kosher meat (2 replies)
-  {
-    id: 'thread-buenos-aires-002-r1',
-    threadId: 'thread-buenos-aires-002',
-    authorFriendId: 'moshe-buenosaires',
-    body:"Al Galope. Their chorizo and picaña are on another level. R$ a bit more but worth it. Levi is fine but less variety.",
-  },
-  {
-    id: 'thread-buenos-aires-002-r2',
-    threadId: 'thread-buenos-aires-002',
-    authorFriendId: 'dana-punta',
-    body:"Thanks Moshe. I'll swing by tomorrow. Already a fan of their chorizo",
+ // thread-buenos-aires-002 — kosher meat (2 replies)
+ {
+ id: 'thread-buenos-aires-002-r1',
+ threadId: 'thread-buenos-aires-002',
+ authorFriendId: 'moshe-buenosaires',
+ body:"Al Galope. Their chorizo and picaña are on another level. R$ a bit more but worth it. Levi is fine but less variety.",
+ },
+ {
+ id: 'thread-buenos-aires-002-r2',
+ threadId: 'thread-buenos-aires-002',
+ authorFriendId: 'dana-punta',
+ body:"Thanks Moshe. I'll swing by tomorrow. Already a fan of their chorizo",
   },
 
   // thread-buenos-aires-003 — La Catedral milonga (3 replies)
@@ -637,18 +637,18 @@ export const forumThreadReplies: ForumThreadReply[] = [
     threadId: 'thread-buenos-aires-003',
     authorFriendId: null,
     body:"Moshe, I'm in town till the 25th. Coming this Friday. Are special shoes required or just smooth soles?",
-  },
-  {
-    id: 'thread-buenos-aires-003-r2',
-    threadId: 'thread-buenos-aires-003',
-    authorFriendId: 'moshe-buenosaires',
-    body:"Smooth soles are enough for beginners. Don't come in trainers, they'll let you dance but it's not nice.",
+ },
+ {
+ id: 'thread-buenos-aires-003-r2',
+ threadId: 'thread-buenos-aires-003',
+ authorFriendId: 'moshe-buenosaires',
+ body:"Smooth soles are enough for beginners. Don't come in trainers, they'll let you dance but it's not nice.",
   },
   {
     id: 'thread-buenos-aires-003-r3',
     threadId: 'thread-buenos-aires-003',
     authorFriendId: 'yael-botafogo',
-    body:"I'm coming too ‍️ first time at a milonga, a little scared. But I'm down.",
+    body:"I'm coming too first time at a milonga, a little scared. But I'm down.",
   },
 
   // thread-buenos-aires-004 — Niceto (2 replies)
@@ -685,12 +685,12 @@ export const forumThreadReplies: ForumThreadReply[] = [
     threadId: 'thread-buenos-aires-006',
     authorFriendId: null,
     body:"Neta, how are the tours? Any specific one you'd recommend? Which wineries?",
-  },
-  {
-    id: 'thread-buenos-aires-006-r2',
-    threadId: 'thread-buenos-aires-006',
-    authorFriendId: 'neta-mendoza',
-    body:"Trout & Wine's day tour is great. 4 wineries, lunch included, AR$ 35,000. Catena Zapata is a must, Bodega Lagarde is more personal.",
+ },
+ {
+ id: 'thread-buenos-aires-006-r2',
+ threadId: 'thread-buenos-aires-006',
+ authorFriendId: 'neta-mendoza',
+ body:"Trout & Wine's day tour is great. 4 wineries, lunch included, AR$ 35,000. Catena Zapata is a must, Bodega Lagarde is more personal.",
   },
   {
     id: 'thread-buenos-aires-006-r3',
@@ -745,12 +745,12 @@ export const forumThreadReplies: ForumThreadReply[] = [
     threadId: 'thread-buenos-aires-009',
     authorFriendId: null,
     body:"Also there 16–25. We'll definitely lock in one asado.",
-  },
-  {
-    id: 'thread-buenos-aires-009-r3',
-    threadId: 'thread-buenos-aires-009',
-    authorFriendId: 'moshe-buenosaires',
-    body:"Perfect. I'll DM a WhatsApp group link to everyone who posted.",
+ },
+ {
+ id: 'thread-buenos-aires-009-r3',
+ threadId: 'thread-buenos-aires-009',
+ authorFriendId: 'moshe-buenosaires',
+ body:"Perfect. I'll DM a WhatsApp group link to everyone who posted.",
   },
 
   // thread-buenos-aires-010 — Bariloche (2 replies)
