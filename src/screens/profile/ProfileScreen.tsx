@@ -81,7 +81,7 @@ export function ProfileScreen() {
           <Link
             to="/profile/settings"
             aria-label="Settings"
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full text-cocoa transition-colors duration-instant ease-out-quart hover:bg-cocoa-8 active:bg-cocoa-15"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full text-cocoa transition-colors duration-instant ease-out-quart hover:bg-cocoa-8 active:bg-cocoa-15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory"
           >
             <Settings className="h-5 w-5" aria-hidden />
           </Link>
@@ -126,7 +126,7 @@ export function ProfileScreen() {
             <SectionLabel number="01" label="Your route." />
             <Link
               to="/trip"
-              className="flex items-center justify-between gap-sm rounded-2xl bg-sand shadow-card p-md transition-colors duration-instant ease-out-quart hover:bg-sand/70 active:bg-sand"
+              className="flex items-center justify-between gap-sm rounded-2xl bg-sand shadow-card p-md transition-colors duration-instant ease-out-quart hover:bg-sand/70 active:bg-sand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory"
             >
               <span className="flex min-w-0 flex-1 flex-col gap-px">
                 <span className="truncate font-serif text-lede italic text-cocoa">
@@ -181,7 +181,7 @@ export function ProfileScreen() {
               <SectionLabel number="03" label="Friends in network." />
               <Link
                 to="/profile/friends"
-                className="text-small text-copper transition-colors duration-instant ease-out-quart hover:text-copper-85"
+                className="text-small text-copper transition-colors duration-instant ease-out-quart hover:text-copper-85 focus-visible:outline-none focus-visible:underline focus-visible:underline-offset-2"
               >
                 See all
               </Link>

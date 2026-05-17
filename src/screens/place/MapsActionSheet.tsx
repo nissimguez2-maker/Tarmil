@@ -49,7 +49,7 @@ export function MapsActionSheet({ open, place, onClose }: Props) {
           type="button"
           onClick={onClose}
           aria-label="Dismiss"
-          className="text-small text-cocoa-55 transition-colors duration-instant ease-out-quart hover:text-cocoa"
+          className="text-small text-cocoa-55 transition-colors duration-instant ease-out-quart hover:text-cocoa focus-visible:outline-none focus-visible:underline focus-visible:underline-offset-2"
         >
           Cancel
         </button>

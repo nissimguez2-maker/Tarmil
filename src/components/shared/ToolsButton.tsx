@@ -18,7 +18,7 @@ export function ToolsButton() {
         type="button"
         aria-label="Tools"
         onClick={() => setOpen(true)}
-        className="inline-flex h-9 w-9 items-center justify-center rounded-full text-cocoa transition-[transform,background-color] duration-instant ease-out-quart hover:bg-cocoa-8 active:scale-95 active:bg-cocoa-15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory"
+        className="inline-flex h-9 w-9 items-center justify-center rounded-full text-cocoa transition-[transform,background-color] duration-instant ease-out-quart motion-reduce:transition-none hover:bg-cocoa-8 active:scale-95 active:bg-cocoa-15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory"
       >
         <Wrench className="h-5 w-5" strokeWidth={1.6} aria-hidden />
       </button>

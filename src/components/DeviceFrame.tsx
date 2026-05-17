@@ -34,15 +34,15 @@ export function DeviceFrame({ children }: Props) {
           'md:ring-1 md:ring-cocoa-15',
         )}
       >
-        {/* notch — desktop only */}
+        {/* notch — desktop only.
+            Centered via flex+inset-x rather than left-1/2+translate so the
+            Hebrew dir="rtl" flip leaves it visually anchored. */}
         <div
           aria-hidden
-          className={clsx(
-            'pointer-events-none absolute top-0 left-1/2 -translate-x-1/2',
-            'h-[28px] w-[120px] rounded-b-notch bg-cocoa z-30',
-            'hidden md:block',
-          )}
-        />
+          className="pointer-events-none absolute top-0 inset-x-0 z-30 flex hidden justify-center md:flex"
+        >
+          <div className="h-[28px] w-[120px] rounded-b-notch bg-cocoa" />
+        </div>
 
         {/* status bar mock — desktop only.
             forced LTR because iOS clock/indicators are LTR even in Hebrew.

@@ -13,12 +13,13 @@ type Props<T extends string> = {
 };
 
 /**
- * 3-tab sub-navigation with a copper underline on the active tab. Used at the
- * top of MessagesScreen (Forums / Group chats / DMs).
+ * Equal-width segmented sub-navigation with a copper underline that slides
+ * between segments on change. One positioned underline element, no Framer
+ * Motion needed.
  *
- * Animated by a single positioned underline that translates between tab
- * positions on change — gives the copper underline a fluid feel without
- * Framer Motion. Each tab is equal-width (flex-1) so the math stays trivial.
+ * The active underline is positioned via the CSS logical `inset-inline-start`
+ * property so the slide direction inherits from `dir` automatically — `+i%`
+ * moves toward the end in both LTR and RTL.
  */
 export function SubNav<T extends string>({
   items,
@@ -47,6 +48,7 @@ export function SubNav<T extends string>({
             className={clsx(
               'flex-1 py-3 text-center font-sans text-body',
               'transition-colors duration-instant ease-out-quart',
+              'focus-visible:outline-none focus-visible:bg-cocoa-8',
               isActive
                 ? 'font-medium text-cocoa'
                 : 'text-cocoa-55 hover:text-cocoa-70',
@@ -59,11 +61,10 @@ export function SubNav<T extends string>({
       })}
       <span
         aria-hidden
-        className="absolute bottom-0 h-[2px] rounded-t-full bg-copper transition-transform duration-considered ease-out-quart"
+        className="absolute bottom-0 h-[2px] rounded-t-full bg-copper transition-[inset-inline-start] duration-considered ease-out-quart"
         style={{
           width: `${100 / items.length}%`,
-          insetInlineStart: 0,
-          transform: `translateX(${activeIndex * -100}%)`,
+          insetInlineStart: `${activeIndex * (100 / items.length)}%`,
         }}
       />
     </div>

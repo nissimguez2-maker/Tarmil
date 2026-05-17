@@ -21,8 +21,9 @@ export function PingButton({ pinged, onPing }: Props) {
       aria-label={pinged ? 'Pinged' : 'Ping'}
       className={clsx(
         'inline-flex h-9 shrink-0 items-center gap-1 rounded-full ps-3 pe-4 font-sans text-small font-medium leading-none',
-        'transition-[transform,background-color,color] duration-instant ease-out-quart',
+        'transition-[transform,background-color,color] duration-instant ease-out-quart motion-reduce:transition-none',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory',
+        'disabled:active:scale-100',
         pinged
           ? 'bg-rope/40 text-cocoa-55'
           : 'bg-copper text-ivory shadow-card hover:bg-copper-85 active:scale-[0.97]',

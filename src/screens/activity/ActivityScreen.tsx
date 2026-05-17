@@ -284,7 +284,7 @@ function PingBellButton({
       {count > 0 && (
         <span
           aria-hidden
-          className="absolute end-1 top-1 inline-flex h-3 min-w-3 items-center justify-center rounded-full bg-copper text-[8pt] font-bold leading-none text-ivory ring-2 ring-ivory tnum"
+          className="tnum absolute end-1 top-1 inline-flex h-3 min-w-3 items-center justify-center rounded-full bg-copper px-1 text-meta font-bold leading-none text-ivory ring-2 ring-ivory"
         >
           {count > 9 ? '9+' : count}
         </span>

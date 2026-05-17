@@ -42,7 +42,7 @@ export function PollComposer({ value, onChange, onRemove }: Props) {
           type="button"
           onClick={onRemove}
           aria-label="Remove poll"
-          className="inline-flex h-7 w-7 items-center justify-center rounded-full text-cocoa-55 transition-colors duration-instant ease-out-quart hover:bg-cocoa-8 hover:text-cocoa"
+          className="inline-flex h-7 w-7 items-center justify-center rounded-full text-cocoa-55 transition-colors duration-instant ease-out-quart hover:bg-cocoa-8 hover:text-cocoa focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-sand"
         >
           <X className="h-4 w-4" strokeWidth={1.8} aria-hidden />
         </button>
@@ -69,7 +69,7 @@ export function PollComposer({ value, onChange, onRemove }: Props) {
               onClick={() => removeOption(i)}
               disabled={value.options.length <= 2}
               aria-label={`Remove option ${i + 1}`}
-              className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-cocoa-55 transition-colors duration-instant ease-out-quart hover:bg-cocoa-8 hover:text-cocoa disabled:opacity-30 disabled:pointer-events-none"
+              className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-cocoa-55 transition-colors duration-instant ease-out-quart hover:bg-cocoa-8 hover:text-cocoa focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-sand disabled:opacity-30 disabled:pointer-events-none"
             >
               <X className="h-4 w-4" strokeWidth={1.8} aria-hidden />
             </button>
@@ -80,7 +80,7 @@ export function PollComposer({ value, onChange, onRemove }: Props) {
         <button
           type="button"
           onClick={addOption}
-          className="inline-flex items-center gap-1 self-start text-small text-copper transition-colors duration-instant ease-out-quart hover:text-copper-85"
+          className="inline-flex items-center gap-1 self-start text-small text-copper transition-colors duration-instant ease-out-quart hover:text-copper-85 focus-visible:outline-none focus-visible:underline focus-visible:underline-offset-2"
         >
           <Plus className="h-3.5 w-3.5" strokeWidth={2} aria-hidden />
           Add option

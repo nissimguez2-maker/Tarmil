@@ -50,7 +50,7 @@ export function TabBar() {
             className={({ isActive }) =>
               clsx(
                 'group relative flex h-14 flex-col items-center justify-center gap-0.5',
-                'transition-[transform,color] duration-instant ease-out-quart',
+                'transition-[transform,color] duration-instant ease-out-quart motion-reduce:transition-none',
                 'active:scale-[0.94]',
                 'focus-visible:outline-none focus-visible:rounded-full focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-cocoa',
                 isActive
@@ -74,7 +74,7 @@ export function TabBar() {
                 />
                 <span
                   className={clsx(
-                    'text-[9pt] leading-none',
+                    'text-small leading-none',
                     isActive ? 'font-semibold' : 'font-medium',
                   )}
                 >

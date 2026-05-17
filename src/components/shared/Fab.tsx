@@ -51,7 +51,7 @@ export function Fab({
       className={clsx(
         'absolute end-md z-[750] inline-flex items-center justify-center',
         'rounded-full bg-copper text-ivory shadow-fab',
-        'transition-[transform,background-color] duration-instant ease-out-quart',
+        'transition-[transform,background-color] duration-instant ease-out-quart motion-reduce:transition-none',
         'hover:bg-copper-85 active:scale-[0.97] active:bg-copper',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory',
         extended ? 'h-12 gap-2 ps-md pe-lg' : 'h-14 w-14',

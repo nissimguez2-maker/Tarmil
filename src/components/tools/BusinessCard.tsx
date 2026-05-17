@@ -31,10 +31,10 @@ const CATEGORY_LABEL: Record<string, string> = {
 };
 
 /**
- * Around-me list card for one paid-placement business. Hero image, name,
- * category, friend-rating row, primary CTA — Reserve / Contact / Open —
- * inferred from `reservation_url`. Tap area outside the CTA drills into
- * the existing `/place/:id` route.
+ * Around list card for one curated venue. Hero image, name, category,
+ * friend-rating row, primary CTA — Reserve / Contact / Open — inferred
+ * from `reservation_url`. Tap area outside the CTA drills into the
+ * existing `/place/:id` route.
  */
 export function BusinessCard({
   place,
@@ -50,7 +50,7 @@ export function BusinessCard({
     <article className="overflow-hidden rounded-2xl bg-sand shadow-card">
       <Link
         to={`/place/${place.id}`}
-        className="block transition-colors duration-instant ease-out-quart hover:bg-sand/80 active:bg-rope/50"
+        className="block transition-colors duration-instant ease-out-quart motion-reduce:transition-none hover:bg-sand/80 active:bg-rope/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory"
       >
         <Hero imageUrl={place.imageUrl} alt={place.englishName} />
         <div className="flex items-start gap-sm p-md">
@@ -91,7 +91,7 @@ export function BusinessCard({
             rel={ctaKind === 'external' ? 'noopener noreferrer' : undefined}
             className={clsx(
               'inline-flex w-full items-center justify-center gap-2 rounded-full bg-copper px-md py-2 text-body font-medium text-ivory shadow-card',
-              'transition-[transform,background-color] duration-instant ease-out-quart',
+              'transition-[transform,background-color] duration-instant ease-out-quart motion-reduce:transition-none',
               'hover:bg-copper-85 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-sand',
             )}
           >

@@ -62,7 +62,7 @@ export function ForumScreen() {
                 <li key={t.id}>
                   <Link
                     to={`/forums/${forum.id}/${t.id}`}
-                    className="flex items-start gap-sm rounded-2xl bg-sand shadow-card p-md transition-colors duration-instant ease-out-quart hover:bg-sand/80 active:bg-rope/50"
+                    className="flex items-start gap-sm rounded-2xl bg-sand shadow-card p-md transition-colors duration-instant ease-out-quart hover:bg-sand/80 active:bg-rope/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory"
                   >
                     <Avatar
                       photoUrl={author?.photoUrl}
