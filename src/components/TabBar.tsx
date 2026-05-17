@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { Map, Newspaper, Compass, MessagesSquare, Wrench } from 'lucide-react';
+import { Map, BookmarkCheck, Newspaper, MessagesSquare, Wrench } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import clsx from 'clsx';
 
@@ -12,19 +12,24 @@ type Tab = {
 /**
  * Floating dark tab capsule — the signature premium-app move.
  *
- * Tab order: Trip → Activity → Around → Forums → Tools (left to right).
+ * Tab order: Trip → Plan → Activity → Forums → Tools (left to right).
  *
- * v0.6 IA: Friends as a tab is dissolved. The brief bundled overlaps,
- * the Activity wall, Ping, and the friends list under one tab, but each
- * is a different mental model. Overlaps live on the Trip map. Activity
- * earns its own tab (the brief's #1 social-layer bet — §11B). Around
- * becomes a primary surface for places discovery. Friends list moves to
- * the Profile drill-down (avatar icon top-right on every tab).
+ * v0.8 IA: Around dissolves; its discovery surface lives inside Plan as
+ * a "+ Discover" modal. Each tab owns one mental model:
+ *   Trip     — visual / macro: where you are, were, will be (the map)
+ *   Plan     — micro / list: saved places organised by trip
+ *   Activity — social feed (friends posting)
+ *   Forums   — stranger Q&A by city × subject
+ *   Tools    — open-use-close utilities
+ *
+ * The Trip and Plan tabs are two views of the same trip data — one
+ * spatial, one organisational. They share an underlying set of saves +
+ * planned stops, and only differ in how they present them.
  */
 const TABS: Tab[] = [
   { to: '/trip', label: 'Trip', Icon: Map },
+  { to: '/plan', label: 'Plan', Icon: BookmarkCheck },
   { to: '/activity', label: 'Activity', Icon: Newspaper },
-  { to: '/around', label: 'Around', Icon: Compass },
   { to: '/forums', label: 'Forums', Icon: MessagesSquare },
   { to: '/tools', label: 'Tools', Icon: Wrench },
 ];

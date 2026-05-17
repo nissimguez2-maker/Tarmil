@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
 import { Screen } from '../../components/Screen';
 import { TopBar } from '../../components/TopBar';
-import { ToolsButton } from '../../components/shared/ToolsButton';
 import { ProfileAvatarButton } from '../../components/shared/ProfileAvatarButton';
 import {
   TripMap,
@@ -163,12 +162,7 @@ export function TripScreen() {
       <div className="flex h-full flex-col">
         <TopBar
           title="Your trip"
-          end={
-            <div className="flex items-center gap-0.5">
-              <ToolsButton />
-              <ProfileAvatarButton initial="N" name="Nissim Guez" />
-            </div>
-          }
+          end={<ProfileAvatarButton initial="N" name="Nissim Guez" />}
         />
 
         <div

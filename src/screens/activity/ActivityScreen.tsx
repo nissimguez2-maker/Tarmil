@@ -4,14 +4,12 @@ import clsx from 'clsx';
 import { Screen } from '../../components/Screen';
 import { TopBar } from '../../components/TopBar';
 import { LoadingPanel, ErrorPanel } from '../../components/DataState';
-import { ToolsButton } from '../../components/shared/ToolsButton';
 import { ProfileAvatarButton } from '../../components/shared/ProfileAvatarButton';
 import { Fab } from '../../components/shared/Fab';
 import { Avatar } from '../../components/shared/Avatar';
 import { Modal } from '../../components/shared/Modal';
 import { TripDeclarationCard } from '../../components/activity/TripDeclarationCard';
 import { WhosDownCard } from '../../components/activity/WhosDownCard';
-import { OverlapNotificationCard } from '../../components/activity/OverlapNotificationCard';
 import { PingButton } from '../../components/friends/PingButton';
 import { PingHistoryRow } from '../../components/friends/PingHistoryRow';
 import { ActivityComposeModal } from '../../components/friends/ActivityComposeModal';
@@ -92,7 +90,6 @@ export function ActivityScreen() {
     repliesByParent.set(parentId, list);
   }
 
-  const plannedStopIds = data.plannedStops.map((s) => s.id);
   const pingCount = data.pings.length;
 
   return (
@@ -105,7 +102,6 @@ export function ActivityScreen() {
               count={pingCount}
               onClick={() => setPingHistoryOpen(true)}
             />
-            <ToolsButton />
             <ProfileAvatarButton initial="N" name="Nissim Guez" />
           </div>
         }
@@ -126,22 +122,12 @@ export function ActivityScreen() {
             : undefined;
           const r = reactionsByTarget.get(post.id) ?? [];
 
-          if (post.kind === 'overlap_notification') {
-            const isTrueOverlap =
-              !!author?.destinationId &&
-              plannedStopIds.includes(author.destinationId);
-            if (!isTrueOverlap) return null;
-            return (
-              <li key={post.id}>
-                <OverlapNotificationCard
-                  post={post}
-                  friend={author}
-                  pinged={author ? hasPinged(author.id) : false}
-                  onPing={() => author && sendPing(author.id)}
-                />
-              </li>
-            );
-          }
+          // v0.8 audit: overlap_notification cards no longer render in
+          // the Activity feed. The Right Now strip above + the Trip-map
+          // friend pins cover the present-overlap signal; future overlaps
+          // surface via the friend's own trip_declaration post. Rows stay
+          // in the DB so we can re-enable later if the strip ever leaves.
+          if (post.kind === 'overlap_notification') return null;
 
           if (post.kind === 'whos_down') {
             return (

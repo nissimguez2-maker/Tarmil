@@ -295,6 +295,58 @@ export type Database = {
           },
         ]
       }
+      place_saves: {
+        Row: {
+          created_at: string
+          friend_id: string | null
+          id: string
+          place_id: string
+          planned_stop_id: string | null
+          private: boolean
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          friend_id?: string | null
+          id?: string
+          place_id: string
+          planned_stop_id?: string | null
+          private?: boolean
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          friend_id?: string | null
+          id?: string
+          place_id?: string
+          planned_stop_id?: string | null
+          private?: boolean
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "place_saves_friend_id_fkey"
+            columns: ["friend_id"]
+            isOneToOne: false
+            referencedRelation: "friend_overlaps"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "place_saves_place_id_fkey"
+            columns: ["place_id"]
+            isOneToOne: false
+            referencedRelation: "places"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "place_saves_planned_stop_id_fkey"
+            columns: ["planned_stop_id"]
+            isOneToOne: false
+            referencedRelation: "planned_stops"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       place_reviews: {
         Row: {
           created_at: string

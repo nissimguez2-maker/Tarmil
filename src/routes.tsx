@@ -3,7 +3,7 @@ import { AppLayout } from './layouts/AppLayout';
 import { TripScreen } from './screens/trip/TripScreen';
 import { TripDetailScreen } from './screens/trip/TripDetailScreen';
 import { ActivityScreen } from './screens/activity/ActivityScreen';
-import { AroundScreen } from './screens/around/AroundScreen';
+import { PlanScreen } from './screens/plan/PlanScreen';
 import { ForumsScreen } from './screens/forums/ForumsScreen';
 import { ForumScreen } from './screens/forums/ForumScreen';
 import { ForumThreadScreen } from './screens/forums/ForumThreadScreen';
@@ -43,7 +43,11 @@ export function AppRoutes() {
         <Route path="/place/:id" element={<PlaceScreen />} />
 
         <Route path="/activity" element={<ActivityScreen />} />
-        <Route path="/around" element={<AroundScreen />} />
+        <Route path="/plan" element={<PlanScreen />} />
+
+        {/* Legacy Around route — redirects to Plan (its content lives in
+            the + Discover modal inside Plan after the v0.8 pivot). */}
+        <Route path="/around" element={<Navigate to="/plan" replace />} />
 
         <Route path="/forums" element={<ForumsScreen />} />
         <Route path="/forums/:forumId" element={<ForumScreen />} />
