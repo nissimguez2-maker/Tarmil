@@ -19,6 +19,8 @@ The app ships **5 bottom tabs**, reorganized in v0.6 so every tab is one mental 
 
 **Profile** moved to a top-right **avatar icon** on every tab — drills to the existing Profile screen (off-grid, route, past trips, friends list, per-trip privacy, settings gear). Friend management lives at `/profile/friends`; single-friend drill-down at `/profile/friend/:id`.
 
+> **v0.6 polish series** (`v0.6a` → `v0.6d`): Forums cities collapse by default; every component swept for token discipline (no arbitrary type sizes, no physical Tailwind utilities, universal `prefers-reduced-motion` respect); per-screen polish on Activity cards, loading + error states, settings rows; final consistency sweep. Detail: see commits `2e65d4d…e31febb` on `main`.
+
 ---
 
 ## Run locally

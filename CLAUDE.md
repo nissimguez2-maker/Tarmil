@@ -32,6 +32,19 @@ The brief mandates Hebrew-first for the real product. The mock is **English-only
 
 ## Hard rules — do not violate without asking
 
+### Token discipline (v0.6 polish series)
+
+After the v0.6 polish chunks landed, the codebase enforces zero drift on the DA token set. **Don't reintroduce drift.** Specifically:
+
+- No arbitrary `text-[Xpt]` values — pick from the 7-size scale.
+- No arbitrary spacing like `p-3` / `gap-2` for editorial spacing — use `xs/sm/md/lg/xl/xxl`. (Tailwind's numeric scale `h-10`, `w-12`, etc. is fine for *dimensional* use on icons / avatars / FABs.)
+- No physical Tailwind utilities (`pl-*`, `pr-*`, `ml-*`, etc.) — use logical equivalents.
+- No side-stripe borders > 1px as a colored accent on cards. Full ring, full border, or nothing.
+- No `100vh`. Use `h-dvh` / `h-full` / `min-h-dvh`.
+- No bare hex literals in `className` or `style`.
+- Every interactive element has `focus-visible:ring-2 ring-copper` (or `focus-visible:underline` for inline text links).
+- Universal `prefers-reduced-motion` is honored via `index.css` — you don't need to sprinkle `motion-reduce:transition-none` on every element, but adding it on shared primitives makes intent explicit.
+
 ### RTL safety: logical properties only
 
 `index.html` is `lang="en" dir="ltr"` today. The Hebrew launch flips both, at which point physical Tailwind utilities (`pl-*`, `pr-*`, `left-*`, `right-*`, `ml-*`, `mr-*`, `border-l-*`, `border-r-*`, `rounded-l-*`, `rounded-r-*`) all break.
