@@ -9,18 +9,19 @@ import { CityForumGroup, RecommendedForumRow } from '../../components/forums/For
 import { useSupabaseData } from '../../lib/SupabaseDataProvider';
 
 /**
- * Forums tab landing. Brief §04 promotes Forums to a top-level tab.
+ * Forums tab landing. City × Subject (8 subjects per city, v0.6).
  *
- * City × Subject (5 subjects per city) — joined cities render as grouped
- * sand cards with stacked subject pills; "Recommended for you" surfaces
- * cities the user hasn't joined yet with a one-tap Join CTA.
- *
- * Search filters by city label OR subject label so typing "kosher" or
- * "rio" both narrow as expected.
+ * v0.6a: cities collapse by default. Tap a city header → expand to
+ * reveal its 8 subject pills. Multiple cities can stay expanded.
+ * Typing in search overrides the collapse state for any city that
+ * matches — so search always shows the results without an extra tap.
  */
 export function ForumsScreen() {
   const { data, loading, error, joinForum } = useSupabaseData();
   const [query, setQuery] = useState('');
+  const [manuallyExpanded, setManuallyExpanded] = useState<Set<string>>(
+    new Set(),
+  );
 
   const lastThreadByForum = useMemo(() => {
     const map = new Map<string, string>();
@@ -35,8 +36,9 @@ export function ForumsScreen() {
   if (error || !data) return <ErrorPanel error={error} />;
 
   const lowerQuery = query.trim().toLowerCase();
+  const searching = lowerQuery.length > 0;
   const matches = (text: string) =>
-    !lowerQuery || text.toLowerCase().includes(lowerQuery);
+    !searching || text.toLowerCase().includes(lowerQuery);
 
   type CityGroup = { cityLabel: string; forums: typeof data.forums };
   const joinedCityGroups: CityGroup[] = (() => {
@@ -44,6 +46,8 @@ export function ForumsScreen() {
     for (const f of data.forums) {
       if (f.isRecommended) continue;
       const cityLabel = f.cityLabel ?? f.nameEn;
+      // Match against city label OR subject label (forum.nameEn = subject label
+      // after v0.6 since name_en is set to SUBJECT_LABEL[subject]).
       if (!matches(cityLabel) && !matches(f.nameEn)) continue;
       const existing = groups.get(cityLabel);
       if (existing) {
@@ -58,6 +62,18 @@ export function ForumsScreen() {
   const recommendedForums = data.forums
     .filter((f) => f.isRecommended)
     .filter((f) => matches(f.cityLabel ?? f.nameEn));
+
+  const isExpanded = (cityLabel: string) =>
+    searching || manuallyExpanded.has(cityLabel);
+
+  const toggleCity = (cityLabel: string) => {
+    setManuallyExpanded((prev) => {
+      const next = new Set(prev);
+      if (next.has(cityLabel)) next.delete(cityLabel);
+      else next.add(cityLabel);
+      return next;
+    });
+  };
 
   return (
     <Screen>
@@ -83,13 +99,15 @@ export function ForumsScreen() {
           choose full name or anonymous each time.
         </p>
 
-        <ul className="flex flex-col gap-md">
+        <ul className="flex flex-col gap-sm">
           {joinedCityGroups.map((group) => (
             <li key={group.cityLabel}>
               <CityForumGroup
                 cityLabel={group.cityLabel}
                 forums={group.forums}
                 previewByForumId={lastThreadByForum}
+                expanded={isExpanded(group.cityLabel)}
+                onToggle={() => toggleCity(group.cityLabel)}
               />
             </li>
           ))}

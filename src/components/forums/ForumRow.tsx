@@ -1,6 +1,8 @@
+import { useId } from 'react';
 import { Link } from 'react-router-dom';
 import {
   ChevronRight,
+  ChevronDown,
   BedDouble,
   Bus,
   ShieldAlert,
@@ -11,6 +13,7 @@ import {
   Users,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
+import clsx from 'clsx';
 import type { Forum } from '../../data/forums';
 import type { ForumSubject } from '../../data/forumThreads';
 import { SUBJECT_LABEL } from '../../data/forums';
@@ -33,34 +36,90 @@ type CityForumGroupProps = {
   forums: Forum[];
   /** Preview title — last-thread title per forum id. */
   previewByForumId: Map<string, string>;
+  /** Whether the body is open. Controlled by parent. */
+  expanded: boolean;
+  /** Toggle handler invoked when the header bar is tapped. */
+  onToggle: () => void;
 };
 
 /**
- * Joined-city group. Header is the city name; body is a sand card with
- * stacked subject pills. Each pill is a (city × subject) focused forum
- * per brief §04 — "city → subject: each city has a forum with 5–6
- * subjects".
+ * Joined-city accordion group. Header is always visible — city name plus
+ * a summary line (subject count, total members across the city). Body
+ * (8 subject pills) renders only when expanded, animated via the modern
+ * grid-rows 0fr→1fr pattern so we get a smooth open without measuring
+ * heights.
+ *
+ * v0.6 collapsed-by-default behaviour replaces the always-expanded list
+ * to cut the Forums-tab scroll length from ~32 pills down to 4 city
+ * headers.
  */
 export function CityForumGroup({
   cityLabel,
   forums,
   previewByForumId,
+  expanded,
+  onToggle,
 }: CityForumGroupProps) {
+  const bodyId = useId();
+  const totalMembers = forums.reduce((acc, f) => acc + f.memberCount, 0);
+  const subjectCount = forums.length;
+
   return (
-    <section className="flex flex-col gap-xs">
-      <h3 className="font-serif text-lede italic leading-tight text-cocoa">
-        {cityLabel}
-      </h3>
-      <ul className="flex flex-col gap-xs rounded-2xl bg-sand p-2 shadow-card">
-        {forums.map((f) => (
-          <li key={f.id}>
-            <SubjectPill
-              forum={f}
-              previewTitle={previewByForumId.get(f.id)}
-            />
-          </li>
-        ))}
-      </ul>
+    <section className="overflow-hidden rounded-2xl bg-sand shadow-card">
+      <button
+        type="button"
+        aria-expanded={expanded}
+        aria-controls={bodyId}
+        onClick={onToggle}
+        className={clsx(
+          'flex w-full items-center gap-sm px-md py-sm text-start',
+          'transition-colors duration-instant ease-out-quart',
+          'hover:bg-sand/70 active:bg-rope/40',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory',
+        )}
+      >
+        <div className="flex min-w-0 flex-1 flex-col gap-px">
+          <span className="font-serif text-lede italic leading-tight text-cocoa">
+            {cityLabel}
+          </span>
+          <span className="text-small text-cocoa-55">
+            <span className="tnum">{subjectCount}</span> subjects ·{' '}
+            <span className="tnum">{formatMembers(totalMembers)}</span> members
+          </span>
+        </div>
+        <ChevronDown
+          className={clsx(
+            'h-5 w-5 shrink-0 text-cocoa-55',
+            'transition-transform duration-instant ease-out-quart',
+            expanded && 'rotate-180',
+          )}
+          strokeWidth={1.7}
+          aria-hidden
+        />
+      </button>
+
+      <div
+        id={bodyId}
+        aria-hidden={!expanded}
+        className={clsx(
+          'grid overflow-hidden transition-[grid-template-rows] duration-considered ease-out-quart',
+          expanded ? 'grid-rows-[1fr]' : 'grid-rows-[0fr]',
+        )}
+      >
+        <div className="min-h-0">
+          <ul className="flex flex-col gap-xs p-2 pt-0">
+            {forums.map((f) => (
+              <li key={f.id}>
+                <SubjectPill
+                  forum={f}
+                  previewTitle={previewByForumId.get(f.id)}
+                  tabbable={expanded}
+                />
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
     </section>
   );
 }
@@ -68,14 +127,17 @@ export function CityForumGroup({
 type SubjectPillProps = {
   forum: Forum;
   previewTitle?: string;
+  /** When false, the link is removed from the tab order — collapsed pills are not reachable by keyboard. */
+  tabbable: boolean;
 };
 
-function SubjectPill({ forum, previewTitle }: SubjectPillProps) {
+function SubjectPill({ forum, previewTitle, tabbable }: SubjectPillProps) {
   const Icon = forum.subject ? SUBJECT_ICON[forum.subject] : Users;
   const label = forum.subject ? SUBJECT_LABEL[forum.subject] : forum.nameEn;
   return (
     <Link
       to={`/forums/${forum.id}`}
+      tabIndex={tabbable ? 0 : -1}
       className="flex items-center gap-sm rounded-xl bg-ivory px-md py-sm transition-colors duration-instant ease-out-quart hover:bg-sand active:bg-rope/50"
     >
       <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-cocoa text-ivory">
@@ -142,4 +204,9 @@ export function RecommendedForumRow({ forum, onJoin }: RecommendedForumRowProps)
       </Button>
     </Link>
   );
+}
+
+function formatMembers(n: number): string {
+  if (n >= 1000) return `${(n / 1000).toFixed(1).replace(/\.0$/, '')}k`;
+  return n.toString();
 }
