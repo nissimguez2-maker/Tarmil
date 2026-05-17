@@ -32,6 +32,8 @@ type Props = {
    * already share.
    */
   onPing: () => void;
+  /** When true, the user is off-grid: pings are blocked from being sent. */
+  offGrid?: boolean;
 };
 
 export function FriendSheet({
@@ -41,6 +43,7 @@ export function FriendSheet({
   onOpenStop,
   pinged,
   onPing,
+  offGrid,
 }: Props) {
   const eyebrow = eyebrowFor(relationship);
   const dateLine = dateLineFor(relationship);
@@ -112,9 +115,11 @@ export function FriendSheet({
         relationship.kind === 'future_overlap') && (
         <div className="flex items-center justify-between gap-sm">
           <span className="text-small leading-snug text-cocoa-55">
-            One ping per co-presence event.
+            {offGrid
+              ? 'Off-grid — pings paused while you stay invisible.'
+              : 'One ping per co-presence event.'}
           </span>
-          <PingButton pinged={pinged} onPing={onPing} />
+          <PingButton pinged={pinged} onPing={onPing} offGrid={offGrid} />
         </div>
       )}
 

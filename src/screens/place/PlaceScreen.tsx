@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { useParams, Navigate, useNavigate } from 'react-router-dom';
-import { Star, Navigation, MapPin, Bookmark } from 'lucide-react';
+import { useParams, Navigate, useNavigate, Link } from 'react-router-dom';
+import { Star, Navigation, MapPin, Bookmark, MessagesSquare } from 'lucide-react';
 import clsx from 'clsx';
 import { Screen } from '../../components/Screen';
 import { TopBar } from '../../components/TopBar';
@@ -12,6 +12,10 @@ import { StarRow } from '../../components/tools/StarRow';
 import { useSupabaseData } from '../../lib/SupabaseDataProvider';
 import { LoadingPanel, ErrorPanel } from '../../components/DataState';
 import type { FriendVisit, PlaceCategory, Season } from '../../data/places';
+import {
+  subjectForCategory,
+  subjectLabelForCategory,
+} from '../../data/categoryForumLink';
 import { MapsActionSheet } from './MapsActionSheet';
 
 /**
@@ -41,6 +45,11 @@ export function PlaceScreen() {
   const selfReview = placeReviews.find((r) => r.reviewerFriendId === null);
   const saved = data.placeSaves.some(
     (s) => s.placeId === place.id && s.friendId === null,
+  );
+
+  const matchingSubject = subjectForCategory(place.category);
+  const matchingForum = data.forums.find(
+    (f) => f.destinationId === place.destinationId && f.subject === matchingSubject,
   );
 
   return (
@@ -199,6 +208,34 @@ export function PlaceScreen() {
           place={place}
           onClose={() => setMapsOpen(false)}
         />
+
+        {matchingForum && (
+          <Link
+            to={`/forums/${matchingForum.id}`}
+            className={clsx(
+              'flex items-center justify-between gap-sm rounded-2xl border border-cocoa-15 bg-ivory p-md',
+              'transition-colors duration-instant ease-out-quart hover:bg-cocoa-8',
+              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory',
+            )}
+          >
+            <span className="flex items-center gap-sm">
+              <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-cocoa-08 text-cocoa-70">
+                <MessagesSquare className="h-4 w-4" strokeWidth={1.7} aria-hidden />
+              </span>
+              <span className="flex min-w-0 flex-1 flex-col leading-tight">
+                <span className="font-serif text-body italic text-cocoa">
+                  Discuss in {subjectLabelForCategory(place.category)}
+                </span>
+                <span className="text-small text-cocoa-70">
+                  {matchingForum.cityLabel} forum ·{' '}
+                  <span className="tnum">{matchingForum.memberCount}</span>{' '}
+                  members
+                </span>
+              </span>
+            </span>
+            <span className="meta-caps shrink-0 text-copper">Open</span>
+          </Link>
+        )}
 
         <Button
           variant="ghost"

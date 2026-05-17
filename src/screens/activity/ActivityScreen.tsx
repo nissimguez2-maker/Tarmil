@@ -1,19 +1,19 @@
 import { useMemo, useState } from 'react';
-import { Plus, Bell } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Plus, Bell, EyeOff, ArrowRight } from 'lucide-react';
 import clsx from 'clsx';
 import { Screen } from '../../components/Screen';
 import { TopBar } from '../../components/TopBar';
 import { LoadingPanel, ErrorPanel } from '../../components/DataState';
 import { ProfileAvatarButton } from '../../components/shared/ProfileAvatarButton';
 import { Fab } from '../../components/shared/Fab';
-import { Avatar } from '../../components/shared/Avatar';
 import { Modal } from '../../components/shared/Modal';
 import { TripDeclarationCard } from '../../components/activity/TripDeclarationCard';
 import { WhosDownCard } from '../../components/activity/WhosDownCard';
-import { PingButton } from '../../components/friends/PingButton';
 import { PingHistoryRow } from '../../components/friends/PingHistoryRow';
 import { ActivityComposeModal } from '../../components/friends/ActivityComposeModal';
 import { useSupabaseData } from '../../lib/SupabaseDataProvider';
+import { useDemoState } from '../../lib/demoState';
 import type { ActivityPost } from '../../data/activityPosts';
 import type { Reaction } from '../../data/reactions';
 import type { FriendOverlap } from '../../data/myTrip';
@@ -39,9 +39,9 @@ export function ActivityScreen() {
     error,
     toggleReaction,
     postActivity,
-    sendPing,
     submitPollVote,
   } = useSupabaseData();
+  const { offGrid } = useDemoState();
 
   const [composeOpen, setComposeOpen] = useState(false);
   const [pingHistoryOpen, setPingHistoryOpen] = useState(false);
@@ -71,10 +71,6 @@ export function ActivityScreen() {
   const presentOverlaps = data.friendOverlaps.filter(
     (f) => f.status === 'present',
   );
-  const hasPinged = (friendId: string) =>
-    data.pings.some(
-      (p) => p.friendId === friendId && p.direction === 'sent',
-    );
 
   // Top-level posts only — replies threaded via payload.parent_id.
   const topLevel = data.activityPosts.filter(
@@ -107,13 +103,11 @@ export function ActivityScreen() {
         }
       />
 
-      {presentOverlaps.length > 0 && (
-        <RightNowStrip
-          friends={presentOverlaps}
-          hasPinged={hasPinged}
-          onPing={(friendId) => sendPing(friendId)}
-        />
-      )}
+      <RightNowBanner
+        friends={presentOverlaps}
+        offGrid={offGrid}
+      />
+
 
       <ul className="flex flex-col gap-sm p-md pb-32">
         {topLevel.map((post) => {
@@ -193,60 +187,54 @@ export function ActivityScreen() {
   );
 }
 
-// ---------- "Right now" overlap strip ----------
+// ---------- "Right now" banner ----------
+//
+// v0.8b: demoted from a horizontal strip with per-friend ping cards to a
+// compact text banner that links to the Trip map. The map is the single
+// source of truth for "who's here right now" — duplicating it in two
+// surfaces fragmented the ping flow and stretched the Activity wall.
 
-function RightNowStrip({
+function RightNowBanner({
   friends,
-  hasPinged,
-  onPing,
+  offGrid,
 }: {
   friends: FriendOverlap[];
-  hasPinged: (id: string) => boolean;
-  onPing: (id: string) => void;
+  offGrid: boolean;
 }) {
+  if (offGrid) {
+    return (
+      <section
+        className="border-b border-cocoa-08 bg-cocoa-08/40 px-md py-2"
+        aria-label="Off-grid"
+      >
+        <div className="flex items-center gap-2 text-small text-cocoa-70">
+          <EyeOff className="h-3.5 w-3.5 shrink-0 text-cocoa-55" aria-hidden />
+          <span>
+            Off-grid mode is on — friends can't see you here, and your pings
+            are paused.
+          </span>
+        </div>
+      </section>
+    );
+  }
+  if (friends.length === 0) return null;
+  const cityLabel = friends[0]?.zoneLabel ?? 'your city';
   return (
-    <section
-      className="border-b border-cocoa-08 bg-sand/40 px-md py-sm"
-      aria-label="Friends in your city right now"
+    <Link
+      to="/trip"
+      className="flex items-center gap-2 border-b border-cocoa-08 bg-sand/40 px-md py-2 transition-colors duration-instant ease-out-quart hover:bg-sand/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper"
+      aria-label="See friends in your city on the map"
     >
-      <div className="flex items-baseline justify-between">
-        <span className="meta-caps text-copper">Right now</span>
-        <span className="text-small text-cocoa-55">
-          <span className="tnum">{friends.length}</span>{' '}
-          {friends.length === 1 ? 'friend' : 'friends'} in your city
-        </span>
-      </div>
-      <ul className="mt-2 flex gap-sm overflow-x-auto pb-1 -mx-md px-md">
-        {friends.map((friend) => {
-          const pinged = hasPinged(friend.id);
-          return (
-            <li key={friend.id} className="shrink-0">
-              <article className="flex w-[220px] items-center gap-sm rounded-2xl bg-ivory shadow-card p-sm">
-                <Avatar
-                  photoUrl={friend.photoUrl}
-                  initial={friend.friendInitial}
-                  name={friend.friendName}
-                  size="md"
-                  statusDot
-                />
-                <div className="flex min-w-0 flex-1 flex-col leading-tight">
-                  <span className="truncate font-serif text-body italic text-cocoa">
-                    {friend.friendName}
-                  </span>
-                  <span className="truncate text-small text-cocoa-55">
-                    {friend.zoneLabel}
-                  </span>
-                </div>
-                <PingButton
-                  pinged={pinged}
-                  onPing={() => onPing(friend.id)}
-                />
-              </article>
-            </li>
-          );
-        })}
-      </ul>
-    </section>
+      <span className="meta-caps shrink-0 text-copper">Right now</span>
+      <span className="min-w-0 flex-1 truncate text-small text-cocoa-70">
+        <span className="tnum font-medium text-cocoa">{friends.length}</span>{' '}
+        {friends.length === 1 ? 'friend' : 'friends'} in {cityLabel}
+      </span>
+      <span className="inline-flex shrink-0 items-center gap-1 text-small text-copper">
+        See on map
+        <ArrowRight className="h-3.5 w-3.5" strokeWidth={2} aria-hidden />
+      </span>
+    </Link>
   );
 }
 

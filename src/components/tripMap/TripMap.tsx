@@ -40,6 +40,8 @@ type Props = {
   activeStopId?: string;
   /** When true, hide the regular layers and render the density heat instead. */
   heatmapEnabled: boolean;
+  /** When true, the user's own present-pin is hidden — they're off-grid. */
+  offGrid?: boolean;
   onOpenSheet: (sheet: SheetState) => void;
   onCloseSheet: () => void;
 };
@@ -58,6 +60,7 @@ export const TripMap = forwardRef<TripMapHandle, Props>(function TripMap(
     plannedStops,
     activeStopId,
     heatmapEnabled,
+    offGrid,
     onOpenSheet,
     onCloseSheet,
   },
@@ -205,7 +208,9 @@ export const TripMap = forwardRef<TripMapHandle, Props>(function TripMap(
       ),
     );
 
-    cleanups.push(drawPresentPin(map, presentLocation));
+    if (!offGrid) {
+      cleanups.push(drawPresentPin(map, presentLocation));
+    }
 
     return () => {
       cleanups.reverse().forEach((fn) => fn());
@@ -218,6 +223,7 @@ export const TripMap = forwardRef<TripMapHandle, Props>(function TripMap(
     plannedStops,
     activeStopId,
     heatmapEnabled,
+    offGrid,
   ]);
 
   return <div ref={containerRef} className="tarmil-map h-full w-full" />;

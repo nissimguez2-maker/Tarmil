@@ -10,6 +10,7 @@ import { TabBar } from '../components/TabBar';
 const HIDE_TAB_PATTERNS: RegExp[] = [
   /^\/forums\/[^/]+\/[^/]+$/,
   /^\/profile\/friend\/[^/]+$/,
+  /^\/welcome$/,
 ];
 
 export function AppLayout() {

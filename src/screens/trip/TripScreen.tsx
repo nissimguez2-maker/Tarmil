@@ -34,6 +34,7 @@ import {
   relateFriend,
 } from '../../components/tripMap/utils/relateFriend';
 import { useSupabaseData } from '../../lib/SupabaseDataProvider';
+import { useDemoState } from '../../lib/demoState';
 import type { FriendOverlap } from '../../data/myTrip';
 import { LoadingPanel, ErrorPanel } from '../../components/DataState';
 
@@ -53,7 +54,9 @@ export function TripScreen() {
     saveStop,
     removeStop,
     sendPing,
+    postActivity,
   } = useSupabaseData();
+  const { offGrid } = useDemoState();
   const [state, dispatch] = useReducer(tripReducer, undefined, () =>
     makeInitialTripState(),
   );
@@ -178,6 +181,7 @@ export function TripScreen() {
               sheet?.kind === 'plannedStop' ? sheet.stopId : undefined
             }
             heatmapEnabled={isHeat}
+            offGrid={offGrid}
             onOpenSheet={(s) => dispatch({ type: 'OPEN_SHEET', sheet: s })}
             onCloseSheet={() => dispatch({ type: 'CLOSE_SHEET' })}
           />
@@ -246,7 +250,11 @@ export function TripScreen() {
                       : undefined
                   }
                   pinged={pinged}
-                  onPing={() => sendPing(f.id)}
+                  onPing={() => {
+                    if (offGrid) return;
+                    sendPing(f.id);
+                  }}
+                  offGrid={offGrid}
                 />
               );
             })()}
@@ -332,7 +340,18 @@ export function TripScreen() {
                 return (
                   <ArrivalConfirmSheet
                     stop={stop}
-                    onConfirm={() => dispatch({ type: 'DISMISS_ARRIVAL' })}
+                    onConfirm={async () => {
+                      try {
+                        await postActivity(
+                          'whos_down',
+                          `Arrived in ${stop.nameEn}.`,
+                          stop.id,
+                        );
+                      } catch (e) {
+                        console.error('Failed to post arrival:', e);
+                      }
+                      dispatch({ type: 'DISMISS_ARRIVAL' });
+                    }}
                     onDismiss={() => dispatch({ type: 'DISMISS_ARRIVAL' })}
                   />
                 );

@@ -43,13 +43,6 @@ const SECTIONS: { number: string; label: string; rows: Row[] }[] = [
           'Off-grid hides you from every friend across overlaps, density, forums and pings. The one-tap switch sits at the top of your Profile.',
       },
       {
-        label: 'Visible to friends of friends',
-        value: 'On',
-        choices: ['On', 'Off'],
-        detail:
-          'Lets friends of friends spot an overlap only when your route actually crosses theirs in a shared city.',
-      },
-      {
         label: 'Location resolution',
         value: 'City level only',
         choices: ['City level only', 'Region level (wider buffer)'],
