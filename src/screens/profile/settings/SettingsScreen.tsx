@@ -22,13 +22,13 @@ const SECTIONS: { number: string; label: string; rows: Row[] }[] = [
     number: '01',
     label: 'Account.',
     rows: [
-      { label: 'Name', value: 'Nissim Gez', detail: 'The name your friends see in the app.' },
-      { label: 'Phone', value: '+972 ··· (verified)', detail: 'Verified at signup. Changing it requires re-verification.' },
+      { label: 'Name', value: 'Nissim Guez', detail: 'The name your friends see in the app.' },
+      { label: 'Phone', value: '+1 ··· (verified)', detail: 'Verified at signup. Changing it requires re-verification.' },
       {
         label: 'Language',
         value: 'English',
-        choices: ['English', 'עברית', 'Português'],
-        detail: 'Interface language. Dates, currencies and writing direction update automatically.',
+        choices: ['English', 'Português', 'Español'],
+        detail: 'Interface language. Dates and currencies update automatically.',
       },
     ],
   },
@@ -37,11 +37,10 @@ const SECTIONS: { number: string; label: string; rows: Row[] }[] = [
     label: 'Privacy.',
     rows: [
       {
-        label: 'Stealth mode',
-        value: 'Off',
-        choices: ['Off', 'A minute', 'An hour', 'A day', 'Until I come back'],
+        label: 'Off-grid mode',
+        value: 'Set on Profile',
         detail:
-          'In stealth mode your route disappears from every friend, and overlaps don\'t register. Total silence.',
+          'Off-grid hides you from every friend across overlaps, density, forums and pings. The one-tap switch sits at the top of your Profile.',
       },
       {
         label: 'Visible to friends of friends',
@@ -74,7 +73,7 @@ const SECTIONS: { number: string; label: string; rows: Row[] }[] = [
         choices: ['All', 'Replies to me', 'Off'],
       },
       {
-        label: 'Messages',
+        label: 'Pings',
         value: 'All',
         choices: ['All', 'Friends only', 'Off'],
       },

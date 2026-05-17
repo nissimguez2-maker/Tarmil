@@ -4,10 +4,18 @@ Investor-facing click-through mockup of the Tarmil mobile app.
 
 - **On a phone**: opens 100% app-like — full-bleed, no browser chrome.
 - **On desktop / tablet (≥768px)**: shows an iPhone frame with the app running inside it.
-- **Hebrew RTL from day one.**
+- **English-first** for international investors. The brand and schema are bilingual-ready (Hebrew column names stay in place for the eventual launch — UI renders the English copy).
 - Pure click-through. No real backend, no real maps API, no real translation.
 
-This is the **foundation** — brand tokens, RTL, fonts, iPhone frame, 4 tab routes with placeholder screens, base components, deploy config. Real screens get built one PR at a time on top of this base.
+The app ships **5 bottom tabs**, exactly as the Product Brief mandates:
+
+| Tab | Surface |
+|---|---|
+| **Trip** | Continent-scale map with pins and bubbles (past, present, declared future). Curated places, friend pins, next-trip card. |
+| **Friends** | Four sub-sections via a top SubNav — **Overlaps** (one-tap Ping per row) · **Activity** wall (text + emoji + optional city pin + optional 2–4 option poll, flat one-level replies, lightweight reactions) · **Ping** (one-shot signal history) · **Friends** list (search, friend requests, FoF opt-ins, density toggle). |
+| **Forums** | City × subject (5 subjects per city). Per-post identity choice (post as your name, or anonymous). One level of replies — no nested threads. |
+| **Tools** | Grid of tiles — Currency converter · Pre-trip checklist · Voice translator · Menu translator · Sign scanner · Friend balances · eSIM & data · Places nearby. |
+| **Profile** | Off-grid one-tap switch, your trip, past trips, friends preview, per-trip privacy. Settings gear in the top bar. |
 
 ---
 
@@ -29,13 +37,15 @@ Open in two browser shapes to see both modes:
 
 ### Supabase
 
-Backed by a Supabase project (`tarmil-mockup`, PolyGuez org, `eu-central-1`). Values for `.env.local` come from **Project Settings → API** in the dashboard. The anon key is safe in the browser when RLS is on; never commit `.env.local` (it's gitignored). For Netlify, add the same two vars under **Site settings → Environment variables**.
+Backed by a Supabase project (`tarmil-mockup`, eu-central-1). Values for `.env.local` come from **Project Settings → API** in the dashboard. The anon key is safe in the browser when RLS is on; never commit `.env.local` (it's gitignored). For Netlify, add the same two vars under **Site settings → Environment variables**.
 
-**Schema** lives in `supabase/migrations/` (4 tables: `places`, `friend_overlaps`, `trip_waypoints`, `planned_stops`). RLS is on everywhere: `anon` reads everything, `anon` has full CRUD on `planned_stops` only.
+**Schema** lives in `supabase/migrations/`. Core tables: `places`, `friend_overlaps`, `trip_waypoints`, `planned_stops`, `forums` (city × subject), `forum_threads`, `forum_thread_replies`, `activity_posts` (with first-class `poll` jsonb), `reactions`, `place_reviews`, `pings`. RLS is on everywhere: `anon` reads everything, `anon` has full CRUD on the demo-mutable tables (`planned_stops`, `pings`, `activity_posts`, etc.).
+
+Removed in v0.5 per brief §06 ("Direct messages and group chats — never"): `dm_threads`, `dm_messages`, `group_chats`, `group_chat_members`, `group_messages`.
 
 **Seed**: edit the arrays in `src/data/*.ts`, then re-run `npx tsx --env-file=.env.local scripts/seed-supabase.ts`. Idempotent (upsert).
 
-**Demo model**: shared global state. Every viewer sees the same `planned_stops`, edits broadcast in real time via Supabase Realtime. Between investor demos, hit the **Reset demo state** button on the Profile screen to restore the canonical 4-stop seed (RPC: `reset_demo_state`).
+**Demo model**: shared global state. Every viewer sees the same data; edits broadcast in real time via Supabase Realtime. Between investor demos, hit **Profile → Settings → Reset demo state** to restore the canonical seed (RPC: `reset_demo_state`). The RPC also clears any pings sent during the session and resets poll vote tallies.
 
 ---
 
@@ -43,15 +53,11 @@ Backed by a Supabase project (`tarmil-mockup`, PolyGuez org, `eu-central-1`). Va
 
 These are easy to break and painful to debug later. Stick to them.
 
-### 1. RTL: never use directional Tailwind utilities
+### 1. Use logical Tailwind utilities — RTL is on the roadmap
 
-**Don't write:** `pl-*`, `pr-*`, `left-*`, `right-*`, `ml-*`, `mr-*`, `border-l-*`, `border-r-*`, `rounded-l-*`, `rounded-r-*`.
+`index.html` is currently `lang="en" dir="ltr"` for the investor mockup. The Hebrew launch will flip `dir="rtl"`, at which point physical utilities (`pl-*`, `pr-*`, `left-*`, `right-*`, `ml-*`, `mr-*`, `border-l-*`, `border-r-*`, `rounded-l-*`, `rounded-r-*`) all break.
 
-**Always write:** `ps-*`, `pe-*`, `start-*`, `end-*`, `ms-*`, `me-*`, `border-s-*`, `border-e-*`, `rounded-s-*`, `rounded-e-*`.
-
-These are Tailwind 3.3+ "logical properties" — they auto-resolve based on `dir` (rtl in our case). Using `pl-4` will literally always pad the **left** side, regardless of direction, and break in Hebrew.
-
-For mixed-direction text (e.g., a Latin city name inside a Hebrew sentence), wrap the Latin part in `<bdi>` or apply the `.ltr` utility class.
+**Always write:** `ps-*`, `pe-*`, `start-*`, `end-*`, `ms-*`, `me-*`, `border-s-*`, `border-e-*`, `rounded-s-*`, `rounded-e-*`. These are Tailwind 3.3+ logical properties — they resolve correctly under both directions and cost nothing to use today.
 
 ### 2. Brand tokens only — no hex literals in components
 
@@ -122,7 +128,7 @@ Drop-in from DA v0.2. CSS variables live in `src/brand/tokens.css`; Tailwind the
 - `.mid-title` — Fraunces italic 500, sentence case, for "01 Concept"-style mid-titles.
 - `.meta-caps` — Heebo 500 uppercase 0.18em, used inside `<SectionLabel>`.
 - `.tnum` — tabular numerals (use on numbers in tables/ledgers).
-- `.ltr` — force LTR on a Latin span inside RTL text.
+- `.ltr` — force LTR on a Latin span inside RTL text (no-op today, kept for the Hebrew flip).
 - `.allow-select` — opt-in text selection (default is disabled for app-feel).
 
 ---
@@ -131,7 +137,7 @@ Drop-in from DA v0.2. CSS variables live in `src/brand/tokens.css`; Tailwind the
 
 1. Create `src/screens/<tab>/<Name>Screen.tsx`.
 2. Wrap content in `<Screen>` and (optionally) `<TopBar>`.
-3. Use base components: `<SectionLabel>`, `<Button>`, `<PlaceCard>`, `<Dunes>`.
+3. Use base components: `<SectionLabel>`, `<Button>`, `<PlaceCard>`, `<SubNav>`, `<Modal>`, `<BottomSheet>`, `<Dunes>`.
 4. Add route in `src/routes.tsx` under the layout route.
 5. If the screen is a drill-down, set `back` on `<TopBar>` so the back chevron appears.
 
@@ -142,36 +148,65 @@ Drop-in from DA v0.2. CSS variables live in `src/brand/tokens.css`; Tailwind the
 ```
 src/
   brand/
-    tokens.css           # CSS variables — single source of truth
+    tokens.css                # CSS variables — single source of truth
   components/
-    Screen.tsx           # safe-area wrapper + ivory bg + scroll
-    TopBar.tsx           # title + back chevron + end slot
-    TabBar.tsx           # 4 tabs, RTL order, active route detection
-    DeviceFrame.tsx      # iPhone shell, desktop-only via CSS
-    Button.tsx           # primary / accent / ghost
-    SectionLabel.tsx     # "01 — Concept" pattern
-    PlaceCard.tsx        # sand bg, rope border, place metadata
-    Dunes.tsx            # 3-layer SVG signature
+    Screen.tsx                # safe-area wrapper + ivory bg + scroll
+    TopBar.tsx                # title + back chevron + end slot
+    TabBar.tsx                # 5 tabs: Trip · Friends · Forums · Tools · Profile
+    DeviceFrame.tsx           # iPhone shell, desktop-only via CSS
+    Button.tsx                # primary / accent / ghost
+    SectionLabel.tsx          # "01 — Concept" pattern
+    PlaceCard.tsx             # sand bg, rope border, place metadata
+    Dunes.tsx                 # 3-layer SVG signature
+    activity/                 # post cards (TripDeclaration, WhosDown, OverlapNotification)
+    friends/                  # PingButton, PollCard, PollComposer, PingHistoryRow, ActivityComposeModal
+    forums/                   # ForumRow, IdentityToggle
+    profile/                  # FriendGridItem, PastTripCard, StatsPill, ToolDetailSheet
+    tools/                    # ToolsGrid, AroundMePanel (Places nearby), BusinessCard, FriendRatingsRow, StarRow
+    shared/                   # Avatar, SearchBar, SubNav, Fab, Modal, BottomSheet, ToolsButton
+    tripMap/                  # MapLibre canvas, sheets, layers, utils
   layouts/
-    AppLayout.tsx        # DeviceFrame + Outlet + persistent TabBar
+    AppLayout.tsx             # DeviceFrame + Outlet + persistent TabBar
+  lib/
+    SupabaseDataProvider.tsx  # the only sanctioned data path
+    supabase.ts               # typed singleton
+    database.types.ts         # generated by Supabase MCP
   screens/
-    trip/TripScreen.tsx
-    tools/ToolsScreen.tsx
-    friends/FriendsScreen.tsx
-    profile/ProfileScreen.tsx
-  routes.tsx             # route table
-  main.tsx               # root + BrowserRouter
-  index.css              # Tailwind directives + global resets
+    trip/                     # TripScreen + TripDetailScreen
+    friends/                  # FriendsScreen + FriendProfileScreen
+    forums/                   # ForumsScreen + ForumScreen + ForumThreadScreen
+    tools/                    # ToolsScreen
+    profile/                  # ProfileScreen + settings/SettingsScreen
+    place/                    # PlaceScreen + MapsActionSheet
+  routes.tsx                  # route table (5 tabs + drill-downs + legacy redirects)
+  main.tsx                    # root + BrowserRouter
+  index.css                   # Tailwind directives + global resets
 public/
-  manifest.webmanifest   # PWA manifest (lang: he, dir: rtl)
-  _redirects             # Netlify SPA fallback
+  manifest.webmanifest        # PWA manifest
+  _redirects                  # Netlify SPA fallback
   icons/
-    icon.svg             # placeholder — replace when DA "App icon" lands
+    icon.svg                  # placeholder — replace when DA "App icon" lands
     icon-maskable.svg
-index.html               # html dir="rtl" lang="he", PWA meta, font links
+index.html                    # html lang="en" dir="ltr" today; Hebrew flip lands later
 tailwind.config.ts
 netlify.toml
+supabase/
+  migrations/                 # 0001-0014; 0014 dropped DMs/group-chats, added pings + polls
 ```
+
+---
+
+## Demo flow
+
+A 60-second walk-through for an investor:
+
+1. **Trip** — Map opens with bubbles and pins. Tap a friend pin → FriendSheet with one-tap **Ping**. Tap a place → reviews + friends-who-know.
+2. **Friends → Overlaps** — Each row has its own Ping button. Tap one; the row enters a "Pinged" state (no re-pinging the same overlap — brief §04).
+3. **Friends → Activity** — Tap the copper FAB to compose. Add an emoji, pin a city, optionally attach a 2-4 option **poll**. Submit; the post renders with a `<PollCard>` that lets the user vote.
+4. **Friends → Ping** — See the Ping you just sent + the seeded inbound pings.
+5. **Forums** — City-grouped subject forums. Drill into a thread; the reply composer has an identity selector (post as your name, or anonymous).
+6. **Tools** — 8 tiles. Tap **Places nearby** to see the partner-channel paid placements as a sheet. Tap **Currency converter** for the interactive demo.
+7. **Profile** — Big copper **Off-grid mode** switch. Per-trip privacy section. Settings gear at the top.
 
 ---
 
@@ -179,29 +214,28 @@ netlify.toml
 
 Wired for Netlify. `netlify.toml` declares the build command, publish dir, SPA redirect, and manifest MIME-type header.
 
-Connect this GitHub repo to a Netlify site. Netlify auto-detects the build (`npm run build` → `dist/`). Add a custom domain (e.g. `mockup.tarmil.app`) when an investor meeting is scheduled — until then, the assigned `*.netlify.app` subdomain is fine.
+Connect this GitHub repo to a Netlify site. Netlify auto-detects the build (`npm run build` → `dist/`). Add a custom domain when an investor meeting is scheduled — until then, the assigned `*.netlify.app` subdomain is fine.
 
 ---
 
-## Open from DA v0.2 — TODO before launch (not blocking foundation)
+## Roadmap aligned to the Product Brief
 
-Per DA §Open / deferred — flagged for awareness:
+| Milestone | Date | Highlights |
+|---|---|---|
+| **MVP — M1** | August 2026 | 5 tabs live, worldwide curated places, phone + email verification, Hebrew-only, native iOS + Android |
+| **V1 — M4** | November 2026 | Diaspora launch (English / French / Spanish), GDPR + CCPA, desktop companion, Smart Route Engine, Destination Intelligence, first partner-channel deals |
+| **V2 — M6** | January 2027 | Detailed itineraries, structured live events, expenses beyond pairwise, Chabad partnership, loyalty progression |
+| **V3 — M9** | April 2027 | TarmilCard (banking-as-a-service), older-segment expansion |
 
-1. **Hebrew typography** — Frank Ruhl Libre + Heebo proposed. Validate with a Hebrew typographer.
-2. **Photography** — undefined. Travel app cannot ship without this rule.
-3. **Logo / wordmark** — currently the word "Tarmil" set in Fraunces 700.
-4. **Hebrew wordmark** — טרמיל, needed for App Store listing.
-5. **App icon** — placeholder SVG in `public/icons/`. Real PNG icons (180/192/512, maskable) needed for "Add to Home Screen" and store.
-6. **Iconography** — primitive Lucide icons used. Custom tab/place markers needed.
-7. **Motion vocabulary** — tab switch, modal in/out, scroll. Currently no animation.
-8. **Loading / empty / error states** — undefined.
+This repo is the **investor-facing mockup**. Real implementation lives in the native iOS + Android codebases the CTO will own.
 
 ---
 
-## What's next (PR roadmap)
+## Known follow-ups
 
-- **PR2** — Trip screen built out: stylized SVG continent map, trip line (past/present/future), friend overlap bubbles, place card drill-down at `/place/:id`.
-- **PR3** — Tools list active: Currency Converter sub-screen at `/tools/currency`.
-- **PR4** — Friends with overlap detail at `/friends/:id`.
-- **PR5** — Profile own-trip detail.
-- **PR6** — Polish: tab-switch transition, status-bar mock refinements, loading states.
+These are tracked but not in scope for this branch:
+
+- Phone + email identity verification onboarding screen (brief §04).
+- Per-trip privacy persistence on `planned_stops` (UI today is local state).
+- Real authentication + per-user data (Supabase model is shared global demo state).
+- Photography rule, app icon PNGs, custom iconography — brand pass open items.

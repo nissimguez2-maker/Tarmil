@@ -1,5 +1,7 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Settings } from 'lucide-react';
+import { Settings, EyeOff } from 'lucide-react';
+import clsx from 'clsx';
 import { Screen } from '../../components/Screen';
 import { TopBar } from '../../components/TopBar';
 import { ToolsButton } from '../../components/shared/ToolsButton';
@@ -12,33 +14,41 @@ import { PastTripCard } from '../../components/profile/PastTripCard';
 import { useSupabaseData } from '../../lib/SupabaseDataProvider';
 import { relateFriend } from '../../components/tripMap/utils/relateFriend';
 
+type TripVisibility = {
+  friends: boolean;
+  fof: boolean;
+};
+
+const COUNTRY_BY_DESTINATION_ID: Record<string, string> = {
+  buzios: 'br',
+  'sao-paulo': 'br',
+  jericoacoara: 'br',
+  'rio-de-janeiro': 'br',
+  'buenos-aires': 'ar',
+  'punta-del-este': 'uy',
+};
+
 /**
- * Profile tab. Three editorial sections — route, past trips, friends in
- * network. Tools moved to their own top-level /tools tab so this screen
- * stays focused on identity + history. Settings remains in the top-bar gear.
+ * Profile tab. Four editorial sections — Off-grid mode (one-tap),
+ * route, past trips, friends grid, and per-trip privacy. Tools moved to
+ * their own top-level /tools tab so this screen stays focused on
+ * identity, history, and privacy controls. Settings remains in the
+ * top-bar gear.
+ *
+ * Off-grid mode and per-trip privacy are local UI state for the demo —
+ * brief §"A note on the privacy opt-in matrix" gives them as MVP
+ * commitments; the persistence schema lands in a follow-up PR.
  */
 export function ProfileScreen() {
   const { data, loading, error } = useSupabaseData();
+  const [offGrid, setOffGrid] = useState(false);
+  const [tripVisibility, setTripVisibility] = useState<
+    Record<string, TripVisibility>
+  >({});
 
   if (loading) return <LoadingPanel />;
   if (error || !data) return <ErrorPanel error={error} />;
 
-  // Quick stats derived from existing data — countries via destination_id of
-  // planned_stops + past leg seeding, places visited via friends_know-style
-  // count, total nights from planned_stops.
-  //
-  // Country mapping covers the seeded LATAM destinations. The +2 below comes
-  // from the past legs (Greece + France + Côte d'Azur + SE Asia stops) that
-  // aren't represented as planned_stops; replace once past trips also live
-  // in the table.
-  const COUNTRY_BY_DESTINATION_ID: Record<string, string> = {
-    buzios: 'br',
-    'sao-paulo': 'br',
-    jericoacoara: 'br',
-    'rio-de-janeiro': 'br',
-    'buenos-aires': 'ar',
-    'punta-del-este': 'uy',
-  };
   const countriesCount = new Set(
     data.plannedStops
       .map((s) => COUNTRY_BY_DESTINATION_ID[s.id])
@@ -49,6 +59,19 @@ export function ProfileScreen() {
   const stopsCount = data.plannedStops.length;
 
   const friendsForGrid = data.friendOverlaps.slice(0, 6);
+
+  const visibilityFor = (stopId: string): TripVisibility =>
+    tripVisibility[stopId] ?? { friends: true, fof: false };
+
+  const setVisibilityFor = (
+    stopId: string,
+    next: Partial<TripVisibility>,
+  ) => {
+    setTripVisibility((prev) => ({
+      ...prev,
+      [stopId]: { ...visibilityFor(stopId), ...next },
+    }));
+  };
 
   return (
     <Screen>
@@ -69,11 +92,6 @@ export function ProfileScreen() {
       />
 
       <div className="flex flex-col gap-lg pb-xl">
-        {/*
-          Warm gradient banner behind the avatar so the hero doesn't feel
-          stranded on ivory. The avatar pulls slightly into the gradient,
-          and the rest of the page falls back to standard padding.
-        */}
         <header
           className="relative flex flex-col items-center gap-sm px-md pt-lg pb-md"
           style={{
@@ -91,7 +109,9 @@ export function ProfileScreen() {
           <span className="font-serif text-sub leading-tight text-cocoa">
             Nissim Guez
           </span>
-          <span className="text-small text-cocoa-55">Traveling since summer 2024</span>
+          <span className="text-small text-cocoa-55">
+            Traveling since summer 2024
+          </span>
           <div className="mt-1 flex flex-wrap items-center justify-center gap-2">
             <StatsPill label="Countries" value={countriesCount + 4} />
             <StatsPill label="Places" value={placesCount} />
@@ -100,84 +120,231 @@ export function ProfileScreen() {
         </header>
 
         <div className="flex flex-col gap-lg px-md">
+          <OffGridCard
+            on={offGrid}
+            onToggle={() => setOffGrid((v) => !v)}
+          />
 
-        <section className="flex flex-col gap-sm">
-          <SectionLabel number="01" label="Your route." />
-          <Link
-            to="/trip"
-            className="flex items-center justify-between gap-sm rounded-2xl bg-sand shadow-card p-md transition-colors duration-instant ease-out-quart hover:bg-sand/70 active:bg-sand"
-          >
-            <span className="flex min-w-0 flex-1 flex-col gap-px">
-              <span className="truncate font-serif text-lede italic text-cocoa">
-                Your route
-              </span>
-              <span className="text-small text-cocoa-70">
-                Rio right now ·{' '}
-                <span className="tnum">{stopsCount}</span> planned stop
-                {stopsCount === 1 ? '' : 's'} in LATAM
-              </span>
-            </span>
-            <span className="meta-caps shrink-0 text-copper">Open map</span>
-          </Link>
-        </section>
-
-        <section className="flex flex-col gap-sm">
-          <SectionLabel number="02" label="Past trips." />
-          <ul className="flex flex-col gap-sm">
-            <li>
-              <PastTripCard
-                destinationHe="Brazil — Rio, Petrópolis"
-                metaLine="Winter 2026 · 21 days"
-                flag="🇧🇷"
-              />
-            </li>
-            <li>
-              <PastTripCard
-                destinationHe="Southeast Asia"
-                metaLine="Autumn 2025 · Bangkok, Krabi, Chiang Mai"
-                flag="🇹🇭"
-              />
-            </li>
-            <li>
-              <PastTripCard
-                destinationHe="Côte d'Azur"
-                metaLine="Summer 2025 · Nice, Cannes, Monaco"
-                flag="🇫🇷"
-              />
-            </li>
-            <li>
-              <PastTripCard
-                destinationHe="Greece — the Cyclades"
-                metaLine="Summer 2024 · Athens, Santorini, Mykonos"
-                flag="🇬🇷"
-              />
-            </li>
-          </ul>
-        </section>
-
-        <section className="flex flex-col gap-sm">
-          <div className="flex items-baseline justify-between">
-            <SectionLabel number="03" label="Friends in network." />
+          <section className="flex flex-col gap-sm">
+            <SectionLabel number="01" label="Your route." />
             <Link
-              to="/friends#list"
-              className="text-small text-copper transition-colors duration-instant ease-out-quart hover:text-copper-85"
+              to="/trip"
+              className="flex items-center justify-between gap-sm rounded-2xl bg-sand shadow-card p-md transition-colors duration-instant ease-out-quart hover:bg-sand/70 active:bg-sand"
             >
-              See all
+              <span className="flex min-w-0 flex-1 flex-col gap-px">
+                <span className="truncate font-serif text-lede italic text-cocoa">
+                  Your route
+                </span>
+                <span className="text-small text-cocoa-70">
+                  Rio right now ·{' '}
+                  <span className="tnum">{stopsCount}</span> planned stop
+                  {stopsCount === 1 ? '' : 's'} in LATAM
+                </span>
+              </span>
+              <span className="meta-caps shrink-0 text-copper">Open map</span>
             </Link>
-          </div>
-          <ul className="grid grid-cols-3 gap-sm">
-            {friendsForGrid.map((f) => (
-              <li key={f.id}>
-                <FriendGridItem
-                  friend={f}
-                  relationship={relateFriend(f, data.plannedStops)}
+          </section>
+
+          <section className="flex flex-col gap-sm">
+            <SectionLabel number="02" label="Past trips." />
+            <ul className="flex flex-col gap-sm">
+              <li>
+                <PastTripCard
+                  destinationHe="Brazil — Rio, Petrópolis"
+                  metaLine="Winter 2026 · 21 days"
+                  flag="🇧🇷"
                 />
               </li>
-            ))}
-          </ul>
-        </section>
+              <li>
+                <PastTripCard
+                  destinationHe="Southeast Asia"
+                  metaLine="Autumn 2025 · Bangkok, Krabi, Chiang Mai"
+                  flag="🇹🇭"
+                />
+              </li>
+              <li>
+                <PastTripCard
+                  destinationHe="Côte d'Azur"
+                  metaLine="Summer 2025 · Nice, Cannes, Monaco"
+                  flag="🇫🇷"
+                />
+              </li>
+              <li>
+                <PastTripCard
+                  destinationHe="Greece — the Cyclades"
+                  metaLine="Summer 2024 · Athens, Santorini, Mykonos"
+                  flag="🇬🇷"
+                />
+              </li>
+            </ul>
+          </section>
+
+          <section className="flex flex-col gap-sm">
+            <div className="flex items-baseline justify-between">
+              <SectionLabel number="03" label="Friends in network." />
+              <Link
+                to="/friends#list"
+                className="text-small text-copper transition-colors duration-instant ease-out-quart hover:text-copper-85"
+              >
+                See all
+              </Link>
+            </div>
+            <ul className="grid grid-cols-3 gap-sm">
+              {friendsForGrid.map((f) => (
+                <li key={f.id}>
+                  <FriendGridItem
+                    friend={f}
+                    relationship={relateFriend(f, data.plannedStops)}
+                  />
+                </li>
+              ))}
+            </ul>
+          </section>
+
+          <section className="flex flex-col gap-sm">
+            <SectionLabel number="04" label="Per-trip privacy." />
+            <p className="text-small leading-snug text-cocoa-70">
+              Each declared stop is private by default. Opt in per trip to
+              share with direct friends, or with friends-of-friends.
+            </p>
+            <ul className="overflow-hidden rounded-2xl border border-cocoa-15 bg-ivory">
+              {data.plannedStops.map((stop, i) => {
+                const v = visibilityFor(stop.id);
+                return (
+                  <li
+                    key={stop.id}
+                    className={clsx(
+                      'flex flex-col gap-2 px-md py-3',
+                      i > 0 && 'border-t border-cocoa-08',
+                    )}
+                  >
+                    <div className="flex items-baseline justify-between gap-sm">
+                      <span className="font-serif text-body italic text-cocoa">
+                        {stop.nameEn}
+                      </span>
+                      <span className="text-small text-cocoa-55">
+                        <span className="tnum">{stop.nights}</span> nights
+                      </span>
+                    </div>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <TinyToggle
+                        label="Friends"
+                        on={v.friends}
+                        onChange={() =>
+                          setVisibilityFor(stop.id, { friends: !v.friends })
+                        }
+                      />
+                      <TinyToggle
+                        label="Friends of friends"
+                        on={v.fof}
+                        onChange={() =>
+                          setVisibilityFor(stop.id, { fof: !v.fof })
+                        }
+                      />
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+          </section>
         </div>
       </div>
     </Screen>
+  );
+}
+
+function OffGridCard({
+  on,
+  onToggle,
+}: {
+  on: boolean;
+  onToggle: () => void;
+}) {
+  return (
+    <section
+      className={clsx(
+        'flex items-center justify-between gap-sm rounded-2xl border p-md transition-colors duration-instant ease-out-quart',
+        on
+          ? 'border-copper bg-copper/10'
+          : 'border-cocoa-15 bg-ivory',
+      )}
+    >
+      <div className="flex items-center gap-sm">
+        <span
+          className={clsx(
+            'inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full',
+            on ? 'bg-copper text-ivory' : 'bg-cocoa-08 text-cocoa-55',
+          )}
+        >
+          <EyeOff className="h-5 w-5" strokeWidth={1.8} aria-hidden />
+        </span>
+        <div className="flex flex-col leading-tight">
+          <span className="font-serif text-lede italic text-cocoa">
+            Off-grid mode
+          </span>
+          <span className="text-small text-cocoa-70">
+            {on
+              ? "You're invisible on every surface — overlaps, density, forums and pings."
+              : 'Hide your route from every friend, in one tap.'}
+          </span>
+        </div>
+      </div>
+      <button
+        type="button"
+        role="switch"
+        aria-checked={on}
+        onClick={onToggle}
+        className={clsx(
+          'relative inline-flex h-7 w-12 shrink-0 items-center rounded-full',
+          'transition-colors duration-instant ease-out-quart',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory',
+          on ? 'bg-copper' : 'bg-cocoa-15',
+        )}
+        aria-label="Toggle off-grid mode"
+      >
+        <span
+          aria-hidden
+          className={clsx(
+            'inline-block h-6 w-6 transform rounded-full bg-ivory shadow-card transition-transform duration-instant ease-out-quart',
+            on ? 'translate-x-5' : 'translate-x-0.5',
+          )}
+        />
+      </button>
+    </section>
+  );
+}
+
+function TinyToggle({
+  label,
+  on,
+  onChange,
+}: {
+  label: string;
+  on: boolean;
+  onChange: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={on}
+      onClick={onChange}
+      className={clsx(
+        'inline-flex items-center gap-2 rounded-full ps-3 pe-3 py-1.5 text-small font-medium leading-none',
+        'transition-colors duration-instant ease-out-quart',
+        on
+          ? 'bg-copper text-ivory'
+          : 'border border-cocoa-15 text-cocoa-70 hover:text-cocoa',
+      )}
+    >
+      <span
+        aria-hidden
+        className={clsx(
+          'inline-block h-2.5 w-2.5 rounded-full',
+          on ? 'bg-ivory' : 'bg-cocoa-30',
+        )}
+      />
+      {label}
+    </button>
   );
 }
