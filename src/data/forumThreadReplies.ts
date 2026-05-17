@@ -23,40 +23,8 @@ export const forumThreadReplies: ForumThreadReply[] = [
   // RIO
   // =====================================================================
 
-  // thread-rio-001 — Chabad Copa Shabbat (3 replies)
-  {
-    id: 'thread-rio-001-r1',
-    threadId: 'thread-rio-001',
-    authorFriendId: null,
-    body: 'Thanks Maya. Registered through the link. You staying for dinner?',
-  },
-  {
-    id: 'thread-rio-001-r2',
-    threadId: 'thread-rio-001',
-    authorFriendId: 'yael-botafogo',
-    body:"I'm coming. Cool to pick you up from Posto 6 at 18:30?",
-  },
-  {
-    id: 'thread-rio-001-r3',
-    threadId: 'thread-rio-001',
-    authorFriendId: 'maya-ipanema',
-    body:"Yael, perfect  see you there. Nissim, you should come too if you're still in town.",
-  },
-
-  // thread-rio-002 — kosher meat in Rio (2 replies)
-  {
-    id: 'thread-rio-002-r1',
-    threadId: 'thread-rio-002',
-    authorFriendId: 'maya-ipanema',
-    body:"Kosher Rio is open 9:00–18:00 except Shabbat. Rua Anita Garibaldi 49. They also have frozen burgers, don't sleep on those.",
-  },
-  {
-    id: 'thread-rio-002-r2',
-    threadId: 'thread-rio-002',
-    authorFriendId: 'yael-botafogo',
-    body: 'Talmud Torah is farther but prices are reasonable. If you call ahead they organize delivery to Copa.',
-  },
-
+      
+    
   // thread-rio-003 — street bloco (3 replies)
   {
     id: 'thread-rio-003-r1',
@@ -203,28 +171,8 @@ export const forumThreadReplies: ForumThreadReply[] = [
   // BÚZIOS
   // =====================================================================
 
-  // thread-buzios-001 — Chabad in Búzios (2 replies)
-  {
-    id: 'thread-buzios-001-r1',
-    threadId: 'thread-buzios-001',
-    authorFriendId: 'roi-buzios',
-    body:"No Chabad in Búzios. Nearest one is in Niterói, two hours away. If Shabbat matters to you, better head back.",
-  },
-  {
-    id: 'thread-buzios-001-r2',
-    threadId: 'thread-buzios-001',
-    authorFriendId: 'maya-ipanema',
-    body:"Option: make Shabbat in Búzios yourself, bring challot from Kosher Rio. Different vibe but if it's just 24 hours, doable.",
-  },
-
-  // thread-buzios-002 — kosher meat (1 reply)
-  {
-    id: 'thread-buzios-002-r1',
-    threadId: 'thread-buzios-002',
-    authorFriendId: null,
-    body:"Bro I'm in. I'll bring veggies, wine and pita. Let's sort it in DM.",
-  },
-
+    
+  
   // thread-buzios-003 — Rua das Pedras (3 replies)
   {
     id: 'thread-buzios-003-r1',
@@ -365,40 +313,8 @@ export const forumThreadReplies: ForumThreadReply[] = [
   // SÃO PAULO
   // =====================================================================
 
-  // thread-sao-paulo-001 — Chabad Jardins (3 replies)
-  {
-    id: 'thread-sao-paulo-001-r1',
-    threadId: 'thread-sao-paulo-001',
-    authorFriendId: 'shir-saopaulo',
-    body: 'Chabad Jardins runs open tables. Confirm ahead through their site. Rabbi Meir hosts, Israeli vibe.',
-  },
-  {
-    id: 'thread-sao-paulo-001-r2',
-    threadId: 'thread-sao-paulo-001',
-    authorFriendId: null,
-    body:"Thanks Shir. I'll email next week.",
-  },
-  {
-    id: 'thread-sao-paulo-001-r3',
-    threadId: 'thread-sao-paulo-001',
-    authorFriendId: 'moshe-buenosaires',
-    body:"If you miss a table, the Cong. Israelita synagogue also hosts for Shabbat. Less Chabad, more traditional.",
-  },
-
-  // thread-sao-paulo-002 — Kosher Delícia (2 replies)
-  {
-    id: 'thread-sao-paulo-002-r1',
-    threadId: 'thread-sao-paulo-002',
-    authorFriendId: null,
-    body:"Been there twice — worth the trip. Their ribs are great, R$ 95 a person with sides.",
-  },
-  {
-    id: 'thread-sao-paulo-002-r2',
-    threadId: 'thread-sao-paulo-002',
-    authorFriendId: 'moshe-buenosaires',
-    body:"There's also Kosher Express in Jardins closer to you. Less impressive but convenient.",
-  },
-
+      
+    
   // thread-sao-paulo-003 — Vila bar (3 replies)
   {
     id: 'thread-sao-paulo-003-r1',
@@ -539,40 +455,8 @@ export const forumThreadReplies: ForumThreadReply[] = [
   // JERICOACOARA
   // =====================================================================
 
-  // thread-jericoacoara-001 — no Chabad (3 replies)
-  {
-    id: 'thread-jericoacoara-001-r1',
-    threadId: 'thread-jericoacoara-001',
-    authorFriendId: null,
-    body:"Yotam, I can bring challot if I arrive on the 9th. Confirm a date and I'll sort it.",
-  },
-  {
-    id: 'thread-jericoacoara-001-r2',
-    threadId: 'thread-jericoacoara-001',
-    authorFriendId: 'roi-buzios',
-    body:"Arriving Nov 11 after Búzios. Bringing wine and a white tablecloth. We'll do kiddush on the beach, it'll be a beautiful mess.",
-  },
-  {
-    id: 'thread-jericoacoara-001-r3',
-    threadId: 'thread-jericoacoara-001',
-    authorFriendId: 'yotam-jericoacoara',
-    body:"Legendary  Nissim brings challot, Roi wine and the cloth, I'll do fish and rice on the fire. Shabbat in Jeri.",
-  },
-
-  // thread-jericoacoara-002 — kosher food (2 replies)
-  {
-    id: 'thread-jericoacoara-002-r1',
-    threadId: 'thread-jericoacoara-002',
-    authorFriendId: 'yotam-jericoacoara',
-    body:"I manage with fresh fish from the fishermen (kosher after checking), veggies, eggs, and pita I bake in a mini oven. It works.",
-  },
-  {
-    id: 'thread-jericoacoara-002-r2',
-    threadId: 'thread-jericoacoara-002',
-    authorFriendId: null,
-    body:"Thanks. I think I'll grab supplies in Fortaleza and bring them with me. The fish idea is solid.",
-  },
-
+      
+    
   // thread-jericoacoara-003 — forró (3 replies)
   {
     id: 'thread-jericoacoara-003-r1',

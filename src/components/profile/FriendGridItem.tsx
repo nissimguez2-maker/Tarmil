@@ -25,7 +25,7 @@ export function FriendGridItem({ friend, relationship }: Props) {
 
   return (
     <Link
-      to={`/friends/friend/${friend.id}`}
+      to={`/profile/friend/${friend.id}`}
       className="flex flex-col items-center gap-xs rounded-xl p-sm transition-colors duration-instant ease-out-quart hover:bg-cocoa-8 active:bg-cocoa-15"
     >
       <Avatar

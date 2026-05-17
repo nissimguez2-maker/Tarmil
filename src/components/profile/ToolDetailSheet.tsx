@@ -9,7 +9,6 @@ import {
 import clsx from 'clsx';
 import { Modal } from '../shared/Modal';
 import { Button } from '../Button';
-import { AroundMePanel } from '../tools/AroundMePanel';
 import { useSupabaseData } from '../../lib/SupabaseDataProvider';
 
 export type ToolId =
@@ -19,8 +18,7 @@ export type ToolId =
   | 'menu'
   | 'signs'
   | 'balances'
-  | 'esim'
-  | 'nearby';
+  | 'esim';
 
 type Props = {
   toolId: ToolId | null;
@@ -35,7 +33,6 @@ const TITLES: Record<ToolId, { title: string; eyebrow: string }> = {
   signs: { title: 'Sign scanner', eyebrow: 'Tool' },
   balances: { title: 'Friend balances', eyebrow: 'Tool' },
   esim: { title: 'eSIM & data', eyebrow: 'Tool' },
-  nearby: { title: 'Places nearby', eyebrow: 'Tool' },
 };
 
 /**
@@ -62,7 +59,6 @@ export function ToolDetailSheet({ toolId, onClose }: Props) {
       {toolId === 'signs' && <SignScanner />}
       {toolId === 'balances' && <FriendBalances />}
       {toolId === 'esim' && <EsimPlans />}
-      {toolId === 'nearby' && <AroundMePanel />}
     </Modal>
   );
 }

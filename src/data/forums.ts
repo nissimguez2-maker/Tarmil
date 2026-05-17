@@ -1,16 +1,16 @@
 /**
- * Forums — one per (city × subject) pair. v0.3 dropped the city-level
- * catch-all forum in favor of focused subject-forums. Free-form chatter
- * goes to Group chats instead.
+ * Forums — one per (city × subject) pair. v0.6 expanded the subject set
+ * from 5 (Israel-flavored) to 8 (international): accommodation, transits,
+ * scams_danger, food, activities_treks, nightlife_parties, money_visas,
+ * meetups.
  *
  * SEED ONLY. Runtime data is read from the `forums` table in Supabase
  * via SupabaseDataProvider. Nothing in `src/` imports this array outside
  * `scripts/seed-supabase.ts`.
  *
- * Joined cities: Rio, Búzios, São Paulo, Jericoacoara → 5 subject forums
- * each = 20 forums. Buenos Aires keeps a single Meetups forum surfaced
- * under "Recommended for you" with a join CTA — demoes the discover
- * pattern without flooding the joined list.
+ * Joined cities: Rio, Búzios, São Paulo, Jericoacoara → 8 subject forums
+ * each = 32 forums. Buenos Aires keeps a single Meetups forum surfaced
+ * under "Recommended for you" with a join CTA.
  */
 
 import type { ForumSubject } from './forumThreads';
@@ -38,26 +38,37 @@ export type Forum = {
 };
 
 /**
- * Each subject has a stable display label, a Lucide icon name (mapped to
- * a real Icon in `src/components/messages/ForumRow.tsx`), and a small
- * library of city-flavored taglines so the seeded blurbs read distinct.
+ * Each subject has a stable display label. Icons live in
+ * `src/components/forums/ForumRow.tsx`.
  */
 export const SUBJECT_LABEL: Record<ForumSubject, string> = {
-  kosher_chabad: 'Kosher & Chabad',
-  parties: 'Parties',
-  treks_activities: 'Treks & activities',
-  restaurants: 'Restaurants',
+  accommodation: 'Accommodation',
+  transits: 'Transits',
+  scams_danger: 'Scams & danger',
+  food: 'Food',
+  activities_treks: 'Activities & treks',
+  nightlife_parties: 'Nightlife & parties',
+  money_visas: 'Money & visas',
   meetups: 'Meetups',
 };
+
+const SUBJECTS_ALL: ForumSubject[] = [
+  'accommodation',
+  'transits',
+  'scams_danger',
+  'food',
+  'activities_treks',
+  'nightlife_parties',
+  'money_visas',
+  'meetups',
+];
 
 type CitySeed = {
   citySlug: string;
   destinationId: string;
   nameEn: string;
   cityLabel: string;
-  /** Per-subject hero blurb. Backpacker tone, single sentence. */
   blurbBySubject: Record<ForumSubject, string>;
-  /** Per-subject member count to vary the city's surface. */
   memberCountBySubject: Record<ForumSubject, number>;
 };
 
@@ -68,22 +79,31 @@ const CITY_SEEDS: CitySeed[] = [
     nameEn: 'Rio de Janeiro',
     cityLabel: 'Rio de Janeiro',
     blurbBySubject: {
-      kosher_chabad:
-        'Chabad Copacabana times, kosher meat tips, Shabbat dinner crews.',
-      parties:
-        'Lapa blocos, baile funk recommendations, who is going out tonight.',
-      treks_activities:
+      accommodation:
+        'Hostels, Airbnbs and which neighborhoods feel safe at night.',
+      transits:
+        'Metro, taxis, buses, Uber, the airport run — how to move around.',
+      scams_danger:
+        'No-go streets, fake taxis, beach scams, what to do if it gets weird.',
+      food:
+        'Açaí bowls, churrascarias on a budget, the best pão de queijo in Botafogo.',
+      activities_treks:
         'Pão de Açúcar sunrise hikes, Tijuca trails, surf lessons in Ipanema.',
-      restaurants:
-        'Acai bowls, churrascarias on a budget, the best pão de queijo in Botafogo.',
+      nightlife_parties:
+        'Lapa blocos, baile funk recommendations, who is going out tonight.',
+      money_visas:
+        'ATMs, cash-vs-card, exchange spots, visa runs and paperwork.',
       meetups:
         'Israeli get-togethers, hostel pickups, "who is here this week?".',
     },
     memberCountBySubject: {
-      kosher_chabad: 132,
-      parties: 198,
-      treks_activities: 156,
-      restaurants: 174,
+      accommodation: 246,
+      transits: 198,
+      scams_danger: 312,
+      food: 174,
+      activities_treks: 156,
+      nightlife_parties: 198,
+      money_visas: 167,
       meetups: 211,
     },
   },
@@ -93,22 +113,31 @@ const CITY_SEEDS: CitySeed[] = [
     nameEn: 'Búzios',
     cityLabel: 'Búzios',
     blurbBySubject: {
-      kosher_chabad:
-        'Shabbat options when the closest minyan is back in Rio.',
-      parties:
-        'Beach bars on Rua das Pedras, sunset DJ sets, full-moon parties.',
-      treks_activities:
-        'Boat trips to 12-beach loops, kayak rentals, snorkel spots.',
-      restaurants:
+      accommodation:
+        'Pousadas, beach hostels and where to stay if you do not have a car.',
+      transits:
+        'Getting in from Rio, scooters, taxis and the beach hop route.',
+      scams_danger:
+        'Mostly chill, but: beach pickpockets, peak-season overcharges.',
+      food:
         'Seafood under fairy lights, açaí shacks, where the locals eat lunch.',
+      activities_treks:
+        'Boat trips to 12-beach loops, kayak rentals, snorkel spots.',
+      nightlife_parties:
+        'Beach bars on Rua das Pedras, sunset DJ sets, full-moon parties.',
+      money_visas:
+        'ATMs are limited — bring cash from Rio. Card friendliness.',
       meetups:
         'Long-weekend crews, peninsula day-trippers from Rio, who is in.',
     },
     memberCountBySubject: {
-      kosher_chabad: 38,
-      parties: 92,
-      treks_activities: 71,
-      restaurants: 83,
+      accommodation: 98,
+      transits: 74,
+      scams_danger: 56,
+      food: 83,
+      activities_treks: 71,
+      nightlife_parties: 92,
+      money_visas: 41,
       meetups: 64,
     },
   },
@@ -118,22 +147,31 @@ const CITY_SEEDS: CitySeed[] = [
     nameEn: 'São Paulo',
     cityLabel: 'São Paulo',
     blurbBySubject: {
-      kosher_chabad:
-        'Chabad Higienópolis, kosher cafés in Bom Retiro, Shabbat in Jardins.',
-      parties:
-        'Vila Madalena bar crawls, Augusta clubs, electronic nights in Bixiga.',
-      treks_activities:
-        'Day trips to Embu, Santos beach runs, MASP exhibits worth queueing for.',
-      restaurants:
+      accommodation:
+        'Vila Madalena vs Jardins, where to crash, the youth hostel scene.',
+      transits:
+        'Metro is the move. Ubers OK, taxis sketchy at the airport.',
+      scams_danger:
+        'Where not to walk at night, phone snatches, the standard SP rules.',
+      food:
         'Asado in Vila Madalena, ramen in Liberdade, pastel in the markets.',
+      activities_treks:
+        'Day trips to Embu, Santos beach runs, MASP exhibits worth queueing for.',
+      nightlife_parties:
+        'Vila Madalena bar crawls, Augusta clubs, electronic nights in Bixiga.',
+      money_visas:
+        'ATMs everywhere, card-friendly city, federal police for visa work.',
       meetups:
         'Israeli expats meetups, weekly coffee at Paulista, hostel buddies.',
     },
     memberCountBySubject: {
-      kosher_chabad: 124,
-      parties: 167,
-      treks_activities: 98,
-      restaurants: 189,
+      accommodation: 211,
+      transits: 184,
+      scams_danger: 263,
+      food: 189,
+      activities_treks: 98,
+      nightlife_parties: 167,
+      money_visas: 142,
       meetups: 142,
     },
   },
@@ -143,39 +181,40 @@ const CITY_SEEDS: CitySeed[] = [
     nameEn: 'Jericoacoara',
     cityLabel: 'Jericoacoara',
     blurbBySubject: {
-      kosher_chabad:
-        'Shabbat on the dunes — small Chabad presence, who is hosting this week.',
-      parties:
-        'Sunset at Duna do Pôr-do-Sol, forró on the sand, full-moon bonfires.',
-      treks_activities:
-        'Kitesurf lessons, buggy tours, lagoon hopping, dune sandboarding.',
-      restaurants:
+      accommodation:
+        'Pousadas, kitesurfer hostels and the no-cars-in-town quirk.',
+      transits:
+        'Fortaleza bus + buggy. The sand street rules. Day trip logistics.',
+      scams_danger:
+        'Tiny town, mostly fine. The kitesurf school overcharge is the main one.',
+      food:
         'Beachfront grilled fish, açaí bowls, the best caipirinha in town.',
+      activities_treks:
+        'Kitesurf lessons, buggy tours, lagoon hopping, dune sandboarding.',
+      nightlife_parties:
+        'Sunset at Duna do Pôr-do-Sol, forró on the sand, full-moon bonfires.',
+      money_visas:
+        'Limited ATMs — bring reais from Fortaleza. Most pousadas take cards.',
       meetups:
         'Kite crews looking for partners, dune sunset groups, jeep-share rides.',
     },
     memberCountBySubject: {
-      kosher_chabad: 22,
-      parties: 78,
-      treks_activities: 124,
-      restaurants: 67,
+      accommodation: 92,
+      transits: 81,
+      scams_danger: 38,
+      food: 67,
+      activities_treks: 124,
+      nightlife_parties: 78,
+      money_visas: 34,
       meetups: 91,
     },
   },
 ];
 
-const SUBJECTS_ALL: ForumSubject[] = [
-  'kosher_chabad',
-  'parties',
-  'treks_activities',
-  'restaurants',
-  'meetups',
-];
-
 const joined: Forum[] = CITY_SEEDS.flatMap((city) =>
   SUBJECTS_ALL.map((subject): Forum => ({
-    id: `forum-${city.citySlug}-${subject}`,
-    slug: `${city.citySlug}-${subject}`,
+    id: `forum-${city.citySlug}-${subject.replace(/_/g, '-')}`,
+    slug: `${city.citySlug}-${subject.replace(/_/g, '-')}`,
     nameEn: SUBJECT_LABEL[subject],
     nameHe: SUBJECT_LABEL[subject],
     cityLabel: city.cityLabel,

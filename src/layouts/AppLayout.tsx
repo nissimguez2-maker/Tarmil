@@ -9,7 +9,7 @@ import { TabBar } from '../components/TabBar';
  */
 const HIDE_TAB_PATTERNS: RegExp[] = [
   /^\/forums\/[^/]+\/[^/]+$/,
-  /^\/friends\/friend\/[^/]+$/,
+  /^\/profile\/friend\/[^/]+$/,
 ];
 
 export function AppLayout() {

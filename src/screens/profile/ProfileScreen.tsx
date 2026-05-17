@@ -4,7 +4,6 @@ import { Settings, EyeOff } from 'lucide-react';
 import clsx from 'clsx';
 import { Screen } from '../../components/Screen';
 import { TopBar } from '../../components/TopBar';
-import { ToolsButton } from '../../components/shared/ToolsButton';
 import { SectionLabel } from '../../components/SectionLabel';
 import { LoadingPanel, ErrorPanel } from '../../components/DataState';
 import { Avatar } from '../../components/shared/Avatar';
@@ -76,18 +75,16 @@ export function ProfileScreen() {
   return (
     <Screen>
       <TopBar
+        back
         title="Profile"
         end={
-          <div className="flex items-center gap-1">
-            <ToolsButton />
-            <Link
-              to="/profile/settings"
-              aria-label="Settings"
-              className="inline-flex h-9 w-9 items-center justify-center rounded-full text-cocoa transition-colors duration-instant ease-out-quart hover:bg-cocoa-8 active:bg-cocoa-15"
-            >
-              <Settings className="h-5 w-5" aria-hidden />
-            </Link>
-          </div>
+          <Link
+            to="/profile/settings"
+            aria-label="Settings"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full text-cocoa transition-colors duration-instant ease-out-quart hover:bg-cocoa-8 active:bg-cocoa-15"
+          >
+            <Settings className="h-5 w-5" aria-hidden />
+          </Link>
         }
       />
 
@@ -183,7 +180,7 @@ export function ProfileScreen() {
             <div className="flex items-baseline justify-between">
               <SectionLabel number="03" label="Friends in network." />
               <Link
-                to="/friends#list"
+                to="/profile/friends"
                 className="text-small text-copper transition-colors duration-instant ease-out-quart hover:text-copper-85"
               >
                 See all

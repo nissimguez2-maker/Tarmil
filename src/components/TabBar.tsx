@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { Map, Users, MessagesSquare, Wrench, User } from 'lucide-react';
+import { Map, Newspaper, Compass, MessagesSquare, Wrench } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import clsx from 'clsx';
 
@@ -12,17 +12,21 @@ type Tab = {
 /**
  * Floating dark tab capsule — the signature premium-app move.
  *
- * Tab order: Trip → Friends → Forums → Tools → Profile (left to right).
- * The capsule floats above the page (8mm above the safe-area bottom), sits
- * on the cocoa fill with ivory icons, and lifts the active tab into a
- * copper-filled inner pill. No edge-to-edge bar, no hard top border.
+ * Tab order: Trip → Activity → Around → Forums → Tools (left to right).
+ *
+ * v0.6 IA: Friends as a tab is dissolved. The brief bundled overlaps,
+ * the Activity wall, Ping, and the friends list under one tab, but each
+ * is a different mental model. Overlaps live on the Trip map. Activity
+ * earns its own tab (the brief's #1 social-layer bet — §11B). Around
+ * becomes a primary surface for places discovery. Friends list moves to
+ * the Profile drill-down (avatar icon top-right on every tab).
  */
 const TABS: Tab[] = [
   { to: '/trip', label: 'Trip', Icon: Map },
-  { to: '/friends', label: 'Friends', Icon: Users },
+  { to: '/activity', label: 'Activity', Icon: Newspaper },
+  { to: '/around', label: 'Around', Icon: Compass },
   { to: '/forums', label: 'Forums', Icon: MessagesSquare },
   { to: '/tools', label: 'Tools', Icon: Wrench },
-  { to: '/profile', label: 'Profile', Icon: User },
 ];
 
 export function TabBar() {

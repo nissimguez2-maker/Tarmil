@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { Screen } from '../../components/Screen';
 import { TopBar } from '../../components/TopBar';
 import { ToolsButton } from '../../components/shared/ToolsButton';
+import { ProfileAvatarButton } from '../../components/shared/ProfileAvatarButton';
 import { LoadingPanel, ErrorPanel } from '../../components/DataState';
 import { SearchBar } from '../../components/shared/SearchBar';
 import { CityForumGroup, RecommendedForumRow } from '../../components/forums/ForumRow';
@@ -60,7 +61,15 @@ export function ForumsScreen() {
 
   return (
     <Screen>
-      <TopBar title="Forums" end={<ToolsButton />} />
+      <TopBar
+        title="Forums"
+        end={
+          <div className="flex items-center gap-0.5">
+            <ToolsButton />
+            <ProfileAvatarButton initial="N" name="Nissim Guez" />
+          </div>
+        }
+      />
 
       <div className="flex flex-col gap-md p-md pb-xl">
         <SearchBar

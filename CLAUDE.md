@@ -6,15 +6,17 @@ This is the Tarmil mobile-mockup repo. Read this BEFORE writing any code.
 
 An English-first click-through mockup of the Tarmil mobile app, served as a static SPA. On phones it goes full-bleed and feels native; on desktop ≥768px it renders inside an iPhone frame. Pure visual demo — no real backend, no real maps API, no real translation.
 
-Five bottom tabs, exactly per the Product Brief:
+Five bottom tabs (v0.6 IA — one mental model per tab):
 
 | Tab | Purpose |
 |---|---|
-| Trip | Continent-scale map (pins and bubbles, no line) + curated places + friend pins + next-trip card |
-| Friends | SubNav with Overlaps · Activity wall · Ping · Friends list |
-| Forums | City × Subject (5 subjects per city) with per-post identity choice |
-| Tools | Grid of utility tiles (incl. Places nearby for partner placements) |
-| Profile | Off-grid one-tap switch, route, past trips, friends grid, per-trip privacy, Settings gear |
+| Trip | Continent-scale map (pins and bubbles, no line) + curated places + friend pins + next-trip card. Friend pins → Ping. |
+| Activity | The social feed. "Right now" overlap strip + wall of trip declarations / who's-down / polls / questions. Compose FAB. Ping history bell. |
+| Around | Curated places discovery. Now / My trip / Search modes. Internal ranking boost on partner placements — no public "partner" / "sponsored" label. |
+| Forums | City × 8 subjects: Accommodation · Transits · Scams & danger · Food · Activities & treks · Nightlife & parties · Money & visas · Meetups. Per-post identity choice. |
+| Tools | Grid of 7 utility tiles (currency, checklist, voice, menu, signs, balances, eSIM). |
+
+**Profile is not a tab.** Top-right avatar icon on every tab → drills to `/profile`. Friends list at `/profile/friends`; single-friend drill-down at `/profile/friend/:id`.
 
 The brief mandates Hebrew-first for the real product. The mock is **English-only for international investors**. The schema and brand are bilingual-ready (Hebrew columns and Frank Ruhl Libre stay in place); the rendered UI today is English.
 
@@ -57,7 +59,7 @@ Use `h-dvh`, `h-full`, or `min-h-dvh`. Plain `100vh` is wrong on mobile Safari (
 
 `src/screens/<tab>/<Name>Screen.tsx`. Drill-downs nest under their parent tab. **No barrel `index.ts` files.**
 
-Today the five tab folders are `trip/`, `friends/`, `forums/`, `tools/`, `profile/`. The `place/` folder holds the cross-tab `PlaceScreen` drill-down.
+Today the five tab folders are `trip/`, `activity/`, `around/`, `forums/`, `tools/`. The `profile/` folder holds Profile + its drill-downs (`FriendsListScreen`, `FriendProfileScreen`, `settings/SettingsScreen`). The `place/` folder holds the cross-tab `PlaceScreen` drill-down.
 
 ### Wrap every screen in `<Screen>`
 
@@ -77,7 +79,7 @@ The brief is the source of truth for product decisions. Today's mock implements 
 - Ping: one-shot signal, one per direction per co-presence event (enforced by `pings.unique (friend_id, direction)`).
 - Off-grid mode: one-tap switch on Profile root.
 - Per-trip privacy: visible-to-friends + visible-to-FoF toggles per planned stop.
-- Tools tiles: 7 from brief §05 + a "Places nearby" partner-channel preview.
+- Tools tiles: 7 from brief §05. The Around content is its own top-level tab in v0.6 (was a tile in v0.5).
 
 **Out (brief §06):**
 
