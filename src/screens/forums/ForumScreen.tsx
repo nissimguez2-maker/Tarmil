@@ -83,7 +83,7 @@ export function ForumScreen() {
                       </span>
                     </div>
                     <ChevronRight
-                      className="mt-1 h-5 w-5 shrink-0 text-cocoa-55"
+                      className="mt-1 h-5 w-5 shrink-0 text-cocoa-30"
                       strokeWidth={1.5}
                       aria-hidden
                     />

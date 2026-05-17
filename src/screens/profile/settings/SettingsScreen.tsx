@@ -137,12 +137,12 @@ export function SettingsScreen() {
                   <button
                     type="button"
                     onClick={() => setOpenRow(row)}
-                    className="flex w-full items-center justify-between gap-sm px-md py-3 text-start transition-colors duration-instant ease-out-quart active:bg-cocoa-08"
+                    className="flex w-full items-center justify-between gap-sm px-md py-3 text-start transition-colors duration-instant ease-out-quart hover:bg-cocoa-8 active:bg-cocoa-15 focus-visible:outline-none focus-visible:bg-cocoa-8"
                   >
                     <span className="text-body text-cocoa">{row.label}</span>
                     <span className="flex shrink-0 items-center gap-2 text-small text-cocoa-55">
                       {valueFor(row)}
-                      <ChevronRight className="h-4 w-4" aria-hidden />
+                      <ChevronRight className="h-4 w-4 text-cocoa-30" strokeWidth={1.5} aria-hidden />
                     </span>
                   </button>
                 </li>

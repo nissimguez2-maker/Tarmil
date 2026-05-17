@@ -15,13 +15,15 @@ type Props = {
 
 /**
  * Activity feed card for a friend's new trip declaration. Avatar + name +
- * body + route thumbnail + reaction strip. Renders only when the post kind
- * is 'trip_declaration'.
+ * meta-caps eyebrow + body + city-centred mini-map + reaction strip. Card
+ * sits on ivory (the quiet baseline) so the more actionable Overlap
+ * notification cards (sand + copper eyebrow) read as the higher-priority
+ * surface above.
  */
 export function TripDeclarationCard({ post, author, reactions, onReact }: Props) {
   const grouped = groupReactions(reactions);
   return (
-    <article className="flex flex-col gap-sm rounded-2xl bg-sand shadow-card p-md">
+    <article className="flex flex-col gap-sm rounded-2xl bg-ivory shadow-card p-md">
       <header className="flex items-center gap-sm">
         <Avatar
           photoUrl={author?.photoUrl}
@@ -29,22 +31,27 @@ export function TripDeclarationCard({ post, author, reactions, onReact }: Props)
           name={author?.friendName ?? 'User'}
           size="md"
         />
-        <div className="flex min-w-0 flex-1 flex-col leading-tight">
+        <div className="flex min-w-0 flex-1 flex-col gap-px leading-tight">
           <span className="truncate font-serif text-lede italic text-cocoa">
             {author?.friendName ?? 'User'}
           </span>
-          <span className="text-small text-cocoa-55">Trip declaration</span>
+          <span className="meta-caps text-cocoa-55">Trip declaration</span>
         </div>
       </header>
+
       <p className="text-body text-cocoa-70">{post.bodyHe}</p>
-      <TripMapPreview
-        destinationId={post.destinationId}
-        ariaLabel={
-          author
-            ? `${author.friendName}'s trip preview map`
-            : 'Trip preview map'
-        }
-      />
+
+      <div className="overflow-hidden rounded-xl ring-1 ring-cocoa-08">
+        <TripMapPreview
+          destinationId={post.destinationId}
+          ariaLabel={
+            author
+              ? `${author.friendName}'s trip preview map`
+              : 'Trip preview map'
+          }
+        />
+      </div>
+
       <div className="flex flex-wrap items-center gap-2">
         {grouped.map((g) => (
           <ReactionPill
