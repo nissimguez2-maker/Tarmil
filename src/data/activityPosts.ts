@@ -8,7 +8,8 @@
  *    season/year/durationLabel + an optional `routeThumbnailKey` the UI
  *    can use to look up a thumbnail.
  *  - `whos_down`: open invitation ("who wants to join me?"). `payload` may
- *    carry destinationId + dateLabel.
+ *    carry destinationId + dateLabel. Optional `poll` lives in its own
+ *    column (jsonb).
  *  - `overlap_notification`: system-generated when a friend's plan overlaps
  *    the user's. `authorFriendId` is the OTHER friend; the user is the
  *    receiver. `payload.overlapDays` is the count of days that match.
@@ -45,24 +46,22 @@ export type ActivityPost = {
   authorFriendId: string | null;
   destinationId?: string;
   bodyHe: string;
-  /** Kind-specific extras. See JSDoc for shape per kind. May carry an
-   * optional `poll` object today (chunk 4 promotes this to a first-class
-   * column on activity_posts). May also carry `parent_id` for replies,
-   * which is how flat one-level threading is modelled until a dedicated
-   * replies table lands.
+  /** Kind-specific extras. See JSDoc for shape per kind. May carry
+   * `parent_id` for replies (flat one-level threading until a dedicated
+   * replies table lands). Polls now live in a sibling `poll` column.
    */
   payload: Record<string, unknown>;
   replyCount: number;
 };
 
 export const activityPosts: ActivityPost[] = [
-  // Overlap notifications — most demo-impactful, surface near the top
+  // Overlap notifications — most demo-impactful, surface near the top.
   {
     id: 'act-overlap-roi-buzios',
     kind: 'overlap_notification',
     authorFriendId: 'roi-buzios',
     destinationId: 'buzios',
-    bodyHe: "Roi will be in Búzios at the same time as you · 3-day overlap",
+    bodyHe: 'Roi will be in Búzios when you are · 3 nights overlap',
     payload: { overlapDays: 3, dateLabel: 'Oct 29–31', friendId: 'roi-buzios' },
     replyCount: 0,
   },
@@ -71,7 +70,7 @@ export const activityPosts: ActivityPost[] = [
     kind: 'overlap_notification',
     authorFriendId: 'shir-saopaulo',
     destinationId: 'sao-paulo',
-    bodyHe: "Shir will be in São Paulo at the same time as you · 3-day overlap",
+    bodyHe: 'Shir will be in São Paulo when you are · 3 nights overlap',
     payload: { overlapDays: 3, dateLabel: 'Nov 3–5', friendId: 'shir-saopaulo' },
     replyCount: 0,
   },
@@ -80,18 +79,18 @@ export const activityPosts: ActivityPost[] = [
     kind: 'overlap_notification',
     authorFriendId: 'yotam-jericoacoara',
     destinationId: 'jericoacoara',
-    bodyHe: "Yotam will be in Jericoacoara at the same time as you · 4-day overlap",
+    bodyHe: 'Yotam will be in Jericoacoara when you are · 4 nights overlap',
     payload: { overlapDays: 4, dateLabel: 'Nov 10–13', friendId: 'yotam-jericoacoara' },
     replyCount: 0,
   },
 
-  // Trip declarations
+  // Trip declarations — short, human, drop the "new trip" filler.
   {
     id: 'act-decl-roi-buzios',
     kind: 'trip_declaration',
     authorFriendId: 'roi-buzios',
     destinationId: 'buzios',
-    bodyHe: 'Roi declared a new trip · Búzios · October 2026',
+    bodyHe: 'Roi declared a trip · Búzios · 3 nights end of October',
     payload: {
       season: 'autumn',
       year: 2026,
@@ -105,7 +104,7 @@ export const activityPosts: ActivityPost[] = [
     kind: 'trip_declaration',
     authorFriendId: 'shir-saopaulo',
     destinationId: 'sao-paulo',
-    bodyHe: 'Shir declared a new trip · São Paulo · November 2026',
+    bodyHe: 'Shir declared a trip · São Paulo · long weekend in November',
     payload: {
       season: 'spring',
       year: 2026,
@@ -115,22 +114,34 @@ export const activityPosts: ActivityPost[] = [
     replyCount: 2,
   },
 
-  // Who's-down invites
+  // Who's-down invites — concise, decision-flavored, real people talking.
   {
     id: 'act-whosdown-asado',
     kind: 'whos_down',
     authorFriendId: 'moshe-buenosaires',
     destinationId: 'buenos-aires',
-    bodyHe: "Who's down for the rooftop asado at my place in Palermo on the 20th, 8pm? Meat, wine, room for everyone.",
-    payload: { dateLabel: 'Nov 20 · 8pm', placeHe: 'Palermo Soho' },
+    bodyHe:
+      'Hosting an asado at my place in Palermo, Friday 8pm. Bring wine if you can. Reply by Thursday.',
+    payload: { dateLabel: 'Fri Nov 20 · 8pm', placeHe: 'Palermo Soho' },
     replyCount: 4,
+  },
+  {
+    id: 'act-whosdown-buzios-party',
+    kind: 'whos_down',
+    authorFriendId: 'roi-buzios',
+    destinationId: 'buzios',
+    bodyHe:
+      'Throwing a small party in Búzios end of October. Trying to land on a night that works for most.',
+    payload: { dateLabel: 'End of October', placeHe: 'Búzios' },
+    replyCount: 3,
   },
   {
     id: 'act-whosdown-jeri-kite',
     kind: 'whos_down',
     authorFriendId: 'yotam-jericoacoara',
     destinationId: 'jericoacoara',
-    bodyHe: "Anyone want to kitesurf in Jeri Nov 10–14? Three days of lessons together, comes out cheaper.",
+    bodyHe:
+      'Splitting a kitesurf course in Jeri, Nov 10–14. Cheaper for 3 — anyone in?',
     payload: { dateLabel: 'Nov 10–14' },
     replyCount: 3,
   },
@@ -138,8 +149,9 @@ export const activityPosts: ActivityPost[] = [
     id: 'act-whosdown-patagonia',
     kind: 'whos_down',
     authorFriendId: 'roi-buzios',
-    bodyHe: "Southern Patagonia trip — who's in for December? Thinking two weeks, El Calafate to El Chaltén.",
-    payload: { dateLabel: 'December 2026' },
+    bodyHe:
+      'Patagonia mid-December for two weeks. Calafate → Chaltén → maybe Puerto Natales. Who is in?',
+    payload: { dateLabel: 'Mid-December' },
     replyCount: 2,
   },
 ];

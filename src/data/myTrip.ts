@@ -112,6 +112,9 @@ export type FriendOverlap = {
 /**
  * Single source of truth for friend overlaps. The Friends tab and the trip
  * map both read this list — keep them in sync by editing here only.
+ *
+ * Detail copy follows the v0.7 content voice: concise, capitalised, real-
+ * person — short enough never to truncate inside the FriendSheet width.
  */
 export const friendOverlaps: FriendOverlap[] = [
   {
@@ -123,7 +126,7 @@ export const friendOverlaps: FriendOverlap[] = [
     lng: zones.ipanema[1],
     zoneLabel: 'Ipanema',
     status: 'present',
-    detail: 'In Ipanema four days already, leaving at the weekend.',
+    detail: 'Four days into Ipanema, flying home Sunday.',
   },
   {
     id: 'yael-botafogo',
@@ -134,7 +137,7 @@ export const friendOverlaps: FriendOverlap[] = [
     lng: zones.botafogo[1],
     zoneLabel: 'Botafogo',
     status: 'present',
-    detail: 'In Botafogo tonight, want to swing by for a beer?',
+    detail: 'Free tonight in Botafogo — anyone around?',
   },
   {
     id: 'roi-buzios',
@@ -145,7 +148,7 @@ export const friendOverlaps: FriendOverlap[] = [
     lng: globalZones.buzios[1],
     zoneLabel: 'Búzios',
     status: 'future',
-    detail: 'Planning Búzios end of October, overlaps with you Oct 29–31.',
+    detail: '3 nights in Búzios end of October. Splitting the drive from Rio.',
     destinationId: 'buzios',
     overlapStart: '2026-10-29',
     overlapEnd: '2026-10-31',
@@ -159,7 +162,7 @@ export const friendOverlaps: FriendOverlap[] = [
     lng: globalZones.saoPaulo[1],
     zoneLabel: 'São Paulo',
     status: 'future',
-    detail: 'In São Paulo for a long weekend, based around Vila Madalena.',
+    detail: 'Long weekend in São Paulo, staying in Vila Madalena.',
     destinationId: 'sao-paulo',
     overlapStart: '2026-11-03',
     overlapEnd: '2026-11-05',
@@ -173,23 +176,59 @@ export const friendOverlaps: FriendOverlap[] = [
     lng: globalZones.jericoacoara[1],
     zoneLabel: 'Jericoacoara',
     status: 'future',
-    detail: 'In Jeri for kitesurf, looking for someone to hit the dunes and sunset with.',
+    detail: '5 days in Jeri for kitesurf. Looking for a sunset crew.',
     destinationId: 'jericoacoara',
     overlapStart: '2026-11-10',
     overlapEnd: '2026-11-13',
   },
   {
-    id: 'tom-buenosaires',
-    friendName: 'Tom Friedman',
-    friendInitial: 'T',
+    id: 'moshe-buenosaires',
+    friendName: 'Moshe Friedman',
+    friendInitial: 'M',
     photoUrl: 'https://i.pravatar.cc/200?img=50',
     lat: globalZones.buenosAires[0],
     lng: globalZones.buenosAires[1],
     zoneLabel: 'Buenos Aires',
     status: 'future',
-    detail: 'In Buenos for a month, lives in Palermo, knows where the best asado is.',
+    detail: 'A month in Buenos. Based in Palermo, asado most Fridays.',
     destinationId: 'buenos-aires',
-    overlapStart: '2026-11-18',
-    overlapEnd: '2026-11-22',
+    overlapStart: '2026-11-15',
+    overlapEnd: '2026-11-19',
+  },
+  {
+    id: 'dana-punta',
+    friendName: 'Dana Arzi',
+    friendInitial: 'D',
+    photoUrl: 'https://i.pravatar.cc/200?img=45',
+    lat: -34.9633,
+    lng: -54.9476,
+    zoneLabel: 'Punta del Este',
+    status: 'future',
+    detail: 'Punta del Este first week of December. Beach days, late nights.',
+    destinationId: 'punta-del-este',
+    overlapStart: '2026-11-21',
+    overlapEnd: '2026-11-23',
+  },
+  {
+    id: 'neta-mendoza',
+    friendName: 'Neta Biton',
+    friendInitial: 'N',
+    photoUrl: 'https://i.pravatar.cc/200?img=48',
+    lat: -32.8908,
+    lng: -68.8272,
+    zoneLabel: 'Mendoza',
+    status: 'future',
+    detail: 'Mendoza for wine tours end of November.',
+  },
+  {
+    id: 'uri-bariloche',
+    friendName: 'Uri Dahan',
+    friendInitial: 'U',
+    photoUrl: 'https://i.pravatar.cc/200?img=60',
+    lat: -41.1335,
+    lng: -71.3103,
+    zoneLabel: 'Bariloche',
+    status: 'future',
+    detail: 'Bariloche end of November — doing a 4-day trek. Spots open.',
   },
 ];
