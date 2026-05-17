@@ -21,11 +21,11 @@ type Props = {
 const SIZE: Record<Size, { box: string; text: string; dot: string }> = {
   xs: { box: 'h-6 w-6', text: 'text-small', dot: 'h-2 w-2' },
   sm: { box: 'h-8 w-8', text: 'text-small', dot: 'h-2.5 w-2.5' },
-  md: { box: 'h-10 w-10', text: 'text-[12pt]', dot: 'h-3 w-3' },
+  md: { box: 'h-10 w-10', text: 'text-body', dot: 'h-3 w-3' },
   lg: { box: 'h-12 w-12', text: 'text-lede', dot: 'h-3 w-3' },
-  xl: { box: 'h-14 w-14', text: 'text-[16pt]', dot: 'h-3.5 w-3.5' },
-  xxl: { box: 'h-16 w-16', text: 'text-[18pt]', dot: 'h-3.5 w-3.5' },
-  hero: { box: 'h-24 w-24', text: 'text-[28pt]', dot: 'h-4 w-4' },
+  xl: { box: 'h-14 w-14', text: 'text-lede', dot: 'h-3.5 w-3.5' },
+  xxl: { box: 'h-16 w-16', text: 'text-sub', dot: 'h-3.5 w-3.5' },
+  hero: { box: 'h-24 w-24', text: 'text-sub', dot: 'h-4 w-4' },
 };
 
 /**

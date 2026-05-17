@@ -70,7 +70,7 @@ export function TripDetailScreen() {
                 <li key={f.id}>
                   <Link
                     to={`/profile/friend/${f.id}`}
-                    className="flex items-center gap-sm rounded-2xl bg-ivory shadow-card p-md transition-colors duration-instant ease-out-quart hover:bg-sand/40 active:bg-sand/60"
+                    className="flex items-center gap-sm rounded-2xl bg-ivory shadow-card p-md transition-colors duration-instant ease-out-quart hover:bg-sand/40 active:bg-sand/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory"
                   >
                     <Avatar
                       photoUrl={f.photoUrl}
@@ -104,7 +104,7 @@ export function TripDetailScreen() {
                 <li key={t.id}>
                   <Link
                     to={`/forums/${forum.id}/${t.id}`}
-                    className="flex flex-col gap-px rounded-2xl bg-ivory shadow-card p-md transition-colors duration-instant ease-out-quart hover:bg-sand/40 active:bg-sand/60"
+                    className="flex flex-col gap-px rounded-2xl bg-ivory shadow-card p-md transition-colors duration-instant ease-out-quart hover:bg-sand/40 active:bg-sand/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory"
                   >
                     <span className="font-serif text-lede italic text-cocoa">
                       {t.title}

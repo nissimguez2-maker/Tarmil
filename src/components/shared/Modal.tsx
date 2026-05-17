@@ -109,7 +109,7 @@ export function Modal({
             type="button"
             aria-label="Close"
             onClick={onClose}
-            className="-me-1 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-cocoa-55 transition-[transform,background-color] duration-instant ease-out-quart hover:bg-cocoa-8 hover:text-cocoa active:scale-95 active:bg-cocoa-15"
+            className="-me-1 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-cocoa-55 transition-[transform,background-color] duration-instant ease-out-quart hover:bg-cocoa-8 hover:text-cocoa active:scale-95 active:bg-cocoa-15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory"
           >
             <X className="h-4 w-4" strokeWidth={1.8} aria-hidden />
           </button>

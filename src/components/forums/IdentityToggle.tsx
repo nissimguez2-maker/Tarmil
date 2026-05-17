@@ -60,8 +60,9 @@ function Button({
       aria-label={ariaLabel}
       onClick={onClick}
       className={clsx(
-        'inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-small font-medium leading-none',
-        'transition-colors duration-instant ease-out-quart',
+        'inline-flex items-center gap-1.5 rounded-full ps-3 pe-3 py-1.5 text-small font-medium leading-none',
+        'transition-colors duration-instant ease-out-quart motion-reduce:transition-none',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory',
         active
           ? 'bg-cocoa text-ivory'
           : 'text-cocoa-70 hover:text-cocoa',

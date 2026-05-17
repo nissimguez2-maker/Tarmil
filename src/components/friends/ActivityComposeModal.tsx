@@ -108,7 +108,7 @@ export function ActivityComposeModal({ open, onClose, stops, onSubmit }: Props) 
                 type="button"
                 onClick={() => insertEmoji(e)}
                 aria-label={`Insert ${e}`}
-                className="inline-flex h-7 w-7 items-center justify-center rounded-full text-body transition-colors duration-instant ease-out-quart hover:bg-cocoa-8 active:bg-cocoa-15"
+                className="inline-flex h-7 w-7 items-center justify-center rounded-full text-body transition-colors duration-instant ease-out-quart hover:bg-cocoa-8 active:bg-cocoa-15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory"
               >
                 {e}
               </button>
@@ -153,7 +153,7 @@ export function ActivityComposeModal({ open, onClose, stops, onSubmit }: Props) 
           <button
             type="button"
             onClick={addPoll}
-            className="inline-flex items-center gap-2 self-start rounded-full bg-cocoa-08 ps-3 pe-md py-2 text-small text-cocoa transition-colors duration-instant ease-out-quart hover:bg-cocoa-15"
+            className="inline-flex items-center gap-2 self-start rounded-full bg-cocoa-08 ps-3 pe-md py-2 text-small text-cocoa transition-colors duration-instant ease-out-quart hover:bg-cocoa-15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory"
           >
             <BarChart3 className="h-4 w-4" strokeWidth={1.8} aria-hidden />
             Add a poll
@@ -177,9 +177,11 @@ function PinChip({
     <button
       type="button"
       onClick={onClick}
+      aria-pressed={active}
       className={clsx(
         'inline-flex h-8 items-center rounded-full ps-3 pe-3 text-small leading-none',
         'transition-colors duration-instant ease-out-quart',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory',
         active
           ? 'bg-cocoa text-ivory'
           : 'bg-cocoa-08 text-cocoa-70 hover:bg-cocoa-15 hover:text-cocoa',

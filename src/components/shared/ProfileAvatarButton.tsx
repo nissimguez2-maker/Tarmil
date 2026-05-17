@@ -18,7 +18,7 @@ export function ProfileAvatarButton({ initial, name, photoUrl }: Props) {
     <Link
       to="/profile"
       aria-label="Profile"
-      className="inline-flex h-9 w-9 items-center justify-center rounded-full transition-[transform,background-color] duration-instant ease-out-quart hover:bg-cocoa-8 active:scale-95 active:bg-cocoa-15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory"
+      className="inline-flex h-9 w-9 items-center justify-center rounded-full transition-[transform,background-color] duration-instant ease-out-quart motion-reduce:transition-none hover:bg-cocoa-8 active:scale-95 active:bg-cocoa-15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory"
     >
       <Avatar
         photoUrl={photoUrl}

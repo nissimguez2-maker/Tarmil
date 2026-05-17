@@ -73,7 +73,7 @@ export function CityForumGroup({
         onClick={onToggle}
         className={clsx(
           'flex w-full items-center gap-sm px-md py-sm text-start',
-          'transition-colors duration-instant ease-out-quart',
+          'transition-colors duration-instant ease-out-quart motion-reduce:transition-none',
           'hover:bg-sand/70 active:bg-rope/40',
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory',
         )}
@@ -138,7 +138,7 @@ function SubjectPill({ forum, previewTitle, tabbable }: SubjectPillProps) {
     <Link
       to={`/forums/${forum.id}`}
       tabIndex={tabbable ? 0 : -1}
-      className="flex items-center gap-sm rounded-xl bg-ivory px-md py-sm transition-colors duration-instant ease-out-quart hover:bg-sand active:bg-rope/50"
+      className="flex items-center gap-sm rounded-xl bg-ivory px-md py-sm transition-colors duration-instant ease-out-quart motion-reduce:transition-none hover:bg-sand active:bg-rope/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-sand"
     >
       <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-cocoa text-ivory">
         <Icon className="h-4 w-4" strokeWidth={1.7} aria-hidden />
@@ -176,7 +176,7 @@ export function RecommendedForumRow({ forum, onJoin }: RecommendedForumRowProps)
   return (
     <Link
       to={`/forums/${forum.id}`}
-      className="flex items-center gap-sm rounded-2xl bg-sand shadow-card p-md transition-colors duration-instant ease-out-quart hover:bg-sand/80 active:bg-rope/50"
+      className="flex items-center gap-sm rounded-2xl bg-sand shadow-card p-md transition-colors duration-instant ease-out-quart motion-reduce:transition-none hover:bg-sand/80 active:bg-rope/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory"
     >
       <div className="flex min-w-0 flex-1 flex-col gap-px">
         <div className="flex flex-wrap items-baseline gap-2">

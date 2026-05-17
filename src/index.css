@@ -12,6 +12,24 @@
     background: var(--page-bg);
   }
 
+  /*
+   * Universal motion-reduce respect. Beats sprinkling
+   * `motion-reduce:transition-none` on every interactive element. Users
+   * with prefers-reduced-motion still get instant feedback (active:scale
+   * jumps without an interpolated curve), but no animations or smooth
+   * colour fades. Standard a11y pattern.
+   */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
   body {
     margin: 0;
     color: var(--cocoa);

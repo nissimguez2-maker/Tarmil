@@ -18,9 +18,10 @@ export function ReactionPill({ emoji, count, active, onClick }: Props) {
     <button
       type="button"
       onClick={onClick}
+      aria-label={`${active ? 'Remove your' : 'React with'} ${emoji}${count > 0 ? ` (${count})` : ''}`}
       className={clsx(
-        'inline-flex h-7 items-center gap-1 rounded-full px-2.5 text-small',
-        'transition-[transform,background-color,box-shadow] duration-instant ease-out-quart',
+        'inline-flex h-7 items-center gap-1 rounded-full ps-2.5 pe-2.5 text-small',
+        'transition-[transform,background-color,box-shadow] duration-instant ease-out-quart motion-reduce:transition-none',
         'active:scale-[0.94]',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-1 focus-visible:ring-offset-ivory',
         active

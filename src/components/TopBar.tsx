@@ -39,7 +39,7 @@ export function TopBar({ title, eyebrow, back, end, className }: Props) {
           className={clsx(
             'absolute start-md inline-flex h-9 w-9 items-center justify-center',
             'rounded-full text-cocoa',
-            'transition-[transform,background-color] duration-instant ease-out-quart',
+            'transition-[transform,background-color] duration-instant ease-out-quart motion-reduce:transition-none',
             'hover:bg-cocoa-8 active:scale-95 active:bg-cocoa-15',
             'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory',
           )}
@@ -53,7 +53,7 @@ export function TopBar({ title, eyebrow, back, end, className }: Props) {
           <span className="text-meta text-cocoa-55">{eyebrow}</span>
         )}
         {title && (
-          <h1 className="font-serif text-[17pt] font-bold leading-none tracking-[-0.018em] text-cocoa">
+          <h1 className="font-serif text-lede font-bold leading-none tracking-tight text-cocoa">
             {title}
           </h1>
         )}

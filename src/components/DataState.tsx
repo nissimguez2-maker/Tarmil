@@ -26,7 +26,7 @@ export function ErrorPanel({ error }: { error: Error | null }) {
         <button
           type="button"
           onClick={() => window.location.reload()}
-          className="meta-caps text-copper active:text-copper-70"
+          className="meta-caps rounded-full px-md py-2 text-copper transition-colors duration-instant ease-out-quart hover:text-copper-85 active:text-copper-70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory"
         >
           Try again
         </button>

@@ -108,7 +108,7 @@ export function WhosDownCard({
         <button
           type="button"
           onClick={() => setReplyOpen((o) => !o)}
-          className="text-small text-copper transition-colors duration-instant ease-out-quart hover:text-copper-85"
+          className="text-small text-copper transition-colors duration-instant ease-out-quart hover:text-copper-85 focus-visible:outline-none focus-visible:underline focus-visible:underline-offset-2"
         >
           {replies.length > 0
             ? `${replies.length} ${replies.length === 1 ? 'reply' : 'replies'} · Reply`
@@ -159,7 +159,7 @@ export function WhosDownCard({
             onClick={submitReply}
             disabled={submitting || draft.trim().length === 0}
             aria-label="Send reply"
-            className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-copper text-ivory transition-colors duration-instant ease-out-quart hover:bg-copper-85 disabled:opacity-30 disabled:pointer-events-none"
+            className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-copper text-ivory transition-colors duration-instant ease-out-quart hover:bg-copper-85 disabled:opacity-30 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory"
           >
             <Send className="h-4 w-4" strokeWidth={2} aria-hidden />
           </button>

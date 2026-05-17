@@ -108,7 +108,7 @@ export function NextTripCard({ stops, onTap, onAdd }: Props) {
             onClick={() => setCollapsed(true)}
             aria-label="Collapse trip details"
             aria-expanded={true}
-            className="inline-flex h-7 w-7 items-center justify-center rounded-full text-cocoa-55 transition-colors duration-instant ease-out-quart hover:bg-cocoa-8 hover:text-cocoa"
+            className="inline-flex h-7 w-7 items-center justify-center rounded-full text-cocoa-55 transition-colors duration-instant ease-out-quart hover:bg-cocoa-8 hover:text-cocoa focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory"
           >
             <ChevronUp className="h-4 w-4" strokeWidth={1.7} aria-hidden />
           </button>
