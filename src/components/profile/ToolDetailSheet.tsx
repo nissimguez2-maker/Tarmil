@@ -1,17 +1,15 @@
 import { useState, useMemo } from 'react';
 import {
   Check,
-  Globe,
   Mic,
   Camera,
   Wallet,
-  Smartphone,
-  Star,
   ExternalLink,
 } from 'lucide-react';
 import clsx from 'clsx';
 import { Modal } from '../shared/Modal';
 import { Button } from '../Button';
+import { AroundMePanel } from '../tools/AroundMePanel';
 import { useSupabaseData } from '../../lib/SupabaseDataProvider';
 
 export type ToolId =
@@ -22,7 +20,7 @@ export type ToolId =
   | 'signs'
   | 'balances'
   | 'esim'
-  | 'jewish';
+  | 'nearby';
 
 type Props = {
   toolId: ToolId | null;
@@ -37,7 +35,7 @@ const TITLES: Record<ToolId, { title: string; eyebrow: string }> = {
   signs: { title: 'Sign scanner', eyebrow: 'Tool' },
   balances: { title: 'Friend balances', eyebrow: 'Tool' },
   esim: { title: 'eSIM & data', eyebrow: 'Tool' },
-  jewish: { title: 'Jewish tools', eyebrow: 'Tool' },
+  nearby: { title: 'Places nearby', eyebrow: 'Tool' },
 };
 
 /**
@@ -64,7 +62,7 @@ export function ToolDetailSheet({ toolId, onClose }: Props) {
       {toolId === 'signs' && <SignScanner />}
       {toolId === 'balances' && <FriendBalances />}
       {toolId === 'esim' && <EsimPlans />}
-      {toolId === 'jewish' && <JewishTools />}
+      {toolId === 'nearby' && <AroundMePanel />}
     </Modal>
   );
 }
@@ -559,61 +557,3 @@ function EsimPlans() {
   );
 }
 
-// ---------- Jewish tools (mock) ----------
-
-const CHABAD_HOUSES = [
-  { name: 'Chabad Rio de Janeiro', dist: '1.2 km', address: 'Botafogo' },
-  { name: 'Chabad São Paulo', dist: '442 km', address: 'Jardins' },
-  { name: 'Chabad Florianópolis', dist: '1,180 km', address: 'Centro' },
-];
-
-function JewishTools() {
-  return (
-    <div className="flex flex-col gap-md">
-      <div className="rounded-2xl bg-sand shadow-card p-md">
-        <div className="flex items-baseline justify-between">
-          <span className="meta-caps text-copper">This Shabbat · Rio</span>
-          <Globe className="h-4 w-4 text-cocoa-55" aria-hidden />
-        </div>
-        <p className="mt-xs font-serif text-lede italic text-cocoa">
-          Candle lighting <span className="tnum">17:38</span> · Havdalah{' '}
-          <span className="tnum">18:34</span>
-        </p>
-      </div>
-
-      <span className="meta-caps text-cocoa-55">Chabad houses nearby</span>
-      <ul className="flex flex-col">
-        {CHABAD_HOUSES.map((h, i) => (
-          <li
-            key={h.name}
-            className={clsx(
-              'flex items-center justify-between gap-sm py-sm',
-              i > 0 && 'border-t border-cocoa-15',
-            )}
-          >
-            <div className="flex min-w-0 flex-1 flex-col">
-              <span className="text-body text-cocoa">{h.name}</span>
-              <span className="text-small text-cocoa-55">{h.address}</span>
-            </div>
-            <span className="shrink-0 text-small text-cocoa-55 tnum">
-              {h.dist}
-            </span>
-          </li>
-        ))}
-      </ul>
-
-      <div className="flex items-center gap-sm rounded-2xl bg-ivory shadow-card p-md">
-        <Star className="h-5 w-5 shrink-0 text-copper" aria-hidden fill="currentColor" strokeWidth={0} />
-        <p className="text-small text-cocoa-70">
-          Kosher scanner — scan a grocery item for a quick check. Includes the
-          major international hechshers.
-        </p>
-      </div>
-
-      <Button variant="ghost" size="sm" fullWidth>
-        <Smartphone className="h-4 w-4" aria-hidden />
-        Open kosher scanner
-      </Button>
-    </div>
-  );
-}

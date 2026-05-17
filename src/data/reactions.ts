@@ -20,8 +20,6 @@
 export type ReactionTargetType =
   | 'forum_thread'
   | 'forum_reply'
-  | 'group_message'
-  | 'dm_message'
   | 'activity_post';
 
 export type Reaction = {
@@ -66,9 +64,4 @@ export const reactions: Reaction[] = [
   // Reactions on forum replies (a smaller set — replies get sparser reactions)
   { id: 'r-reply-buzios-001-r3-fire-self', targetType: 'forum_reply', targetId: 'thread-buzios-001-r3', emoji: '🔥', actorFriendId: null },
   { id: 'r-reply-sao-paulo-001-r1-egg-self', targetType: 'forum_reply', targetId: 'thread-sao-paulo-001-r1', emoji: '🍳', actorFriendId: null },
-
-  // Reactions on group messages
-  { id: 'r-group-buzios-007-fire-self', targetType: 'group_message', targetId: 'msg-buzios-007', emoji: '🔥', actorFriendId: null },
-  { id: 'r-group-sao-paulo-001-cheers-yael', targetType: 'group_message', targetId: 'msg-sao-paulo-001', emoji: '🥂', actorFriendId: 'yael-botafogo' },
-  { id: 'r-group-buenos-001-cheers-self', targetType: 'group_message', targetId: 'msg-buenos-001', emoji: '🥂', actorFriendId: null },
 ];

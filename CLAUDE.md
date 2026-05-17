@@ -4,7 +4,19 @@ This is the Tarmil mobile-mockup repo. Read this BEFORE writing any code.
 
 ## What this is
 
-A Hebrew-RTL click-through mockup of the Tarmil mobile app, served as a static SPA. On phones it goes full-bleed and feels native; on desktop ≥768px it renders inside an iPhone frame. Pure visual demo — no real backend, no real maps API, no real translation. Foundation only in PR1; feature screens land one PR at a time on top.
+An English-first click-through mockup of the Tarmil mobile app, served as a static SPA. On phones it goes full-bleed and feels native; on desktop ≥768px it renders inside an iPhone frame. Pure visual demo — no real backend, no real maps API, no real translation.
+
+Five bottom tabs, exactly per the Product Brief:
+
+| Tab | Purpose |
+|---|---|
+| Trip | Continent-scale map (pins and bubbles, no line) + curated places + friend pins + next-trip card |
+| Friends | SubNav with Overlaps · Activity wall · Ping · Friends list |
+| Forums | City × Subject (5 subjects per city) with per-post identity choice |
+| Tools | Grid of utility tiles (incl. Places nearby for partner placements) |
+| Profile | Off-grid one-tap switch, route, past trips, friends grid, per-trip privacy, Settings gear |
+
+The brief mandates Hebrew-first for the real product. The mock is **English-only for international investors**. The schema and brand are bilingual-ready (Hebrew columns and Frank Ruhl Libre stay in place); the rendered UI today is English.
 
 ## Stack
 
@@ -12,19 +24,19 @@ A Hebrew-RTL click-through mockup of the Tarmil mobile app, served as a static S
 - Tailwind CSS **3.4+** (required for native logical-property utilities).
 - React Router 6 with a single `AppLayout` route.
 - `clsx` for class composition. `lucide-react` for icons.
-- Supabase backend via `@supabase/supabase-js` — typed singleton at `src/lib/supabase.ts`. Schema in `supabase/migrations/`. App-wide `SupabaseDataProvider` (in `src/lib/`) wraps the router and exposes `useSupabaseData()` — the only sanctioned way to read or mutate trip data at runtime. Realtime is on for `planned_stops` so multiple viewers stay in sync during a shared demo.
+- Supabase backend via `@supabase/supabase-js` — typed singleton at `src/lib/supabase.ts`. Schema in `supabase/migrations/`. App-wide `SupabaseDataProvider` (in `src/lib/`) wraps the router and exposes `useSupabaseData()` — the only sanctioned way to read or mutate trip data at runtime. Realtime is on for `planned_stops`, `forum_thread_replies`, `activity_posts`, `reactions`, and `pings`.
 - Seed source-of-truth: `src/data/*.ts` arrays. `scripts/seed-supabase.ts` (run with `npx tsx --env-file=.env.local scripts/seed-supabase.ts`) imports them and upserts via supabase-js. Edit a TS file → re-run the seed → DB matches.
-- No state management library. No animation library. No i18n framework. No tests yet.
+- No state management library. No animation library. No tests yet. i18n is hardcoded English — Hebrew launch flips `<html lang dir>` and swaps copy.
 
 ## Hard rules — do not violate without asking
 
-### RTL: logical properties only
+### RTL safety: logical properties only
 
-The app runs `<html dir="rtl" lang="he">`. Directional Tailwind utilities (`pl-*`, `pr-*`, `left-*`, `right-*`, `ml-*`, `mr-*`, `border-l-*`, `border-r-*`, `rounded-l-*`, `rounded-r-*`) **always** resolve to physical left/right and **break in RTL**.
+`index.html` is `lang="en" dir="ltr"` today. The Hebrew launch flips both, at which point physical Tailwind utilities (`pl-*`, `pr-*`, `left-*`, `right-*`, `ml-*`, `mr-*`, `border-l-*`, `border-r-*`, `rounded-l-*`, `rounded-r-*`) all break.
 
-Use logical equivalents: `ps-*`, `pe-*`, `start-*`, `end-*`, `ms-*`, `me-*`, `border-s-*`, `border-e-*`, `rounded-s-*`, `rounded-e-*`.
+Always use logical equivalents: `ps-*`, `pe-*`, `start-*`, `end-*`, `ms-*`, `me-*`, `border-s-*`, `border-e-*`, `rounded-s-*`, `rounded-e-*`. Zero cost today, free Hebrew launch later.
 
-For Latin text inside Hebrew sentences, wrap in `<bdi>` or apply `.ltr`.
+For mixed-direction text down the road, wrap Latin spans in `<bdi>` or apply `.ltr`.
 
 ### Brand tokens only — no hex literals
 
@@ -45,9 +57,46 @@ Use `h-dvh`, `h-full`, or `min-h-dvh`. Plain `100vh` is wrong on mobile Safari (
 
 `src/screens/<tab>/<Name>Screen.tsx`. Drill-downs nest under their parent tab. **No barrel `index.ts` files.**
 
+Today the five tab folders are `trip/`, `friends/`, `forums/`, `tools/`, `profile/`. The `place/` folder holds the cross-tab `PlaceScreen` drill-down.
+
 ### Wrap every screen in `<Screen>`
 
 `<Screen>` handles safe-area-top, ivory background, and scroll. Don't bypass it.
+
+## Brief alignment — what's in, what's out
+
+The brief is the source of truth for product decisions. Today's mock implements the MVP scope with a couple of V1-flavoured surfaces seeded so the demo is full.
+
+**In (matches brief MVP scope):**
+
+- 5 tabs above.
+- Pins-and-bubbles trip map with no connecting line (brief §04).
+- Worldwide curated places from day one.
+- Forums: anyone verified can post; identity per post is the user's choice (full name or anonymous).
+- Activity wall: text + emoji + optional city-level pin + optional 2-4 option **poll**, flat one-level replies, lightweight reactions, NO media.
+- Ping: one-shot signal, one per direction per co-presence event (enforced by `pings.unique (friend_id, direction)`).
+- Off-grid mode: one-tap switch on Profile root.
+- Per-trip privacy: visible-to-friends + visible-to-FoF toggles per planned stop.
+- Tools tiles: 7 from brief §05 + a "Places nearby" partner-channel preview.
+
+**Out (brief §06):**
+
+- Direct messages — never. Ping is the only one-to-one signal and carries no body.
+- Group chats — never.
+- Media inside Activity posts — never.
+- Public profiles / public discoverability — never.
+- Re-pinging the same overlap — blocked by the unique constraint.
+
+**Deliberately not in this mockup (later PRs):**
+
+- Real authentication + per-user data — Supabase is shared global demo state today.
+- Phone + email identity verification onboarding screen — brief §04 mandates; mocked screen comes later.
+- Per-trip privacy persistence — UI today is local state; schema column comes later.
+- Real translation / OCR / Google Maps / Mapbox.
+- `react-i18next` — English hardcoded; Hebrew + French + Spanish copies arrive at V1.
+- Animation libraries.
+- Tests.
+- Dark mode (DA is single-palette warm).
 
 ## Common tasks
 
@@ -57,11 +106,11 @@ Use `h-dvh`, `h-full`, or `min-h-dvh`. Plain `100vh` is wrong on mobile Safari (
 2. Use `<Screen>` + `<TopBar>` + base components.
 3. Add a route in `src/routes.tsx` under the layout route.
 4. For drill-downs, set `back` on `<TopBar>`.
-5. If the screen reads or mutates trip data, call `useSupabaseData()` and gate render on `loading` / `error` with `<LoadingPanel />` / `<ErrorPanel />` (in `src/components/DataState.tsx`). Don't import from `src/data/` at runtime — those arrays are seed-only now.
+5. If the screen reads or mutates trip data, call `useSupabaseData()` and gate render on `loading` / `error` with `<LoadingPanel />` / `<ErrorPanel />` (in `src/components/DataState.tsx`). Don't import from `src/data/` at runtime — those arrays are seed-only.
 
 ### Add a new mutation
 
-1. Add the SQL change in a new migration file under `supabase/migrations/` (numbered after `0002`).
+1. Add the SQL change in a new migration file under `supabase/migrations/` (numbered after `0014`).
 2. Apply it (locally via Supabase CLI or via the Supabase MCP `apply_migration`).
 3. Regenerate types: re-run `generate_typescript_types` and overwrite `src/lib/database.types.ts`.
 4. Add a mutator method on `SupabaseDataProvider` (camelCase, async, refetches on success).
@@ -93,15 +142,6 @@ These are listed in DA v0.2 §Open and should not be solved without brand input:
 - Loading / empty / error states.
 
 If a task touches any of these, point it out and ask the founder to escalate to the brand pass.
-
-## Deferred until later PRs
-
-- Real authentication. The current Supabase model is shared global demo state with public anon CRUD on `planned_stops` and a `reset_demo_state()` RPC (Profile → Demo controls) to restore the seed between investor demos. Per-user auth, real signup, real privacy enforcement = future PR.
-- Real translation / OCR / Google Maps / Mapbox.
-- `react-i18next` — Hebrew-only mockup, hardcode strings.
-- Animation libraries.
-- Tests.
-- Dark mode (DA is single-palette warm).
 
 ## Tone
 

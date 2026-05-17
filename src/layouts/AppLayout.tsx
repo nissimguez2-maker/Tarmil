@@ -8,10 +8,8 @@ import { TabBar } from '../components/TabBar';
  * iOS-standard pattern — the bar reappears when the user goes back.
  */
 const HIDE_TAB_PATTERNS: RegExp[] = [
-  /^\/messages\/forums\/[^/]+\/[^/]+$/,
-  /^\/messages\/chats\/[^/]+$/,
-  /^\/messages\/dms\/[^/]+$/,
-  /^\/profile\/friend\/[^/]+$/,
+  /^\/forums\/[^/]+\/[^/]+$/,
+  /^\/friends\/friend\/[^/]+$/,
 ];
 
 export function AppLayout() {

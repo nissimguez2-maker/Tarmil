@@ -56,6 +56,7 @@ export function TripScreen() {
     saveStop,
     removeStop,
     savePlaceToStop,
+    sendPing,
   } = useSupabaseData();
   const [state, dispatch] = useReducer(tripReducer, undefined, () =>
     makeInitialTripState(),
@@ -263,7 +264,9 @@ export function TripScreen() {
             {sheet?.kind === 'friend' && (() => {
               const f = sheet.friend;
               const relationship = getFriendRelationship(f);
-              const dm = data.dms.find((d) => d.friendId === f.id);
+              const pinged = data.pings.some(
+                (p) => p.friendId === f.id && p.direction === 'sent',
+              );
               return (
                 <FriendSheet
                   friend={f}
@@ -274,11 +277,8 @@ export function TripScreen() {
                       ? () => openPlannedStop(relationship.stopId)
                       : undefined
                   }
-                  onMessage={
-                    dm
-                      ? () => navigate(`/messages/dms/${dm.id}`)
-                      : undefined
-                  }
+                  pinged={pinged}
+                  onPing={() => sendPing(f.id)}
                 />
               );
             })()}

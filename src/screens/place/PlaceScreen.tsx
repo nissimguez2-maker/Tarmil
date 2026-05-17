@@ -8,7 +8,7 @@ import { SectionLabel } from '../../components/SectionLabel';
 import { Button } from '../../components/Button';
 import { Dunes } from '../../components/Dunes';
 import { Avatar } from '../../components/shared/Avatar';
-import { StarRow } from '../../components/around/StarRow';
+import { StarRow } from '../../components/tools/StarRow';
 import { useSupabaseData } from '../../lib/SupabaseDataProvider';
 import { LoadingPanel, ErrorPanel } from '../../components/DataState';
 import type { FriendVisit, PlaceCategory, Season } from '../../data/places';
@@ -43,7 +43,7 @@ export function PlaceScreen() {
     <Screen>
       <TopBar
         back
-        title={place.hebrewName}
+        title={place.englishName}
         eyebrow={categoryLabel(place.category)}
       />
 
@@ -51,16 +51,12 @@ export function PlaceScreen() {
         <div className="flex flex-col gap-sm rounded-2xl bg-sand shadow-card p-md">
           <div className="flex items-baseline justify-between gap-sm">
             <h1 className="font-serif text-sub leading-tight text-cocoa">
-              {place.hebrewName}
+              {place.englishName}
             </h1>
             {place.tarmilPick && (
               <span className="meta-caps shrink-0 text-copper">Tarmil pick</span>
             )}
           </div>
-
-          <span className="text-small text-cocoa-55 ltr">
-            {place.englishName}
-          </span>
 
           <div className="mt-xs flex items-center gap-md">
             <span className="inline-flex items-center gap-1 text-body text-cocoa">
@@ -86,7 +82,7 @@ export function PlaceScreen() {
 
         <SectionLabel number="01" label="What this place is." />
         <p className="max-w-body text-body text-cocoa">
-          {place.hebrewDescription}
+          {place.englishDescription}
         </p>
 
         <SectionLabel number="02" label="Friends who know this place." />

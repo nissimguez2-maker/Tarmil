@@ -15,13 +15,14 @@ import type { PlannedStop, PlannedStopPrivacy } from '../data/plannedStops';
 import type { Forum, ForumKind } from '../data/forums';
 import type { ForumThread } from '../data/forumThreads';
 import type { ForumThreadReply } from '../data/forumThreadReplies';
-import type { GroupChat, GroupChatMember } from '../data/groupChats';
-import type { GroupMessage } from '../data/groupMessages';
-import type { DM } from '../data/dms';
-import type { DMMessage } from '../data/dmMessages';
-import type { ActivityPost, ActivityPostKind } from '../data/activityPosts';
+import type {
+  ActivityPost,
+  ActivityPostKind,
+  Poll,
+} from '../data/activityPosts';
 import type { Reaction, ReactionTargetType } from '../data/reactions';
 import type { PlaceReview } from '../data/placeReviews';
+import type { Ping } from '../data/pings';
 
 export type TripData = {
   places: Place[];
@@ -31,14 +32,10 @@ export type TripData = {
   forums: Forum[];
   forumThreads: ForumThread[];
   forumThreadReplies: ForumThreadReply[];
-  groupChats: GroupChat[];
-  groupChatMembers: GroupChatMember[];
-  groupMessages: GroupMessage[];
-  dms: DM[];
-  dmMessages: DMMessage[];
   activityPosts: ActivityPost[];
   reactions: Reaction[];
   placeReviews: PlaceReview[];
+  pings: Ping[];
 };
 
 type Mutators = {
@@ -48,8 +45,6 @@ type Mutators = {
   resetDemo: () => Promise<void>;
   joinForum: (forumId: string) => Promise<void>;
   postForumReply: (threadId: string, body: string) => Promise<void>;
-  sendGroupMessage: (chatId: string, body: string) => Promise<void>;
-  sendDM: (dmThreadId: string, body: string) => Promise<void>;
   toggleReaction: (
     targetType: ReactionTargetType,
     targetId: string,
@@ -60,6 +55,7 @@ type Mutators = {
     bodyHe: string,
     destinationId?: string,
     payload?: Record<string, unknown>,
+    poll?: Poll | null,
   ) => Promise<void>;
   /**
    * Upsert the demo user's 1–5 star rating for a place. There's exactly one
@@ -67,6 +63,18 @@ type Mutators = {
    * updated in place.
    */
   submitPlaceReview: (placeId: string, rating: 1 | 2 | 3 | 4 | 5) => Promise<void>;
+  /**
+   * Fire a one-shot Ping. Idempotent: re-pinging the same friend in the
+   * same direction collapses (unique constraint enforces "one per
+   * co-presence event" per brief §04). Returns silently when already pinged.
+   */
+  sendPing: (friendId: string) => Promise<void>;
+  /**
+   * Toggle the user's vote on an Activity post's attached poll. For a
+   * single-choice poll the new index replaces any existing self-vote.
+   * For multiple-choice, the index is added or removed from the set.
+   */
+  submitPollVote: (postId: string, optionIndex: number) => Promise<void>;
 };
 
 type ContextValue = {
@@ -242,57 +250,54 @@ const forumReplyRowToReply = (
   body: r.body,
 });
 
-const groupChatRowToChat = (r: Tables<'group_chats'>): GroupChat => ({
-  id: r.id,
-  nameHe: r.name_he,
-  cityLabel: r.city_label ?? undefined,
-  destinationId: r.destination_id ?? undefined,
-});
-
-const groupChatMemberRowToMember = (
-  r: Tables<'group_chat_members'>,
-): GroupChatMember => ({
-  chatId: r.chat_id,
-  friendId: r.friend_id,
-});
-
-const groupMessageRowToMessage = (
-  r: Tables<'group_messages'>,
-): GroupMessage => ({
-  id: r.id,
-  chatId: r.chat_id,
-  authorFriendId: r.author_friend_id,
-  body: r.body,
-});
-
-const dmRowToDm = (r: Tables<'dm_threads'>): DM => ({
-  id: r.id,
-  friendId: r.friend_id,
-  lastMessagePreviewHe: r.last_message_preview_he,
-  unreadCount: r.unread_count,
-});
-
-const dmMessageRowToMessage = (r: Tables<'dm_messages'>): DMMessage => ({
-  id: r.id,
-  dmThreadId: r.dm_thread_id,
-  fromFriend: r.from_friend,
-  body: r.body,
-});
+const parsePoll = (raw: unknown): Poll | undefined => {
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return undefined;
+  const p = raw as Record<string, unknown>;
+  const question = typeof p.question === 'string' ? p.question : null;
+  const options = Array.isArray(p.options) ? p.options : null;
+  if (!question || !options) return undefined;
+  const parsedOptions = options
+    .filter(
+      (o): o is Record<string, unknown> =>
+        !!o && typeof o === 'object' && !Array.isArray(o),
+    )
+    .map((o) => ({
+      text: typeof o.text === 'string' ? o.text : '',
+      voteCount: typeof o.voteCount === 'number' ? o.voteCount : 0,
+    }))
+    .filter((o) => o.text.length > 0);
+  if (parsedOptions.length < 2) return undefined;
+  const votes =
+    p.votes && typeof p.votes === 'object' && !Array.isArray(p.votes)
+      ? (p.votes as Record<string, number[]>)
+      : {};
+  return {
+    question,
+    options: parsedOptions,
+    multipleChoice: !!p.multipleChoice,
+    votes,
+  };
+};
 
 const activityPostRowToPost = (
   r: Tables<'activity_posts'>,
-): ActivityPost => ({
-  id: r.id,
-  kind: r.kind as ActivityPostKind,
-  authorFriendId: r.author_friend_id,
-  destinationId: r.destination_id ?? undefined,
-  bodyHe: r.body_he,
-  payload:
+): ActivityPost => {
+  const payload =
     r.payload && typeof r.payload === 'object' && !Array.isArray(r.payload)
-      ? (r.payload as Record<string, unknown>)
-      : {},
-  replyCount: r.reply_count,
-});
+      ? { ...(r.payload as Record<string, unknown>) }
+      : {};
+  const poll = parsePoll(r.poll);
+  if (poll) payload.poll = poll;
+  return {
+    id: r.id,
+    kind: r.kind as ActivityPostKind,
+    authorFriendId: r.author_friend_id,
+    destinationId: r.destination_id ?? undefined,
+    bodyHe: r.body_he,
+    payload,
+    replyCount: r.reply_count,
+  };
+};
 
 const reactionRowToReaction = (r: Tables<'reactions'>): Reaction => ({
   id: r.id,
@@ -302,12 +307,19 @@ const reactionRowToReaction = (r: Tables<'reactions'>): Reaction => ({
   actorFriendId: r.actor_friend_id,
 });
 
+const pingRowToPing = (r: Tables<'pings'>): Ping => ({
+  id: r.id,
+  friendId: r.friend_id,
+  direction: r.direction as 'sent' | 'received',
+  zoneLabel: r.zone_label,
+  createdAt: r.created_at,
+});
+
 export function SupabaseDataProvider({ children }: { children: ReactNode }) {
   const [data, setData] = useState<TripData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
-  // Ref so mutators see fresh state without re-creating their callbacks.
   const dataRef = useRef<TripData | null>(null);
   useEffect(() => {
     dataRef.current = data;
@@ -350,36 +362,6 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
     );
   }, []);
 
-  const refetchGroupMessages = useCallback(async () => {
-    const { data: rows, error: fetchErr } = await supabase
-      .from('group_messages')
-      .select('*')
-      .order('created_at');
-    if (fetchErr) return;
-    setData((prev) =>
-      prev
-        ? { ...prev, groupMessages: rows.map(groupMessageRowToMessage) }
-        : prev,
-    );
-  }, []);
-
-  const refetchDms = useCallback(async () => {
-    const [threadsRes, messagesRes] = await Promise.all([
-      supabase.from('dm_threads').select('*'),
-      supabase.from('dm_messages').select('*').order('created_at'),
-    ]);
-    if (threadsRes.error || messagesRes.error) return;
-    setData((prev) =>
-      prev
-        ? {
-            ...prev,
-            dms: threadsRes.data.map(dmRowToDm),
-            dmMessages: messagesRes.data.map(dmMessageRowToMessage),
-          }
-        : prev,
-    );
-  }, []);
-
   const refetchActivity = useCallback(async () => {
     const { data: rows, error: fetchErr } = await supabase
       .from('activity_posts')
@@ -401,6 +383,17 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
     );
   }, []);
 
+  const refetchPings = useCallback(async () => {
+    const { data: rows, error: fetchErr } = await supabase
+      .from('pings')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (fetchErr) return;
+    setData((prev) =>
+      prev ? { ...prev, pings: rows.map(pingRowToPing) } : prev,
+    );
+  }, []);
+
   // Initial fetch — every table in parallel.
   useEffect(() => {
     let cancelled = false;
@@ -414,14 +407,10 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
           forumsRes,
           forumThreadsRes,
           forumRepliesRes,
-          groupChatsRes,
-          groupChatMembersRes,
-          groupMessagesRes,
-          dmThreadsRes,
-          dmMessagesRes,
           activityPostsRes,
           reactionsRes,
           placeReviewsRes,
+          pingsRes,
         ] = await Promise.all([
           supabase.from('places').select('*'),
           supabase.from('friend_overlaps').select('*'),
@@ -430,14 +419,10 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
           supabase.from('forums').select('*'),
           supabase.from('forum_threads').select('*').order('created_at', { ascending: false }),
           supabase.from('forum_thread_replies').select('*').order('created_at'),
-          supabase.from('group_chats').select('*'),
-          supabase.from('group_chat_members').select('*'),
-          supabase.from('group_messages').select('*').order('created_at'),
-          supabase.from('dm_threads').select('*'),
-          supabase.from('dm_messages').select('*').order('created_at'),
           supabase.from('activity_posts').select('*').order('created_at', { ascending: false }),
           supabase.from('reactions').select('*'),
           supabase.from('place_reviews').select('*'),
+          supabase.from('pings').select('*').order('created_at', { ascending: false }),
         ]);
         if (placesRes.error) throw placesRes.error;
         if (friendsRes.error) throw friendsRes.error;
@@ -446,14 +431,10 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
         if (forumsRes.error) throw forumsRes.error;
         if (forumThreadsRes.error) throw forumThreadsRes.error;
         if (forumRepliesRes.error) throw forumRepliesRes.error;
-        if (groupChatsRes.error) throw groupChatsRes.error;
-        if (groupChatMembersRes.error) throw groupChatMembersRes.error;
-        if (groupMessagesRes.error) throw groupMessagesRes.error;
-        if (dmThreadsRes.error) throw dmThreadsRes.error;
-        if (dmMessagesRes.error) throw dmMessagesRes.error;
         if (activityPostsRes.error) throw activityPostsRes.error;
         if (reactionsRes.error) throw reactionsRes.error;
         if (placeReviewsRes.error) throw placeReviewsRes.error;
+        if (pingsRes.error) throw pingsRes.error;
 
         const places = placesRes.data.map(placeRowToPlace);
         const friendOverlaps = friendsRes.data.map(friendRowToOverlap);
@@ -475,16 +456,10 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
             forums: forumsRes.data.map(forumRowToForum),
             forumThreads: forumThreadsRes.data.map(forumThreadRowToThread),
             forumThreadReplies: forumRepliesRes.data.map(forumReplyRowToReply),
-            groupChats: groupChatsRes.data.map(groupChatRowToChat),
-            groupChatMembers: groupChatMembersRes.data.map(
-              groupChatMemberRowToMember,
-            ),
-            groupMessages: groupMessagesRes.data.map(groupMessageRowToMessage),
-            dms: dmThreadsRes.data.map(dmRowToDm),
-            dmMessages: dmMessagesRes.data.map(dmMessageRowToMessage),
             activityPosts: activityPostsRes.data.map(activityPostRowToPost),
             reactions: reactionsRes.data.map(reactionRowToReaction),
             placeReviews: placeReviewsRes.data.map(placeReviewRowToReview),
+            pings: pingsRes.data.map(pingRowToPing),
           });
           setLoading(false);
         }
@@ -501,8 +476,7 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  // Realtime — one channel per surface so cleanup stays simple. Each subscriber
-  // refetches its own slice; cheap enough for demo scale.
+  // Realtime — one channel per surface so cleanup stays simple.
   useEffect(() => {
     const channel = supabase
       .channel('planned_stops_changes')
@@ -537,38 +511,6 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const channel = supabase
-      .channel('group_messages_changes')
-      .on(
-        'postgres_changes',
-        { event: '*', schema: 'public', table: 'group_messages' },
-        () => {
-          refetchGroupMessages();
-        },
-      )
-      .subscribe();
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [refetchGroupMessages]);
-
-  useEffect(() => {
-    const channel = supabase
-      .channel('dm_messages_changes')
-      .on(
-        'postgres_changes',
-        { event: '*', schema: 'public', table: 'dm_messages' },
-        () => {
-          refetchDms();
-        },
-      )
-      .subscribe();
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [refetchDms]);
-
-  useEffect(() => {
-    const channel = supabase
       .channel('activity_posts_changes')
       .on(
         'postgres_changes',
@@ -598,6 +540,22 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
       supabase.removeChannel(channel);
     };
   }, [refetchReactions]);
+
+  useEffect(() => {
+    const channel = supabase
+      .channel('pings_changes')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'pings' },
+        () => {
+          refetchPings();
+        },
+      )
+      .subscribe();
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [refetchPings]);
 
   const saveStop = useCallback(
     async (stop: PlannedStop) => {
@@ -642,8 +600,8 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
   const resetDemo = useCallback(async () => {
     const { error: rpcErr } = await supabase.rpc('reset_demo_state');
     if (rpcErr) throw rpcErr;
-    await refetchStops();
-  }, [refetchStops]);
+    await Promise.all([refetchStops(), refetchPings(), refetchActivity()]);
+  }, [refetchStops, refetchPings, refetchActivity]);
 
   const joinForum = useCallback(
     async (forumId: string) => {
@@ -670,8 +628,6 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
         .from('forum_thread_replies')
         .insert({ thread_id: threadId, author_friend_id: null, body: trimmed });
       if (insertErr) throw insertErr;
-      // bump parent reply_count; if RLS forbids, the realtime refetch still
-      // surfaces the new reply so the count is recalculable in UI.
       const thread = dataRef.current?.forumThreads.find((t) => t.id === threadId);
       if (thread) {
         await supabase
@@ -682,48 +638,6 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
       await refetchForumReplies();
     },
     [refetchForumReplies],
-  );
-
-  const sendGroupMessage = useCallback(
-    async (chatId: string, body: string) => {
-      const trimmed = body.trim();
-      if (!trimmed) return;
-      const { error: insertErr } = await supabase.from('group_messages').insert({
-        chat_id: chatId,
-        author_friend_id: null,
-        body: trimmed,
-      });
-      if (insertErr) throw insertErr;
-      await supabase
-        .from('group_chats')
-        .update({ last_message_at: new Date().toISOString() })
-        .eq('id', chatId);
-      await refetchGroupMessages();
-    },
-    [refetchGroupMessages],
-  );
-
-  const sendDM = useCallback(
-    async (dmThreadId: string, body: string) => {
-      const trimmed = body.trim();
-      if (!trimmed) return;
-      const { error: insertErr } = await supabase.from('dm_messages').insert({
-        dm_thread_id: dmThreadId,
-        from_friend: false,
-        body: trimmed,
-      });
-      if (insertErr) throw insertErr;
-      await supabase
-        .from('dm_threads')
-        .update({
-          last_message_preview_he: trimmed.slice(0, 80),
-          last_message_at: new Date().toISOString(),
-          unread_count: 0,
-        })
-        .eq('id', dmThreadId);
-      await refetchDms();
-    },
-    [refetchDms],
   );
 
   const toggleReaction = useCallback(
@@ -765,6 +679,7 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
       bodyHe: string,
       destinationId?: string,
       payload?: Record<string, unknown>,
+      poll?: Poll | null,
     ) => {
       const trimmed = bodyHe.trim();
       if (!trimmed) return;
@@ -776,6 +691,7 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
         destination_id: destinationId ?? null,
         body_he: trimmed,
         payload: (payload ?? {}) as Json,
+        poll: (poll ?? null) as Json | null,
         reply_count: 0,
       });
       if (insertErr) throw insertErr;
@@ -798,10 +714,6 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
 
   const submitPlaceReview = useCallback(
     async (placeId: string, rating: 1 | 2 | 3 | 4 | 5) => {
-      // The demo user's review uses reviewer_friend_id = NULL. The DB
-      // doesn't have a unique constraint on (place_id, NULL) — manage the
-      // "one-per-user" rule app-side: find the existing self-review and
-      // update, else insert.
       const existing = (dataRef.current?.placeReviews ?? []).find(
         (r) => r.placeId === placeId && r.reviewerFriendId === null,
       );
@@ -823,6 +735,75 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
     [refetchPlaceReviews],
   );
 
+  const sendPing = useCallback(
+    async (friendId: string) => {
+      const friend = dataRef.current?.friendOverlaps.find(
+        (f) => f.id === friendId,
+      );
+      if (!friend) return;
+      const already = dataRef.current?.pings.some(
+        (p) => p.friendId === friendId && p.direction === 'sent',
+      );
+      if (already) return;
+      const { error: insertErr } = await supabase.from('pings').insert({
+        friend_id: friendId,
+        direction: 'sent',
+        zone_label: friend.zoneLabel,
+      });
+      if (insertErr) {
+        // Unique-violation = already pinged this overlap; swallow as success
+        // since the brief enforces "one per co-presence event" exactly here.
+        if (
+          (insertErr as { code?: string }).code !== '23505'
+        ) {
+          throw insertErr;
+        }
+      }
+      await refetchPings();
+    },
+    [refetchPings],
+  );
+
+  const submitPollVote = useCallback(
+    async (postId: string, optionIndex: number) => {
+      const post = dataRef.current?.activityPosts.find((p) => p.id === postId);
+      if (!post) return;
+      const existingPoll = (post.payload as { poll?: Poll })?.poll;
+      if (!existingPoll) return;
+      const selfVotes = new Set(existingPoll.votes?.self ?? []);
+      const had = selfVotes.has(optionIndex);
+      if (existingPoll.multipleChoice) {
+        if (had) selfVotes.delete(optionIndex);
+        else selfVotes.add(optionIndex);
+      } else {
+        selfVotes.clear();
+        if (!had) selfVotes.add(optionIndex);
+      }
+      const nextVoteSet = Array.from(selfVotes).sort();
+      const previousSelf = existingPoll.votes?.self ?? [];
+      const nextOptions = existingPoll.options.map((opt, i) => {
+        const wasIn = previousSelf.includes(i);
+        const isIn = nextVoteSet.includes(i);
+        let count = opt.voteCount;
+        if (!wasIn && isIn) count += 1;
+        if (wasIn && !isIn) count -= 1;
+        return { ...opt, voteCount: Math.max(0, count) };
+      });
+      const nextPoll: Poll = {
+        ...existingPoll,
+        options: nextOptions,
+        votes: { ...(existingPoll.votes ?? {}), self: nextVoteSet },
+      };
+      const { error: updateErr } = await supabase
+        .from('activity_posts')
+        .update({ poll: nextPoll as unknown as Json })
+        .eq('id', postId);
+      if (updateErr) throw updateErr;
+      await refetchActivity();
+    },
+    [refetchActivity],
+  );
+
   return (
     <Context.Provider
       value={{
@@ -835,11 +816,11 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
         resetDemo,
         joinForum,
         postForumReply,
-        sendGroupMessage,
-        sendDM,
         toggleReaction,
         postActivity,
         submitPlaceReview,
+        sendPing,
+        submitPollVote,
       }}
     >
       {children}

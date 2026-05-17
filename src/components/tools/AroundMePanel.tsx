@@ -1,13 +1,9 @@
 import { useMemo, useState } from 'react';
 import { ChevronDown, Check } from 'lucide-react';
 import clsx from 'clsx';
-import { Screen } from '../../components/Screen';
-import { TopBar } from '../../components/TopBar';
-import { LoadingPanel, ErrorPanel } from '../../components/DataState';
-import { SubNav } from '../../components/shared/SubNav';
-import { SearchBar } from '../../components/shared/SearchBar';
-import { ToolsButton } from '../../components/shared/ToolsButton';
-import { BusinessCard } from '../../components/around/BusinessCard';
+import { SubNav } from '../shared/SubNav';
+import { SearchBar } from '../shared/SearchBar';
+import { BusinessCard } from './BusinessCard';
 import { useSupabaseData } from '../../lib/SupabaseDataProvider';
 import type { PlannedStop } from '../../data/plannedStops';
 
@@ -18,11 +14,6 @@ const MODE_TABS: { id: Mode; label: string }[] = [
   { id: 'trip', label: 'Your trip' },
 ];
 
-/**
- * Display label for any `destination_id` — covers both planned-stop
- * cities and unplanned discovery cities the user might search for.
- * Falls back to the id itself for unknown destinations.
- */
 const CITY_BY_DESTINATION_ID: Record<string, string> = {
   buzios: 'Búzios',
   'sao-paulo': 'São Paulo',
@@ -41,21 +32,17 @@ function cityLabel(destinationId: string): string {
 }
 
 /**
- * "Around me" — the v0.3 monetization surface. Curated paid-placement
- * businesses, friend star ratings, Reserve/Contact CTAs.
+ * Places-nearby panel — partner-channel paid placements presented as a
+ * Tools-tab utility. Brief §07 puts partner-channel deals in V1, but the
+ * tile exists in the Tools shell today so we have somewhere to test the
+ * Reserve / Contact CTAs once partners go live.
  *
- * Three navigation paths:
- *  - Now mode:    places within ~50km of `myTrip.present`.
- *  - Your trip:   collapsible city picker for the user's planned stops,
- *                 then filter by `destination_id`.
- *  - Search:      typing anything switches to a global search across
- *                 every paid-placement venue, including cities the user
- *                 hasn't planned — useful when weighing a trip change.
- *
- * Both Now / Your trip scope to `places.paid_placement = true`.
+ * Lifted from the old AroundMeScreen — same three modes (Now, Your trip,
+ * global search), minus the outer Screen/TopBar (the parent Modal frames
+ * the surface).
  */
-export function AroundMeScreen() {
-  const { data, loading, error } = useSupabaseData();
+export function AroundMePanel() {
+  const { data } = useSupabaseData();
   const [mode, setMode] = useState<Mode>('trip');
   const [selectedDestinationId, setSelectedDestinationId] = useState<
     string | null
@@ -68,8 +55,7 @@ export function AroundMeScreen() {
     return data.places.filter((p) => p.paidPlacement);
   }, [data]);
 
-  if (loading) return <LoadingPanel />;
-  if (error || !data) return <ErrorPanel error={error} />;
+  if (!data) return null;
 
   const present = data.myTrip.present;
   const nowPlaces = paidPlaces.filter((p) =>
@@ -106,8 +92,6 @@ export function AroundMeScreen() {
       ? nowPlaces
       : tripPlaces;
 
-  // Unique destinations represented in the search results — drives the
-  // optional "thinking of changing trips" hint copy at the top.
   const searchCities = searching
     ? [...new Set(searchResults.map((p) => p.destinationId))]
     : [];
@@ -116,71 +100,67 @@ export function AroundMeScreen() {
   );
 
   return (
-    <Screen>
-      <TopBar title="Around me" end={<ToolsButton />} />
-
+    <div className="flex flex-col gap-md">
       {!searching && (
         <SubNav items={MODE_TABS} active={mode} onChange={setMode} />
       )}
 
-      <div className="flex flex-col gap-md p-md pb-xl">
-        <SearchBar
-          value={query}
-          onChange={setQuery}
-          placeholder="Search a place or a city"
+      <SearchBar
+        value={query}
+        onChange={setQuery}
+        placeholder="Search a place or a city"
+      />
+
+      {!searching && mode === 'trip' && stops.length > 0 && (
+        <CityPicker
+          stops={stops}
+          selectedId={activeDestinationId}
+          open={pickerOpen}
+          onToggle={() => setPickerOpen((o) => !o)}
+          onPick={(id) => {
+            setSelectedDestinationId(id);
+            setPickerOpen(false);
+          }}
         />
+      )}
 
-        {!searching && mode === 'trip' && stops.length > 0 && (
-          <CityPicker
-            stops={stops}
-            selectedId={activeDestinationId}
-            open={pickerOpen}
-            onToggle={() => setPickerOpen((o) => !o)}
-            onPick={(id) => {
-              setSelectedDestinationId(id);
-              setPickerOpen(false);
-            }}
-          />
-        )}
+      {searching && unplannedSearchCities.length > 0 && (
+        <p className="text-small leading-snug text-cocoa-70">
+          Considering{' '}
+          <span className="font-medium text-cocoa">
+            {unplannedSearchCities.map(cityLabel).join(', ')}
+          </span>
+          ? Tap a card to see what's curated there — you can decide
+          whether to add it to your trip later.
+        </p>
+      )}
 
-        {searching && unplannedSearchCities.length > 0 && (
-          <p className="text-small leading-snug text-cocoa-70">
-            Considering{' '}
-            <span className="font-medium text-cocoa">
-              {unplannedSearchCities.map(cityLabel).join(', ')}
-            </span>
-            ? Tap a card to see what is curated there — you can decide
-            whether to add it to your trip later.
-          </p>
-        )}
-
-        {visiblePlaces.length === 0 ? (
-          <EmptyState
-            mode={searching ? 'search' : mode}
-            cityName={
-              !searching && mode === 'trip'
-                ? activeStop?.nameEn
-                : undefined
-            }
-          />
-        ) : (
-          <ul className="flex flex-col gap-md">
-            {visiblePlaces.map((p) => (
-              <li key={p.id}>
-                <BusinessCard
-                  place={p}
-                  reviews={data.placeReviews}
-                  friends={data.friendOverlaps}
-                  cityLabel={
-                    searching ? cityLabel(p.destinationId) : undefined
-                  }
-                />
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
-    </Screen>
+      {visiblePlaces.length === 0 ? (
+        <EmptyState
+          mode={searching ? 'search' : mode}
+          cityName={
+            !searching && mode === 'trip'
+              ? activeStop?.nameEn
+              : undefined
+          }
+        />
+      ) : (
+        <ul className="flex flex-col gap-md">
+          {visiblePlaces.map((p) => (
+            <li key={p.id}>
+              <BusinessCard
+                place={p}
+                reviews={data.placeReviews}
+                friends={data.friendOverlaps}
+                cityLabel={
+                  searching ? cityLabel(p.destinationId) : undefined
+                }
+              />
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   );
 }
 
@@ -192,13 +172,6 @@ type CityPickerProps = {
   onPick: (id: string) => void;
 };
 
-/**
- * Collapsible single-select for the user's planned stops. Closed: pill
- * button shows the active city + count + chevron. Open: a stacked list
- * with a checkmark beside the active city. Replaces the previous
- * horizontal-scroll pill rail (which clipped Buenos Aires + Punta del
- * Este off-screen in the device frame).
- */
 function CityPicker({
   stops,
   selectedId,
@@ -312,7 +285,7 @@ function EmptyState({
       : 'No partner places listed here yet. Tarmil is rolling out city by city — your favourite venue can be next.';
   }
   return (
-    <p className="rounded-2xl bg-sand shadow-card p-md text-small leading-snug text-cocoa-70">
+    <p className="rounded-2xl bg-sand p-md text-small leading-snug text-cocoa-70">
       {copy}
     </p>
   );
@@ -326,7 +299,7 @@ function withinKm(
   lng2: number,
   km: number,
 ): boolean {
-  const R = 6371; // km
+  const R = 6371;
   const toRad = (d: number) => (d * Math.PI) / 180;
   const dLat = toRad(lat2 - lat1);
   const dLng = toRad(lng2 - lng1);

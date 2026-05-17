@@ -1,21 +1,26 @@
 import type { ActivityPost } from '../../data/activityPosts';
 import type { FriendOverlap } from '../../data/myTrip';
 import { Avatar } from '../shared/Avatar';
-import { Button } from '../Button';
+import { PingButton } from '../friends/PingButton';
 
 type Props = {
   post: ActivityPost;
   friend?: FriendOverlap;
-  onOpenChat?: () => void;
+  pinged: boolean;
+  onPing: () => void;
 };
 
 /**
  * Trip-overlap notification card. Distinctive treatment: sand bg + cocoa-15
- * border + Fraunces italic body, with a primary copper CTA. The card stands
- * out from the regular ivory cards in the feed because overlap moments are
- * the most actionable thing the app surfaces.
+ * border + Fraunces italic body. CTA is a one-tap Ping — the brief makes
+ * Ping the only one-to-one signal, so calendar overlaps converge there.
  */
-export function OverlapNotificationCard({ post, friend, onOpenChat }: Props) {
+export function OverlapNotificationCard({
+  post,
+  friend,
+  pinged,
+  onPing,
+}: Props) {
   return (
     <article className="flex flex-col gap-sm rounded-2xl bg-sand shadow-card p-md">
       <header className="flex items-center gap-sm">
@@ -37,9 +42,7 @@ export function OverlapNotificationCard({ post, friend, onOpenChat }: Props) {
         {post.bodyHe}
       </p>
       <div className="flex justify-start">
-        <Button variant="accent" onClick={onOpenChat}>
-          Open chat
-        </Button>
+        <PingButton pinged={pinged} onPing={onPing} />
       </div>
     </article>
   );

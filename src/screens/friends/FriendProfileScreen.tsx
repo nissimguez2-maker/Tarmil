@@ -1,12 +1,12 @@
-import { useParams, useNavigate } from 'react-router-dom';
-import { Screen } from '../../../components/Screen';
-import { TopBar } from '../../../components/TopBar';
-import { LoadingPanel, ErrorPanel } from '../../../components/DataState';
-import { Avatar } from '../../../components/shared/Avatar';
-import { StatsPill } from '../../../components/profile/StatsPill';
-import { PastTripCard } from '../../../components/profile/PastTripCard';
-import { Button } from '../../../components/Button';
-import { useSupabaseData } from '../../../lib/SupabaseDataProvider';
+import { useParams } from 'react-router-dom';
+import { Screen } from '../../components/Screen';
+import { TopBar } from '../../components/TopBar';
+import { LoadingPanel, ErrorPanel } from '../../components/DataState';
+import { Avatar } from '../../components/shared/Avatar';
+import { StatsPill } from '../../components/profile/StatsPill';
+import { PastTripCard } from '../../components/profile/PastTripCard';
+import { PingButton } from '../../components/friends/PingButton';
+import { useSupabaseData } from '../../lib/SupabaseDataProvider';
 
 type RawPastTrip = {
   destinationHe?: string;
@@ -15,7 +15,7 @@ type RawPastTrip = {
   durationLabel?: string;
 };
 
-const SEASON_HE: Record<string, string> = {
+const SEASON_LABEL: Record<string, string> = {
   spring: 'Spring',
   summer: 'Summer',
   autumn: 'Autumn',
@@ -24,16 +24,18 @@ const SEASON_HE: Record<string, string> = {
 
 /**
  * Friend profile drill-down. 96px photo, name, status pill, stats row,
- * past trips at SEASON + YEAR + DURATION resolution only (privacy posture
- * non-negotiable per CLAUDE.md). Sticky bottom CTAs to DM or add to group.
+ * past trips at SEASON + YEAR + DURATION resolution only (brief §02
+ * Privacy-first; CLAUDE.md hard rule). Sticky bottom CTA is a Ping.
  *
- * Past trips come from `friend_overlaps.past_trips` JSONB (added in
- * migration 0006). Each row is whitelisted to the four privacy-safe fields.
+ * No DM CTA — brief §06 removes direct messages entirely. Conversation
+ * happens on whatever channel the user and friend already share.
+ *
+ * Past trips come from `friend_overlaps.past_trips` JSONB (migration 0006).
+ * Each row is whitelisted to the four privacy-safe fields.
  */
 export function FriendProfileScreen() {
   const { friendId = '' } = useParams<{ friendId: string }>();
-  const navigate = useNavigate();
-  const { data, loading, error } = useSupabaseData();
+  const { data, loading, error, sendPing } = useSupabaseData();
 
   if (loading) return <LoadingPanel />;
   if (error || !data) return <ErrorPanel error={error} />;
@@ -52,14 +54,8 @@ export function FriendProfileScreen() {
       ? `Currently in ${friend.zoneLabel}`
       : `Planning ${friend.zoneLabel}`;
 
-  // Sanitize past_trips from JSONB: only render rows that pass the privacy
-  // filter (season + year + durationLabel — no raw dates).
   const pastTrips: { destinationHe: string; metaLine: string }[] = (() => {
-    if (!Array.isArray(data.friendOverlaps)) return [];
     const raw = (friend as unknown as { past_trips?: unknown }).past_trips;
-    // friend type doesn't carry past_trips currently — fall back to a static
-    // demo past for personas with no JSONB. Once friends.past_trips is mapped
-    // through the row → domain mapper, this branch will surface real data.
     if (!Array.isArray(raw)) {
       return DEMO_PAST_TRIPS[friend.id] ?? [];
     }
@@ -67,11 +63,9 @@ export function FriendProfileScreen() {
       .filter((t) => t.destinationHe && t.season && t.year && t.durationLabel)
       .map((t) => ({
         destinationHe: t.destinationHe!,
-        metaLine: `${SEASON_HE[t.season!] ?? t.season!} ${t.year!} · ${t.durationLabel!}`,
+        metaLine: `${SEASON_LABEL[t.season!] ?? t.season!} ${t.year!} · ${t.durationLabel!}`,
       }));
   })();
-
-  const dm = data.dms.find((d) => d.friendId === friend.id);
 
   return (
     <Screen className="flex flex-col">
@@ -103,7 +97,8 @@ export function FriendProfileScreen() {
         <section className="flex flex-col gap-sm">
           <h2 className="font-serif text-lede italic text-cocoa">Past routes</h2>
           <p className="text-small text-cocoa-55">
-            Dates always at season + year resolution — Tarmil never exposes a friend's exact dates.
+            Dates always at season + year resolution — Tarmil never exposes
+            a friend's exact dates.
           </p>
           <ul className="flex flex-col gap-sm">
             {pastTrips.length === 0 && (
@@ -126,33 +121,27 @@ export function FriendProfileScreen() {
       </div>
 
       <div
-        className="flex gap-sm border-t border-cocoa-15 bg-ivory p-md"
+        className="flex items-center justify-end gap-sm border-t border-cocoa-15 bg-ivory p-md"
         style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 16px)' }}
       >
-        <Button
-          variant="accent"
-          fullWidth
-          onClick={() => {
-            if (dm) navigate(`/messages/dms/${dm.id}`);
-            else navigate('/messages');
-          }}
-        >
-          Send message
-        </Button>
-        <Button variant="ghost" onClick={() => navigate('/messages#chats')}>
-          Add to a group
-        </Button>
+        <span className="me-auto text-small leading-snug text-cocoa-55">
+          One ping per co-presence event.
+        </span>
+        <PingButton
+          pinged={data.pings.some(
+            (p) => p.friendId === friend.id && p.direction === 'sent',
+          )}
+          onPing={() => sendPing(friend.id)}
+        />
       </div>
     </Screen>
   );
 }
 
-/**
- * Fallback past-trip data per persona. Used when the `past_trips` JSONB column
- * is empty for that friend. All entries respect the season + year + duration
- * resolution rule.
- */
-const DEMO_PAST_TRIPS: Record<string, { destinationHe: string; metaLine: string }[]> = {
+const DEMO_PAST_TRIPS: Record<
+  string,
+  { destinationHe: string; metaLine: string }[]
+> = {
   'maya-ipanema': [
     { destinationHe: 'Mexico — San Cristóbal', metaLine: 'Winter 2025 · 18 days' },
     { destinationHe: 'India — Delhi, Goa', metaLine: 'Spring 2024 · 32 days' },

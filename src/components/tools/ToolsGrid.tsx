@@ -7,7 +7,7 @@ import {
   ScanLine,
   Wallet,
   Smartphone,
-  Star,
+  Compass,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import {
@@ -22,6 +22,10 @@ type Tool = {
   Icon: LucideIcon;
 };
 
+// First seven tiles match brief §05's MVP tools list verbatim. The eighth
+// "Places nearby" is a partner-channel preview (brief §07 V1 surface) that
+// holds the AroundMe content from v0.4 inside the Tools shell — open, use,
+// close, exactly like every other tool.
 const TOOLS: Tool[] = [
   { id: 'currency', name: 'Currency converter', meta: 'Works offline too', Icon: Coins },
   { id: 'checklist', name: 'Pre-trip checklist', meta: 'Visa, vaccines, insurance', Icon: ListChecks },
@@ -30,7 +34,7 @@ const TOOLS: Tool[] = [
   { id: 'signs', name: 'Sign scanner', meta: 'Live signage translation', Icon: ScanLine },
   { id: 'balances', name: 'Friend balances', meta: 'Open tab between friends', Icon: Wallet },
   { id: 'esim', name: 'eSIM & data', meta: 'English-friendly support abroad', Icon: Smartphone },
-  { id: 'jewish', name: 'Jewish tools', meta: 'Chabad, kosher, Shabbat', Icon: Star },
+  { id: 'nearby', name: 'Places nearby', meta: 'Curated venues, your trip', Icon: Compass },
 ];
 
 /**

@@ -31,8 +31,9 @@ type CityForumGroupProps = {
 
 /**
  * Joined-city group. Header is the city name; body is a sand card with
- * stacked subject pills. v0.3 layout — each pill is a focused
- * subject-forum, replacing the old single city forum + chip filter.
+ * stacked subject pills. Each pill is a (city × subject) focused forum
+ * per brief §04 — "city → subject: each city has a forum with 5–6
+ * subjects".
  */
 export function CityForumGroup({
   cityLabel,
@@ -68,7 +69,7 @@ function SubjectPill({ forum, previewTitle }: SubjectPillProps) {
   const label = forum.subject ? SUBJECT_LABEL[forum.subject] : forum.nameEn;
   return (
     <Link
-      to={`/messages/forums/${forum.id}`}
+      to={`/forums/${forum.id}`}
       className="flex items-center gap-sm rounded-xl bg-ivory px-md py-sm transition-colors duration-instant ease-out-quart hover:bg-sand active:bg-rope/50"
     >
       <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-cocoa text-ivory">
@@ -100,13 +101,13 @@ type RecommendedForumRowProps = {
 
 /**
  * Recommended-for-you single forum row (e.g., Buenos Aires meetups before
- * the user joins). Keeps the bigger card layout from the v0.2 city forums
- * so the discover slot reads as a discrete CTA.
+ * the user joins). Bigger card layout so the discover slot reads as a
+ * discrete CTA.
  */
 export function RecommendedForumRow({ forum, onJoin }: RecommendedForumRowProps) {
   return (
     <Link
-      to={`/messages/forums/${forum.id}`}
+      to={`/forums/${forum.id}`}
       className="flex items-center gap-sm rounded-2xl bg-sand shadow-card p-md transition-colors duration-instant ease-out-quart hover:bg-sand/80 active:bg-rope/50"
     >
       <div className="flex min-w-0 flex-1 flex-col gap-px">
