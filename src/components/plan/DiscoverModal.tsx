@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { ChevronDown, Check, X } from 'lucide-react';
 import clsx from 'clsx';
 import { createPortal } from 'react-dom';
@@ -56,6 +56,16 @@ export function DiscoverModal({ open, onClose, initialDestinationId }: Props) {
   >(initialDestinationId ?? null);
   const [pickerOpen, setPickerOpen] = useState(false);
   const [query, setQuery] = useState('');
+
+  // Modal stays mounted between opens, so useState initializers run once.
+  // Sync internal selection on every transition to open so a fresh
+  // initialDestinationId from PlanScreen actually applies.
+  useEffect(() => {
+    if (!open) return;
+    setSelectedDestinationId(initialDestinationId ?? null);
+    setPickerOpen(false);
+    setQuery('');
+  }, [open, initialDestinationId]);
 
   const rankedPlaces = useMemo(() => {
     if (!data) return [];

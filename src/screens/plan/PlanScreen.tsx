@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { Plus } from 'lucide-react';
+import clsx from 'clsx';
 import { Screen } from '../../components/Screen';
 import { TopBar } from '../../components/TopBar';
 import { ProfileAvatarButton } from '../../components/shared/ProfileAvatarButton';
@@ -12,6 +13,14 @@ import { useSupabaseData } from '../../lib/SupabaseDataProvider';
 import type { Place } from '../../data/places';
 import type { PlannedStop } from '../../data/plannedStops';
 import type { PlaceSave, PlaceSaveStatus } from '../../data/placeSaves';
+
+type StatusFilter = 'all' | PlaceSaveStatus;
+
+const STATUS_LABEL: Record<PlaceSaveStatus, string> = {
+  reserved: 'Reserved',
+  wishlist: 'Wishlist',
+  visited: 'Visited',
+};
 
 /**
  * Plan tab — the list/micro side of the Trip ↔ Plan pivot. Saved places
@@ -28,6 +37,7 @@ export function PlanScreen() {
   const [discoverDestinationId, setDiscoverDestinationId] = useState<
     string | undefined
   >(undefined);
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
 
   const today = useMemo(() => new Date().toISOString().slice(0, 10), []);
 
@@ -44,7 +54,18 @@ export function PlanScreen() {
     .filter((s) => s.departureDate < today)
     .sort((a, b) => b.arrivalDate.localeCompare(a.arrivalDate));
 
-  const unsortedSaves = selfSaves.filter((s) => s.plannedStopId === null);
+  const statusCounts: Record<PlaceSaveStatus, number> = {
+    reserved: 0,
+    wishlist: 0,
+    visited: 0,
+  };
+  for (const s of selfSaves) statusCounts[s.status] += 1;
+
+  const matchesStatus = (save: PlaceSave) =>
+    statusFilter === 'all' || save.status === statusFilter;
+  const filteredSaves = selfSaves.filter(matchesStatus);
+
+  const unsortedSaves = filteredSaves.filter((s) => s.plannedStopId === null);
   const totalSaved = selfSaves.length;
 
   const openDiscover = (destinationId?: string) => {
@@ -60,15 +81,17 @@ export function PlanScreen() {
       />
 
       <div className="relative flex flex-col gap-lg p-md pb-xxl">
-        <p className="text-small leading-snug text-cocoa-70">
-          Star a place to drop it here. We sort it by trip when the city
-          matches; everything else lands in Saved.
-        </p>
-
         {totalSaved === 0 && upcomingStops.length === 0 && pastStops.length === 0 ? (
           <EmptyAll onDiscover={() => openDiscover()} />
         ) : (
           <>
+            <StatusFilterRow
+              value={statusFilter}
+              onChange={setStatusFilter}
+              counts={statusCounts}
+              total={totalSaved}
+            />
+
             <SectionLabel
               number="01"
               label={`Upcoming ${upcomingStops.length === 1 ? 'trip' : 'trips'}.`}
@@ -81,11 +104,14 @@ export function PlanScreen() {
                   <StopBlock
                     key={stop.id}
                     stop={stop}
-                    saves={selfSaves.filter((s) => s.plannedStopId === stop.id)}
+                    saves={filteredSaves.filter(
+                      (s) => s.plannedStopId === stop.id,
+                    )}
                     placesById={placesById}
                     reviews={data.placeReviews}
                     friends={data.friendOverlaps}
                     onDiscover={() => openDiscover(stop.id)}
+                    statusFilter={statusFilter}
                   />
                 ))}
               </div>
@@ -93,7 +119,13 @@ export function PlanScreen() {
 
             <SectionLabel number="02" label="Saved (unsorted)." />
             {unsortedSaves.length === 0 ? (
-              <EmptyHint copy="Anything you star without a matching trip lands here." />
+              <EmptyHint
+                copy={
+                  statusFilter === 'all'
+                    ? 'Anything you star without a matching trip lands here.'
+                    : `Nothing in the unsorted bucket matches ${STATUS_LABEL[statusFilter].toLowerCase()}.`
+                }
+              />
             ) : (
               <SaveGrid
                 saves={unsortedSaves}
@@ -112,13 +144,14 @@ export function PlanScreen() {
                     <StopBlock
                       key={stop.id}
                       stop={stop}
-                      saves={selfSaves.filter(
+                      saves={filteredSaves.filter(
                         (s) => s.plannedStopId === stop.id,
                       )}
                       placesById={placesById}
                       reviews={data.placeReviews}
                       friends={data.friendOverlaps}
                       past
+                      statusFilter={statusFilter}
                     />
                   ))}
                 </div>
@@ -152,6 +185,7 @@ type StopBlockProps = {
   friends: import('../../data/myTrip').FriendOverlap[];
   past?: boolean;
   onDiscover?: () => void;
+  statusFilter: StatusFilter;
 };
 
 function StopBlock({
@@ -162,8 +196,10 @@ function StopBlock({
   friends,
   past,
   onDiscover,
+  statusFilter,
 }: StopBlockProps) {
   const orderedSaves = useMemo(() => orderByStatus(saves), [saves]);
+  const filteringEmpty = saves.length === 0 && statusFilter !== 'all';
   return (
     <section className="flex flex-col gap-sm">
       <header className="flex items-baseline justify-between gap-sm">
@@ -183,7 +219,13 @@ function StopBlock({
       </header>
 
       {saves.length === 0 ? (
-        past ? (
+        filteringEmpty ? (
+          <p className="rounded-2xl bg-sand p-md text-small leading-snug text-cocoa-70">
+            Nothing matches{' '}
+            <span className="lowercase">{STATUS_LABEL[statusFilter as PlaceSaveStatus]}</span>{' '}
+            in {stop.nameEn}.
+          </p>
+        ) : past ? (
           <p className="rounded-2xl bg-sand p-md text-small leading-snug text-cocoa-70">
             Nothing saved for this trip.
           </p>
@@ -216,6 +258,70 @@ function StopBlock({
         </ul>
       )}
     </section>
+  );
+}
+
+type StatusFilterRowProps = {
+  value: StatusFilter;
+  onChange: (v: StatusFilter) => void;
+  counts: Record<PlaceSaveStatus, number>;
+  total: number;
+};
+
+function StatusFilterRow({
+  value,
+  onChange,
+  counts,
+  total,
+}: StatusFilterRowProps) {
+  const items: Array<{ id: StatusFilter; label: string; count: number }> = [
+    { id: 'all', label: 'All', count: total },
+  ];
+  (['reserved', 'wishlist', 'visited'] as const).forEach((status) => {
+    if (counts[status] > 0) {
+      items.push({ id: status, label: STATUS_LABEL[status], count: counts[status] });
+    }
+  });
+  if (items.length === 1) return null;
+  return (
+    <div
+      role="tablist"
+      aria-label="Filter saves by status"
+      className="flex flex-wrap gap-2"
+    >
+      {items.map((item) => {
+        const active = item.id === value;
+        return (
+          <button
+            key={item.id}
+            type="button"
+            role="tab"
+            aria-selected={active}
+            onClick={() => onChange(item.id)}
+            className={clsx(
+              'inline-flex items-center gap-1.5 rounded-full px-sm py-1.5',
+              'border text-small font-medium leading-none',
+              'transition-[transform,background-color,border-color,color] duration-instant ease-out-quart',
+              'active:scale-[0.97]',
+              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory',
+              active
+                ? 'border-cocoa bg-cocoa text-ivory'
+                : 'border-cocoa-15 bg-ivory text-cocoa-70 hover:border-cocoa-30 hover:text-cocoa',
+            )}
+          >
+            <span>{item.label}</span>
+            <span
+              className={clsx(
+                'tnum text-meta',
+                active ? 'text-ivory/70' : 'text-cocoa-55',
+              )}
+            >
+              {item.count}
+            </span>
+          </button>
+        );
+      })}
+    </div>
   );
 }
 
