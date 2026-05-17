@@ -23,6 +23,7 @@ import type {
 import type { Reaction, ReactionTargetType } from '../data/reactions';
 import type { PlaceReview } from '../data/placeReviews';
 import type { Ping } from '../data/pings';
+import type { PlaceSave, PlaceSaveStatus } from '../data/placeSaves';
 
 export type TripData = {
   places: Place[];
@@ -36,6 +37,7 @@ export type TripData = {
   reactions: Reaction[];
   placeReviews: PlaceReview[];
   pings: Ping[];
+  placeSaves: PlaceSave[];
 };
 
 type Mutators = {
@@ -75,6 +77,21 @@ type Mutators = {
    * For multiple-choice, the index is added or removed from the set.
    */
   submitPollVote: (postId: string, optionIndex: number) => Promise<void>;
+  /**
+   * Star (or un-star) a place. Toggles a single self-row in `place_saves`
+   * for `placeId`. If already saved, removes it. Default status is
+   * `wishlist`; the place can be moved to `reserved` / `visited` later
+   * via {@link updatePlaceSave}.
+   */
+  togglePlaceSave: (placeId: string) => Promise<void>;
+  /**
+   * Update an existing self-save — attach to a planned stop, change
+   * status (wishlist → reserved → visited), or toggle private.
+   */
+  updatePlaceSave: (
+    placeId: string,
+    patch: { status?: PlaceSaveStatus; plannedStopId?: string | null; private?: boolean },
+  ) => Promise<void>;
 };
 
 type ContextValue = {
@@ -315,6 +332,16 @@ const pingRowToPing = (r: Tables<'pings'>): Ping => ({
   createdAt: r.created_at,
 });
 
+const placeSaveRowToSave = (r: Tables<'place_saves'>): PlaceSave => ({
+  id: r.id,
+  friendId: r.friend_id,
+  placeId: r.place_id,
+  status: r.status as PlaceSaveStatus,
+  plannedStopId: r.planned_stop_id,
+  private: r.private,
+  createdAt: r.created_at,
+});
+
 export function SupabaseDataProvider({ children }: { children: ReactNode }) {
   const [data, setData] = useState<TripData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -394,6 +421,17 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
     );
   }, []);
 
+  const refetchPlaceSaves = useCallback(async () => {
+    const { data: rows, error: fetchErr } = await supabase
+      .from('place_saves')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (fetchErr) return;
+    setData((prev) =>
+      prev ? { ...prev, placeSaves: rows.map(placeSaveRowToSave) } : prev,
+    );
+  }, []);
+
   // Initial fetch — every table in parallel.
   useEffect(() => {
     let cancelled = false;
@@ -411,6 +449,7 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
           reactionsRes,
           placeReviewsRes,
           pingsRes,
+          placeSavesRes,
         ] = await Promise.all([
           supabase.from('places').select('*'),
           supabase.from('friend_overlaps').select('*'),
@@ -423,6 +462,7 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
           supabase.from('reactions').select('*'),
           supabase.from('place_reviews').select('*'),
           supabase.from('pings').select('*').order('created_at', { ascending: false }),
+          supabase.from('place_saves').select('*').order('created_at', { ascending: false }),
         ]);
         if (placesRes.error) throw placesRes.error;
         if (friendsRes.error) throw friendsRes.error;
@@ -435,6 +475,7 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
         if (reactionsRes.error) throw reactionsRes.error;
         if (placeReviewsRes.error) throw placeReviewsRes.error;
         if (pingsRes.error) throw pingsRes.error;
+        if (placeSavesRes.error) throw placeSavesRes.error;
 
         const places = placesRes.data.map(placeRowToPlace);
         const friendOverlaps = friendsRes.data.map(friendRowToOverlap);
@@ -460,6 +501,7 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
             reactions: reactionsRes.data.map(reactionRowToReaction),
             placeReviews: placeReviewsRes.data.map(placeReviewRowToReview),
             pings: pingsRes.data.map(pingRowToPing),
+            placeSaves: placeSavesRes.data.map(placeSaveRowToSave),
           });
           setLoading(false);
         }
@@ -557,6 +599,22 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
     };
   }, [refetchPings]);
 
+  useEffect(() => {
+    const channel = supabase
+      .channel('place_saves_changes')
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'place_saves' },
+        () => {
+          refetchPlaceSaves();
+        },
+      )
+      .subscribe();
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [refetchPlaceSaves]);
+
   const saveStop = useCallback(
     async (stop: PlannedStop) => {
       const { error: upsertErr } = await supabase
@@ -600,8 +658,13 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
   const resetDemo = useCallback(async () => {
     const { error: rpcErr } = await supabase.rpc('reset_demo_state');
     if (rpcErr) throw rpcErr;
-    await Promise.all([refetchStops(), refetchPings(), refetchActivity()]);
-  }, [refetchStops, refetchPings, refetchActivity]);
+    await Promise.all([
+      refetchStops(),
+      refetchPings(),
+      refetchActivity(),
+      refetchPlaceSaves(),
+    ]);
+  }, [refetchStops, refetchPings, refetchActivity, refetchPlaceSaves]);
 
   const joinForum = useCallback(
     async (forumId: string) => {
@@ -804,6 +867,71 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
     [refetchActivity],
   );
 
+  const togglePlaceSave = useCallback(
+    async (placeId: string) => {
+      const existing = (dataRef.current?.placeSaves ?? []).find(
+        (s) => s.placeId === placeId && s.friendId === null,
+      );
+      if (existing) {
+        const { error: deleteErr } = await supabase
+          .from('place_saves')
+          .delete()
+          .eq('id', existing.id);
+        if (deleteErr) throw deleteErr;
+      } else {
+        // Auto-attach to a matching planned stop in the same city if one
+        // exists. Plan tab still treats null plannedStopId as "Saved
+        // (unsorted)" — this just removes a sorting tap when the answer
+        // is obvious.
+        const place = dataRef.current?.places.find((p) => p.id === placeId);
+        const matchingStop = place
+          ? (dataRef.current?.plannedStops ?? []).find(
+              (s) => s.id === place.destinationId,
+            )
+          : undefined;
+        const { error: insertErr } = await supabase.from('place_saves').insert({
+          friend_id: null,
+          place_id: placeId,
+          status: 'wishlist',
+          planned_stop_id: matchingStop?.id ?? null,
+          private: false,
+        });
+        if (insertErr) throw insertErr;
+      }
+      await refetchPlaceSaves();
+    },
+    [refetchPlaceSaves],
+  );
+
+  const updatePlaceSave = useCallback(
+    async (
+      placeId: string,
+      patch: {
+        status?: PlaceSaveStatus;
+        plannedStopId?: string | null;
+        private?: boolean;
+      },
+    ) => {
+      const existing = (dataRef.current?.placeSaves ?? []).find(
+        (s) => s.placeId === placeId && s.friendId === null,
+      );
+      if (!existing) return;
+      const updates: import('./database.types').TablesUpdate<'place_saves'> = {};
+      if (patch.status !== undefined) updates.status = patch.status;
+      if (patch.plannedStopId !== undefined)
+        updates.planned_stop_id = patch.plannedStopId;
+      if (patch.private !== undefined) updates.private = patch.private;
+      if (Object.keys(updates).length === 0) return;
+      const { error: updateErr } = await supabase
+        .from('place_saves')
+        .update(updates)
+        .eq('id', existing.id);
+      if (updateErr) throw updateErr;
+      await refetchPlaceSaves();
+    },
+    [refetchPlaceSaves],
+  );
+
   return (
     <Context.Provider
       value={{
@@ -821,6 +949,8 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
         submitPlaceReview,
         sendPing,
         submitPollVote,
+        togglePlaceSave,
+        updatePlaceSave,
       }}
     >
       {children}
