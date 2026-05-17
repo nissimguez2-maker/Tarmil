@@ -25,6 +25,19 @@ export type ActivityPostKind =
   | 'overlap_notification'
   | 'place_review';
 
+export type PollOption = {
+  text: string;
+  voteCount: number;
+};
+
+export type Poll = {
+  question: string;
+  options: PollOption[];
+  multipleChoice: boolean;
+  /** Map of friendId (or 'self') → indices the actor has voted for. */
+  votes?: Record<string, number[]>;
+};
+
 export type ActivityPost = {
   id: string;
   kind: ActivityPostKind;
@@ -32,7 +45,12 @@ export type ActivityPost = {
   authorFriendId: string | null;
   destinationId?: string;
   bodyHe: string;
-  /** Kind-specific extras. See JSDoc for shape per kind. */
+  /** Kind-specific extras. See JSDoc for shape per kind. May carry an
+   * optional `poll` object today (chunk 4 promotes this to a first-class
+   * column on activity_posts). May also carry `parent_id` for replies,
+   * which is how flat one-level threading is modelled until a dedicated
+   * replies table lands.
+   */
   payload: Record<string, unknown>;
   replyCount: number;
 };

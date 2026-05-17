@@ -159,7 +159,7 @@ export function ProfileScreen() {
           <div className="flex items-baseline justify-between">
             <SectionLabel number="03" label="Friends in network." />
             <Link
-              to="/profile/friends"
+              to="/friends#list"
               className="text-small text-copper transition-colors duration-instant ease-out-quart hover:text-copper-85"
             >
               See all

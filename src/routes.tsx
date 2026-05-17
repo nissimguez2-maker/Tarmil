@@ -7,7 +7,7 @@ import { ForumsScreen } from './screens/forums/ForumsScreen';
 import { ForumScreen } from './screens/messages/forums/ForumScreen';
 import { ForumThreadScreen } from './screens/messages/forums/ForumThreadScreen';
 import { ProfileScreen } from './screens/profile/ProfileScreen';
-import { FriendProfileScreen } from './screens/profile/friends/FriendProfileScreen';
+import { FriendProfileScreen } from './screens/friends/FriendProfileScreen';
 import { SettingsScreen } from './screens/profile/settings/SettingsScreen';
 import { PlaceScreen } from './screens/place/PlaceScreen';
 import { ToolsScreen } from './screens/tools/ToolsScreen';

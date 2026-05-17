@@ -1,6 +1,7 @@
-import { X, ArrowRight, MessageCircle } from 'lucide-react';
+import { X, ArrowRight } from 'lucide-react';
 import clsx from 'clsx';
 import { Button } from '../../Button';
+import { PingButton } from '../../friends/PingButton';
 import type { FriendOverlap } from '../../../data/myTrip';
 import { formatDateRange } from '../utils/formatDateRange';
 import type { FriendRelationship } from '../utils/relateFriend';
@@ -21,11 +22,16 @@ type Props = {
    */
   onOpenStop?: () => void;
   /**
-   * Opens a DM thread with the friend. Rendered as primary on
-   * `present` / `traveling`, secondary on `future_overlap`. Omit when
-   * there's no DM thread for this friend.
+   * Whether the user has already pinged this friend for the current
+   * co-presence event. When true, the Ping affordance is disabled.
    */
-  onMessage?: () => void;
+  pinged: boolean;
+  /**
+   * Fire a one-shot Ping to this friend. Brief §04 — one per direction
+   * per co-presence event; the receiver opens whichever channel they
+   * already share.
+   */
+  onPing: () => void;
 };
 
 export function FriendSheet({
@@ -33,7 +39,8 @@ export function FriendSheet({
   relationship,
   onClose,
   onOpenStop,
-  onMessage,
+  pinged,
+  onPing,
 }: Props) {
   const eyebrow = eyebrowFor(relationship);
   const dateLine = dateLineFor(relationship);
@@ -101,18 +108,14 @@ export function FriendSheet({
         </Button>
       )}
 
-      {onMessage && (
-        <Button
-          variant={
-            relationship.kind === 'future_overlap' ? 'ghost' : 'accent'
-          }
-          size="sm"
-          fullWidth
-          onClick={onMessage}
-        >
-          <MessageCircle className="h-4 w-4" strokeWidth={1.7} aria-hidden />
-          Message {friend.friendName.split(' ')[0]}
-        </Button>
+      {(relationship.kind === 'present' ||
+        relationship.kind === 'future_overlap') && (
+        <div className="flex items-center justify-between gap-sm">
+          <span className="text-small leading-snug text-cocoa-55">
+            One ping per co-presence event.
+          </span>
+          <PingButton pinged={pinged} onPing={onPing} />
+        </div>
       )}
 
       <p className="text-small leading-snug text-cocoa-55">

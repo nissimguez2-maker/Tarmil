@@ -1,4 +1,4 @@
-import { useCallback, useReducer, useRef } from 'react';
+import { useCallback, useReducer, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
 import { Screen } from '../../components/Screen';
@@ -62,6 +62,12 @@ export function TripScreen() {
   );
   const navigate = useNavigate();
   const tripMapRef = useRef<TripMapHandle>(null);
+  // Local Ping tracking — replaced by SupabaseDataProvider.sendPing in
+  // chunk 4. Tracks which friend ids the user has already pinged so the
+  // FriendSheet's button reflects sent state.
+  const [pingedFriendIds, setPingedFriendIds] = useState<Set<string>>(
+    new Set(),
+  );
 
   // Build a stable per-friend relationship resolver. Memoise on the
   // planned-stops reference so the TripMap effect only re-runs when the
@@ -263,7 +269,6 @@ export function TripScreen() {
             {sheet?.kind === 'friend' && (() => {
               const f = sheet.friend;
               const relationship = getFriendRelationship(f);
-              const dm = data.dms.find((d) => d.friendId === f.id);
               return (
                 <FriendSheet
                   friend={f}
@@ -274,10 +279,14 @@ export function TripScreen() {
                       ? () => openPlannedStop(relationship.stopId)
                       : undefined
                   }
-                  onMessage={
-                    dm
-                      ? () => navigate(`/messages/dms/${dm.id}`)
-                      : undefined
+                  pinged={pingedFriendIds.has(f.id)}
+                  onPing={() =>
+                    setPingedFriendIds((prev) => {
+                      if (prev.has(f.id)) return prev;
+                      const next = new Set(prev);
+                      next.add(f.id);
+                      return next;
+                    })
                   }
                 />
               );
