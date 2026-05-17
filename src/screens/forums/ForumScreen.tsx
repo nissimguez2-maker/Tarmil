@@ -1,16 +1,16 @@
 import { Link, useParams } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
-import { Screen } from '../../../components/Screen';
-import { TopBar } from '../../../components/TopBar';
-import { LoadingPanel, ErrorPanel } from '../../../components/DataState';
-import { Avatar } from '../../../components/shared/Avatar';
-import { useSupabaseData } from '../../../lib/SupabaseDataProvider';
-import { SUBJECT_LABEL } from '../../../data/forums';
+import { Screen } from '../../components/Screen';
+import { TopBar } from '../../components/TopBar';
+import { LoadingPanel, ErrorPanel } from '../../components/DataState';
+import { Avatar } from '../../components/shared/Avatar';
+import { useSupabaseData } from '../../lib/SupabaseDataProvider';
+import { SUBJECT_LABEL } from '../../data/forums';
 
 /**
- * Single subject-forum view. v0.3 dropped the city-level forum + chip
- * filter; every forum is now (city × subject), so the TopBar title is
- * the subject label and the eyebrow is the city. Thread list is unfiltered.
+ * Single subject-forum view (one entry in the city × subject grid). The
+ * TopBar title is the subject label, eyebrow is the city. Thread list is
+ * unfiltered — search lives at the Forums tab level.
  */
 export function ForumScreen() {
   const { forumId = '' } = useParams<{ forumId: string }>();
@@ -46,8 +46,8 @@ export function ForumScreen() {
 
         {threads.length === 0 ? (
           <p className="rounded-2xl bg-sand shadow-card p-md text-small leading-snug text-cocoa-70">
-            No threads in this forum yet. Kick the first one off with "New
-            post" in Activity.
+            No threads in this forum yet. Tap any subject pill on the
+            Forums tab to find a busier one.
           </p>
         ) : (
           <ul className="flex flex-col gap-sm">
@@ -61,7 +61,7 @@ export function ForumScreen() {
               return (
                 <li key={t.id}>
                   <Link
-                    to={`/messages/forums/${forum.id}/${t.id}`}
+                    to={`/forums/${forum.id}/${t.id}`}
                     className="flex items-start gap-sm rounded-2xl bg-sand shadow-card p-md transition-colors duration-instant ease-out-quart hover:bg-sand/80 active:bg-rope/50"
                   >
                     <Avatar

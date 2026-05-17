@@ -103,7 +103,7 @@ export function TripDetailScreen() {
               {threads.slice(0, 3).map((t) => (
                 <li key={t.id}>
                   <Link
-                    to={`/messages/forums/${forum.id}/${t.id}`}
+                    to={`/forums/${forum.id}/${t.id}`}
                     className="flex flex-col gap-px rounded-2xl bg-ivory shadow-card p-md transition-colors duration-instant ease-out-quart hover:bg-sand/40 active:bg-sand/60"
                   >
                     <span className="font-serif text-lede italic text-cocoa">
