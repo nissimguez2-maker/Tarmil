@@ -31,6 +31,7 @@ type DemoState = {
   resolvedRequestIds: string[];
   hasOnboarded: boolean;
   arrivalToastStopId: string | null;
+  settingsOverrides: Record<string, string>;
 };
 
 const STORAGE_KEY = 'tarmil-demo-state-v1';
@@ -43,6 +44,7 @@ const DEFAULT: DemoState = {
   resolvedRequestIds: [],
   hasOnboarded: false,
   arrivalToastStopId: null,
+  settingsOverrides: {},
 };
 
 function load(): DemoState {
@@ -145,6 +147,15 @@ export function setOnboarded(value: boolean) {
 
 export function setArrivalToast(stopId: string | null) {
   state = { ...state, arrivalToastStopId: stopId };
+  save();
+  emit();
+}
+
+export function setSettingsOverride(key: string, value: string) {
+  state = {
+    ...state,
+    settingsOverrides: { ...state.settingsOverrides, [key]: value },
+  };
   save();
   emit();
 }

@@ -21,7 +21,6 @@ import { PlannedRouteSheet } from '../../components/tripMap/sheets/PlannedRouteS
 import { PlannedStopSheet } from '../../components/tripMap/sheets/PlannedStopSheet';
 import { ArrivalConfirmSheet } from '../../components/tripMap/sheets/ArrivalConfirmSheet';
 import { FiltersSheet } from '../../components/tripMap/sheets/FiltersSheet';
-import { ConfirmFriendTripSheet } from '../../components/tripMap/sheets/ConfirmFriendTripSheet';
 import { MapOnlyToggle } from '../../components/tripMap/ui/MapOnlyToggle';
 import { DensityFab } from '../../components/tripMap/ui/DensityFab';
 import { DensityLegend } from '../../components/tripMap/ui/DensityLegend';
@@ -258,13 +257,6 @@ export function TripScreen() {
                 />
               );
             })()}
-            {sheet?.kind === 'confirmFriendTrip' && (
-              <ConfirmFriendTripSheet
-                friend={sheet.friend}
-                onSave={handleSaveStop}
-                onClose={() => dispatch({ type: 'CLOSE_SHEET' })}
-              />
-            )}
             {sheet?.kind === 'searchDest' && (
               <SearchDestinationSheet
                 onPickSuggestion={(s) =>

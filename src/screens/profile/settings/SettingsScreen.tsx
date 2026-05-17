@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { ChevronRight, RotateCcw } from 'lucide-react';
 import clsx from 'clsx';
 import { Screen } from '../../../components/Screen';
@@ -7,6 +8,11 @@ import { SectionLabel } from '../../../components/SectionLabel';
 import { Button } from '../../../components/Button';
 import { Modal } from '../../../components/shared/Modal';
 import { useSupabaseData } from '../../../lib/SupabaseDataProvider';
+import {
+  useDemoState,
+  setSettingsOverride,
+  clearDemoState,
+} from '../../../lib/demoState';
 
 type Row = {
   label: string;
@@ -90,10 +96,11 @@ const SECTIONS: { number: string; label: string; rows: Row[] }[] = [
  */
 export function SettingsScreen() {
   const { resetDemo } = useSupabaseData();
+  const { settingsOverrides } = useDemoState();
+  const navigate = useNavigate();
   const [resetting, setResetting] = useState(false);
   const [resetMessage, setResetMessage] = useState<string | null>(null);
   const [openRow, setOpenRow] = useState<Row | null>(null);
-  const [overrides, setOverrides] = useState<Record<string, string>>({});
   const [signoutOpen, setSignoutOpen] = useState(false);
 
   async function handleReset() {
@@ -109,7 +116,13 @@ export function SettingsScreen() {
     }
   }
 
-  const valueFor = (row: Row) => overrides[row.label] ?? row.value;
+  const valueFor = (row: Row) => settingsOverrides[row.label] ?? row.value;
+
+  const handleSignOut = () => {
+    clearDemoState();
+    setSignoutOpen(false);
+    navigate('/welcome', { replace: true });
+  };
 
   return (
     <Screen>
@@ -176,7 +189,7 @@ export function SettingsScreen() {
         currentValue={openRow ? valueFor(openRow) : ''}
         onSelect={(value) => {
           if (openRow) {
-            setOverrides((prev) => ({ ...prev, [openRow.label]: value }));
+            setSettingsOverride(openRow.label, value);
           }
           setOpenRow(null);
         }}
@@ -186,6 +199,7 @@ export function SettingsScreen() {
       <SignOutConfirm
         open={signoutOpen}
         onClose={() => setSignoutOpen(false)}
+        onConfirm={handleSignOut}
       />
     </Screen>
   );
@@ -253,9 +267,11 @@ function SettingDetailSheet({
 function SignOutConfirm({
   open,
   onClose,
+  onConfirm,
 }: {
   open: boolean;
   onClose: () => void;
+  onConfirm: () => void;
 }) {
   return (
     <Modal
@@ -272,10 +288,7 @@ function SignOutConfirm({
             variant="accent"
             size="sm"
             fullWidth
-            onClick={() => {
-              // Demo mode: just acknowledge and close. A real auth flow lands later.
-              onClose();
-            }}
+            onClick={onConfirm}
           >
             Sign out
           </Button>
@@ -283,10 +296,9 @@ function SignOutConfirm({
       }
     >
       <p className="text-body leading-snug text-cocoa-70">
-        You can come back any time. Your route, friends and messages stay on Tarmil's servers.
-      </p>
-      <p className="mt-sm text-small leading-snug text-cocoa-55">
-        Demo build — sign-out here is a no-op.
+        Demo build — this clears local toggles (off-grid, per-stop
+        visibility, friend requests, settings overrides) and returns you
+        to the welcome screen so you can run the demo again from scratch.
       </p>
     </Modal>
   );

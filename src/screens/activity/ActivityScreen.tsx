@@ -110,18 +110,13 @@ export function ActivityScreen() {
 
 
       <ul className="flex flex-col gap-sm p-md pb-32">
-        {topLevel.map((post) => {
+        {topLevel
+          .filter((post) => post.kind !== 'overlap_notification')
+          .map((post) => {
           const author = post.authorFriendId
             ? authorById.get(post.authorFriendId)
             : undefined;
           const r = reactionsByTarget.get(post.id) ?? [];
-
-          // v0.8 audit: overlap_notification cards no longer render in
-          // the Activity feed. The Right Now strip above + the Trip-map
-          // friend pins cover the present-overlap signal; future overlaps
-          // surface via the friend's own trip_declaration post. Rows stay
-          // in the DB so we can re-enable later if the strip ever leaves.
-          if (post.kind === 'overlap_notification') return null;
 
           if (post.kind === 'whos_down') {
             return (
