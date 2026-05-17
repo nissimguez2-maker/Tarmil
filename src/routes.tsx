@@ -13,6 +13,8 @@ import { FriendProfileScreen } from './screens/profile/FriendProfileScreen';
 import { SettingsScreen } from './screens/profile/settings/SettingsScreen';
 import { PlaceScreen } from './screens/place/PlaceScreen';
 import { ToolsScreen } from './screens/tools/ToolsScreen';
+import { WelcomeScreen } from './screens/onboarding/WelcomeScreen';
+import { useDemoState } from './lib/demoState';
 
 /**
  * Route table — v0.8 IA.
@@ -33,10 +35,18 @@ import { ToolsScreen } from './screens/tools/ToolsScreen';
  * Legacy paths redirect to their new homes for any in-flight links.
  */
 export function AppRoutes() {
+  const { hasOnboarded } = useDemoState();
+
   return (
     <Routes>
       <Route element={<AppLayout />}>
-        <Route index element={<Navigate to="/trip" replace />} />
+        <Route
+          index
+          element={
+            <Navigate to={hasOnboarded ? '/trip' : '/welcome'} replace />
+          }
+        />
+        <Route path="/welcome" element={<WelcomeScreen />} />
 
         <Route path="/trip" element={<TripScreen />} />
         <Route path="/trip/stop/:plannedStopId" element={<TripDetailScreen />} />

@@ -63,9 +63,9 @@ export function ToolDetailSheet({ toolId, onClose }: Props) {
   );
 }
 
-// ---------- Currency converter (interactive) ----------
+// ---------- Currency converter (interactive, trip-aware) ----------
 
-type Currency = 'ILS' | 'USD' | 'EUR' | 'BRL' | 'ARS' | 'THB';
+type Currency = 'ILS' | 'USD' | 'EUR' | 'BRL' | 'ARS' | 'UYU' | 'THB';
 
 const CURRENCY_LABEL: Record<Currency, string> = {
   ILS: 'Shekel · ₪',
@@ -73,6 +73,7 @@ const CURRENCY_LABEL: Record<Currency, string> = {
   EUR: 'Euro · €',
   BRL: 'Real · R$',
   ARS: 'Argentine peso · $',
+  UYU: 'Uruguayan peso · $U',
   THB: 'Baht · ฿',
 };
 
@@ -83,12 +84,32 @@ const TO_ILS: Record<Currency, number> = {
   EUR: 3.95,
   BRL: 0.72,
   ARS: 0.0036,
+  UYU: 0.09,
   THB: 0.105,
 };
 
+const CURRENCY_BY_DESTINATION: Record<string, Currency> = {
+  buzios: 'BRL',
+  'sao-paulo': 'BRL',
+  jericoacoara: 'BRL',
+  'rio-de-janeiro': 'BRL',
+  'buenos-aires': 'ARS',
+  'punta-del-este': 'UYU',
+};
+
 function CurrencyConverter() {
-  const [from, setFrom] = useState<Currency>('ILS');
-  const [to, setTo] = useState<Currency>('BRL');
+  const { data } = useSupabaseData();
+  const tripCurrency: Currency = useMemo(() => {
+    const firstStop = data?.plannedStops[0];
+    if (!firstStop) return 'BRL';
+    return CURRENCY_BY_DESTINATION[firstStop.id] ?? 'BRL';
+  }, [data]);
+  const tripDestination = useMemo(
+    () => data?.plannedStops[0]?.nameEn,
+    [data],
+  );
+  const [from, setFrom] = useState<Currency>('USD');
+  const [to, setTo] = useState<Currency>(tripCurrency);
   const [amount, setAmount] = useState('100');
 
   const numeric = Number.parseFloat(amount.replace(/,/g, '')) || 0;
@@ -101,6 +122,13 @@ function CurrencyConverter() {
         Live rates. Values update once a day and keep the last rate even when
         offline.
       </p>
+
+      {tripDestination && (
+        <p className="rounded-2xl bg-sand p-md text-small leading-snug text-cocoa-70">
+          You're headed to <span className="text-cocoa">{tripDestination}</span> —
+          defaulting to {CURRENCY_LABEL[tripCurrency].split(' · ')[0]}.
+        </p>
+      )}
 
       <div className="flex flex-col gap-xs">
         <label className="meta-caps text-cocoa-55">Amount</label>
@@ -166,11 +194,11 @@ function formatNumber(n: number): string {
   return n.toFixed(2);
 }
 
-// ---------- Pre-trip checklist (interactive) ----------
+// ---------- Pre-trip checklist (interactive, trip-aware) ----------
 
-const CHECKLIST_ITEMS = [
-  { id: 'visa', label: 'Visa for every stop on the route' },
-  { id: 'vaccines', label: 'Vaccines — yellow fever, hep A' },
+type ChecklistItem = { id: string; label: string; trip?: true };
+
+const GENERIC_CHECKLIST: ChecklistItem[] = [
   { id: 'insurance', label: 'Travel insurance with extreme-sports cover' },
   { id: 'passport', label: 'Passport valid at least six months' },
   { id: 'cards', label: 'Credit cards + local cash' },
@@ -179,10 +207,47 @@ const CHECKLIST_ITEMS = [
   { id: 'pharmacy', label: 'Basic pharmacy kit' },
 ];
 
-function PreTripChecklist() {
-  const [checked, setChecked] = useState<Record<string, boolean>>({});
-  const done = Object.values(checked).filter(Boolean).length;
+const COUNTRY_BY_STOP_ID: Record<string, string> = {
+  buzios: 'Brazil',
+  'sao-paulo': 'Brazil',
+  jericoacoara: 'Brazil',
+  'rio-de-janeiro': 'Brazil',
+  'buenos-aires': 'Argentina',
+  'punta-del-este': 'Uruguay',
+};
 
+const COUNTRY_ITEMS: Record<string, ChecklistItem[]> = {
+  Brazil: [
+    { id: 'br-yellow', label: 'Yellow-fever vaccine (Brazil mandates entry)', trip: true },
+    { id: 'br-cash', label: 'Reais cash for Búzios and Jeri (ATMs limited)', trip: true },
+  ],
+  Argentina: [
+    { id: 'ar-pesos', label: 'Argentine pesos in cash (blue-dollar rate beats cards)', trip: true },
+  ],
+  Uruguay: [
+    { id: 'uy-pesos', label: 'Uruguayan pesos for Punta del Este weekends', trip: true },
+  ],
+};
+
+function PreTripChecklist() {
+  const { data } = useSupabaseData();
+  const [checked, setChecked] = useState<Record<string, boolean>>({});
+
+  const items = useMemo(() => {
+    const countries = new Set<string>();
+    for (const s of data?.plannedStops ?? []) {
+      const c = COUNTRY_BY_STOP_ID[s.id];
+      if (c) countries.add(c);
+    }
+    const tripItems: ChecklistItem[] = [];
+    for (const c of countries) {
+      const seq = COUNTRY_ITEMS[c];
+      if (seq) tripItems.push(...seq);
+    }
+    return [...tripItems, ...GENERIC_CHECKLIST];
+  }, [data]);
+
+  const done = Object.values(checked).filter(Boolean).length;
   const toggle = (id: string) =>
     setChecked((prev) => ({ ...prev, [id]: !prev[id] }));
 
@@ -190,15 +255,15 @@ function PreTripChecklist() {
     <div className="flex flex-col gap-md">
       <div className="flex items-baseline justify-between">
         <p className="text-small text-cocoa-70">
-          Run through everything before you leave. Keeps your head clear on the way out.
+          Tailored to your planned stops — country-specific items on top.
         </p>
         <span className="text-small text-cocoa-55 tnum">
-          {done}/{CHECKLIST_ITEMS.length}
+          {done}/{items.length}
         </span>
       </div>
 
       <ul className="flex flex-col">
-        {CHECKLIST_ITEMS.map((item, i) => {
+        {items.map((item, i) => {
           const isChecked = !!checked[item.id];
           return (
             <li
@@ -226,7 +291,7 @@ function PreTripChecklist() {
                 </span>
                 <span
                   className={clsx(
-                    'text-body',
+                    'min-w-0 flex-1 text-body',
                     isChecked
                       ? 'text-cocoa-55 line-through'
                       : 'text-cocoa',
@@ -234,6 +299,11 @@ function PreTripChecklist() {
                 >
                   {item.label}
                 </span>
+                {item.trip && (
+                  <span className="meta-caps shrink-0 text-copper">
+                    Trip
+                  </span>
+                )}
               </button>
             </li>
           );
@@ -367,21 +437,37 @@ function SignScanner() {
 
 // ---------- Friend balances (mock, uses real friend rows) ----------
 
+type Expense = {
+  id: string;
+  friendId: string;
+  amount: number;
+  note: string;
+};
+
 function FriendBalances() {
   const { data } = useSupabaseData();
   const friends = useMemo(
     () => (data ? data.friendOverlaps.slice(0, 4) : []),
     [data],
   );
+  const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [addOpen, setAddOpen] = useState(false);
+
+  const baseAmounts = [128, -45, 220, -12];
 
   const balances = useMemo(() => {
     if (!data) return [];
-    return friends.map((f, i) => ({
-      friend: f,
-      amount: [128, -45, 220, -12][i] ?? 0,
-      currency: 'BRL',
-    }));
-  }, [data, friends]);
+    return friends.map((f, i) => {
+      const extra = expenses
+        .filter((e) => e.friendId === f.id)
+        .reduce((sum, e) => sum + e.amount, 0);
+      return {
+        friend: f,
+        amount: (baseAmounts[i] ?? 0) + extra,
+        currency: 'BRL',
+      };
+    });
+  }, [data, friends, expenses]);
 
   return (
     <div className="flex flex-col gap-md">
@@ -423,11 +509,159 @@ function FriendBalances() {
         })}
       </ul>
 
-      <Button variant="ghost" size="sm" fullWidth>
+      {expenses.length > 0 && (
+        <div className="rounded-2xl bg-sand p-md">
+          <span className="meta-caps text-copper">Recent</span>
+          <ul className="mt-2 flex flex-col gap-1">
+            {expenses.slice(-3).reverse().map((e) => {
+              const f = friends.find((x) => x.id === e.friendId);
+              return (
+                <li
+                  key={e.id}
+                  className="flex items-center justify-between gap-sm text-small text-cocoa-70"
+                >
+                  <span className="truncate">
+                    {e.note} · {f?.friendName ?? 'Friend'}
+                  </span>
+                  <span className="tnum shrink-0 text-cocoa">
+                    {e.amount > 0 ? '+' : ''}
+                    {e.amount} BRL
+                  </span>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
+
+      <Button
+        variant="ghost"
+        size="sm"
+        fullWidth
+        onClick={() => setAddOpen(true)}
+      >
         <Wallet className="h-4 w-4" aria-hidden />
         Add shared expense
       </Button>
+
+      <AddExpenseModal
+        open={addOpen}
+        onClose={() => setAddOpen(false)}
+        friends={friends}
+        onSubmit={(expense) => {
+          setExpenses((prev) => [...prev, expense]);
+          setAddOpen(false);
+        }}
+      />
     </div>
+  );
+}
+
+function AddExpenseModal({
+  open,
+  onClose,
+  friends,
+  onSubmit,
+}: {
+  open: boolean;
+  onClose: () => void;
+  friends: { id: string; friendName: string }[];
+  onSubmit: (expense: Expense) => void;
+}) {
+  const [friendId, setFriendId] = useState(friends[0]?.id ?? '');
+  const [amount, setAmount] = useState('');
+  const [note, setNote] = useState('');
+  const [direction, setDirection] = useState<'owesYou' | 'youOwe'>('owesYou');
+
+  const handleSubmit = () => {
+    const numeric = Number.parseFloat(amount.replace(/,/g, ''));
+    if (!Number.isFinite(numeric) || numeric <= 0 || !friendId) return;
+    const signed = direction === 'owesYou' ? numeric : -numeric;
+    onSubmit({
+      id: `exp-${Date.now()}`,
+      friendId,
+      amount: Math.round(signed),
+      note: note.trim() || 'Shared expense',
+    });
+    setAmount('');
+    setNote('');
+  };
+
+  return (
+    <Modal
+      open={open}
+      onClose={onClose}
+      eyebrow="New expense"
+      title="Add shared expense"
+      level={1}
+      footer={
+        <Button variant="accent" fullWidth onClick={handleSubmit}>
+          Add to tab
+        </Button>
+      }
+    >
+      <div className="flex flex-col gap-md">
+        <div className="flex flex-col gap-xs">
+          <label className="meta-caps text-cocoa-55">With</label>
+          <select
+            value={friendId}
+            onChange={(e) => setFriendId(e.target.value)}
+            className="h-12 w-full appearance-none rounded-full border border-cocoa-15 bg-sand px-md text-body text-cocoa focus:border-copper focus:outline-none"
+          >
+            {friends.map((f) => (
+              <option key={f.id} value={f.id}>
+                {f.friendName}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="flex flex-col gap-xs">
+          <label className="meta-caps text-cocoa-55">Amount (BRL)</label>
+          <input
+            type="text"
+            inputMode="decimal"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            placeholder="0"
+            className="h-12 w-full rounded-full border border-cocoa-15 bg-sand px-md text-lede tnum text-cocoa focus:border-copper focus:outline-none"
+          />
+        </div>
+
+        <div className="flex flex-col gap-xs">
+          <label className="meta-caps text-cocoa-55">Direction</label>
+          <div className="inline-flex self-start rounded-full bg-cocoa-08 p-1">
+            {(['owesYou', 'youOwe'] as const).map((d) => (
+              <button
+                key={d}
+                type="button"
+                onClick={() => setDirection(d)}
+                className={clsx(
+                  'rounded-full px-md py-1.5 text-small font-medium leading-none',
+                  'transition-colors duration-instant ease-out-quart',
+                  direction === d
+                    ? 'bg-cocoa text-ivory'
+                    : 'text-cocoa-70 hover:text-cocoa',
+                )}
+              >
+                {d === 'owesYou' ? 'They owe you' : 'You owe them'}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-xs">
+          <label className="meta-caps text-cocoa-55">Note</label>
+          <input
+            type="text"
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+            placeholder="Dinner at Aprazível"
+            className="h-12 w-full rounded-full border border-cocoa-15 bg-sand px-md text-body text-cocoa placeholder:text-cocoa-55 focus:border-copper focus:outline-none"
+          />
+        </div>
+      </div>
+    </Modal>
   );
 }
 

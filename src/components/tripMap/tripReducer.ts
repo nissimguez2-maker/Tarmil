@@ -8,7 +8,6 @@ export type SheetState =
       candidate: { nameHe: string; latlng: [number, number] };
       editingStopId?: string;
     }
-  | { kind: 'confirmFriendTrip'; friend: FriendOverlap }
   | { kind: 'plannedRoute' }
   | { kind: 'plannedStop'; stopId: string }
   | { kind: 'arrivalConfirm'; stopId: string }

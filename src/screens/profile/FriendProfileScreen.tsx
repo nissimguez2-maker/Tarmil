@@ -7,6 +7,7 @@ import { StatsPill } from '../../components/profile/StatsPill';
 import { PastTripCard } from '../../components/profile/PastTripCard';
 import { PingButton } from '../../components/friends/PingButton';
 import { useSupabaseData } from '../../lib/SupabaseDataProvider';
+import { useDemoState } from '../../lib/demoState';
 
 type RawPastTrip = {
   destinationHe?: string;
@@ -36,6 +37,7 @@ const SEASON_LABEL: Record<string, string> = {
 export function FriendProfileScreen() {
   const { friendId = '' } = useParams<{ friendId: string }>();
   const { data, loading, error, sendPing } = useSupabaseData();
+  const { offGrid } = useDemoState();
 
   if (loading) return <LoadingPanel />;
   if (error || !data) return <ErrorPanel error={error} />;
@@ -125,13 +127,19 @@ export function FriendProfileScreen() {
         style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 16px)' }}
       >
         <span className="me-auto text-small leading-snug text-cocoa-55">
-          One ping per co-presence event.
+          {offGrid
+            ? 'Off-grid — pings paused while you stay invisible.'
+            : 'One ping per co-presence event.'}
         </span>
         <PingButton
           pinged={data.pings.some(
             (p) => p.friendId === friend.id && p.direction === 'sent',
           )}
-          onPing={() => sendPing(friend.id)}
+          onPing={() => {
+            if (offGrid) return;
+            sendPing(friend.id);
+          }}
+          offGrid={offGrid}
         />
       </div>
     </Screen>

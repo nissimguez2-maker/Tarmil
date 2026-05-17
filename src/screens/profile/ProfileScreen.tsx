@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Settings, EyeOff } from 'lucide-react';
 import clsx from 'clsx';
@@ -12,11 +11,12 @@ import { FriendGridItem } from '../../components/profile/FriendGridItem';
 import { PastTripCard } from '../../components/profile/PastTripCard';
 import { useSupabaseData } from '../../lib/SupabaseDataProvider';
 import { relateFriend } from '../../components/tripMap/utils/relateFriend';
-
-type TripVisibility = {
-  friends: boolean;
-  fof: boolean;
-};
+import {
+  useDemoState,
+  setOffGrid,
+  setStopVisibility,
+  getStopVisibility,
+} from '../../lib/demoState';
 
 const COUNTRY_BY_DESTINATION_ID: Record<string, string> = {
   buzios: 'br',
@@ -28,22 +28,19 @@ const COUNTRY_BY_DESTINATION_ID: Record<string, string> = {
 };
 
 /**
- * Profile tab. Four editorial sections — Off-grid mode (one-tap),
- * route, past trips, friends grid, and per-trip privacy. Tools moved to
- * their own top-level /tools tab so this screen stays focused on
- * identity, history, and privacy controls. Settings remains in the
- * top-bar gear.
+ * Profile tab. Four editorial sections — Off-grid mode, route, past
+ * trips, friends grid, and per-trip privacy. Tools moved to their own
+ * top-level /tools tab so this screen stays focused on identity,
+ * history, and privacy controls. Settings remains in the top-bar gear.
  *
- * Off-grid mode and per-trip privacy are local UI state for the demo —
- * brief §"A note on the privacy opt-in matrix" gives them as MVP
- * commitments; the persistence schema lands in a follow-up PR.
+ * Off-grid mode and per-stop visibility persist via localStorage
+ * (`src/lib/demoState`) — the shared Supabase backend is global demo
+ * state today, so per-user toggles can't live in the DB until auth
+ * lands.
  */
 export function ProfileScreen() {
   const { data, loading, error } = useSupabaseData();
-  const [offGrid, setOffGrid] = useState(false);
-  const [tripVisibility, setTripVisibility] = useState<
-    Record<string, TripVisibility>
-  >({});
+  const demo = useDemoState();
 
   if (loading) return <LoadingPanel />;
   if (error || !data) return <ErrorPanel error={error} />;
@@ -58,19 +55,6 @@ export function ProfileScreen() {
   const stopsCount = data.plannedStops.length;
 
   const friendsForGrid = data.friendOverlaps.slice(0, 6);
-
-  const visibilityFor = (stopId: string): TripVisibility =>
-    tripVisibility[stopId] ?? { friends: true, fof: false };
-
-  const setVisibilityFor = (
-    stopId: string,
-    next: Partial<TripVisibility>,
-  ) => {
-    setTripVisibility((prev) => ({
-      ...prev,
-      [stopId]: { ...visibilityFor(stopId), ...next },
-    }));
-  };
 
   return (
     <Screen>
@@ -118,8 +102,8 @@ export function ProfileScreen() {
 
         <div className="flex flex-col gap-lg px-md">
           <OffGridCard
-            on={offGrid}
-            onToggle={() => setOffGrid((v) => !v)}
+            on={demo.offGrid}
+            onToggle={() => setOffGrid(!demo.offGrid)}
           />
 
           <section className="flex flex-col gap-sm">
@@ -201,44 +185,34 @@ export function ProfileScreen() {
           <section className="flex flex-col gap-sm">
             <SectionLabel number="04" label="Per-trip privacy." />
             <p className="text-small leading-snug text-cocoa-70">
-              Each declared stop is private by default. Opt in per trip to
-              share with direct friends, or with friends-of-friends.
+              Friends see the city, not the exact dates. Hide any stop
+              that's nobody's business — your call, per trip.
             </p>
             <ul className="overflow-hidden rounded-2xl border border-cocoa-15 bg-ivory">
               {data.plannedStops.map((stop, i) => {
-                const v = visibilityFor(stop.id);
+                const visible = getStopVisibility(stop.id);
                 return (
                   <li
                     key={stop.id}
                     className={clsx(
-                      'flex flex-col gap-2 px-md py-3',
+                      'flex items-center justify-between gap-sm px-md py-3',
                       i > 0 && 'border-t border-cocoa-08',
                     )}
                   >
-                    <div className="flex items-baseline justify-between gap-sm">
+                    <div className="flex min-w-0 flex-1 flex-col leading-tight">
                       <span className="font-serif text-body italic text-cocoa">
                         {stop.nameEn}
                       </span>
                       <span className="text-small text-cocoa-55">
-                        <span className="tnum">{stop.nights}</span> nights
+                        <span className="tnum">{stop.nights}</span> nights ·{' '}
+                        {visible ? 'Visible to friends' : 'Hidden from friends'}
                       </span>
                     </div>
-                    <div className="flex flex-wrap items-center gap-2">
-                      <TinyToggle
-                        label="Friends"
-                        on={v.friends}
-                        onChange={() =>
-                          setVisibilityFor(stop.id, { friends: !v.friends })
-                        }
-                      />
-                      <TinyToggle
-                        label="Friends of friends"
-                        on={v.fof}
-                        onChange={() =>
-                          setVisibilityFor(stop.id, { fof: !v.fof })
-                        }
-                      />
-                    </div>
+                    <VisibilityToggle
+                      visible={visible}
+                      onChange={() => setStopVisibility(stop.id, !visible)}
+                      label={`Toggle ${stop.nameEn} visibility`}
+                    />
                   </li>
                 );
               })}
@@ -311,37 +285,36 @@ function OffGridCard({
   );
 }
 
-function TinyToggle({
-  label,
-  on,
+function VisibilityToggle({
+  visible,
   onChange,
+  label,
 }: {
-  label: string;
-  on: boolean;
+  visible: boolean;
   onChange: () => void;
+  label: string;
 }) {
   return (
     <button
       type="button"
       role="switch"
-      aria-checked={on}
+      aria-checked={visible}
+      aria-label={label}
       onClick={onChange}
       className={clsx(
-        'inline-flex items-center gap-2 rounded-full ps-3 pe-3 py-1.5 text-small font-medium leading-none',
+        'relative inline-flex h-6 w-11 shrink-0 items-center rounded-full',
         'transition-colors duration-instant ease-out-quart',
-        on
-          ? 'bg-copper text-ivory'
-          : 'border border-cocoa-15 text-cocoa-70 hover:text-cocoa',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory',
+        visible ? 'bg-copper' : 'bg-cocoa-15',
       )}
     >
       <span
         aria-hidden
         className={clsx(
-          'inline-block h-2.5 w-2.5 rounded-full',
-          on ? 'bg-ivory' : 'bg-cocoa-30',
+          'inline-block h-5 w-5 transform rounded-full bg-ivory shadow-card transition-transform duration-instant ease-out-quart',
+          visible ? 'translate-x-5' : 'translate-x-0.5',
         )}
       />
-      {label}
     </button>
   );
 }

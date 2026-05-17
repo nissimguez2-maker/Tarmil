@@ -47,6 +47,17 @@ type Mutators = {
   resetDemo: () => Promise<void>;
   joinForum: (forumId: string) => Promise<void>;
   postForumReply: (threadId: string, body: string) => Promise<void>;
+  /**
+   * Create a new thread in a forum. The body is stored verbatim — callers
+   * are responsible for any prefix encoding (see `data/forumPurpose.ts`
+   * for the demo's purpose-tag convention). The thread's subject column
+   * mirrors the parent forum's subject.
+   */
+  postForumThread: (params: {
+    forumId: string;
+    title: string;
+    body: string;
+  }) => Promise<void>;
   toggleReaction: (
     targetType: ReactionTargetType,
     targetId: string,
@@ -389,6 +400,19 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
     );
   }, []);
 
+  const refetchForumThreads = useCallback(async () => {
+    const { data: rows, error: fetchErr } = await supabase
+      .from('forum_threads')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (fetchErr) return;
+    setData((prev) =>
+      prev
+        ? { ...prev, forumThreads: rows.map(forumThreadRowToThread) }
+        : prev,
+    );
+  }, []);
+
   const refetchActivity = useCallback(async () => {
     const { data: rows, error: fetchErr } = await supabase
       .from('activity_posts')
@@ -703,6 +727,39 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
     [refetchForumReplies],
   );
 
+  const postForumThread = useCallback(
+    async ({
+      forumId,
+      title,
+      body,
+    }: {
+      forumId: string;
+      title: string;
+      body: string;
+    }) => {
+      const trimmedTitle = title.trim();
+      const trimmedBody = body.trim();
+      if (!trimmedTitle || !trimmedBody) return;
+      const forum = dataRef.current?.forums.find((f) => f.id === forumId);
+      if (!forum) return;
+      const id = `thread-${forumId}-${Date.now()}`;
+      const { error: insertErr } = await supabase.from('forum_threads').insert({
+        id,
+        forum_id: forumId,
+        author_friend_id: null,
+        title: trimmedTitle,
+        body: trimmedBody,
+        reply_count: 0,
+        follow_count: 0,
+        pinned: false,
+        subject: forum.subject ?? 'meetups',
+      });
+      if (insertErr) throw insertErr;
+      await refetchForumThreads();
+    },
+    [refetchForumThreads],
+  );
+
   const toggleReaction = useCallback(
     async (
       targetType: ReactionTargetType,
@@ -944,6 +1001,7 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
         resetDemo,
         joinForum,
         postForumReply,
+        postForumThread,
         toggleReaction,
         postActivity,
         submitPlaceReview,
