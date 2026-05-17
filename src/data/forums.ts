@@ -79,22 +79,14 @@ const CITY_SEEDS: CitySeed[] = [
     nameEn: 'Rio de Janeiro',
     cityLabel: 'Rio de Janeiro',
     blurbBySubject: {
-      accommodation:
-        'Hostels, Airbnbs and which neighborhoods feel safe at night.',
-      transits:
-        'Metro, taxis, buses, Uber, the airport run — how to move around.',
-      scams_danger:
-        'No-go streets, fake taxis, beach scams, what to do if it gets weird.',
-      food:
-        'Açaí bowls, churrascarias on a budget, the best pão de queijo in Botafogo.',
-      activities_treks:
-        'Pão de Açúcar sunrise hikes, Tijuca trails, surf lessons in Ipanema.',
-      nightlife_parties:
-        'Lapa blocos, baile funk recommendations, who is going out tonight.',
-      money_visas:
-        'ATMs, cash-vs-card, exchange spots, visa runs and paperwork.',
-      meetups:
-        'Israeli get-togethers, hostel pickups, "who is here this week?".',
+      accommodation: 'Hostels, neighbourhoods, what is actually safe at night',
+      transits: 'Metro, Uber, taxis, the GIG airport run',
+      scams_danger: 'What to watch for in Lapa, Copa, Centro',
+      food: 'Açaí, churrasco, where Israelis eat in Botafogo',
+      activities_treks: 'Pão de Açúcar, Tijuca trails, Ipanema surf',
+      nightlife_parties: 'Lapa blocos, baile funk, who is out tonight',
+      money_visas: 'ATMs, Wise vs cash, federal police hours',
+      meetups: 'Who is in Rio this week',
     },
     memberCountBySubject: {
       accommodation: 246,
@@ -113,22 +105,14 @@ const CITY_SEEDS: CitySeed[] = [
     nameEn: 'Búzios',
     cityLabel: 'Búzios',
     blurbBySubject: {
-      accommodation:
-        'Pousadas, beach hostels and where to stay if you do not have a car.',
-      transits:
-        'Getting in from Rio, scooters, taxis and the beach hop route.',
-      scams_danger:
-        'Mostly chill, but: beach pickpockets, peak-season overcharges.',
-      food:
-        'Seafood under fairy lights, açaí shacks, where the locals eat lunch.',
-      activities_treks:
-        'Boat trips to 12-beach loops, kayak rentals, snorkel spots.',
-      nightlife_parties:
-        'Beach bars on Rua das Pedras, sunset DJ sets, full-moon parties.',
-      money_visas:
-        'ATMs are limited — bring cash from Rio. Card friendliness.',
-      meetups:
-        'Long-weekend crews, peninsula day-trippers from Rio, who is in.',
+      accommodation: 'Pousadas, beach hostels, which streets get loud',
+      transits: 'Rio drive, scooters, the beach hop route',
+      scams_danger: 'Beach pickpockets, peak-season overcharges',
+      food: 'Seafood, açaí shacks, where locals eat lunch',
+      activities_treks: 'The 12-beach boat loop, kayaks, snorkel spots',
+      nightlife_parties: 'Rua das Pedras bars, sunset DJs, full moons',
+      money_visas: 'ATMs are limited. Bring cash from Rio',
+      meetups: 'Weekend crews, day trips from Rio',
     },
     memberCountBySubject: {
       accommodation: 98,
@@ -147,22 +131,14 @@ const CITY_SEEDS: CitySeed[] = [
     nameEn: 'São Paulo',
     cityLabel: 'São Paulo',
     blurbBySubject: {
-      accommodation:
-        'Vila Madalena vs Jardins, where to crash, the youth hostel scene.',
-      transits:
-        'Metro is the move. Ubers OK, taxis sketchy at the airport.',
-      scams_danger:
-        'Where not to walk at night, phone snatches, the standard SP rules.',
-      food:
-        'Asado in Vila Madalena, ramen in Liberdade, pastel in the markets.',
-      activities_treks:
-        'Day trips to Embu, Santos beach runs, MASP exhibits worth queueing for.',
-      nightlife_parties:
-        'Vila Madalena bar crawls, Augusta clubs, electronic nights in Bixiga.',
-      money_visas:
-        'ATMs everywhere, card-friendly city, federal police for visa work.',
-      meetups:
-        'Israeli expats meetups, weekly coffee at Paulista, hostel buddies.',
+      accommodation: 'Vila Madalena vs Jardins, the hostel scene',
+      transits: 'Metro, Uber, GRU airport at night',
+      scams_danger: 'Where not to walk at night, phone snatches',
+      food: 'Asado in Vila Mada, ramen in Liberdade, market pastels',
+      activities_treks: 'Embu day trips, Santos beaches, MASP',
+      nightlife_parties: 'Vila Madalena, Augusta, Bixiga electronic',
+      money_visas: 'ATMs everywhere, federal police for visa work',
+      meetups: 'Israeli meetups, Paulista coffee, hostel crews',
     },
     memberCountBySubject: {
       accommodation: 211,
@@ -181,22 +157,14 @@ const CITY_SEEDS: CitySeed[] = [
     nameEn: 'Jericoacoara',
     cityLabel: 'Jericoacoara',
     blurbBySubject: {
-      accommodation:
-        'Pousadas, kitesurfer hostels and the no-cars-in-town quirk.',
-      transits:
-        'Fortaleza bus + buggy. The sand street rules. Day trip logistics.',
-      scams_danger:
-        'Tiny town, mostly fine. The kitesurf school overcharge is the main one.',
-      food:
-        'Beachfront grilled fish, açaí bowls, the best caipirinha in town.',
-      activities_treks:
-        'Kitesurf lessons, buggy tours, lagoon hopping, dune sandboarding.',
-      nightlife_parties:
-        'Sunset at Duna do Pôr-do-Sol, forró on the sand, full-moon bonfires.',
-      money_visas:
-        'Limited ATMs — bring reais from Fortaleza. Most pousadas take cards.',
-      meetups:
-        'Kite crews looking for partners, dune sunset groups, jeep-share rides.',
+      accommodation: 'Pousadas, kitesurf hostels, no cars in town',
+      transits: 'Fortaleza bus + buggy. The sand street rules',
+      scams_danger: 'Tiny town. Kitesurf school overcharge is the one',
+      food: 'Beachfront fish, açaí bowls, the caipirinha to try',
+      activities_treks: 'Kitesurf, buggy tours, lagoons, sandboarding',
+      nightlife_parties: 'Sunset at Duna do Pôr-do-Sol, forró, full moons',
+      money_visas: 'Limited ATMs. Bring reais from Fortaleza',
+      meetups: 'Kite crews, sunset groups, jeep-share rides',
     },
     memberCountBySubject: {
       accommodation: 92,
@@ -238,8 +206,7 @@ const recommended: Forum[] = [
     kind: 'city',
     subject: 'meetups',
     memberCount: 142,
-    heroBlurbHe:
-      'Palermo coffee meetups, San Telmo Sunday market crew, asado plans.',
+    heroBlurbHe: 'Palermo coffee, San Telmo Sunday market, asado plans',
     isRecommended: true,
   },
 ];
