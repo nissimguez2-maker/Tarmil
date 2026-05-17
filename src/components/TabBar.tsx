@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { Map, Newspaper, MessageSquare, Compass, User } from 'lucide-react';
+import { Map, Users, MessagesSquare, Wrench, User } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import clsx from 'clsx';
 
@@ -12,16 +12,16 @@ type Tab = {
 /**
  * Floating dark tab capsule — the signature premium-app move.
  *
- * Tab order: Trip → Activity → Messages → Tools → Profile (left to right).
+ * Tab order: Trip → Friends → Forums → Tools → Profile (left to right).
  * The capsule floats above the page (8mm above the safe-area bottom), sits
  * on the cocoa fill with ivory icons, and lifts the active tab into a
  * copper-filled inner pill. No edge-to-edge bar, no hard top border.
  */
 const TABS: Tab[] = [
   { to: '/trip', label: 'Trip', Icon: Map },
-  { to: '/activity', label: 'Activity', Icon: Newspaper },
-  { to: '/messages', label: 'Messages', Icon: MessageSquare },
-  { to: '/around', label: 'Around', Icon: Compass },
+  { to: '/friends', label: 'Friends', Icon: Users },
+  { to: '/forums', label: 'Forums', Icon: MessagesSquare },
+  { to: '/tools', label: 'Tools', Icon: Wrench },
   { to: '/profile', label: 'Profile', Icon: User },
 ];
 
