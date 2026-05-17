@@ -154,7 +154,7 @@ function SubjectPill({ forum, previewTitle, tabbable }: SubjectPillProps) {
         )}
       </div>
       <ChevronRight
-        className="h-5 w-5 shrink-0 text-cocoa-55"
+        className="h-5 w-5 shrink-0 text-cocoa-30"
         strokeWidth={1.5}
         aria-hidden
       />

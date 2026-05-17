@@ -79,7 +79,7 @@ export function NextTripCard({ stops, onTap, onAdd }: Props) {
         >
           <span className="meta-caps text-copper">Next trip</span>
 
-          <h2 className="truncate font-serif text-sub font-bold leading-[1.05] tracking-[-0.022em] text-cocoa">
+          <h2 className="truncate font-serif text-sub font-bold leading-tight text-cocoa">
             {title}
           </h2>
 

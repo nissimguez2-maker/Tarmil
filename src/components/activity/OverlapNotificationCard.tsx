@@ -11,9 +11,12 @@ type Props = {
 };
 
 /**
- * Trip-overlap notification card. Distinctive treatment: sand bg + cocoa-15
- * border + Fraunces italic body. CTA is a one-tap Ping — the brief makes
- * Ping the only one-to-one signal, so calendar overlaps converge there.
+ * Trip-overlap notification card. Distinctive treatment so it pops above
+ * the quieter trip-declaration / who's-down cards: sand fill, a 1px
+ * copper border on the start edge as the eye-catching mark, Fraunces
+ * italic body for the human-voiced overlap announcement, and a copper
+ * Ping CTA — the brief makes Ping the only one-to-one signal, so
+ * calendar overlaps converge there.
  */
 export function OverlapNotificationCard({
   post,
@@ -21,8 +24,17 @@ export function OverlapNotificationCard({
   pinged,
   onPing,
 }: Props) {
+  const dateLabel =
+    typeof post.payload?.dateLabel === 'string'
+      ? (post.payload.dateLabel as string)
+      : null;
+  const overlapDays =
+    typeof post.payload?.overlapDays === 'number'
+      ? (post.payload.overlapDays as number)
+      : null;
+
   return (
-    <article className="flex flex-col gap-sm rounded-2xl bg-sand shadow-card p-md">
+    <article className="flex flex-col gap-sm rounded-2xl bg-sand shadow-card ring-1 ring-copper-70 p-md">
       <header className="flex items-center gap-sm">
         <Avatar
           photoUrl={friend?.photoUrl}
@@ -31,17 +43,38 @@ export function OverlapNotificationCard({
           size="md"
           statusDot
         />
-        <div className="flex min-w-0 flex-1 flex-col leading-tight">
+        <div className="flex min-w-0 flex-1 flex-col gap-px leading-tight">
           <span className="truncate font-serif text-lede italic text-cocoa">
             {friend?.friendName ?? 'Friend'}
           </span>
-          <span className="meta-caps text-copper">Calendar overlap</span>
+          <span className="meta-caps text-copper">
+            {overlapDays
+              ? `${overlapDays}-day overlap`
+              : 'Calendar overlap'}
+          </span>
         </div>
       </header>
+
       <p className="font-serif text-lede italic leading-snug text-cocoa">
         {post.bodyHe}
       </p>
-      <div className="flex justify-start">
+
+      {dateLabel && (
+        <p className="text-small text-cocoa-70">
+          <span className="tnum">{dateLabel}</span>
+          {friend?.zoneLabel && (
+            <>
+              <span aria-hidden className="px-1 text-cocoa-30">·</span>
+              <span>{friend.zoneLabel}</span>
+            </>
+          )}
+        </p>
+      )}
+
+      <div className="flex items-center justify-between gap-sm pt-xs">
+        <span className="text-small leading-snug text-cocoa-55">
+          One ping per co-presence event.
+        </span>
         <PingButton pinged={pinged} onPing={onPing} />
       </div>
     </article>

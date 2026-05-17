@@ -99,7 +99,7 @@ export function PlaceScreen() {
             </span>
           </div>
         ) : (
-          <p className="text-body text-cocoa-55">
+          <p className="rounded-2xl bg-sand p-md text-small leading-snug text-cocoa-70">
             None of your friends have been here yet.
           </p>
         )}
