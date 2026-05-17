@@ -44,4 +44,5 @@ Editorial, warm, deliberate. Sentence cap ~28 words, prefer ~14. Active voice. P
 2. **One mental model per tab.** Trip = location, Activity = social feed, Around = discovery, Forums = stranger Q&A, Tools = utilities.
 3. **Quality over quantity.** Curated data, considered design, no feature bloat. Every surface earns its place.
 4. **Partner placements are invisible to the user.** Ranking boost happens internally; nothing in the UI labels a place as a partner or paid.
-5. **Logical Tailwind utilities only.** The Hebrew RTL launch flips `dir="rtl"` and physical utilities break then. Use `ps-*`, `pe-*`, `start-*`, `end-*`, `ms-*`, `me-*`, `border-s-*`, `border-e-*`, `rounded-s-*`, `rounded-e-*`.
+5. **Religious content present, not accentuated.** Chabad houses and kosher spots stay in the place catalogue for travellers who want them, but the surface design doesn't lead with them — no religious forum subject in the city × subject set, no religious-coded paid-placement promotion. Tarmil is a travel app that includes religious-relevant places, not a religious app.
+6. **Logical Tailwind utilities only.** The Hebrew RTL launch flips `dir="rtl"` and physical utilities break then. Use `ps-*`, `pe-*`, `start-*`, `end-*`, `ms-*`, `me-*`, `border-s-*`, `border-e-*`, `rounded-s-*`, `rounded-e-*`.
