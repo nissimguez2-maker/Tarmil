@@ -2,7 +2,7 @@ import { Screen } from '../../components/Screen';
 import { TopBar } from '../../components/TopBar';
 import { SectionLabel } from '../../components/SectionLabel';
 import { ToolsGrid } from '../../components/tools/ToolsGrid';
-import { ToolsButton } from '../../components/shared/ToolsButton';
+import { ProfileAvatarButton } from '../../components/shared/ProfileAvatarButton';
 
 /**
  * Standalone Tools route. Tools also live in the TopBar wrench on every
@@ -12,7 +12,7 @@ import { ToolsButton } from '../../components/shared/ToolsButton';
 export function ToolsScreen() {
   return (
     <Screen>
-      <TopBar title="Tools" end={<ToolsButton />} />
+      <TopBar title="Tools" end={<ProfileAvatarButton initial="N" name="Nissim Guez" />} />
 
       <div className="flex flex-col gap-lg p-md pb-xl">
         <section className="flex flex-col gap-sm">

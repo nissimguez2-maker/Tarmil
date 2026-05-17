@@ -7,15 +7,17 @@ Investor-facing click-through mockup of the Tarmil mobile app.
 - **English-first** for international investors. The brand and schema are bilingual-ready (Hebrew column names stay in place for the eventual launch — UI renders the English copy).
 - Pure click-through. No real backend, no real maps API, no real translation.
 
-The app ships **5 bottom tabs**, exactly as the Product Brief mandates:
+The app ships **5 bottom tabs**, reorganized in v0.6 so every tab is one mental model — location, social feed, places discovery, public Q&A, utilities:
 
 | Tab | Surface |
 |---|---|
-| **Trip** | Continent-scale map with pins and bubbles (past, present, declared future). Curated places, friend pins, next-trip card. |
-| **Friends** | Four sub-sections via a top SubNav — **Overlaps** (one-tap Ping per row) · **Activity** wall (text + emoji + optional city pin + optional 2–4 option poll, flat one-level replies, lightweight reactions) · **Ping** (one-shot signal history) · **Friends** list (search, friend requests, FoF opt-ins, density toggle). |
-| **Forums** | City × subject (5 subjects per city). Per-post identity choice (post as your name, or anonymous). One level of replies — no nested threads. |
-| **Tools** | Grid of tiles — Currency converter · Pre-trip checklist · Voice translator · Menu translator · Sign scanner · Friend balances · eSIM & data · Places nearby. |
-| **Profile** | Off-grid one-tap switch, your trip, past trips, friends preview, per-trip privacy. Settings gear in the top bar. |
+| **Trip** | Continent-scale map with pins and bubbles (past, present, declared future). Curated places, friend pins, next-trip card. Tap a friend → one-tap **Ping**. |
+| **Activity** | The social feed. "Right now" overlap strip at the top with inline Ping. Wall of trip declarations, who's-down posts (with optional 2–4 option **polls**), questions and party invites. Reactions and flat one-level replies. Compose FAB. Top-right **bell** opens the Ping history sheet (Sent / Received). |
+| **Around** | Curated places discovery. Three modes — **Now** (within 50km), **My trip** (filter by planned stop), **Search** (global). Internal ranking boost on partner placements; no "Partner" or "Sponsored" badge in the UI. |
+| **Forums** | City × 8 subjects — Accommodation · Transits · Scams & danger · Food · Activities & treks · Nightlife & parties · Money & visas · Meetups. Anyone verified can post; identity per post is the user's choice (real name or anonymous). One level of replies. |
+| **Tools** | Grid of 7 tiles — Currency converter · Pre-trip checklist · Voice translator · Menu translator · Sign scanner · Friend balances · eSIM & data. Open-use-close utilities only. |
+
+**Profile** moved to a top-right **avatar icon** on every tab — drills to the existing Profile screen (off-grid, route, past trips, friends list, per-trip privacy, settings gear). Friend management lives at `/profile/friends`; single-friend drill-down at `/profile/friend/:id`.
 
 ---
 
@@ -201,12 +203,11 @@ supabase/
 A 60-second walk-through for an investor:
 
 1. **Trip** — Map opens with bubbles and pins. Tap a friend pin → FriendSheet with one-tap **Ping**. Tap a place → reviews + friends-who-know.
-2. **Friends → Overlaps** — Each row has its own Ping button. Tap one; the row enters a "Pinged" state (no re-pinging the same overlap — brief §04).
-3. **Friends → Activity** — Tap the copper FAB to compose. Add an emoji, pin a city, optionally attach a 2-4 option **poll**. Submit; the post renders with a `<PollCard>` that lets the user vote.
-4. **Friends → Ping** — See the Ping you just sent + the seeded inbound pings.
-5. **Forums** — City-grouped subject forums. Drill into a thread; the reply composer has an identity selector (post as your name, or anonymous).
-6. **Tools** — 8 tiles. Tap **Places nearby** to see the partner-channel paid placements as a sheet. Tap **Currency converter** for the interactive demo.
-7. **Profile** — Big copper **Off-grid mode** switch. Per-trip privacy section. Settings gear at the top.
+2. **Activity** — "Right now" strip at the top shows present overlaps; tap Ping on any one. Below: the feed of trip declarations and who's-down posts with polls. Tap the **bell** for Ping history (Sent / Received). Compose FAB → text + emoji + city pin + optional 2-4 option poll.
+3. **Around** — Three modes (Now / My trip / Search). Tap a card → place detail. Reserve / Contact CTAs on cards with reservation URLs.
+4. **Forums** — City-grouped 8-subject pills (Accommodation, Transits, Scams & danger, Food, Activities & treks, Nightlife & parties, Money & visas, Meetups). Drill into a thread; the reply composer has an identity selector.
+5. **Tools** — 7 utility tiles. Tap Currency converter for the interactive demo.
+6. **Avatar (top-right)** — Drills to Profile: big copper **Off-grid mode** switch, route card, past trips, per-trip privacy section, Settings gear. From Profile → "See all" friends → /profile/friends with search + FoF toggles.
 
 ---
 

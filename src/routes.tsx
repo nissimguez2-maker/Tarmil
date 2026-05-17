@@ -2,31 +2,35 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import { AppLayout } from './layouts/AppLayout';
 import { TripScreen } from './screens/trip/TripScreen';
 import { TripDetailScreen } from './screens/trip/TripDetailScreen';
-import { FriendsScreen } from './screens/friends/FriendsScreen';
+import { ActivityScreen } from './screens/activity/ActivityScreen';
+import { AroundScreen } from './screens/around/AroundScreen';
 import { ForumsScreen } from './screens/forums/ForumsScreen';
 import { ForumScreen } from './screens/forums/ForumScreen';
 import { ForumThreadScreen } from './screens/forums/ForumThreadScreen';
 import { ProfileScreen } from './screens/profile/ProfileScreen';
-import { FriendProfileScreen } from './screens/friends/FriendProfileScreen';
+import { FriendsListScreen } from './screens/profile/FriendsListScreen';
+import { FriendProfileScreen } from './screens/profile/FriendProfileScreen';
 import { SettingsScreen } from './screens/profile/settings/SettingsScreen';
 import { PlaceScreen } from './screens/place/PlaceScreen';
 import { ToolsScreen } from './screens/tools/ToolsScreen';
 
 /**
- * Route table.
+ * Route table — v0.6 IA.
  *
  * Tabs (5):
- *   /trip       — TripScreen (map + planned route)
- *   /friends    — FriendsScreen (Overlaps · Activity · Ping · List)
+ *   /trip       — TripScreen (map + planned route + friend pins)
+ *   /activity   — ActivityScreen (the social feed)
+ *   /around     — AroundScreen (curated places discovery)
  *   /forums     — ForumsScreen (city × subject)
- *   /tools      — ToolsScreen (utility tiles, incl. Places nearby)
- *   /profile    — ProfileScreen
+ *   /tools      — ToolsScreen (utility tiles)
  *
- * Drill-downs nest under their parent tab folder in src/screens/.
+ * Profile drills from the top-right avatar on every tab:
+ *   /profile             — ProfileScreen (off-grid, route, past trips, privacy)
+ *   /profile/friends     — FriendsListScreen (manage relationships)
+ *   /profile/friend/:id  — FriendProfileScreen (single friend)
+ *   /profile/settings    — SettingsScreen (account + privacy + notifications)
  *
- * Legacy paths (`/activity`, `/messages/*`, `/around`, `/profile/friends`)
- * redirect to their new homes for any deep-links investors may have
- * bookmarked. Chunks 2–5 replace the stubs with real screens.
+ * Legacy paths redirect to their new homes for any in-flight links.
  */
 export function AppRoutes() {
   return (
@@ -38,11 +42,8 @@ export function AppRoutes() {
         <Route path="/trip/stop/:plannedStopId" element={<TripDetailScreen />} />
         <Route path="/place/:id" element={<PlaceScreen />} />
 
-        <Route path="/friends" element={<FriendsScreen />} />
-        <Route
-          path="/friends/friend/:friendId"
-          element={<FriendProfileScreen />}
-        />
+        <Route path="/activity" element={<ActivityScreen />} />
+        <Route path="/around" element={<AroundScreen />} />
 
         <Route path="/forums" element={<ForumsScreen />} />
         <Route path="/forums/:forumId" element={<ForumScreen />} />
@@ -54,10 +55,19 @@ export function AppRoutes() {
         <Route path="/tools" element={<ToolsScreen />} />
 
         <Route path="/profile" element={<ProfileScreen />} />
+        <Route path="/profile/friends" element={<FriendsListScreen />} />
+        <Route
+          path="/profile/friend/:friendId"
+          element={<FriendProfileScreen />}
+        />
         <Route path="/profile/settings" element={<SettingsScreen />} />
 
-        {/* Legacy redirects — preserved so any in-flight links keep working. */}
-        <Route path="/activity" element={<Navigate to="/friends#activity" replace />} />
+        {/* Legacy redirects. */}
+        <Route path="/friends" element={<Navigate to="/activity" replace />} />
+        <Route
+          path="/friends/friend/:friendId"
+          element={<LegacyFriendProfileRedirect />}
+        />
         <Route path="/messages" element={<Navigate to="/forums" replace />} />
         <Route
           path="/messages/forums/:forumId"
@@ -68,15 +78,6 @@ export function AppRoutes() {
           element={<LegacyForumThreadRedirect />}
         />
         <Route path="/messages/*" element={<Navigate to="/forums" replace />} />
-        <Route path="/around" element={<Navigate to="/tools" replace />} />
-        <Route
-          path="/profile/friends"
-          element={<Navigate to="/friends#list" replace />}
-        />
-        <Route
-          path="/profile/friend/:friendId"
-          element={<LegacyFriendProfileRedirect />}
-        />
 
         <Route path="*" element={<Navigate to="/trip" replace />} />
       </Route>
@@ -84,7 +85,6 @@ export function AppRoutes() {
   );
 }
 
-// Tiny inline redirects so URL parameters survive the legacy-path move.
 function LegacyForumRedirect() {
   const segments = window.location.pathname.split('/');
   const forumId = segments[3];
@@ -101,5 +101,5 @@ function LegacyForumThreadRedirect() {
 function LegacyFriendProfileRedirect() {
   const segments = window.location.pathname.split('/');
   const friendId = segments[3];
-  return <Navigate to={`/friends/friend/${friendId}`} replace />;
+  return <Navigate to={`/profile/friend/${friendId}`} replace />;
 }

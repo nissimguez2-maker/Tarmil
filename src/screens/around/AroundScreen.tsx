@@ -1,17 +1,23 @@
 import { useMemo, useState } from 'react';
 import { ChevronDown, Check } from 'lucide-react';
 import clsx from 'clsx';
-import { SubNav } from '../shared/SubNav';
-import { SearchBar } from '../shared/SearchBar';
-import { BusinessCard } from './BusinessCard';
+import { Screen } from '../../components/Screen';
+import { TopBar } from '../../components/TopBar';
+import { LoadingPanel, ErrorPanel } from '../../components/DataState';
+import { SubNav } from '../../components/shared/SubNav';
+import { SearchBar } from '../../components/shared/SearchBar';
+import { ToolsButton } from '../../components/shared/ToolsButton';
+import { ProfileAvatarButton } from '../../components/shared/ProfileAvatarButton';
+import { BusinessCard } from '../../components/tools/BusinessCard';
 import { useSupabaseData } from '../../lib/SupabaseDataProvider';
+import type { Place } from '../../data/places';
 import type { PlannedStop } from '../../data/plannedStops';
 
 type Mode = 'now' | 'trip';
 
 const MODE_TABS: { id: Mode; label: string }[] = [
   { id: 'now', label: 'Now' },
-  { id: 'trip', label: 'Your trip' },
+  { id: 'trip', label: 'My trip' },
 ];
 
 const CITY_BY_DESTINATION_ID: Record<string, string> = {
@@ -32,17 +38,20 @@ function cityLabel(destinationId: string): string {
 }
 
 /**
- * Places-nearby panel — partner-channel paid placements presented as a
- * Tools-tab utility. Brief §07 puts partner-channel deals in V1, but the
- * tile exists in the Tools shell today so we have somewhere to test the
- * Reserve / Contact CTAs once partners go live.
+ * Around tab — curated places discovery. Promoted to a primary tab in
+ * v0.6 because it's daily-open content for travelers ("where do I eat
+ * tonight?") and the strongest monetization surface.
  *
- * Lifted from the old AroundMeScreen — same three modes (Now, Your trip,
- * global search), minus the outer Screen/TopBar (the parent Modal frames
- * the surface).
+ * Shows every curated place in the catalogue. Partner placements get
+ * internal ranking boost only — the user never sees a "Partner" or
+ * "Sponsored" badge. Reserve / Contact CTAs render on cards with a
+ * reservation URL (a venue property, not a partner signal).
+ *
+ * Three modes: Now (within 50km), My trip (filter by planned stop),
+ * Search (global match by name / description / city / category).
  */
-export function AroundMePanel() {
-  const { data } = useSupabaseData();
+export function AroundScreen() {
+  const { data, loading, error } = useSupabaseData();
   const [mode, setMode] = useState<Mode>('trip');
   const [selectedDestinationId, setSelectedDestinationId] = useState<
     string | null
@@ -50,15 +59,24 @@ export function AroundMePanel() {
   const [pickerOpen, setPickerOpen] = useState(false);
   const [query, setQuery] = useState('');
 
-  const paidPlaces = useMemo(() => {
+  // Sort by internal ranking boost: paid placements first, then alpha
+  // by city, then by name. This is the only place the paid_placement
+  // flag matters to UI — purely as an ordering signal, never as a label.
+  const rankedPlaces = useMemo(() => {
     if (!data) return [];
-    return data.places.filter((p) => p.paidPlacement);
+    return [...data.places].sort((a, b) => {
+      if (!!a.paidPlacement !== !!b.paidPlacement) {
+        return a.paidPlacement ? -1 : 1;
+      }
+      return a.englishName.localeCompare(b.englishName);
+    });
   }, [data]);
 
-  if (!data) return null;
+  if (loading) return <LoadingPanel />;
+  if (error || !data) return <ErrorPanel error={error} />;
 
   const present = data.myTrip.present;
-  const nowPlaces = paidPlaces.filter((p) =>
+  const nowPlaces = rankedPlaces.filter((p) =>
     withinKm(p.lat, p.lng, present[0], present[1], 50),
   );
 
@@ -69,15 +87,15 @@ export function AroundMePanel() {
     ? stops.find((s) => s.id === activeDestinationId) ?? null
     : null;
   const tripPlaces = activeDestinationId
-    ? paidPlaces.filter((p) => p.destinationId === activeDestinationId)
+    ? rankedPlaces.filter((p) => p.destinationId === activeDestinationId)
     : [];
 
   const trimmed = query.trim().toLowerCase();
   const searching = trimmed.length > 0;
   const matchesQuery = (text: string | undefined) =>
     !!text && text.toLowerCase().includes(trimmed);
-  const searchResults = searching
-    ? paidPlaces.filter(
+  const searchResults: Place[] = searching
+    ? rankedPlaces.filter(
         (p) =>
           matchesQuery(p.englishName) ||
           matchesQuery(p.englishDescription) ||
@@ -92,75 +110,69 @@ export function AroundMePanel() {
       ? nowPlaces
       : tripPlaces;
 
-  const searchCities = searching
-    ? [...new Set(searchResults.map((p) => p.destinationId))]
-    : [];
-  const unplannedSearchCities = searchCities.filter(
-    (id) => !stops.some((s) => s.id === id),
-  );
-
   return (
-    <div className="flex flex-col gap-md">
+    <Screen>
+      <TopBar
+        title="Around"
+        end={
+          <div className="flex items-center gap-0.5">
+            <ToolsButton />
+            <ProfileAvatarButton initial="N" name="Nissim Guez" />
+          </div>
+        }
+      />
+
       {!searching && (
         <SubNav items={MODE_TABS} active={mode} onChange={setMode} />
       )}
 
-      <SearchBar
-        value={query}
-        onChange={setQuery}
-        placeholder="Search a place or a city"
-      />
-
-      {!searching && mode === 'trip' && stops.length > 0 && (
-        <CityPicker
-          stops={stops}
-          selectedId={activeDestinationId}
-          open={pickerOpen}
-          onToggle={() => setPickerOpen((o) => !o)}
-          onPick={(id) => {
-            setSelectedDestinationId(id);
-            setPickerOpen(false);
-          }}
+      <div className="flex flex-col gap-md p-md pb-xl">
+        <SearchBar
+          value={query}
+          onChange={setQuery}
+          placeholder="Search a place or a city"
         />
-      )}
 
-      {searching && unplannedSearchCities.length > 0 && (
-        <p className="text-small leading-snug text-cocoa-70">
-          Considering{' '}
-          <span className="font-medium text-cocoa">
-            {unplannedSearchCities.map(cityLabel).join(', ')}
-          </span>
-          ? Tap a card to see what's curated there — you can decide
-          whether to add it to your trip later.
-        </p>
-      )}
+        {!searching && mode === 'trip' && stops.length > 0 && (
+          <CityPicker
+            stops={stops}
+            selectedId={activeDestinationId}
+            open={pickerOpen}
+            onToggle={() => setPickerOpen((o) => !o)}
+            onPick={(id) => {
+              setSelectedDestinationId(id);
+              setPickerOpen(false);
+            }}
+          />
+        )}
 
-      {visiblePlaces.length === 0 ? (
-        <EmptyState
-          mode={searching ? 'search' : mode}
-          cityName={
-            !searching && mode === 'trip'
-              ? activeStop?.nameEn
-              : undefined
-          }
-        />
-      ) : (
-        <ul className="flex flex-col gap-md">
-          {visiblePlaces.map((p) => (
-            <li key={p.id}>
-              <BusinessCard
-                place={p}
-                reviews={data.placeReviews}
-                friends={data.friendOverlaps}
-                cityLabel={
-                  searching ? cityLabel(p.destinationId) : undefined
-                }
-              />
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
+        {visiblePlaces.length === 0 ? (
+          <EmptyState
+            mode={searching ? 'search' : mode}
+            cityName={
+              !searching && mode === 'trip'
+                ? activeStop?.nameEn
+                : undefined
+            }
+          />
+        ) : (
+          <ul className="flex flex-col gap-md">
+            {visiblePlaces.map((p) => (
+              <li key={p.id}>
+                <BusinessCard
+                  place={p}
+                  reviews={data.placeReviews}
+                  friends={data.friendOverlaps}
+                  cityLabel={
+                    searching ? cityLabel(p.destinationId) : undefined
+                  }
+                />
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </Screen>
   );
 }
 
@@ -275,14 +287,14 @@ function EmptyState({
   let copy: string;
   if (mode === 'search') {
     copy =
-      "No partner places match that yet. Try a city, a category, or a venue name — Tarmil is rolling out city by city.";
+      "Nothing matches that yet. Try a city, a category, or a venue name — Tarmil is rolling out city by city.";
   } else if (mode === 'now') {
     copy =
-      'No partner places near you right now. Switch to "Your trip" to see what is curated where you are going next.';
+      'No curated places near you right now. Switch to "My trip" to see what is curated where you are going next.';
   } else {
     copy = cityName
-      ? `No partner places listed in ${cityName} yet. Tarmil is rolling out city by city — your favourite venue can be next.`
-      : 'No partner places listed here yet. Tarmil is rolling out city by city — your favourite venue can be next.';
+      ? `No curated places listed in ${cityName} yet. Tarmil is rolling out city by city.`
+      : 'No curated places listed here yet. Tarmil is rolling out city by city.';
   }
   return (
     <p className="rounded-2xl bg-sand p-md text-small leading-snug text-cocoa-70">

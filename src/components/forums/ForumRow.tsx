@@ -1,10 +1,13 @@
 import { Link } from 'react-router-dom';
 import {
   ChevronRight,
-  Sparkles,
-  PartyPopper,
-  Mountain,
+  BedDouble,
+  Bus,
+  ShieldAlert,
   UtensilsCrossed,
+  Mountain,
+  PartyPopper,
+  CreditCard,
   Users,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
@@ -14,10 +17,13 @@ import { SUBJECT_LABEL } from '../../data/forums';
 import { Button } from '../Button';
 
 const SUBJECT_ICON: Record<ForumSubject, LucideIcon> = {
-  kosher_chabad: Sparkles,
-  parties: PartyPopper,
-  treks_activities: Mountain,
-  restaurants: UtensilsCrossed,
+  accommodation: BedDouble,
+  transits: Bus,
+  scams_danger: ShieldAlert,
+  food: UtensilsCrossed,
+  activities_treks: Mountain,
+  nightlife_parties: PartyPopper,
+  money_visas: CreditCard,
   meetups: Users,
 };
 

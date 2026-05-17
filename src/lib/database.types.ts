@@ -596,10 +596,13 @@ export type Database = {
     }
     Enums: {
       forum_subject:
-        | "kosher_chabad"
-        | "parties"
-        | "treks_activities"
-        | "restaurants"
+        | "accommodation"
+        | "transits"
+        | "scams_danger"
+        | "food"
+        | "activities_treks"
+        | "nightlife_parties"
+        | "money_visas"
         | "meetups"
     }
     CompositeTypes: {
@@ -729,10 +732,13 @@ export const Constants = {
   public: {
     Enums: {
       forum_subject: [
-        "kosher_chabad",
-        "parties",
-        "treks_activities",
-        "restaurants",
+        "accommodation",
+        "transits",
+        "scams_danger",
+        "food",
+        "activities_treks",
+        "nightlife_parties",
+        "money_visas",
         "meetups",
       ],
     },

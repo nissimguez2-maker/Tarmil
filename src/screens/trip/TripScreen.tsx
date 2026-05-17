@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import { Screen } from '../../components/Screen';
 import { TopBar } from '../../components/TopBar';
 import { ToolsButton } from '../../components/shared/ToolsButton';
+import { ProfileAvatarButton } from '../../components/shared/ProfileAvatarButton';
 import {
   TripMap,
   type TripMapHandle,
@@ -160,7 +161,15 @@ export function TripScreen() {
   return (
     <Screen noScroll>
       <div className="flex h-full flex-col">
-        <TopBar title="Your trip" end={<ToolsButton />} />
+        <TopBar
+          title="Your trip"
+          end={
+            <div className="flex items-center gap-0.5">
+              <ToolsButton />
+              <ProfileAvatarButton initial="N" name="Nissim Guez" />
+            </div>
+          }
+        />
 
         <div
           aria-hidden={headerCollapsed}
