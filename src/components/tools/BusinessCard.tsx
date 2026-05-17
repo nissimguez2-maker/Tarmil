@@ -72,6 +72,7 @@ export function BusinessCard({
 
   return (
     <article className="relative overflow-hidden rounded-2xl bg-sand shadow-card">
+      {statusBadge && <StatusPill status={statusBadge} />}
       {onToggleSave && (
         <button
           type="button"
@@ -109,20 +110,6 @@ export function BusinessCard({
                 <>
                   <span aria-hidden className="px-1 text-cocoa-30">·</span>
                   <span className="text-cocoa-55">{cityLabel}</span>
-                </>
-              )}
-              {statusBadge && (
-                <>
-                  <span aria-hidden className="px-1 text-cocoa-30">·</span>
-                  <span
-                    className={clsx(
-                      statusBadge === 'visited'
-                        ? 'text-cocoa-55'
-                        : 'text-copper',
-                    )}
-                  >
-                    {STATUS_LABEL[statusBadge]}
-                  </span>
                 </>
               )}
             </span>
@@ -181,6 +168,33 @@ function inferCtaKind(url?: string): 'tel' | 'whatsapp' | 'external' {
     return 'whatsapp';
   }
   return 'external';
+}
+
+function StatusPill({ status }: { status: PlaceSaveStatus }) {
+  return (
+    <span
+      className={clsx(
+        'absolute start-sm top-sm z-10 inline-flex items-center gap-1 rounded-full px-2 py-1',
+        'text-meta font-semibold uppercase tracking-[0.12em] leading-none',
+        'shadow-card backdrop-blur',
+        status === 'reserved' && 'bg-copper text-ivory',
+        status === 'wishlist' && 'bg-ivory/95 text-copper',
+        status === 'visited' && 'bg-cocoa/85 text-ivory',
+      )}
+      aria-label={`Status: ${STATUS_LABEL[status]}`}
+    >
+      <span
+        aria-hidden
+        className={clsx(
+          'inline-block h-1.5 w-1.5 rounded-full',
+          status === 'reserved' && 'bg-ivory',
+          status === 'wishlist' && 'bg-copper',
+          status === 'visited' && 'bg-ivory',
+        )}
+      />
+      {STATUS_LABEL[status]}
+    </span>
+  );
 }
 
 function Hero({ imageUrl, alt }: { imageUrl?: string; alt: string }) {

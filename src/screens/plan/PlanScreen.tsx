@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Plus } from 'lucide-react';
+import { Plus, Search } from 'lucide-react';
 import clsx from 'clsx';
 import { Screen } from '../../components/Screen';
 import { TopBar } from '../../components/TopBar';
@@ -81,6 +81,8 @@ export function PlanScreen() {
       />
 
       <div className="relative flex flex-col gap-lg p-md pb-xxl">
+        <DiscoverSearchButton onOpen={() => openDiscover()} />
+
         {totalSaved === 0 && upcomingStops.length === 0 && pastStops.length === 0 ? (
           <EmptyAll onDiscover={() => openDiscover()} />
         ) : (
@@ -110,7 +112,7 @@ export function PlanScreen() {
                     placesById={placesById}
                     reviews={data.placeReviews}
                     friends={data.friendOverlaps}
-                    onDiscover={() => openDiscover(stop.id)}
+                    onAdd={() => openDiscover(stop.id)}
                     statusFilter={statusFilter}
                   />
                 ))}
@@ -184,7 +186,8 @@ type StopBlockProps = {
   reviews: import('../../data/placeReviews').PlaceReview[];
   friends: import('../../data/myTrip').FriendOverlap[];
   past?: boolean;
-  onDiscover?: () => void;
+  /** Open Discover prefiltered to this stop. Past stops don't get an add affordance. */
+  onAdd?: () => void;
   statusFilter: StatusFilter;
 };
 
@@ -195,7 +198,7 @@ function StopBlock({
   reviews,
   friends,
   past,
-  onDiscover,
+  onAdd,
   statusFilter,
 }: StopBlockProps) {
   const orderedSaves = useMemo(() => orderByStatus(saves), [saves]);
@@ -212,10 +215,28 @@ function StopBlock({
             <span className="tnum">{stop.nights}</span> nights
           </span>
         </div>
-        <span className="meta-caps shrink-0 text-cocoa-55">
-          <span className="tnum">{saves.length}</span>{' '}
-          {saves.length === 1 ? 'place' : 'places'}
-        </span>
+        <div className="flex shrink-0 items-center gap-sm">
+          <span className="meta-caps text-cocoa-55">
+            <span className="tnum">{saves.length}</span>{' '}
+            {saves.length === 1 ? 'place' : 'places'}
+          </span>
+          {onAdd && !past && (
+            <button
+              type="button"
+              onClick={onAdd}
+              aria-label={`Find a place to add in ${stop.nameEn}`}
+              className={clsx(
+                'inline-flex h-7 w-7 items-center justify-center rounded-full',
+                'border border-cocoa-15 bg-ivory text-cocoa-70',
+                'transition-[transform,background-color,border-color,color] duration-instant ease-out-quart',
+                'hover:border-copper hover:text-copper active:scale-[0.94]',
+                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory',
+              )}
+            >
+              <Plus className="h-3.5 w-3.5" strokeWidth={2} aria-hidden />
+            </button>
+          )}
+        </div>
       </header>
 
       {saves.length === 0 ? (
@@ -232,10 +253,10 @@ function StopBlock({
         ) : (
           <button
             type="button"
-            onClick={onDiscover}
+            onClick={onAdd}
             className="rounded-2xl bg-sand p-md text-start text-small leading-snug text-cocoa-70 transition-colors duration-instant ease-out-quart hover:bg-rope/50 active:bg-rope/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory"
           >
-            Nothing planned in {stop.nameEn} yet — tap to discover places.
+            Nothing planned in {stop.nameEn} yet — tap to find places.
           </button>
         )
       ) : (
@@ -258,6 +279,32 @@ function StopBlock({
         </ul>
       )}
     </section>
+  );
+}
+
+function DiscoverSearchButton({ onOpen }: { onOpen: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onOpen}
+      className={clsx(
+        'group flex items-center gap-sm rounded-full bg-sand px-md py-2.5 text-start',
+        'border border-cocoa-15 shadow-card',
+        'transition-[transform,background-color,border-color] duration-instant ease-out-quart motion-reduce:transition-none',
+        'hover:border-copper hover:bg-ivory active:scale-[0.99]',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory',
+      )}
+    >
+      <Search
+        className="h-4 w-4 shrink-0 text-cocoa-55 group-hover:text-copper"
+        strokeWidth={1.8}
+        aria-hidden
+      />
+      <span className="flex-1 truncate text-body text-cocoa-55 group-hover:text-cocoa">
+        Find a place to save
+      </span>
+      <span className="meta-caps shrink-0 text-copper">Discover</span>
+    </button>
   );
 }
 
