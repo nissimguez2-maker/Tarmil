@@ -35,7 +35,7 @@ const SEASON_LABEL: Record<string, string> = {
  */
 export function FriendProfileScreen() {
   const { friendId = '' } = useParams<{ friendId: string }>();
-  const { data, loading, error } = useSupabaseData();
+  const { data, loading, error, sendPing } = useSupabaseData();
 
   if (loading) return <LoadingPanel />;
   if (error || !data) return <ErrorPanel error={error} />;
@@ -128,11 +128,10 @@ export function FriendProfileScreen() {
           One ping per co-presence event.
         </span>
         <PingButton
-          pinged={false}
-          onPing={() => {
-            // Ping persistence lands in chunk 4 (sendPing provider mutator).
-            // For now this is a no-op so the affordance is visible.
-          }}
+          pinged={data.pings.some(
+            (p) => p.friendId === friend.id && p.direction === 'sent',
+          )}
+          onPing={() => sendPing(friend.id)}
         />
       </div>
     </Screen>

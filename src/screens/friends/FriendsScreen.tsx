@@ -19,9 +19,10 @@ import { PingHistoryRow } from '../../components/friends/PingHistoryRow';
 import { ActivityComposeModal } from '../../components/friends/ActivityComposeModal';
 import { formatDateRange } from '../../components/tripMap/utils/formatDateRange';
 import { useSupabaseData } from '../../lib/SupabaseDataProvider';
-import type { ActivityPost, Poll } from '../../data/activityPosts';
+import type { ActivityPost } from '../../data/activityPosts';
 import type { Reaction } from '../../data/reactions';
 import type { FriendOverlap } from '../../data/myTrip';
+import type { Ping } from '../../data/pings';
 
 type SubTab = 'overlaps' | 'activity' | 'ping' | 'list';
 
@@ -32,40 +33,26 @@ const TABS: { id: SubTab; label: string }[] = [
   { id: 'list', label: 'Friends' },
 ];
 
-type LocalPing = {
-  id: string;
-  friendId: string;
-  direction: 'sent' | 'received';
-  zoneLabel: string;
-  createdAt: number;
-};
-
 /**
  * Friends tab — Overlaps, Activity wall, Ping history, Friends list.
  * Replaces the old Activity tab and the nested /profile/friends list.
- *
- * Ping today is local React state — chunk 4 swaps it for a real
- * `sendPing` provider method backed by a `pings` table. Polls live in
- * `activity_posts.payload.poll`; chunk 4 promotes that to a first-class
- * `poll` column with a `submitPollVote` mutator.
  */
 export function FriendsScreen() {
-  const { data, loading, error, toggleReaction, postActivity } =
-    useSupabaseData();
+  const {
+    data,
+    loading,
+    error,
+    toggleReaction,
+    postActivity,
+    sendPing,
+    submitPollVote,
+  } = useSupabaseData();
 
-  const [localPings, setLocalPings] = useState<LocalPing[]>([]);
   const [composeOpen, setComposeOpen] = useState(false);
   const [listQuery, setListQuery] = useState('');
   const [seeFoF, setSeeFoF] = useState(false);
   const [beSeenFoF, setBeSeenFoF] = useState(false);
   const [showDensity, setShowDensity] = useState(true);
-  // Local poll-vote state. Maps post-id → option indices the user has
-  // voted for. Each vote ALSO optimistically bumps the count in
-  // `localPollVotes[postId][optionIdx]`; chunk 4's real mutator will read
-  // from the post.payload.poll directly.
-  const [localPollVotes, setLocalPollVotes] = useState<
-    Record<string, number[]>
-  >({});
 
   const initialTab: SubTab = (() => {
     const hash = window.location.hash.replace('#', '');
@@ -103,38 +90,10 @@ export function FriendsScreen() {
   if (loading) return <LoadingPanel />;
   if (error || !data) return <ErrorPanel error={error} />;
 
-  const sendPing = (friend: FriendOverlap) => {
-    setLocalPings((prev) => {
-      if (
-        prev.some((p) => p.friendId === friend.id && p.direction === 'sent')
-      ) {
-        return prev;
-      }
-      return [
-        {
-          id: `ping-${friend.id}-${Date.now()}`,
-          friendId: friend.id,
-          direction: 'sent',
-          zoneLabel: friend.zoneLabel,
-          createdAt: Date.now(),
-        },
-        ...prev,
-      ];
-    });
-  };
-
   const hasPinged = (friendId: string) =>
-    localPings.some((p) => p.friendId === friendId && p.direction === 'sent');
-
-  const handlePollVote = (postId: string, optionIndex: number) => {
-    setLocalPollVotes((prev) => {
-      const current = prev[postId] ?? [];
-      if (current.includes(optionIndex)) {
-        return { ...prev, [postId]: current.filter((i) => i !== optionIndex) };
-      }
-      return { ...prev, [postId]: [...current, optionIndex] };
-    });
-  };
+    data.pings.some(
+      (p) => p.friendId === friendId && p.direction === 'sent',
+    );
 
   return (
     <Screen className="relative">
@@ -146,7 +105,7 @@ export function FriendsScreen() {
         <OverlapsPanel
           friends={data.friendOverlaps}
           hasPinged={hasPinged}
-          onPing={sendPing}
+          onPing={(friend) => sendPing(friend.id)}
         />
       )}
 
@@ -157,13 +116,12 @@ export function FriendsScreen() {
             plannedStopIds={data.plannedStops.map((s) => s.id)}
             authorById={authorById}
             reactionsByTarget={reactionsByTarget}
-            localPollVotes={localPollVotes}
             onReact={(postId, emoji) =>
               toggleReaction('activity_post', postId, emoji)
             }
-            onPing={sendPing}
+            onPing={(friend) => sendPing(friend.id)}
             hasPinged={hasPinged}
-            onPollVote={handlePollVote}
+            onPollVote={(postId, i) => submitPollVote(postId, i)}
             onReply={async (parentId, body) =>
               postActivity('whos_down', body, undefined, { parent_id: parentId })
             }
@@ -178,9 +136,7 @@ export function FriendsScreen() {
             onClose={() => setComposeOpen(false)}
             stops={data.plannedStops}
             onSubmit={async (body, destinationId, poll) => {
-              const payload: Record<string, unknown> = {};
-              if (poll) payload.poll = poll;
-              await postActivity('whos_down', body, destinationId, payload);
+              await postActivity('whos_down', body, destinationId, {}, poll);
               setComposeOpen(false);
             }}
           />
@@ -188,11 +144,7 @@ export function FriendsScreen() {
       )}
 
       {active === 'ping' && (
-        <PingPanel
-          friends={data.friendOverlaps}
-          pings={localPings}
-          authorById={authorById}
-        />
+        <PingPanel pings={data.pings} authorById={authorById} />
       )}
 
       {active === 'list' && (
@@ -326,7 +278,6 @@ function ActivityPanel({
   plannedStopIds,
   authorById,
   reactionsByTarget,
-  localPollVotes,
   onReact,
   onPing,
   hasPinged,
@@ -337,7 +288,6 @@ function ActivityPanel({
   plannedStopIds: string[];
   authorById: Map<string, FriendOverlap>;
   reactionsByTarget: Map<string, Reaction[]>;
-  localPollVotes: Record<string, number[]>;
   onReact: (postId: string, emoji: string) => void;
   onPing: (friend: FriendOverlap) => void;
   hasPinged: (friendId: string) => boolean;
@@ -387,15 +337,10 @@ function ActivityPanel({
         }
 
         if (post.kind === 'whos_down') {
-          // Merge local optimistic votes into the rendered poll.
-          const merged = mergePoll(post, localPollVotes[post.id] ?? []);
-          const postWithPoll: ActivityPost = merged
-            ? { ...post, payload: { ...post.payload, poll: merged } }
-            : post;
           return (
             <li key={post.id}>
               <WhosDownCard
-                post={postWithPoll}
+                post={post}
                 author={author}
                 reactions={r}
                 replies={repliesByParent.get(post.id) ?? []}
@@ -423,40 +368,22 @@ function ActivityPanel({
   );
 }
 
-function mergePoll(post: ActivityPost, selfVotes: number[]): Poll | null {
-  const original = (post.payload as Record<string, unknown> | undefined)?.poll as
-    | Poll
-    | undefined;
-  if (!original) return null;
-  const options = original.options.map((option, i) => {
-    const baselineSelfHad = original.votes?.self?.includes(i) ?? false;
-    const nowSelfHas = selfVotes.includes(i);
-    let count = option.voteCount;
-    if (!baselineSelfHad && nowSelfHas) count += 1;
-    if (baselineSelfHad && !nowSelfHas) count -= 1;
-    return { ...option, voteCount: count };
-  });
-  return {
-    ...original,
-    options,
-    votes: { ...(original.votes ?? {}), self: selfVotes },
-  };
-}
-
 // ---------- Ping panel ----------
 
 function PingPanel({
   pings,
   authorById,
 }: {
-  friends: FriendOverlap[];
-  pings: LocalPing[];
+  pings: Ping[];
   authorById: Map<string, FriendOverlap>;
 }) {
   const [segment, setSegment] = useState<'received' | 'sent'>('sent');
   const visible = pings
     .filter((p) => p.direction === segment)
-    .sort((a, b) => b.createdAt - a.createdAt);
+    .sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    );
 
   return (
     <div className="flex flex-col gap-md p-md pb-xl">
@@ -499,7 +426,7 @@ function PingPanel({
                 direction={p.direction}
                 friend={authorById.get(p.friendId)}
                 zoneLabel={p.zoneLabel}
-                at={p.createdAt}
+                at={new Date(p.createdAt).getTime()}
               />
             </li>
           ))}

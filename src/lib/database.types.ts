@@ -7,8 +7,6 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instantiate createClient with right options
-  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "14.5"
   }
@@ -23,6 +21,7 @@ export type Database = {
           id: string
           kind: string
           payload: Json
+          poll: Json | null
           reply_count: number
         }
         Insert: {
@@ -33,6 +32,7 @@ export type Database = {
           id: string
           kind: string
           payload?: Json
+          poll?: Json | null
           reply_count?: number
         }
         Update: {
@@ -43,6 +43,7 @@ export type Database = {
           id?: string
           kind?: string
           payload?: Json
+          poll?: Json | null
           reply_count?: number
         }
         Relationships: [
@@ -72,70 +73,6 @@ export type Database = {
           value?: Json
         }
         Relationships: []
-      }
-      dm_messages: {
-        Row: {
-          body: string
-          created_at: string
-          dm_thread_id: string
-          from_friend: boolean
-          id: string
-        }
-        Insert: {
-          body: string
-          created_at?: string
-          dm_thread_id: string
-          from_friend: boolean
-          id?: string
-        }
-        Update: {
-          body?: string
-          created_at?: string
-          dm_thread_id?: string
-          from_friend?: boolean
-          id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "dm_messages_dm_thread_id_fkey"
-            columns: ["dm_thread_id"]
-            isOneToOne: false
-            referencedRelation: "dm_threads"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      dm_threads: {
-        Row: {
-          friend_id: string
-          id: string
-          last_message_at: string
-          last_message_preview_he: string
-          unread_count: number
-        }
-        Insert: {
-          friend_id: string
-          id: string
-          last_message_at?: string
-          last_message_preview_he?: string
-          unread_count?: number
-        }
-        Update: {
-          friend_id?: string
-          id?: string
-          last_message_at?: string
-          last_message_preview_he?: string
-          unread_count?: number
-        }
-        Relationships: [
-          {
-            foreignKeyName: "dm_threads_friend_id_fkey"
-            columns: ["friend_id"]
-            isOneToOne: true
-            referencedRelation: "friend_overlaps"
-            referencedColumns: ["id"]
-          },
-        ]
       }
       forum_thread_replies: {
         Row: {
@@ -326,101 +263,34 @@ export type Database = {
         }
         Relationships: []
       }
-      group_chat_members: {
+      pings: {
         Row: {
-          chat_id: string
+          created_at: string
+          direction: string
           friend_id: string
-          joined_at: string
+          id: string
+          zone_label: string
         }
         Insert: {
-          chat_id: string
+          created_at?: string
+          direction: string
           friend_id: string
-          joined_at?: string
+          id?: string
+          zone_label: string
         }
         Update: {
-          chat_id?: string
+          created_at?: string
+          direction?: string
           friend_id?: string
-          joined_at?: string
+          id?: string
+          zone_label?: string
         }
         Relationships: [
           {
-            foreignKeyName: "group_chat_members_chat_id_fkey"
-            columns: ["chat_id"]
-            isOneToOne: false
-            referencedRelation: "group_chats"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "group_chat_members_friend_id_fkey"
+            foreignKeyName: "pings_friend_id_fkey"
             columns: ["friend_id"]
             isOneToOne: false
             referencedRelation: "friend_overlaps"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      group_chats: {
-        Row: {
-          city_label: string | null
-          created_at: string
-          destination_id: string | null
-          id: string
-          last_message_at: string
-          name_he: string
-        }
-        Insert: {
-          city_label?: string | null
-          created_at?: string
-          destination_id?: string | null
-          id: string
-          last_message_at?: string
-          name_he: string
-        }
-        Update: {
-          city_label?: string | null
-          created_at?: string
-          destination_id?: string | null
-          id?: string
-          last_message_at?: string
-          name_he?: string
-        }
-        Relationships: []
-      }
-      group_messages: {
-        Row: {
-          author_friend_id: string | null
-          body: string
-          chat_id: string
-          created_at: string
-          id: string
-        }
-        Insert: {
-          author_friend_id?: string | null
-          body: string
-          chat_id: string
-          created_at?: string
-          id?: string
-        }
-        Update: {
-          author_friend_id?: string | null
-          body?: string
-          chat_id?: string
-          created_at?: string
-          id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "group_messages_author_friend_id_fkey"
-            columns: ["author_friend_id"]
-            isOneToOne: false
-            referencedRelation: "friend_overlaps"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "group_messages_chat_id_fkey"
-            columns: ["chat_id"]
-            isOneToOne: false
-            referencedRelation: "group_chats"
             referencedColumns: ["id"]
           },
         ]
