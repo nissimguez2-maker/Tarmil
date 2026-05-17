@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useParams, Navigate, useNavigate } from 'react-router-dom';
-import { Star, Navigation, MapPin } from 'lucide-react';
+import { Star, Navigation, MapPin, Bookmark } from 'lucide-react';
 import clsx from 'clsx';
 import { Screen } from '../../components/Screen';
 import { TopBar } from '../../components/TopBar';
@@ -20,7 +20,8 @@ import { MapsActionSheet } from './MapsActionSheet';
  */
 export function PlaceScreen() {
   const { id } = useParams<{ id: string }>();
-  const { data, loading, error, submitPlaceReview } = useSupabaseData();
+  const { data, loading, error, submitPlaceReview, togglePlaceSave } =
+    useSupabaseData();
   const navigate = useNavigate();
   const [mapsOpen, setMapsOpen] = useState(false);
   if (loading) return <LoadingPanel />;
@@ -38,6 +39,9 @@ export function PlaceScreen() {
     (r) => r.reviewerFriendId !== null,
   );
   const selfReview = placeReviews.find((r) => r.reviewerFriendId === null);
+  const saved = data.placeSaves.some(
+    (s) => s.placeId === place.id && s.friendId === null,
+  );
 
   return (
     <Screen>
@@ -45,6 +49,37 @@ export function PlaceScreen() {
         back
         title={place.englishName}
         eyebrow={categoryLabel(place.category)}
+        end={
+          <button
+            type="button"
+            aria-pressed={saved}
+            aria-label={
+              saved
+                ? `Remove ${place.englishName} from your Plan`
+                : `Save ${place.englishName} to your Plan`
+            }
+            onClick={() =>
+              togglePlaceSave(place.id).catch((e) =>
+                console.error('Failed to toggle save:', e),
+              )
+            }
+            className={clsx(
+              'inline-flex h-9 w-9 items-center justify-center rounded-full',
+              'transition-[transform,background-color,color] duration-instant ease-out-quart motion-reduce:transition-none',
+              'active:scale-[0.94]',
+              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory',
+              saved
+                ? 'bg-copper text-ivory shadow-card hover:bg-copper-85'
+                : 'text-cocoa-55 hover:bg-cocoa-8 hover:text-cocoa active:bg-cocoa-15',
+            )}
+          >
+            <Bookmark
+              className={clsx('h-4 w-4', saved && 'fill-current')}
+              strokeWidth={saved ? 0 : 1.8}
+              aria-hidden
+            />
+          </button>
+        }
       />
 
       <div className="flex flex-col gap-lg p-md pb-xl">

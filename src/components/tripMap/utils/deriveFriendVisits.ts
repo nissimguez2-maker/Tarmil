@@ -118,5 +118,4 @@ export function deriveFriendVisits(place: {
   return out;
 }
 
-/** Friendly export so PlaceSheet can call this without re-importing the type. */
 export type { Place };

@@ -1,13 +1,6 @@
-import type { Place } from '../../data/places';
 import type { FriendOverlap } from '../../data/myTrip';
-import {
-  ALL_FILTERS,
-  DEFAULT_ACTIVE_FILTERS,
-  type FilterId,
-} from './utils/categoryLabel';
 
 export type SheetState =
-  | { kind: 'place'; place: Place | Place }
   | { kind: 'friend'; friend: FriendOverlap }
   | { kind: 'searchDest' }
   | {
@@ -18,7 +11,6 @@ export type SheetState =
   | { kind: 'confirmFriendTrip'; friend: FriendOverlap }
   | { kind: 'plannedRoute' }
   | { kind: 'plannedStop'; stopId: string }
-  | { kind: 'savePlaceToStop'; place: Place | Place }
   | { kind: 'arrivalConfirm'; stopId: string }
   | { kind: 'filters' };
 
@@ -38,7 +30,6 @@ export type TripState = {
   // 'pick'    = pick-a-point mode (reticle + bottom action bar)
   // 'mapOnly' = focus mode, NextTripCard collapsed, no sheets open
   mode: 'default' | 'pick' | 'mapOnly';
-  activeFilters: Set<FilterId>;
   sheet: SheetState | null;
   pickPrefillName?: string;
   arrivalDismissed: boolean;
@@ -50,8 +41,6 @@ export type TripState = {
 export type TripAction =
   | { type: 'OPEN_SHEET'; sheet: SheetState }
   | { type: 'CLOSE_SHEET' }
-  | { type: 'TOGGLE_FILTER'; id: FilterId }
-  | { type: 'SET_FILTERS'; filters: Set<FilterId> }
   | { type: 'START_PICK'; nameHe?: string }
   | { type: 'CANCEL_PICK' }
   | { type: 'CONFIRM_PICK'; latlng: [number, number] }
@@ -63,7 +52,6 @@ export type TripAction =
 export function makeInitialTripState(): TripState {
   return {
     mode: 'default',
-    activeFilters: new Set(DEFAULT_ACTIVE_FILTERS),
     sheet: null,
     arrivalDismissed: false,
     friendsView: 'all',
@@ -84,14 +72,6 @@ export function tripReducer(state: TripState, action: TripAction): TripState {
       };
     case 'CLOSE_SHEET':
       return { ...state, sheet: null };
-    case 'TOGGLE_FILTER': {
-      const next = new Set(state.activeFilters);
-      if (next.has(action.id)) next.delete(action.id);
-      else next.add(action.id);
-      return { ...state, activeFilters: next };
-    }
-    case 'SET_FILTERS':
-      return { ...state, activeFilters: new Set(action.filters) };
     case 'START_PICK':
       return {
         ...state,
@@ -137,8 +117,4 @@ export function tripReducer(state: TripState, action: TripAction): TripState {
         mode: state.mode === 'pick' ? state.mode : 'default',
       };
   }
-}
-
-export function isAllFiltersActive(filters: Set<FilterId>): boolean {
-  return filters.size === ALL_FILTERS.length;
 }

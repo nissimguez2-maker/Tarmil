@@ -15,12 +15,12 @@ import { PlaceScreen } from './screens/place/PlaceScreen';
 import { ToolsScreen } from './screens/tools/ToolsScreen';
 
 /**
- * Route table — v0.6 IA.
+ * Route table — v0.8 IA.
  *
  * Tabs (5):
- *   /trip       — TripScreen (map + planned route + friend pins)
+ *   /trip       — TripScreen (map + planned stops + friend bubbles)
+ *   /plan       — PlanScreen (saved places spine, opens Discover modal)
  *   /activity   — ActivityScreen (the social feed)
- *   /around     — AroundScreen (curated places discovery)
  *   /forums     — ForumsScreen (city × subject)
  *   /tools      — ToolsScreen (utility tiles)
  *

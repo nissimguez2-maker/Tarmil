@@ -9,15 +9,12 @@ import 'leaflet/dist/leaflet.css';
 import 'leaflet.markercluster/dist/MarkerCluster.css';
 import './TripMap.css';
 
-import type { Place } from '../../data/places';
 import type { FriendOverlap, LatLng } from '../../data/myTrip';
 import type { PlannedStop } from '../../data/plannedStops';
-import { drawPlaceMarkers } from './layers/drawPlaceMarkers';
 import { drawFriendBubbles } from './layers/drawFriendBubbles';
 import { drawPresentPin } from './layers/drawPresentPin';
 import { drawPlannedStops } from './layers/drawPlannedStops';
 import { drawDensityHeat } from './layers/drawDensityHeat';
-import { placeMatchesFilters, type FilterId } from './utils/categoryLabel';
 import { DENSITY_POINTS } from '../../data/densityCities';
 import type { SheetState } from './tripReducer';
 
@@ -28,8 +25,6 @@ export type TripMapHandle = {
 
 type Props = {
   mode: 'default' | 'pick' | 'mapOnly';
-  activeFilters: Set<FilterId>;
-  places: Place[];
   /** Already filtered by friendsView upstream — drawn as-is. */
   friendOverlaps: FriendOverlap[];
   /**
@@ -57,8 +52,6 @@ type Props = {
 export const TripMap = forwardRef<TripMapHandle, Props>(function TripMap(
   {
     mode,
-    activeFilters,
-    places,
     friendOverlaps,
     getFriendRelationship,
     presentLocation,
@@ -181,7 +174,6 @@ export const TripMap = forwardRef<TripMapHandle, Props>(function TripMap(
     }
 
     const isPick = mode === 'pick';
-    const noopPlace = () => {};
     const noopFriend = () => {};
     const noopStop = () => {};
 
@@ -198,20 +190,6 @@ export const TripMap = forwardRef<TripMapHandle, Props>(function TripMap(
                 kind: 'plannedStop',
                 stopId: stop.id,
               }),
-      ),
-    );
-
-    const visiblePlaces = places.filter((p) =>
-      placeMatchesFilters(p, activeFilters),
-    );
-    cleanups.push(
-      drawPlaceMarkers(
-        map,
-        visiblePlaces,
-        isPick
-          ? noopPlace
-          : (place) =>
-              handlersRef.current.onOpenSheet({ kind: 'place', place }),
       ),
     );
 
@@ -234,8 +212,6 @@ export const TripMap = forwardRef<TripMapHandle, Props>(function TripMap(
     };
   }, [
     mode,
-    activeFilters,
-    places,
     friendOverlaps,
     getFriendRelationship,
     presentLocation,
