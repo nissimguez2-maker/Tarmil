@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom';
-import { Phone, MessageCircle, ExternalLink, ChevronRight } from 'lucide-react';
+import { Phone, MessageCircle, ExternalLink, ChevronRight, Star, Bookmark } from 'lucide-react';
 import clsx from 'clsx';
 import type { Place } from '../../data/places';
 import type { FriendOverlap } from '../../data/myTrip';
 import type { PlaceReview } from '../../data/placeReviews';
+import type { PlaceSaveStatus } from '../../data/placeSaves';
 import { FriendRatingsRow } from './FriendRatingsRow';
 
 type Props = {
@@ -16,6 +17,23 @@ type Props = {
    * Omit on the trip + now lists where the city is already obvious.
    */
   cityLabel?: string;
+  /** Whether this place is already in the user's Plan. Drives the Star fill. */
+  saved?: boolean;
+  /** Tap → togglePlaceSave. Omit to render the card without a star. */
+  onToggleSave?: () => void;
+  /**
+   * Save status badge — only meaningful on the Plan tab. Shows
+   * "Reserved" / "Wishlist" / "Visited" next to the category. The
+   * Discover modal omits this; the card is the same place at a different
+   * moment in the funnel.
+   */
+  statusBadge?: PlaceSaveStatus;
+};
+
+const STATUS_LABEL: Record<PlaceSaveStatus, string> = {
+  reserved: 'Reserved',
+  wishlist: 'Wishlist',
+  visited: 'Visited',
 };
 
 const CATEGORY_LABEL: Record<string, string> = {
@@ -31,23 +49,53 @@ const CATEGORY_LABEL: Record<string, string> = {
 };
 
 /**
- * Around list card for one curated venue. Hero image, name, category,
+ * Discover list card for one curated venue. Hero image, name, category,
  * friend-rating row, primary CTA — Reserve / Contact / Open — inferred
- * from `reservation_url`. Tap area outside the CTA drills into the
- * existing `/place/:id` route.
+ * from `reservation_url`. A bookmark icon on the hero lets the user
+ * star the place into Plan.
+ *
+ * Tap area outside the bookmark and the CTA drills into the existing
+ * `/place/:id` route.
  */
 export function BusinessCard({
   place,
   reviews,
   friends,
   cityLabel,
+  saved,
+  onToggleSave,
+  statusBadge,
 }: Props) {
   const placeReviews = reviews.filter((r) => r.placeId === place.id);
   const ctaKind = inferCtaKind(place.reservationUrl);
   const category = CATEGORY_LABEL[place.category] ?? place.category;
 
   return (
-    <article className="overflow-hidden rounded-2xl bg-sand shadow-card">
+    <article className="relative overflow-hidden rounded-2xl bg-sand shadow-card">
+      {onToggleSave && (
+        <button
+          type="button"
+          onClick={onToggleSave}
+          aria-pressed={!!saved}
+          aria-label={saved ? `Remove ${place.englishName} from your Plan` : `Save ${place.englishName} to your Plan`}
+          className={clsx(
+            'absolute end-sm top-sm z-10 inline-flex h-9 w-9 items-center justify-center rounded-full backdrop-blur',
+            'transition-[transform,background-color,color] duration-instant ease-out-quart',
+            'active:scale-[0.92]',
+            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-sand',
+            saved
+              ? 'bg-copper text-ivory shadow-card hover:bg-copper-85'
+              : 'bg-ivory/90 text-cocoa shadow-card hover:bg-ivory',
+          )}
+        >
+          <Bookmark
+            className={clsx('h-4 w-4', saved && 'fill-current')}
+            strokeWidth={saved ? 0 : 1.8}
+            aria-hidden
+          />
+        </button>
+      )}
+
       <Link
         to={`/place/${place.id}`}
         className="block transition-colors duration-instant ease-out-quart motion-reduce:transition-none hover:bg-sand/80 active:bg-rope/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory"
@@ -61,6 +109,20 @@ export function BusinessCard({
                 <>
                   <span aria-hidden className="px-1 text-cocoa-30">·</span>
                   <span className="text-cocoa-55">{cityLabel}</span>
+                </>
+              )}
+              {statusBadge && (
+                <>
+                  <span aria-hidden className="px-1 text-cocoa-30">·</span>
+                  <span
+                    className={clsx(
+                      statusBadge === 'visited'
+                        ? 'text-cocoa-55'
+                        : 'text-copper',
+                    )}
+                  >
+                    {STATUS_LABEL[statusBadge]}
+                  </span>
                 </>
               )}
             </span>
@@ -77,7 +139,7 @@ export function BusinessCard({
             />
           </div>
           <ChevronRight
-            className="mt-1 h-5 w-5 shrink-0 text-cocoa-55"
+            className="mt-1 h-5 w-5 shrink-0 text-cocoa-30"
             strokeWidth={1.5}
             aria-hidden
           />
@@ -132,8 +194,6 @@ function Hero({ imageUrl, alt }: { imageUrl?: string; alt: string }) {
       />
     );
   }
-  // Sand-to-rope gradient fallback so seeded entries without an image still
-  // feel intentional rather than blank.
   return (
     <div
       aria-hidden
@@ -145,3 +205,7 @@ function Hero({ imageUrl, alt }: { imageUrl?: string; alt: string }) {
     />
   );
 }
+
+// Star is imported but unused if the bookmark wins; keep available for callers
+// who still want a star-shaped affordance.
+export { Star };

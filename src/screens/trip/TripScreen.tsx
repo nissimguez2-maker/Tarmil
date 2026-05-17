@@ -14,13 +14,11 @@ import { AddDestinationFab } from '../../components/tripMap/ui/AddDestinationFab
 import { PickReticle } from '../../components/tripMap/ui/PickReticle';
 import { PickOnMapBar } from '../../components/tripMap/ui/PickOnMapBar';
 import { BottomSheet } from '../../components/shared/BottomSheet';
-import { PlaceSheet } from '../../components/tripMap/sheets/PlaceSheet';
 import { FriendSheet } from '../../components/tripMap/sheets/FriendSheet';
 import { SearchDestinationSheet } from '../../components/tripMap/sheets/SearchDestinationSheet';
 import { ConfirmDestinationSheet } from '../../components/tripMap/sheets/ConfirmDestinationSheet';
 import { PlannedRouteSheet } from '../../components/tripMap/sheets/PlannedRouteSheet';
 import { PlannedStopSheet } from '../../components/tripMap/sheets/PlannedStopSheet';
-import { SavePlaceToStopSheet } from '../../components/tripMap/sheets/SavePlaceToStopSheet';
 import { ArrivalConfirmSheet } from '../../components/tripMap/sheets/ArrivalConfirmSheet';
 import { FiltersSheet } from '../../components/tripMap/sheets/FiltersSheet';
 import { ConfirmFriendTripSheet } from '../../components/tripMap/sheets/ConfirmFriendTripSheet';
@@ -32,7 +30,6 @@ import {
   makeInitialTripState,
 } from '../../components/tripMap/tripReducer';
 import type { PlannedStop } from '../../data/plannedStops';
-import { DEFAULT_ACTIVE_FILTERS } from '../../components/tripMap/utils/categoryLabel';
 import {
   relateFriend,
 } from '../../components/tripMap/utils/relateFriend';
@@ -55,7 +52,6 @@ export function TripScreen() {
     error,
     saveStop,
     removeStop,
-    savePlaceToStop,
     sendPing,
   } = useSupabaseData();
   const [state, dispatch] = useReducer(tripReducer, undefined, () =>
@@ -94,10 +90,7 @@ export function TripScreen() {
         ? data.friendOverlaps.filter((f) => plannedFriendIds.has(f.id))
         : data.friendOverlaps;
 
-  const filtersDirty =
-    state.friendsView !== 'all' ||
-    state.activeFilters.size !== DEFAULT_ACTIVE_FILTERS.size ||
-    ![...DEFAULT_ACTIVE_FILTERS].every((f) => state.activeFilters.has(f));
+  const filtersDirty = state.friendsView !== 'all';
 
   const handleConfirmPick = () => {
     const center = tripMapRef.current?.getCenter();
@@ -147,16 +140,6 @@ export function TripScreen() {
     }
   };
 
-  const handleSavePlaceToStop = async (placeId: string, stopId: string) => {
-    try {
-      await savePlaceToStop(placeId, stopId);
-    } catch (e) {
-      console.error('Failed to save place to stop:', e);
-    } finally {
-      dispatch({ type: 'CLOSE_SHEET' });
-    }
-  };
-
   return (
     <Screen noScroll>
       <div className="flex h-full flex-col">
@@ -187,8 +170,6 @@ export function TripScreen() {
           <TripMap
             ref={tripMapRef}
             mode={state.mode}
-            activeFilters={state.activeFilters}
-            places={data.places}
             friendOverlaps={visibleFriends}
             getFriendRelationship={getFriendRelationship}
             presentLocation={data.myTrip.present}
@@ -248,22 +229,6 @@ export function TripScreen() {
             open={sheet !== null}
             height={isTallSheet ? 'tall' : 'auto'}
           >
-            {sheet?.kind === 'place' && (
-              <PlaceSheet
-                place={sheet.place}
-                onClose={() => dispatch({ type: 'CLOSE_SHEET' })}
-                onOpen={() => navigate(`/place/${sheet.place.id}`)}
-                onSaveToStop={
-                  data.plannedStops.length > 0
-                    ? () =>
-                        dispatch({
-                          type: 'OPEN_SHEET',
-                          sheet: { kind: 'savePlaceToStop', place: sheet.place },
-                        })
-                    : undefined
-                }
-              />
-            )}
             {sheet?.kind === 'friend' && (() => {
               const f = sheet.friend;
               const relationship = getFriendRelationship(f);
@@ -360,16 +325,6 @@ export function TripScreen() {
                   />
                 );
               })()}
-            {sheet?.kind === 'savePlaceToStop' && (
-              <SavePlaceToStopSheet
-                place={sheet.place}
-                stops={data.plannedStops}
-                onSave={(stopId) =>
-                  handleSavePlaceToStop(sheet.place.id, stopId)
-                }
-                onClose={() => dispatch({ type: 'CLOSE_SHEET' })}
-              />
-            )}
             {sheet?.kind === 'arrivalConfirm' &&
               (() => {
                 const stop = resolveStop(sheet.stopId);
@@ -387,13 +342,6 @@ export function TripScreen() {
                 friendsView={state.friendsView}
                 onSetFriendsView={(view) =>
                   dispatch({ type: 'SET_FRIENDS_VIEW', view })
-                }
-                activeFilters={state.activeFilters}
-                onToggleFilter={(id) =>
-                  dispatch({ type: 'TOGGLE_FILTER', id })
-                }
-                onSetFilters={(filters) =>
-                  dispatch({ type: 'SET_FILTERS', filters })
                 }
                 onClose={() => dispatch({ type: 'CLOSE_SHEET' })}
               />
