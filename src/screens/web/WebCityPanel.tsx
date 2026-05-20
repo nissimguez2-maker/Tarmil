@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import clsx from 'clsx';
-import { Star, Users, X } from 'lucide-react';
+import { Star, Users } from 'lucide-react';
 import { Button } from '../../components/Button';
 import type { PlannedStop } from '../../data/plannedStops';
 import type { Place, PlaceCategory } from '../../data/places';
@@ -9,7 +9,6 @@ import { formatStopRange } from './dateUtils';
 type Props = {
   stop: PlannedStop;
   places: Place[];
-  onClose: () => void;
 };
 
 type CategoryFilter = 'all' | PlaceCategory;
@@ -27,7 +26,7 @@ const CATEGORY_TABS: { value: CategoryFilter; label: string }[] = [
   { value: 'kosher', label: 'Kosher' },
 ];
 
-export function WebCityPanel({ stop, places, onClose }: Props) {
+export function WebCityPanel({ stop, places }: Props) {
   const [filter, setFilter] = useState<CategoryFilter>('all');
 
   const visible = useMemo(() => {
@@ -45,18 +44,15 @@ export function WebCityPanel({ stop, places, onClose }: Props) {
   return (
     <div className="flex flex-col h-full min-h-0">
       <header className="shrink-0 p-md border-b border-cocoa-15 flex flex-col gap-xs">
-        <div className="flex items-start gap-sm">
-          <div className="flex-1 flex flex-col gap-xs">
-            <h2 className="font-serif text-sub text-cocoa">{stop.nameEn}</h2>
-            <p className="text-small text-cocoa-55">
-              {formatStopRange(stop.arrivalDate, stop.departureDate)} ·{' '}
-              {stop.nights} {stop.nights === 1 ? 'night' : 'nights'}
-            </p>
-            {stop.note && (
-              <p className="text-small text-cocoa-55 italic">{stop.note}</p>
-            )}
-          </div>
-          <CloseButton onClick={onClose} />
+        <div className="flex flex-col gap-xs">
+          <h2 className="font-serif text-sub text-cocoa">{stop.nameEn}</h2>
+          <p className="text-small text-cocoa-55">
+            {formatStopRange(stop.arrivalDate, stop.departureDate)} ·{' '}
+            {stop.nights} {stop.nights === 1 ? 'night' : 'nights'}
+          </p>
+          {stop.note && (
+            <p className="text-small text-cocoa-55 italic">{stop.note}</p>
+          )}
         </div>
         <div className="-mx-md px-md overflow-x-auto">
           <div className="flex gap-xs pb-xs">
@@ -138,18 +134,5 @@ function PlaceCard({ place }: { place: Place }) {
         </Button>
       </div>
     </article>
-  );
-}
-
-function CloseButton({ onClick }: { onClick: () => void }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-label="Close panel"
-      className="shrink-0 h-8 w-8 rounded-full flex items-center justify-center text-cocoa-55 hover:text-cocoa hover:bg-cocoa-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory"
-    >
-      <X size={16} strokeWidth={2} />
-    </button>
   );
 }

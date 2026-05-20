@@ -3,7 +3,7 @@ import { Plane, Bus, Plus } from 'lucide-react';
 import { Button } from '../../components/Button';
 import type { PlannedStop } from '../../data/plannedStops';
 import { findLeg } from '../../data/mockTransport';
-import { formatStopRange } from './dateUtils';
+import { formatShortDate, formatStopRange } from './dateUtils';
 import type { Selection } from './types';
 
 type Props = {
@@ -14,52 +14,95 @@ type Props = {
 
 export function WebStopList({ stops, selection, onSelect }: Props) {
   return (
-    <aside className="w-72 shrink-0 border-e border-cocoa-15 bg-ivory overflow-y-auto py-md">
-      <p className="meta-caps text-cocoa-55 px-md mb-md">Itinerary</p>
-      <ol className="flex flex-col px-md">
-        {stops.map((stop, i) => {
-          const next = stops[i + 1];
-          const isStopSelected =
-            selection.type === 'stop' && selection.stopId === stop.id;
-          const isLegSelected =
-            !!next &&
-            selection.type === 'leg' &&
-            selection.fromStopId === stop.id &&
-            selection.toStopId === next.id;
-          return (
-            <li key={stop.id} className="flex flex-col">
-              <StopRow
-                stop={stop}
-                index={i + 1}
-                hasNext={!!next}
-                selected={isStopSelected}
-                onClick={() => onSelect({ type: 'stop', stopId: stop.id })}
-              />
-              {next && (
-                <LegRow
-                  from={stop}
-                  to={next}
-                  selected={isLegSelected}
-                  onClick={() =>
-                    onSelect({
-                      type: 'leg',
-                      fromStopId: stop.id,
-                      toStopId: next.id,
-                    })
-                  }
+    <div className="flex-1 overflow-y-auto min-h-0 py-md flex flex-col gap-md">
+      <TripOverviewCard stops={stops} />
+      <div>
+        <p className="meta-caps text-cocoa-55 px-md mb-md">Itinerary</p>
+        <ol className="flex flex-col px-md">
+          {stops.map((stop, i) => {
+            const next = stops[i + 1];
+            const isStopSelected =
+              selection.type === 'stop' && selection.stopId === stop.id;
+            const isLegSelected =
+              !!next &&
+              selection.type === 'leg' &&
+              selection.fromStopId === stop.id &&
+              selection.toStopId === next.id;
+            return (
+              <li key={stop.id} className="flex flex-col">
+                <StopRow
+                  stop={stop}
+                  index={i + 1}
+                  hasNext={!!next}
+                  selected={isStopSelected}
+                  onClick={() => onSelect({ type: 'stop', stopId: stop.id })}
                 />
-              )}
-            </li>
-          );
-        })}
-      </ol>
-      <div className="px-md mt-md pt-md border-t border-cocoa-08 mx-md">
+                {next && (
+                  <LegRow
+                    from={stop}
+                    to={next}
+                    selected={isLegSelected}
+                    onClick={() =>
+                      onSelect({
+                        type: 'leg',
+                        fromStopId: stop.id,
+                        toStopId: next.id,
+                      })
+                    }
+                  />
+                )}
+              </li>
+            );
+          })}
+        </ol>
+      </div>
+      <div className="px-md mx-md pt-md border-t border-cocoa-08">
         <Button variant="ghost" size="sm" fullWidth>
           <Plus size={14} strokeWidth={2} />
           Add stop
         </Button>
       </div>
-    </aside>
+    </div>
+  );
+}
+
+function TripOverviewCard({ stops }: { stops: PlannedStop[] }) {
+  const legs = stops.length > 0 ? stops.length - 1 : 0;
+  const nights = stops.reduce((sum, s) => sum + s.nights, 0);
+  const first = stops[0];
+  const last = stops[stops.length - 1];
+  const dateSpan =
+    first && last
+      ? `${formatShortDate(first.arrivalDate)} – ${formatShortDate(last.departureDate)}`
+      : '';
+  const year = last
+    ? new Date(last.departureDate + 'T12:00:00').getFullYear()
+    : '';
+
+  return (
+    <article className="mx-md bg-sand border border-rope rounded-2xl p-md flex flex-col gap-sm">
+      <p className="meta-caps text-cocoa-55">Trip overview</p>
+      <h2 className="font-serif text-lede text-cocoa">
+        {dateSpan}
+        {year && <span className="text-cocoa-55">, {year}</span>}
+      </h2>
+      <dl className="grid grid-cols-3 gap-sm pt-sm border-t border-cocoa-15">
+        <Stat label="Stops" value={stops.length} />
+        <Stat label="Legs" value={legs} />
+        <Stat label="Nights" value={nights} />
+      </dl>
+    </article>
+  );
+}
+
+function Stat({ label, value }: { label: string; value: number }) {
+  return (
+    <div className="flex flex-col gap-xs">
+      <dd className="font-serif text-sub text-cocoa tnum leading-none">
+        {value}
+      </dd>
+      <dt className="text-small text-cocoa-55">{label}</dt>
+    </div>
   );
 }
 

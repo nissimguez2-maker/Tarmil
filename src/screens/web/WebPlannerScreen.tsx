@@ -3,9 +3,8 @@ import { Link } from 'react-router-dom';
 import { useSupabaseData } from '../../lib/SupabaseDataProvider';
 import { LoadingPanel, ErrorPanel } from '../../components/DataState';
 import { WebHeader } from './WebHeader';
-import { WebStopList } from './WebStopList';
+import { WebSidebar } from './WebSidebar';
 import { WebMapCanvas } from './WebMapCanvas';
-import { WebRightPanel } from './WebRightPanel';
 import type { Selection } from './types';
 
 export function WebPlannerScreen() {
@@ -24,22 +23,18 @@ export function WebPlannerScreen() {
       <div className="hidden lg:flex h-dvh flex-col bg-ivory">
         <WebHeader stops={stops} />
         <div className="flex-1 flex min-h-0">
-          <WebStopList
-            stops={stops}
+          <WebSidebar
             selection={selection}
             onSelect={setSelection}
+            onBack={() => setSelection({ type: 'none' })}
+            stops={stops}
+            places={places}
           />
           <WebMapCanvas
             stops={stops}
             past={past}
             selection={selection}
             onSelect={setSelection}
-          />
-          <WebRightPanel
-            selection={selection}
-            onClose={() => setSelection({ type: 'none' })}
-            stops={stops}
-            places={places}
           />
         </div>
       </div>
