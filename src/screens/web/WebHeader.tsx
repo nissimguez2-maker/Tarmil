@@ -18,9 +18,12 @@ export function WebHeader({ stops }: Props) {
   return (
     <header className="h-14 shrink-0 bg-ivory border-b border-cocoa-15 flex items-center px-md gap-md">
       <span className="font-serif text-lede text-cocoa">Tarmil</span>
-      <div className="flex-1 text-center font-serif text-lede text-cocoa">
-        {TRIP_TITLE_REGION}
-        {range && <span className="text-cocoa-55"> · {range}</span>}
+      <div className="flex-1 flex flex-col items-center leading-tight">
+        <span className="meta-caps text-cocoa-55">Planned trip</span>
+        <span className="font-serif text-lede text-cocoa">
+          {TRIP_TITLE_REGION}
+          {range && <span className="text-cocoa-55"> · {range}</span>}
+        </span>
       </div>
       <div className="flex items-center gap-sm">
         <span className="text-small text-cocoa-55">1 traveler</span>
