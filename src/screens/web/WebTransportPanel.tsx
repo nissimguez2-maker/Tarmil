@@ -1,18 +1,17 @@
 import { useEffect, useMemo, useState } from 'react';
 import clsx from 'clsx';
-import { ArrowRight, Plane, Bus, Ship, Car } from 'lucide-react';
+import { ArrowRight, Bus, Car, Plane, Ship, Train } from 'lucide-react';
 import { Button } from '../../components/Button';
 import type { PlannedStop } from '../../data/plannedStops';
-import {
-  findLeg,
-  type TransportOffer,
-} from '../../data/mockTransport';
+import type { TransportOffer } from '../../data/mockTransport';
+import { generateLeg } from './transportGenerator';
 import { formatLongDate } from './dateUtils';
 import type { BookingTarget } from './WebBookingModal';
 
 type Props = {
   fromStop: PlannedStop;
   toStop: PlannedStop;
+  travelDate: string;
   onBook: (target: BookingTarget) => void;
 };
 
@@ -20,16 +19,24 @@ type Mode = TransportOffer['mode'];
 
 const MODE_META: { mode: Mode; label: string; Icon: typeof Plane }[] = [
   { mode: 'flight', label: 'Flight', Icon: Plane },
+  { mode: 'train', label: 'Train', Icon: Train },
   { mode: 'bus', label: 'Bus', Icon: Bus },
   { mode: 'ferry', label: 'Ferry', Icon: Ship },
   { mode: 'transfer', label: 'Transfer', Icon: Car },
 ];
 
-export function WebTransportPanel({ fromStop, toStop, onBook }: Props) {
-  const leg = findLeg(fromStop.id, toStop.id);
+export function WebTransportPanel({
+  fromStop,
+  toStop,
+  travelDate,
+  onBook,
+}: Props) {
+  const leg = useMemo(
+    () => generateLeg(fromStop, toStop, travelDate),
+    [fromStop, toStop, travelDate],
+  );
 
   const availableModes = useMemo<Set<Mode>>(() => {
-    if (!leg) return new Set();
     return new Set(leg.offers.map((o) => o.mode));
   }, [leg]);
 
@@ -62,11 +69,9 @@ export function WebTransportPanel({ fromStop, toStop, onBook }: Props) {
             <ArrowRight size={16} strokeWidth={2} className="text-cocoa-55" />
             <span>{toStop.nameEn}</span>
           </div>
-          {leg && (
-            <p className="text-small text-cocoa-55">
-              {formatLongDate(leg.travelDate)}
-            </p>
-          )}
+          <p className="text-small text-cocoa-55">
+            {formatLongDate(leg.travelDate)}
+          </p>
         </div>
         {availableModes.size > 1 && (
           <div className="flex flex-col gap-xs">
@@ -100,11 +105,7 @@ export function WebTransportPanel({ fromStop, toStop, onBook }: Props) {
         )}
       </header>
       <div className="flex-1 overflow-y-auto p-md flex flex-col gap-sm">
-        {!leg ? (
-          <p className="text-small text-cocoa-55 text-center py-xl">
-            No transport options on this leg yet.
-          </p>
-        ) : visibleOffers.length === 0 ? (
+        {visibleOffers.length === 0 ? (
           <p className="text-small text-cocoa-55 text-center py-xl">
             No offers match the selected modes. Toggle a mode back on.
           </p>
@@ -131,6 +132,7 @@ export function WebTransportPanel({ fromStop, toStop, onBook }: Props) {
 
 function modeIcon(mode: Mode) {
   if (mode === 'flight') return Plane;
+  if (mode === 'train') return Train;
   if (mode === 'bus') return Bus;
   if (mode === 'ferry') return Ship;
   return Car;

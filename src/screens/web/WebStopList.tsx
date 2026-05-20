@@ -17,10 +17,10 @@ import {
 } from '@dnd-kit/sortable';
 import type { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
 import { CSS } from '@dnd-kit/utilities';
-import { Bus, GripVertical, Pencil, Plane, Plus, Trash2 } from 'lucide-react';
+import { Bus, GripVertical, Pencil, Plane, Plus, Ship, Train, Trash2 } from 'lucide-react';
 import { Button } from '../../components/Button';
 import type { PlannedStop } from '../../data/plannedStops';
-import { findLeg } from '../../data/mockTransport';
+import { generateLeg } from './transportGenerator';
 import { formatShortDate, formatStopRange } from './dateUtils';
 import type { Selection } from './types';
 
@@ -428,8 +428,18 @@ type LegRowProps = {
 };
 
 function LegRow({ from, to, selected, onClick }: LegRowProps) {
-  const leg = findLeg(from.id, to.id);
-  const Icon = leg?.legType === 'flight' ? Plane : Bus;
+  const leg = generateLeg(from, to, from.departureDate);
+  const dominantMode = leg.offers.find((o) => o.badge === 'recommended')?.mode
+    ?? leg.offers[0]?.mode
+    ?? 'bus';
+  const Icon =
+    dominantMode === 'flight'
+      ? Plane
+      : dominantMode === 'train'
+        ? Train
+        : dominantMode === 'ferry'
+          ? Ship
+          : Bus;
   return (
     <button
       type="button"
@@ -460,7 +470,7 @@ function LegRow({ from, to, selected, onClick }: LegRowProps) {
               : 'text-cocoa-55 group-hover:text-copper',
           )}
         >
-          {leg ? leg.legType : 'transit'}
+          {dominantMode}
         </span>
       </div>
     </button>

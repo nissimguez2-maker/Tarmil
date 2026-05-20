@@ -68,13 +68,20 @@ export function WebBubble({
             onBook={onBook}
           />
         )}
-        {selection.type === 'leg' && (
-          <WebTransportPanel
-            fromStop={requireStop(stops, selection.fromStopId)}
-            toStop={requireStop(stops, selection.toStopId)}
-            onBook={onBook}
-          />
-        )}
+        {selection.type === 'leg' && (() => {
+          const fromStop = requireStop(stops, selection.fromStopId);
+          const toStop = requireStop(stops, selection.toStopId);
+          const idx = stops.findIndex((s) => s.id === fromStop.id);
+          const travelDate = idx >= 0 ? fromStop.departureDate : new Date().toISOString().slice(0, 10);
+          return (
+            <WebTransportPanel
+              fromStop={fromStop}
+              toStop={toStop}
+              travelDate={travelDate}
+              onBook={onBook}
+            />
+          );
+        })()}
       </div>
     </div>
   );

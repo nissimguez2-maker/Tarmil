@@ -5,11 +5,18 @@
  * back through SupabaseDataProvider.
  */
 
+export type TransportMode =
+  | 'flight'
+  | 'bus'
+  | 'ferry'
+  | 'transfer'
+  | 'train';
+
 export type TransportOffer = {
   id: string;
   fromStopId: string;
   toStopId: string;
-  mode: 'flight' | 'bus' | 'ferry' | 'transfer';
+  mode: TransportMode;
   provider: string;
   departureTime: string;
   arrivalTime: string;
