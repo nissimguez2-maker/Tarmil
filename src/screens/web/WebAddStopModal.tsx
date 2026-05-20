@@ -1,7 +1,13 @@
-import { MapPin, X } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Loader2, MapPin, Search, X } from 'lucide-react';
 import clsx from 'clsx';
-import { ADDABLE_CITIES, type AddableCity } from './addableCities';
+import {
+  ADDABLE_CITIES,
+  slugifyId,
+  type AddableCity,
+} from './addableCities';
 import { cityPhotos } from './cityPhotos';
+import { searchNominatim, type NominatimResult } from './nominatimApi';
 
 type Props = {
   open: boolean;
@@ -11,7 +17,38 @@ type Props = {
 };
 
 export function WebAddStopModal({ open, onClose, onAdd, existingStopIds }: Props) {
+  const [query, setQuery] = useState('');
+  const [results, setResults] = useState<NominatimResult[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!open) {
+      setQuery('');
+      setResults([]);
+    }
+  }, [open]);
+
+  useEffect(() => {
+    const q = query.trim();
+    if (q.length < 2) {
+      setResults([]);
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
+    const t = setTimeout(() => {
+      searchNominatim(q).then((r) => {
+        setResults(r);
+        setLoading(false);
+      });
+    }, 400);
+    return () => clearTimeout(t);
+  }, [query]);
+
   if (!open) return null;
+
+  const trimmed = query.trim();
+  const showResults = trimmed.length >= 2;
 
   return (
     <div
@@ -23,7 +60,7 @@ export function WebAddStopModal({ open, onClose, onAdd, existingStopIds }: Props
       <div
         onClick={(e) => e.stopPropagation()}
         style={{ width: '480px' }}
-        className="bg-ivory border border-rope rounded-3xl shadow-panel p-md flex flex-col gap-md relative"
+        className="bg-ivory border border-rope rounded-3xl shadow-panel p-md flex flex-col gap-md relative max-h-[80dvh]"
       >
         <button
           type="button"
@@ -36,47 +73,98 @@ export function WebAddStopModal({ open, onClose, onAdd, existingStopIds }: Props
         <div className="flex flex-col gap-xs pe-12">
           <p className="meta-caps text-cocoa-55">Add stop</p>
           <h2 className="font-serif text-sub text-cocoa leading-tight">
-            Extend your trip
+            Search any city
           </h2>
           <p className="text-small text-cocoa-55">
-            Pick a city. It lands after your last stop with a default duration; drag it into place from the sidebar.
+            Type a city name. We resolve it via OpenStreetMap.
           </p>
         </div>
-        <div className="flex flex-col gap-sm">
-          {ADDABLE_CITIES.map((city) => {
-            const alreadyAdded = existingStopIds.includes(city.id);
-            return (
-              <CityRow
-                key={city.id}
-                city={city}
-                disabled={alreadyAdded}
-                onAdd={() => {
-                  onAdd(city);
-                  onClose();
-                }}
-              />
-            );
-          })}
+        <label className="flex items-center gap-sm rounded-full bg-sand border border-rope px-sm h-10 focus-within:border-copper transition-[border-color] duration-instant ease-out-quart motion-reduce:transition-none">
+          <Search size={14} strokeWidth={2} className="text-cocoa-55 shrink-0" />
+          <input
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Tokyo, Lisbon, Cape Town…"
+            autoFocus
+            className="flex-1 bg-transparent outline-none text-body text-cocoa placeholder:text-cocoa-55"
+          />
+          {loading && (
+            <Loader2
+              size={14}
+              strokeWidth={2}
+              className="text-cocoa-55 animate-spin"
+            />
+          )}
+        </label>
+        <div className="flex flex-col gap-sm overflow-y-auto min-h-0">
+          {!showResults && (
+            <>
+              <p className="meta-caps text-cocoa-55">Suggested</p>
+              {ADDABLE_CITIES.map((city) => (
+                <SuggestedRow
+                  key={city.id}
+                  city={city}
+                  disabled={existingStopIds.includes(city.id)}
+                  onPick={() => {
+                    onAdd(city);
+                    onClose();
+                  }}
+                />
+              ))}
+            </>
+          )}
+          {showResults && !loading && results.length === 0 && (
+            <p className="text-small text-cocoa-55 text-center py-md">
+              No matches. Try a different spelling or add the country.
+            </p>
+          )}
+          {showResults && results.length > 0 && (
+            <>
+              <p className="meta-caps text-cocoa-55">Results</p>
+              {results.map((r, i) => {
+                const id = slugifyId(`${r.name}-${r.countryCode || i}`);
+                const disabled = existingStopIds.includes(id);
+                return (
+                  <NominatimRow
+                    key={`${id}-${i}`}
+                    result={r}
+                    disabled={disabled}
+                    onPick={() => {
+                      onAdd({
+                        id,
+                        nameEn: r.name,
+                        lat: r.lat,
+                        lng: r.lng,
+                        defaultNights: 3,
+                      });
+                      onClose();
+                    }}
+                  />
+                );
+              })}
+            </>
+          )}
         </div>
       </div>
     </div>
   );
 }
 
-function CityRow({
+function SuggestedRow({
   city,
   disabled,
-  onAdd,
+  onPick,
 }: {
   city: AddableCity;
   disabled: boolean;
-  onAdd: () => void;
+  onPick: () => void;
 }) {
   const thumb = cityPhotos(city.id)[0];
   return (
     <button
       type="button"
-      onClick={onAdd}
+      onClick={onPick}
       disabled={disabled}
       className={clsx(
         'group w-full text-start rounded-2xl border bg-sand p-sm flex gap-sm items-center transition-[border-color,background-color] duration-instant ease-out-quart motion-reduce:transition-none',
@@ -86,7 +174,7 @@ function CityRow({
           : 'border-rope hover:border-copper',
       )}
     >
-      <div className="shrink-0 h-16 w-16 rounded-xl overflow-hidden bg-gradient-to-br from-rope to-sand">
+      <div className="shrink-0 h-12 w-12 rounded-xl overflow-hidden bg-gradient-to-br from-rope to-sand">
         {thumb && (
           <img
             src={thumb}
@@ -100,16 +188,65 @@ function CityRow({
         <h3 className="font-serif text-lede text-cocoa leading-tight">
           {city.nameEn}
         </h3>
-        <p className="text-small text-cocoa-70 leading-snug">{city.blurb}</p>
+        {city.blurb && (
+          <p className="text-small text-cocoa-70 leading-snug line-clamp-1">
+            {city.blurb}
+          </p>
+        )}
         <p className="text-meta uppercase text-cocoa-55">
           {disabled ? 'Already in trip' : `${city.defaultNights} night default`}
         </p>
       </div>
-      {!disabled && (
-        <span className="shrink-0 text-copper">
-          <MapPin size={16} strokeWidth={2} />
-        </span>
+    </button>
+  );
+}
+
+function flagEmoji(countryCode: string): string {
+  if (!countryCode || countryCode.length !== 2) return '';
+  const A = 0x1f1e6;
+  const codes = countryCode.toUpperCase().split('').map((c) => A + c.charCodeAt(0) - 65);
+  return String.fromCodePoint(...codes);
+}
+
+function NominatimRow({
+  result,
+  disabled,
+  onPick,
+}: {
+  result: NominatimResult;
+  disabled: boolean;
+  onPick: () => void;
+}) {
+  const flag = flagEmoji(result.countryCode);
+  const subtitle = result.country || result.displayName.split(',').slice(1).join(', ').trim();
+  return (
+    <button
+      type="button"
+      onClick={onPick}
+      disabled={disabled}
+      className={clsx(
+        'group w-full text-start rounded-2xl border bg-ivory p-sm flex gap-sm items-center transition-[border-color,background-color] duration-instant ease-out-quart motion-reduce:transition-none',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory',
+        disabled
+          ? 'border-cocoa-15 opacity-50 cursor-not-allowed'
+          : 'border-cocoa-15 hover:border-copper hover:bg-sand',
       )}
+    >
+      <span
+        aria-hidden="true"
+        className="shrink-0 h-12 w-12 rounded-xl bg-sand flex items-center justify-center text-display"
+      >
+        {flag || <MapPin size={20} strokeWidth={2} className="text-cocoa-55" />}
+      </span>
+      <div className="flex-1 min-w-0 flex flex-col gap-xs">
+        <h3 className="font-serif text-lede text-cocoa leading-tight truncate">
+          {result.name}
+        </h3>
+        <p className="text-small text-cocoa-55 truncate">{subtitle}</p>
+      </div>
+      <span className="text-meta uppercase text-copper">
+        {disabled ? 'Added' : 'Add'}
+      </span>
     </button>
   );
 }

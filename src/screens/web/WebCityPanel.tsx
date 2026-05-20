@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import clsx from 'clsx';
 import {
   Cloud,
   CloudRain,
   CloudSun,
+  ExternalLink,
   Star,
   Sun,
   Users,
@@ -16,6 +17,15 @@ import { cityPhotos } from './cityPhotos';
 import type { WeatherCondition, WeatherDay } from './cityWeather';
 import { fetchWeather, type WeatherSource } from './weatherApi';
 import { formatStopRange } from './dateUtils';
+import { fetchWikiSummary, type WikiSummary } from './wikiApi';
+import { wikiTitleFor } from './cityWikiTitles';
+import { fetchCountry, type CountryInfo } from './countryApi';
+import { countryCodeFor } from './cityCountries';
+import {
+  fetchNearby,
+  type OsmCategory,
+  type OsmPlace,
+} from './overpassApi';
 import type { BookingTarget } from './WebBookingModal';
 
 type Props = {
@@ -62,6 +72,29 @@ const SUB_FILTERS: Record<TabId, SubFilter[]> = {
   ],
 };
 
+function tabOsmCategory(
+  tabId: TabId,
+  subFilter: PlaceCategory | 'all',
+): OsmCategory | null {
+  if (subFilter !== 'all') {
+    if (
+      subFilter === 'restaurant' ||
+      subFilter === 'cafe' ||
+      subFilter === 'bar' ||
+      subFilter === 'club' ||
+      subFilter === 'landmark' ||
+      subFilter === 'beach'
+    ) {
+      return subFilter;
+    }
+    return null;
+  }
+  if (tabId === 'eat') return 'restaurant';
+  if (tabId === 'drink') return 'bar';
+  if (tabId === 'see') return 'landmark';
+  return null;
+}
+
 export function WebCityPanel({ stop, places, onBook }: Props) {
   const [activeTab, setActiveTab] = useState<TabId>('overview');
   const [activeSub, setActiveSub] = useState<PlaceCategory | 'all'>('all');
@@ -76,15 +109,7 @@ export function WebCityPanel({ stop, places, onBook }: Props) {
 
   return (
     <div className="flex flex-col h-full min-h-0">
-      <header className="shrink-0 px-md pt-md pb-sm border-b border-cocoa-15 flex flex-col gap-xs pe-12">
-        <h2 className="font-serif text-sub text-cocoa leading-tight">
-          {stop.nameEn}
-        </h2>
-        <p className="text-small text-cocoa-55">
-          {formatStopRange(stop.arrivalDate, stop.departureDate)} ·{' '}
-          {stop.nights} {stop.nights === 1 ? 'night' : 'nights'}
-        </p>
-      </header>
+      <CityHeader stop={stop} />
 
       <nav className="shrink-0 px-md pt-sm border-b border-cocoa-15 flex flex-col gap-sm">
         <div className="flex gap-xs overflow-x-auto -mx-md px-md pb-xs">
@@ -135,13 +160,71 @@ export function WebCityPanel({ stop, places, onBook }: Props) {
           <OverviewTab stop={stop} />
         ) : (
           <PlacesList
-            places={filterAndSortPlaces(places, activeTabDef.categories, activeSub)}
+            places={filterAndSortPlaces(
+              places,
+              activeTabDef.categories,
+              activeSub,
+            )}
             emptyLabel={activeTabDef.label.toLowerCase()}
             onBook={onBook}
+            osmCategory={tabOsmCategory(activeTab, activeSub)}
+            stop={stop}
           />
         )}
       </div>
     </div>
+  );
+}
+
+function flagEmoji(code: string): string {
+  if (!code || code.length !== 2) return '';
+  const A = 0x1f1e6;
+  return String.fromCodePoint(
+    ...code.toUpperCase().split('').map((c) => A + c.charCodeAt(0) - 65),
+  );
+}
+
+function CityHeader({ stop }: { stop: PlannedStop }) {
+  const [country, setCountry] = useState<CountryInfo | null>(null);
+  const code = countryCodeFor(stop.id);
+
+  useEffect(() => {
+    setCountry(null);
+    if (!code) return;
+    let cancelled = false;
+    fetchCountry(code).then((c) => {
+      if (!cancelled) setCountry(c);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [code]);
+
+  const flag = country?.flag || flagEmoji(code ?? '');
+  const meta = [
+    country?.currencyCode,
+    country?.language,
+    country?.timezone ? `UTC${country.timezone}` : null,
+  ]
+    .filter(Boolean)
+    .join(' · ');
+
+  return (
+    <header className="shrink-0 px-md pt-md pb-sm border-b border-cocoa-15 flex flex-col gap-xs pe-12">
+      <h2 className="font-serif text-sub text-cocoa leading-tight">
+        {stop.nameEn}
+      </h2>
+      <p className="text-small text-cocoa-55">
+        {formatStopRange(stop.arrivalDate, stop.departureDate)} ·{' '}
+        {stop.nights} {stop.nights === 1 ? 'night' : 'nights'}
+      </p>
+      {(flag || meta) && (
+        <p className="text-small text-cocoa-55 inline-flex items-center gap-xs">
+          {flag && <span aria-hidden="true">{flag}</span>}
+          {meta && <span className="tnum">{meta}</span>}
+        </p>
+      )}
+    </header>
   );
 }
 
@@ -161,28 +244,83 @@ function filterAndSortPlaces(
 }
 
 function OverviewTab({ stop }: { stop: PlannedStop }) {
-  const description = cityDescription(stop.id, stop.note);
-  const photos = cityPhotos(stop.id);
+  const fallbackText = cityDescription(stop.id, stop.note);
+  const wikiTitle = wikiTitleFor(stop.id, stop.nameEn);
+  const [wiki, setWiki] = useState<WikiSummary | null>(null);
+  const [wikiLoading, setWikiLoading] = useState(true);
+
+  useEffect(() => {
+    setWiki(null);
+    setWikiLoading(true);
+    let cancelled = false;
+    fetchWikiSummary(wikiTitle).then((res) => {
+      if (cancelled) return;
+      setWiki(res);
+      setWikiLoading(false);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [wikiTitle]);
+
+  const curatedPhotos = cityPhotos(stop.id);
+  const heroPhoto = wiki?.originalImage ?? wiki?.thumbnail;
+  const photos = useMemo(() => {
+    if (curatedPhotos.length > 0) return curatedPhotos;
+    return heroPhoto ? [heroPhoto] : [];
+  }, [curatedPhotos, heroPhoto]);
+
+  const description = wiki?.extract ?? fallbackText;
+
   return (
     <div className="flex flex-col gap-md">
-      {photos.length > 0 && <PhotoGrid photos={photos} cityName={stop.nameEn} />}
+      {photos.length > 0 && (
+        <PhotoGrid photos={photos} cityName={stop.nameEn} />
+      )}
+      {wikiLoading && !description && (
+        <div className="h-16 rounded-2xl bg-sand animate-pulse" />
+      )}
       {description && (
-        <p className="font-sans text-body text-cocoa leading-relaxed">
-          {description}
-        </p>
+        <div className="flex flex-col gap-xs">
+          <p className="font-sans text-body text-cocoa leading-relaxed">
+            {description}
+          </p>
+          {wiki && (
+            <p className="text-meta uppercase text-cocoa-55">
+              Source · Wikipedia
+            </p>
+          )}
+        </div>
       )}
       <WeatherStrip stop={stop} />
     </div>
   );
 }
 
-function PhotoGrid({ photos, cityName }: { photos: string[]; cityName: string }) {
+function PhotoGrid({
+  photos,
+  cityName,
+}: {
+  photos: string[];
+  cityName: string;
+}) {
+  const cols = Math.min(photos.length, 3);
   return (
-    <div className="grid grid-cols-3 gap-sm">
+    <div
+      className={clsx(
+        'grid gap-sm',
+        cols === 3 && 'grid-cols-3',
+        cols === 2 && 'grid-cols-2',
+        cols === 1 && 'grid-cols-1',
+      )}
+    >
       {photos.map((src, i) => (
         <div
           key={src}
-          className="relative aspect-square rounded-xl overflow-hidden bg-gradient-to-br from-rope to-sand"
+          className={clsx(
+            'relative rounded-xl overflow-hidden bg-gradient-to-br from-rope to-sand',
+            cols === 1 ? 'aspect-video' : 'aspect-square',
+          )}
         >
           <img
             src={src}
@@ -256,7 +394,11 @@ function WeatherStrip({ stop }: { stop: PlannedStop }) {
           const ts = new Date(day.isoDate + 'T12:00:00').getTime();
           const inTrip = ts >= arrival && ts <= departure;
           return (
-            <WeatherDayCard key={day.isoDate} day={day} highlighted={inTrip} />
+            <WeatherDayCard
+              key={day.isoDate}
+              day={day}
+              highlighted={inTrip}
+            />
           );
         })}
       </div>
@@ -335,24 +477,126 @@ function PlacesList({
   places,
   emptyLabel,
   onBook,
+  osmCategory,
+  stop,
 }: {
   places: Place[];
   emptyLabel: string;
   onBook: (target: BookingTarget) => void;
+  osmCategory: OsmCategory | null;
+  stop: PlannedStop;
 }) {
-  if (places.length === 0) {
+  return (
+    <div className="flex flex-col gap-md">
+      {places.length > 0 ? (
+        <div className="flex flex-col gap-sm">
+          {places.map((place) => (
+            <PlaceCard key={place.id} place={place} onBook={onBook} />
+          ))}
+        </div>
+      ) : (
+        !osmCategory && (
+          <p className="text-small text-cocoa-55 text-center py-xl">
+            No {emptyLabel} places curated yet for this stop.
+          </p>
+        )
+      )}
+      {osmCategory && (
+        <NearbyOsmList
+          key={`${stop.id}-${osmCategory}`}
+          category={osmCategory}
+          lat={stop.lat}
+          lng={stop.lng}
+          curatedCount={places.length}
+        />
+      )}
+    </div>
+  );
+}
+
+function NearbyOsmList({
+  category,
+  lat,
+  lng,
+  curatedCount,
+}: {
+  category: OsmCategory;
+  lat: number;
+  lng: number;
+  curatedCount: number;
+}) {
+  const [items, setItems] = useState<OsmPlace[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setLoading(true);
+    let cancelled = false;
+    fetchNearby(category, lat, lng).then((r) => {
+      if (cancelled) return;
+      setItems(r);
+      setLoading(false);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [category, lat, lng]);
+
+  if (loading) {
     return (
-      <p className="text-small text-cocoa-55 text-center py-xl">
-        No {emptyLabel} places curated yet for this stop.
-      </p>
+      <div className="flex flex-col gap-sm">
+        <p className="meta-caps text-cocoa-55">Nearby on OpenStreetMap</p>
+        <div className="h-10 rounded-xl bg-sand animate-pulse" />
+        <div className="h-10 rounded-xl bg-sand animate-pulse" />
+      </div>
     );
   }
+  if (items.length === 0) {
+    if (curatedCount === 0) {
+      return (
+        <p className="text-small text-cocoa-55 text-center py-xl">
+          No nearby spots found on OSM for this area.
+        </p>
+      );
+    }
+    return null;
+  }
+
   return (
     <div className="flex flex-col gap-sm">
-      {places.map((place) => (
-        <PlaceCard key={place.id} place={place} onBook={onBook} />
+      <p className="meta-caps text-cocoa-55">Nearby on OpenStreetMap</p>
+      {items.map((item) => (
+        <NearbyOsmRow key={item.id} item={item} />
       ))}
     </div>
+  );
+}
+
+function NearbyOsmRow({ item }: { item: OsmPlace }) {
+  const link = `https://www.openstreetmap.org/?mlat=${item.lat}&mlon=${item.lng}&zoom=18`;
+  const distance =
+    item.distanceMeters < 1000
+      ? `${item.distanceMeters} m`
+      : `${(item.distanceMeters / 1000).toFixed(1)} km`;
+  return (
+    <a
+      href={link}
+      target="_blank"
+      rel="noopener"
+      className="group flex items-center gap-sm rounded-xl border border-cocoa-15 bg-ivory px-sm py-xs hover:border-copper transition-[border-color] duration-instant ease-out-quart motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory"
+    >
+      <div className="flex-1 min-w-0">
+        <p className="font-sans text-body text-cocoa truncate">{item.name}</p>
+        <p className="text-meta uppercase text-cocoa-55">
+          {distance}
+          {item.cuisine && <> · {item.cuisine.replace(/_/g, ' ')}</>}
+        </p>
+      </div>
+      <ExternalLink
+        size={12}
+        strokeWidth={2}
+        className="shrink-0 text-cocoa-55 group-hover:text-copper"
+      />
+    </a>
   );
 }
 
