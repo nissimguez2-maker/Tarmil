@@ -35,15 +35,6 @@ export function WebBubble({
     return () => cancelAnimationFrame(id);
   }, [isOpen]);
 
-  useEffect(() => {
-    if (!isOpen) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [isOpen, onClose]);
-
   if (selection.type === 'none') return null;
 
   return (

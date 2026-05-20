@@ -13,7 +13,7 @@ import type { PlannedStop } from '../../data/plannedStops';
 import type { FriendVisit, Place, PlaceCategory } from '../../data/places';
 import { cityDescription } from './cityCopy';
 import { cityPhotos } from './cityPhotos';
-import { cityWeather, type WeatherCondition, type WeatherDay } from './cityWeather';
+import { cityWeatherRange, type WeatherCondition, type WeatherDay } from './cityWeather';
 import { formatStopRange } from './dateUtils';
 import type { BookingTarget } from './WebBookingModal';
 
@@ -203,7 +203,17 @@ function weatherIcon(condition: WeatherCondition) {
 }
 
 function WeatherStrip({ stop }: { stop: PlannedStop }) {
-  const days = cityWeather(stop.id);
+  const arrivalDate = new Date(stop.arrivalDate + 'T12:00:00');
+  const departureDate = new Date(stop.departureDate + 'T12:00:00');
+  const from = new Date(arrivalDate);
+  from.setDate(from.getDate() - 2);
+  const to = new Date(departureDate);
+  to.setDate(to.getDate() + 2);
+  const days = cityWeatherRange(
+    stop.id,
+    from.toISOString().slice(0, 10),
+    to.toISOString().slice(0, 10),
+  );
   if (days.length === 0) {
     return (
       <div className="bg-sand border border-rope rounded-2xl p-md">
@@ -213,8 +223,8 @@ function WeatherStrip({ stop }: { stop: PlannedStop }) {
       </div>
     );
   }
-  const arrival = new Date(stop.arrivalDate + 'T12:00:00').getTime();
-  const departure = new Date(stop.departureDate + 'T12:00:00').getTime();
+  const arrival = arrivalDate.getTime();
+  const departure = departureDate.getTime();
 
   return (
     <div className="bg-sand border border-rope rounded-2xl p-md flex flex-col gap-sm">

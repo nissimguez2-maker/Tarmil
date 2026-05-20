@@ -28,6 +28,21 @@ export const CITY_PHOTOS: Record<string, string[]> = {
     unsplash('1653918488348-17d2a707012f', 600),
     unsplash('1653898968886-a14171069047', 600),
   ],
+  'rio-de-janeiro': [
+    unsplash('1518639192441-8fce0a366e2e', 600),
+    unsplash('1539053447282-6f32f2bddfed', 600),
+    unsplash('1516306580123-e6e52b1b7b5f', 600),
+  ],
+  'foz-do-iguacu': [
+    unsplash('1657386363865-f30779784410', 600),
+    unsplash('1656615832862-c48d4eead43d', 600),
+    unsplash('1656856747603-1777348793e6', 600),
+  ],
+  mendoza: [
+    unsplash('1618100789816-86508e3f2275', 600),
+    unsplash('1546863340-7e4e97e46f42', 600),
+    unsplash('1690993444739-c75bef705568', 600),
+  ],
 };
 
 export function cityPhotos(stopId: string): string[] {

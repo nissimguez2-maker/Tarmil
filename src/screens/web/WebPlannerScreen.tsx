@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSupabaseData } from '../../lib/SupabaseDataProvider';
 import { ErrorPanel } from '../../components/DataState';
+import type { PlannedStop } from '../../data/plannedStops';
 import { WebHeader } from './WebHeader';
 import { WebStopList } from './WebStopList';
 import { WebMapCanvas } from './WebMapCanvas';
@@ -9,20 +10,75 @@ import { WebBubble } from './WebBubble';
 import { WebBookingModal, type BookingTarget } from './WebBookingModal';
 import { WebAddStopModal } from './WebAddStopModal';
 import { WebPlannerSkeleton } from './WebPlannerSkeleton';
+import {
+  addStop as addStopMut,
+  editStopDates as editStopDatesMut,
+  removeStop as removeStopMut,
+  reorderStops as reorderStopsMut,
+} from './tripMutations';
 import type { Selection } from './types';
 
 export function WebPlannerScreen() {
   const { data, loading, error } = useSupabaseData();
+  const [localStops, setLocalStops] = useState<PlannedStop[] | null>(null);
   const [selection, setSelection] = useState<Selection>({ type: 'none' });
   const [bookingTarget, setBookingTarget] = useState<BookingTarget | null>(null);
   const [addStopOpen, setAddStopOpen] = useState(false);
 
+  useEffect(() => {
+    if (data && localStops === null) {
+      setLocalStops(data.plannedStops);
+    }
+  }, [data, localStops]);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return;
+      if (bookingTarget) {
+        setBookingTarget(null);
+      } else if (addStopOpen) {
+        setAddStopOpen(false);
+      } else if (selection.type !== 'none') {
+        setSelection({ type: 'none' });
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [bookingTarget, addStopOpen, selection.type]);
+
   if (loading) return <WebPlannerSkeleton />;
   if (error || !data) return <ErrorPanel error={error} />;
 
-  const stops = data.plannedStops;
+  const stops = localStops ?? data.plannedStops;
   const places = data.places;
   const past = data.myTrip?.past as [number, number][] | undefined;
+
+  const handleReorder = (fromIdx: number, toIdx: number) => {
+    setLocalStops((prev) =>
+      reorderStopsMut(prev ?? stops, fromIdx, toIdx),
+    );
+  };
+  const handleRemove = (id: string) => {
+    setLocalStops((prev) => removeStopMut(prev ?? stops, id));
+    if (selection.type === 'stop' && selection.stopId === id) {
+      setSelection({ type: 'none' });
+    }
+    if (
+      selection.type === 'leg' &&
+      (selection.fromStopId === id || selection.toStopId === id)
+    ) {
+      setSelection({ type: 'none' });
+    }
+  };
+  const handleEditDates = (
+    id: string,
+    arrivalIso: string,
+    departureIso: string,
+  ) => {
+    setLocalStops((prev) =>
+      editStopDatesMut(prev ?? stops, id, arrivalIso, departureIso),
+    );
+  };
 
   return (
     <>
@@ -34,6 +90,9 @@ export function WebPlannerScreen() {
             selection={selection}
             onSelect={setSelection}
             onAddStop={() => setAddStopOpen(true)}
+            onReorder={handleReorder}
+            onRemoveStop={handleRemove}
+            onEditDates={handleEditDates}
           />
           <div className="flex-1 relative">
             <WebMapCanvas
@@ -70,6 +129,8 @@ export function WebPlannerScreen() {
       <WebAddStopModal
         open={addStopOpen}
         onClose={() => setAddStopOpen(false)}
+        onAdd={(city) => setLocalStops((prev) => addStopMut(prev ?? stops, city))}
+        existingStopIds={stops.map((s) => s.id)}
       />
     </>
   );

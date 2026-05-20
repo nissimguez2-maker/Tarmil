@@ -8,63 +8,76 @@ export type WeatherDay = {
   precipPercent: number;
 };
 
-export const CITY_WEATHER: Record<string, WeatherDay[]> = {
-  buzios: [
-    { isoDate: '2026-10-26', tempHighC: 25, tempLowC: 19, condition: 'partly-cloudy', precipPercent: 20 },
-    { isoDate: '2026-10-27', tempHighC: 26, tempLowC: 20, condition: 'sun', precipPercent: 10 },
-    { isoDate: '2026-10-28', tempHighC: 28, tempLowC: 21, condition: 'sun', precipPercent: 5 },
-    { isoDate: '2026-10-29', tempHighC: 28, tempLowC: 21, condition: 'sun', precipPercent: 10 },
-    { isoDate: '2026-10-30', tempHighC: 25, tempLowC: 20, condition: 'partly-cloudy', precipPercent: 30 },
-    { isoDate: '2026-10-31', tempHighC: 23, tempLowC: 19, condition: 'rain', precipPercent: 70 },
-    { isoDate: '2026-11-01', tempHighC: 24, tempLowC: 18, condition: 'partly-cloudy', precipPercent: 40 },
-  ],
-  'sao-paulo': [
-    { isoDate: '2026-10-30', tempHighC: 26, tempLowC: 16, condition: 'partly-cloudy', precipPercent: 30 },
-    { isoDate: '2026-10-31', tempHighC: 24, tempLowC: 15, condition: 'rain', precipPercent: 70 },
-    { isoDate: '2026-11-01', tempHighC: 25, tempLowC: 16, condition: 'partly-cloudy', precipPercent: 40 },
-    { isoDate: '2026-11-02', tempHighC: 27, tempLowC: 17, condition: 'sun', precipPercent: 10 },
-    { isoDate: '2026-11-03', tempHighC: 28, tempLowC: 18, condition: 'sun', precipPercent: 5 },
-    { isoDate: '2026-11-04', tempHighC: 27, tempLowC: 18, condition: 'partly-cloudy', precipPercent: 20 },
-    { isoDate: '2026-11-05', tempHighC: 26, tempLowC: 18, condition: 'rain', precipPercent: 60 },
-    { isoDate: '2026-11-06', tempHighC: 25, tempLowC: 17, condition: 'cloud', precipPercent: 40 },
-    { isoDate: '2026-11-07', tempHighC: 27, tempLowC: 17, condition: 'sun', precipPercent: 10 },
-  ],
-  jericoacoara: [
-    { isoDate: '2026-11-05', tempHighC: 31, tempLowC: 24, condition: 'sun', precipPercent: 5 },
-    { isoDate: '2026-11-06', tempHighC: 31, tempLowC: 24, condition: 'sun', precipPercent: 5 },
-    { isoDate: '2026-11-07', tempHighC: 32, tempLowC: 25, condition: 'sun', precipPercent: 0 },
-    { isoDate: '2026-11-08', tempHighC: 32, tempLowC: 25, condition: 'sun', precipPercent: 0 },
-    { isoDate: '2026-11-09', tempHighC: 33, tempLowC: 25, condition: 'sun', precipPercent: 5 },
-    { isoDate: '2026-11-10', tempHighC: 33, tempLowC: 26, condition: 'partly-cloudy', precipPercent: 15 },
-    { isoDate: '2026-11-11', tempHighC: 32, tempLowC: 25, condition: 'sun', precipPercent: 10 },
-    { isoDate: '2026-11-12', tempHighC: 31, tempLowC: 24, condition: 'partly-cloudy', precipPercent: 20 },
-    { isoDate: '2026-11-13', tempHighC: 32, tempLowC: 25, condition: 'sun', precipPercent: 5 },
-    { isoDate: '2026-11-14', tempHighC: 32, tempLowC: 25, condition: 'sun', precipPercent: 5 },
-  ],
-  'buenos-aires': [
-    { isoDate: '2026-11-12', tempHighC: 22, tempLowC: 14, condition: 'rain', precipPercent: 70 },
-    { isoDate: '2026-11-13', tempHighC: 23, tempLowC: 15, condition: 'partly-cloudy', precipPercent: 40 },
-    { isoDate: '2026-11-14', tempHighC: 24, tempLowC: 15, condition: 'sun', precipPercent: 10 },
-    { isoDate: '2026-11-15', tempHighC: 26, tempLowC: 16, condition: 'sun', precipPercent: 5 },
-    { isoDate: '2026-11-16', tempHighC: 27, tempLowC: 17, condition: 'sun', precipPercent: 10 },
-    { isoDate: '2026-11-17', tempHighC: 26, tempLowC: 17, condition: 'partly-cloudy', precipPercent: 30 },
-    { isoDate: '2026-11-18', tempHighC: 24, tempLowC: 16, condition: 'cloud', precipPercent: 50 },
-    { isoDate: '2026-11-19', tempHighC: 25, tempLowC: 16, condition: 'sun', precipPercent: 15 },
-    { isoDate: '2026-11-20', tempHighC: 26, tempLowC: 17, condition: 'sun', precipPercent: 10 },
-    { isoDate: '2026-11-21', tempHighC: 27, tempLowC: 17, condition: 'partly-cloudy', precipPercent: 20 },
-  ],
-  'punta-del-este': [
-    { isoDate: '2026-11-18', tempHighC: 22, tempLowC: 15, condition: 'partly-cloudy', precipPercent: 40 },
-    { isoDate: '2026-11-19', tempHighC: 23, tempLowC: 16, condition: 'sun', precipPercent: 10 },
-    { isoDate: '2026-11-20', tempHighC: 24, tempLowC: 17, condition: 'sun', precipPercent: 5 },
-    { isoDate: '2026-11-21', tempHighC: 25, tempLowC: 18, condition: 'sun', precipPercent: 5 },
-    { isoDate: '2026-11-22', tempHighC: 25, tempLowC: 18, condition: 'partly-cloudy', precipPercent: 20 },
-    { isoDate: '2026-11-23', tempHighC: 23, tempLowC: 17, condition: 'rain', precipPercent: 65 },
-    { isoDate: '2026-11-24', tempHighC: 22, tempLowC: 16, condition: 'cloud', precipPercent: 50 },
-    { isoDate: '2026-11-25', tempHighC: 24, tempLowC: 17, condition: 'sun', precipPercent: 15 },
-  ],
+type CityBaseline = {
+  tempHigh: number;
+  tempLow: number;
+  rainBias: number;
 };
 
-export function cityWeather(stopId: string): WeatherDay[] {
-  return CITY_WEATHER[stopId] ?? [];
+const CITY_BASELINE: Record<string, CityBaseline> = {
+  buzios: { tempHigh: 27, tempLow: 20, rainBias: 0.2 },
+  'sao-paulo': { tempHigh: 26, tempLow: 17, rainBias: 0.35 },
+  jericoacoara: { tempHigh: 32, tempLow: 25, rainBias: 0.08 },
+  'buenos-aires': { tempHigh: 25, tempLow: 16, rainBias: 0.3 },
+  'punta-del-este': { tempHigh: 24, tempLow: 17, rainBias: 0.25 },
+  'rio-de-janeiro': { tempHigh: 28, tempLow: 21, rainBias: 0.2 },
+  'foz-do-iguacu': { tempHigh: 30, tempLow: 19, rainBias: 0.4 },
+  mendoza: { tempHigh: 27, tempLow: 14, rainBias: 0.12 },
+};
+
+function hashString(s: string): number {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) {
+    h = (h * 31 + s.charCodeAt(i)) | 0;
+  }
+  return h >>> 0;
+}
+
+function pickCondition(rand: number, rainBias: number): WeatherCondition {
+  if (rand < rainBias) return 'rain';
+  if (rand < rainBias + 0.2) return 'cloud';
+  if (rand < rainBias + 0.55) return 'partly-cloudy';
+  return 'sun';
+}
+
+export function cityWeatherRange(
+  stopId: string,
+  fromIso: string,
+  toIso: string,
+): WeatherDay[] {
+  const baseline = CITY_BASELINE[stopId];
+  if (!baseline) return [];
+  const start = new Date(fromIso + 'T12:00:00');
+  const end = new Date(toIso + 'T12:00:00');
+  if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) return [];
+  const out: WeatherDay[] = [];
+  const cursor = new Date(start);
+  while (cursor <= end) {
+    const iso = cursor.toISOString().slice(0, 10);
+    const seed = hashString(stopId + iso);
+    const r1 = (seed & 0xffff) / 0xffff;
+    const r2 = ((seed >> 16) & 0xff) / 0xff;
+    const r3 = ((seed >> 24) & 0xff) / 0xff;
+    const condition = pickCondition(r1, baseline.rainBias);
+    const tempJitter = Math.round((r2 - 0.5) * 4);
+    const tempHighC = baseline.tempHigh + tempJitter;
+    const tempLowC = baseline.tempLow + Math.round((r3 - 0.5) * 3);
+    const precipPercent =
+      condition === 'rain'
+        ? 60 + Math.round(r2 * 35)
+        : condition === 'cloud'
+          ? 30 + Math.round(r2 * 25)
+          : condition === 'partly-cloudy'
+            ? 10 + Math.round(r3 * 25)
+            : Math.round(r3 * 10);
+    out.push({
+      isoDate: iso,
+      tempHighC,
+      tempLowC,
+      condition,
+      precipPercent,
+    });
+    cursor.setDate(cursor.getDate() + 1);
+  }
+  return out;
 }
