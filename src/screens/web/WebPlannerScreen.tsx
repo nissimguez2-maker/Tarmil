@@ -9,7 +9,9 @@ import { WebMapCanvas } from './WebMapCanvas';
 import { WebBubble } from './WebBubble';
 import { WebBookingModal, type BookingTarget } from './WebBookingModal';
 import { WebAddStopModal } from './WebAddStopModal';
+import { WebHomeEditor } from './WebHomeEditor';
 import { WebPlannerSkeleton } from './WebPlannerSkeleton';
+import { DEFAULT_HOME, loadHome, saveHome, type HomeCity } from './homeCity';
 import {
   addStop as addStopMut,
   editStopDates as editStopDatesMut,
@@ -21,9 +23,14 @@ import type { Selection } from './types';
 export function WebPlannerScreen() {
   const { data, loading, error } = useSupabaseData();
   const [localStops, setLocalStops] = useState<PlannedStop[] | null>(null);
+  const [home, setHome] = useState<HomeCity>(() => {
+    if (typeof window === 'undefined') return DEFAULT_HOME;
+    return loadHome();
+  });
   const [selection, setSelection] = useState<Selection>({ type: 'none' });
   const [bookingTarget, setBookingTarget] = useState<BookingTarget | null>(null);
   const [addStopOpen, setAddStopOpen] = useState(false);
+  const [homeEditorOpen, setHomeEditorOpen] = useState(false);
 
   useEffect(() => {
     if (data && localStops === null) {
@@ -32,10 +39,16 @@ export function WebPlannerScreen() {
   }, [data, localStops]);
 
   useEffect(() => {
+    saveHome(home);
+  }, [home]);
+
+  useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== 'Escape') return;
       if (bookingTarget) {
         setBookingTarget(null);
+      } else if (homeEditorOpen) {
+        setHomeEditorOpen(false);
       } else if (addStopOpen) {
         setAddStopOpen(false);
       } else if (selection.type !== 'none') {
@@ -44,14 +57,13 @@ export function WebPlannerScreen() {
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [bookingTarget, addStopOpen, selection.type]);
+  }, [bookingTarget, addStopOpen, homeEditorOpen, selection.type]);
 
   if (loading) return <WebPlannerSkeleton />;
   if (error || !data) return <ErrorPanel error={error} />;
 
   const stops = localStops ?? data.plannedStops;
   const places = data.places;
-  const past = data.myTrip?.past as [number, number][] | undefined;
 
   const handleReorder = (fromIdx: number, toIdx: number) => {
     setLocalStops((prev) =>
@@ -87,23 +99,26 @@ export function WebPlannerScreen() {
         <div className="flex-1 flex min-h-0">
           <WebStopList
             stops={stops}
+            home={home}
             selection={selection}
             onSelect={setSelection}
             onAddStop={() => setAddStopOpen(true)}
             onReorder={handleReorder}
             onRemoveStop={handleRemove}
             onEditDates={handleEditDates}
+            onEditHome={() => setHomeEditorOpen(true)}
           />
           <div className="flex-1 relative">
             <WebMapCanvas
               stops={stops}
-              past={past}
+              home={home}
               selection={selection}
               onSelect={setSelection}
             />
             <WebBubble
               selection={selection}
               stops={stops}
+              home={home}
               places={places}
               onClose={() => setSelection({ type: 'none' })}
               onBook={setBookingTarget}
@@ -131,6 +146,12 @@ export function WebPlannerScreen() {
         onClose={() => setAddStopOpen(false)}
         onAdd={(city) => setLocalStops((prev) => addStopMut(prev ?? stops, city))}
         existingStopIds={stops.map((s) => s.id)}
+      />
+      <WebHomeEditor
+        open={homeEditorOpen}
+        onClose={() => setHomeEditorOpen(false)}
+        onPick={(h) => setHome(h)}
+        currentName={home.nameEn}
       />
     </>
   );

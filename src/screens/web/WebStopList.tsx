@@ -17,31 +17,36 @@ import {
 } from '@dnd-kit/sortable';
 import type { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
 import { CSS } from '@dnd-kit/utilities';
-import { Bus, GripVertical, Pencil, Plane, Plus, Ship, Train, Trash2 } from 'lucide-react';
+import { Bus, GripVertical, Home, Pencil, Plane, Plus, Ship, Train, Trash2 } from 'lucide-react';
 import { Button } from '../../components/Button';
 import type { PlannedStop } from '../../data/plannedStops';
+import type { HomeCity } from './homeCity';
 import { generateLeg } from './transportGenerator';
 import { formatShortDate, formatStopRange } from './dateUtils';
 import type { Selection } from './types';
 
 type Props = {
   stops: PlannedStop[];
+  home: HomeCity;
   selection: Selection;
   onSelect: (s: Selection) => void;
   onAddStop: () => void;
   onReorder: (fromIdx: number, toIdx: number) => void;
   onRemoveStop: (id: string) => void;
   onEditDates: (id: string, arrivalIso: string, departureIso: string) => void;
+  onEditHome: () => void;
 };
 
 export function WebStopList({
   stops,
+  home,
   selection,
   onSelect,
   onAddStop,
   onReorder,
   onRemoveStop,
   onEditDates,
+  onEditHome,
 }: Props) {
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
@@ -59,22 +64,57 @@ export function WebStopList({
     onReorder(fromIdx, toIdx);
   };
 
+  const homeStop = homeAsStop(home, stops[0]?.arrivalDate ?? '2026-01-01');
+  const firstStop = stops[0];
+  const lastStop = stops[stops.length - 1];
+  const isDepartureSelected =
+    !!firstStop &&
+    selection.type === 'leg' &&
+    selection.fromStopId === 'home' &&
+    selection.toStopId === firstStop.id;
+  const isReturnSelected =
+    !!lastStop &&
+    selection.type === 'leg' &&
+    selection.fromStopId === lastStop.id &&
+    selection.toStopId === 'home';
+
   return (
     <aside className="w-96 shrink-0 border-e border-cocoa-15 bg-ivory overflow-y-auto min-h-0 py-md flex flex-col gap-md">
       <TripOverviewCard stops={stops} />
       <div>
         <p className="meta-caps text-cocoa-55 px-md mb-md">Itinerary</p>
-        <DndContext
-          sensors={sensors}
-          collisionDetection={closestCenter}
-          onDragEnd={handleDragEnd}
-          modifiers={[]}
-        >
-          <SortableContext
-            items={stops.map((s) => s.id)}
-            strategy={verticalListSortingStrategy}
+        <div className="flex flex-col px-md">
+          <HomeRow
+            home={home}
+            variant="departure"
+            hasNext={stops.length > 0}
+            onEdit={onEditHome}
+          />
+          {firstStop && (
+            <LegRow
+              from={homeStop}
+              to={firstStop}
+              selected={isDepartureSelected}
+              onClick={() =>
+                onSelect({
+                  type: 'leg',
+                  fromStopId: 'home',
+                  toStopId: firstStop.id,
+                })
+              }
+            />
+          )}
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+            modifiers={[]}
           >
-            <ol className="flex flex-col px-md">
+            <SortableContext
+              items={stops.map((s) => s.id)}
+              strategy={verticalListSortingStrategy}
+            >
+              <ol className="flex flex-col">
               {stops.map((stop, i) => {
                 const next = stops[i + 1];
                 const isStopSelected =
@@ -89,7 +129,7 @@ export function WebStopList({
                     <SortableStopRow
                       stop={stop}
                       index={i + 1}
-                      hasNext={!!next}
+                      hasNext={!!next || stops.length > 0}
                       selected={isStopSelected}
                       canRemove={stops.length > 1}
                       onClick={() =>
@@ -118,6 +158,27 @@ export function WebStopList({
             </ol>
           </SortableContext>
         </DndContext>
+          {lastStop && (
+            <LegRow
+              from={lastStop}
+              to={homeStop}
+              selected={isReturnSelected}
+              onClick={() =>
+                onSelect({
+                  type: 'leg',
+                  fromStopId: lastStop.id,
+                  toStopId: 'home',
+                })
+              }
+            />
+          )}
+          <HomeRow
+            home={home}
+            variant="return"
+            hasNext={false}
+            onEdit={onEditHome}
+          />
+        </div>
       </div>
       <div className="px-md mx-md pt-md border-t border-cocoa-08">
         <Button variant="ghost" size="sm" fullWidth onClick={onAddStop}>
@@ -126,6 +187,70 @@ export function WebStopList({
         </Button>
       </div>
     </aside>
+  );
+}
+
+function homeAsStop(home: HomeCity, dateIso: string): PlannedStop {
+  return {
+    id: 'home',
+    nameEn: home.nameEn,
+    nameHe: home.nameEn,
+    type: 'city',
+    lat: home.lat,
+    lng: home.lng,
+    arrivalDate: dateIso,
+    departureDate: dateIso,
+    nights: 0,
+    privacy: 'private',
+  };
+}
+
+function HomeRow({
+  home,
+  variant,
+  hasNext,
+  onEdit,
+}: {
+  home: HomeCity;
+  variant: 'departure' | 'return';
+  hasNext: boolean;
+  onEdit: () => void;
+}) {
+  return (
+    <div className="group flex gap-sm w-full">
+      <div className="shrink-0 w-8 flex flex-col items-center">
+        <span
+          aria-hidden="true"
+          className="h-8 w-8 rounded-full bg-cocoa text-ivory flex items-center justify-center shrink-0"
+        >
+          <Home size={14} strokeWidth={2} />
+        </span>
+        {hasNext && (
+          <div className="w-px flex-1 border-s border-dashed border-cocoa-15 mt-xs" />
+        )}
+      </div>
+      <div className="flex-1 min-w-0 rounded-2xl px-sm py-xs group-hover:bg-cocoa-8 transition-[background-color] duration-instant ease-out-quart motion-reduce:transition-none">
+        <div className="flex items-start gap-sm">
+          <div className="flex-1 min-w-0">
+            <p className="meta-caps text-cocoa-55">
+              {variant === 'departure' ? 'Departure' : 'Return'}
+            </p>
+            <h3 className="font-serif text-lede text-cocoa leading-tight truncate">
+              {home.nameEn}
+            </h3>
+          </div>
+          <button
+            type="button"
+            onClick={onEdit}
+            aria-label="Change home"
+            title="Change home"
+            className="opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity duration-instant ease-out-quart h-6 w-6 rounded-full flex items-center justify-center text-cocoa-55 hover:text-copper hover:bg-cocoa-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory"
+          >
+            <Pencil size={12} strokeWidth={2} />
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -367,14 +492,12 @@ function DateEditor({
   );
   const valid = arrival && departure && nights >= 1;
   return (
-    <div className="mt-sm flex flex-col gap-sm">
-      <div className="flex gap-sm">
-        <DateField label="Arrival" value={arrival} onChange={setArrival} />
-        <DateField label="Depart" value={departure} onChange={setDeparture} />
-      </div>
+    <div className="mt-md flex flex-col gap-md">
+      <DateField label="Arrival" value={arrival} onChange={setArrival} />
+      <DateField label="Departure" value={departure} onChange={setDeparture} />
       <p
         className={clsx(
-          'text-small',
+          'text-small tnum',
           valid ? 'text-cocoa-55' : 'text-copper',
         )}
       >
@@ -382,7 +505,7 @@ function DateEditor({
           ? `${nights} ${nights === 1 ? 'night' : 'nights'}`
           : 'Departure must be after arrival'}
       </p>
-      <div className="flex gap-sm">
+      <div className="flex gap-sm justify-end pt-xs border-t border-cocoa-08">
         <Button variant="ghost" size="sm" onClick={onCancel}>
           Cancel
         </Button>
