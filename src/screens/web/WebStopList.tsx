@@ -14,41 +14,46 @@ type Props = {
 
 export function WebStopList({ stops, selection, onSelect }: Props) {
   return (
-    <aside className="w-60 shrink-0 border-e border-cocoa-15 bg-ivory overflow-y-auto p-md flex flex-col gap-xs">
-      {stops.map((stop, i) => {
-        const next = stops[i + 1];
-        const isSelected =
-          selection.type === 'stop' && selection.stopId === stop.id;
-        return (
-          <div key={stop.id} className="flex flex-col">
-            <StopCard
-              stop={stop}
-              index={i + 1}
-              selected={isSelected}
-              onClick={() => onSelect({ type: 'stop', stopId: stop.id })}
-            />
-            {next && (
-              <LegConnector
-                fromStopId={stop.id}
-                toStopId={next.id}
-                selected={
-                  selection.type === 'leg' &&
-                  selection.fromStopId === stop.id &&
-                  selection.toStopId === next.id
-                }
-                onClick={() =>
-                  onSelect({
-                    type: 'leg',
-                    fromStopId: stop.id,
-                    toStopId: next.id,
-                  })
-                }
+    <aside className="w-72 shrink-0 border-e border-cocoa-15 bg-ivory overflow-y-auto py-md">
+      <p className="meta-caps text-cocoa-55 px-md mb-md">Itinerary</p>
+      <ol className="flex flex-col px-md">
+        {stops.map((stop, i) => {
+          const next = stops[i + 1];
+          const isStopSelected =
+            selection.type === 'stop' && selection.stopId === stop.id;
+          const isLegSelected =
+            !!next &&
+            selection.type === 'leg' &&
+            selection.fromStopId === stop.id &&
+            selection.toStopId === next.id;
+          return (
+            <li key={stop.id} className="flex flex-col">
+              <StopRow
+                stop={stop}
+                index={i + 1}
+                hasNext={!!next}
+                selected={isStopSelected}
+                onClick={() => onSelect({ type: 'stop', stopId: stop.id })}
               />
-            )}
-          </div>
-        );
-      })}
-      <div className="mt-md">
+              {next && (
+                <LegRow
+                  from={stop}
+                  to={next}
+                  selected={isLegSelected}
+                  onClick={() =>
+                    onSelect({
+                      type: 'leg',
+                      fromStopId: stop.id,
+                      toStopId: next.id,
+                    })
+                  }
+                />
+              )}
+            </li>
+          );
+        })}
+      </ol>
+      <div className="px-md mt-md pt-md border-t border-cocoa-08 mx-md">
         <Button variant="ghost" size="sm" fullWidth>
           <Plus size={14} strokeWidth={2} />
           Add stop
@@ -58,96 +63,99 @@ export function WebStopList({ stops, selection, onSelect }: Props) {
   );
 }
 
-type StopCardProps = {
+type StopRowProps = {
   stop: PlannedStop;
   index: number;
+  hasNext: boolean;
   selected: boolean;
   onClick: () => void;
 };
 
-function StopCard({ stop, index, selected, onClick }: StopCardProps) {
+function StopRow({ stop, index, hasNext, selected, onClick }: StopRowProps) {
   return (
     <button
       type="button"
       onClick={onClick}
-      className={clsx(
-        'w-full text-start rounded-2xl p-sm border transition-[background-color,border-color] duration-instant ease-out-quart motion-reduce:transition-none',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory',
-        selected
-          ? 'bg-sand border-rope'
-          : 'bg-ivory border-transparent hover:border-cocoa-15',
-      )}
+      className="group flex gap-sm w-full text-start rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory"
     >
-      <div className="flex items-start gap-sm">
+      <div className="shrink-0 w-8 flex flex-col items-center">
         <span
           aria-hidden="true"
-          className="h-7 w-7 shrink-0 rounded-full bg-copper text-ivory font-serif text-small flex items-center justify-center"
+          className="h-8 w-8 rounded-full bg-copper text-ivory font-serif text-body flex items-center justify-center shrink-0"
         >
           {index}
         </span>
-        <div className="flex flex-col min-w-0 flex-1">
-          <span className="font-serif text-lede text-cocoa truncate">
-            {stop.nameEn}
-          </span>
-          <span className="text-small text-cocoa-55">
-            {formatStopRange(stop.arrivalDate, stop.departureDate)}
-          </span>
-          <span className="text-small text-cocoa-55">
-            {stop.nights} {stop.nights === 1 ? 'night' : 'nights'}
-          </span>
-          {stop.note && (
-            <span className="text-small text-cocoa-55 italic truncate mt-xs">
-              {stop.note}
-            </span>
-          )}
-        </div>
+        {hasNext && (
+          <div className="w-px flex-1 border-s border-dashed border-cocoa-15 mt-xs" />
+        )}
+      </div>
+      <div
+        className={clsx(
+          'flex-1 min-w-0 rounded-2xl px-sm py-xs transition-[background-color] duration-instant ease-out-quart motion-reduce:transition-none',
+          selected ? 'bg-sand' : 'group-hover:bg-cocoa-8',
+        )}
+      >
+        <h3 className="font-serif text-lede text-cocoa leading-tight">
+          {stop.nameEn}
+        </h3>
+        <p className="text-small text-cocoa-55 tnum mt-xs">
+          {formatStopRange(stop.arrivalDate, stop.departureDate)}
+          <span className="text-cocoa-30"> · </span>
+          {stop.nights} {stop.nights === 1 ? 'night' : 'nights'}
+        </p>
+        {stop.note && (
+          <p className="text-small text-cocoa-55 italic mt-xs leading-snug">
+            {stop.note}
+          </p>
+        )}
       </div>
     </button>
   );
 }
 
-type LegConnectorProps = {
-  fromStopId: string;
-  toStopId: string;
+type LegRowProps = {
+  from: PlannedStop;
+  to: PlannedStop;
   selected: boolean;
   onClick: () => void;
 };
 
-function LegConnector({
-  fromStopId,
-  toStopId,
-  selected,
-  onClick,
-}: LegConnectorProps) {
-  const leg = findLeg(fromStopId, toStopId);
+function LegRow({ from, to, selected, onClick }: LegRowProps) {
+  const leg = findLeg(from.id, to.id);
   const Icon = leg?.legType === 'flight' ? Plane : Bus;
   return (
     <button
       type="button"
       onClick={onClick}
-      className={clsx(
-        'group flex items-center gap-sm py-xs ms-sm rounded-sm',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory',
-      )}
-      aria-label={`Transport between stops`}
+      aria-label={`Transport from ${from.nameEn} to ${to.nameEn}`}
+      className="group flex gap-sm w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory rounded-2xl"
     >
-      <div
-        className={clsx(
-          'h-8 w-px border-s border-dashed',
-          selected
-            ? 'border-copper'
-            : 'border-cocoa-15 group-hover:border-copper',
-        )}
-      />
-      <span
-        className={clsx(
-          'flex items-center gap-xs text-meta uppercase',
-          selected ? 'text-copper' : 'text-cocoa-55 group-hover:text-copper',
-        )}
-      >
-        <Icon size={12} strokeWidth={2} />
-        {leg?.legType ?? 'transit'}
-      </span>
+      <div className="shrink-0 w-8 flex flex-col items-center">
+        <div className="h-3 w-px border-s border-dashed border-cocoa-15" />
+        <div
+          className={clsx(
+            'h-6 w-6 rounded-full bg-ivory border flex items-center justify-center shrink-0 transition-[border-color,color] duration-instant ease-out-quart motion-reduce:transition-none',
+            selected
+              ? 'border-copper text-copper'
+              : 'border-cocoa-15 text-cocoa-55 group-hover:border-copper group-hover:text-copper',
+          )}
+        >
+          <Icon size={12} strokeWidth={2} />
+        </div>
+        <div className="h-3 w-px border-s border-dashed border-cocoa-15" />
+      </div>
+      <div className="flex-1 flex items-center px-sm">
+        <span
+          className={clsx(
+            'meta-caps transition-colors duration-instant ease-out-quart motion-reduce:transition-none',
+            selected
+              ? 'text-copper'
+              : 'text-cocoa-55 group-hover:text-copper',
+          )}
+        >
+          {leg?.legType ?? 'transit'}
+        </span>
+      </div>
     </button>
   );
 }
