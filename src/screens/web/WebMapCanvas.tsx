@@ -21,17 +21,16 @@ type Props = {
 };
 
 function pinIcon(index: number, selected: boolean): L.DivIcon {
-  const bg = selected ? 'var(--cocoa)' : 'var(--copper)';
   const ring = selected
-    ? 'box-shadow:0 0 0 3px var(--copper), 0 2px 6px rgba(0,0,0,0.18);'
-    : 'box-shadow:0 2px 6px rgba(0,0,0,0.18);';
+    ? 'box-shadow: 0 0 0 2px var(--ivory), 0 0 0 5px var(--copper), 0 2px 6px rgba(0,0,0,0.18);'
+    : 'box-shadow: 0 2px 6px rgba(0,0,0,0.18);';
   return L.divIcon({
     className: '',
     iconSize: [32, 32],
     iconAnchor: [16, 16],
     html: `<div style="
       width:32px;height:32px;border-radius:9999px;
-      background-color:${bg};
+      background-color:var(--copper);
       display:flex;align-items:center;justify-content:center;
       color:white;font-family:Fraunces,serif;font-weight:600;font-size:14px;
       ${ring}
@@ -51,6 +50,47 @@ function FitBounds({ stops }: { stops: PlannedStop[] }) {
   return null;
 }
 
+function FlyToSelection({
+  stops,
+  selection,
+}: {
+  stops: PlannedStop[];
+  selection: Selection;
+}) {
+  const map = useMap();
+  useEffect(() => {
+    if (selection.type === 'stop') {
+      const stop = stops.find((s) => s.id === selection.stopId);
+      if (stop) {
+        map.flyTo([stop.lat, stop.lng], 12, { duration: 0.8 });
+      }
+    } else if (selection.type === 'leg') {
+      const from = stops.find((s) => s.id === selection.fromStopId);
+      const to = stops.find((s) => s.id === selection.toStopId);
+      if (from && to) {
+        const bounds = L.latLngBounds([
+          [from.lat, from.lng],
+          [to.lat, to.lng],
+        ]);
+        map.flyToBounds(bounds, { padding: [80, 80], duration: 0.8 });
+      }
+    }
+  }, [map, stops, selection]);
+  return null;
+}
+
+function MapClickDismiss({ onDismiss }: { onDismiss: () => void }) {
+  const map = useMap();
+  useEffect(() => {
+    const handler = () => onDismiss();
+    map.on('click', handler);
+    return () => {
+      map.off('click', handler);
+    };
+  }, [map, onDismiss]);
+  return null;
+}
+
 export function WebMapCanvas({ stops, past, selection, onSelect }: Props) {
   const initialCenter = useMemo<LatLng>(() => {
     if (!stops.length) return [0, 0];
@@ -63,7 +103,7 @@ export function WebMapCanvas({ stops, past, selection, onSelect }: Props) {
       : null;
 
   return (
-    <div className="flex-1 relative isolate">
+    <div className="absolute inset-0 isolate">
       <MapContainer
         center={initialCenter}
         zoom={4}
@@ -112,7 +152,10 @@ export function WebMapCanvas({ stops, past, selection, onSelect }: Props) {
                   }),
                 mouseover: (e) => {
                   if (!isSelected) {
-                    e.target.setStyle({ color: 'var(--copper)', weight: 3 });
+                    e.target.setStyle({
+                      color: 'var(--copper)',
+                      weight: 3,
+                    });
                   }
                 },
                 mouseout: (e) => {
@@ -135,7 +178,7 @@ export function WebMapCanvas({ stops, past, selection, onSelect }: Props) {
               key={`${s.id}-${isSelected ? 'sel' : 'idle'}`}
               position={[s.lat, s.lng]}
               icon={pinIcon(i, isSelected)}
-              title={`${s.nameEn}`}
+              title={s.nameEn}
               eventHandlers={{
                 click: () => onSelect({ type: 'stop', stopId: s.id }),
               }}
@@ -144,6 +187,8 @@ export function WebMapCanvas({ stops, past, selection, onSelect }: Props) {
         })}
 
         <FitBounds stops={stops} />
+        <FlyToSelection stops={stops} selection={selection} />
+        <MapClickDismiss onDismiss={() => onSelect({ type: 'none' })} />
       </MapContainer>
     </div>
   );
