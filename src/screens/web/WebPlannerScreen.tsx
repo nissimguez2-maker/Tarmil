@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSupabaseData } from '../../lib/SupabaseDataProvider';
 import { ErrorPanel } from '../../components/DataState';
@@ -16,6 +16,21 @@ export function WebPlannerScreen() {
   const [selection, setSelection] = useState<Selection>({ type: 'none' });
   const [bookingTarget, setBookingTarget] = useState<BookingTarget | null>(null);
   const [addStopOpen, setAddStopOpen] = useState(false);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return;
+      if (bookingTarget) {
+        setBookingTarget(null);
+      } else if (addStopOpen) {
+        setAddStopOpen(false);
+      } else if (selection.type !== 'none') {
+        setSelection({ type: 'none' });
+      }
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [bookingTarget, addStopOpen, selection.type]);
 
   if (loading) return <WebPlannerSkeleton />;
   if (error || !data) return <ErrorPanel error={error} />;

@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { ExternalLink, X } from 'lucide-react';
 import { Button } from '../../components/Button';
 
@@ -18,15 +17,6 @@ const PROVIDERS = [
 ];
 
 export function WebBookingModal({ target, onClose }: Props) {
-  useEffect(() => {
-    if (!target) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [target, onClose]);
-
   if (!target) return null;
 
   const title =
