@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { Share2 } from 'lucide-react';
 import type { PlannedStop } from '../../data/plannedStops';
 import { formatTripMonthRange } from './dateUtils';
 
@@ -25,20 +26,30 @@ export function WebHeader({ stops }: Props) {
           {range && <span className="text-cocoa-55"> · {range}</span>}
         </span>
       </div>
-      <div className="flex items-center gap-sm">
-        <span className="text-small text-cocoa-55">1 traveler</span>
-        <span
-          aria-hidden="true"
-          className="h-8 w-8 rounded-full bg-stone text-ivory font-serif text-small flex items-center justify-center"
+      <div className="flex items-center gap-md">
+        <button
+          type="button"
+          onClick={() => window.alert('Share link copied (mock)')}
+          className="inline-flex items-center gap-xs text-small text-cocoa-70 hover:text-cocoa transition-colors duration-instant ease-out-quart motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory rounded-sm"
         >
-          Y
-        </span>
+          <Share2 size={14} strokeWidth={2} />
+          Share
+        </button>
         <Link
           to="/trip"
           className="text-small text-copper hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory rounded-sm"
         >
           Switch to App
         </Link>
+        <div className="flex items-center gap-xs">
+          <span className="text-small text-cocoa-55">Yotam</span>
+          <span
+            aria-hidden="true"
+            className="h-8 w-8 rounded-full bg-cocoa text-ivory font-serif text-small flex items-center justify-center"
+          >
+            Y
+          </span>
+        </div>
       </div>
     </header>
   );

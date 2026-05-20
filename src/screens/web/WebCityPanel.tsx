@@ -1,15 +1,26 @@
 import { useEffect, useState } from 'react';
 import clsx from 'clsx';
-import { Cloud, Star, Users } from 'lucide-react';
+import {
+  Cloud,
+  CloudRain,
+  CloudSun,
+  Star,
+  Sun,
+  Users,
+} from 'lucide-react';
 import { Button } from '../../components/Button';
 import type { PlannedStop } from '../../data/plannedStops';
-import type { Place, PlaceCategory } from '../../data/places';
+import type { FriendVisit, Place, PlaceCategory } from '../../data/places';
 import { cityDescription } from './cityCopy';
-import { formatShortDate, formatStopRange } from './dateUtils';
+import { cityPhotos } from './cityPhotos';
+import { cityWeather, type WeatherCondition, type WeatherDay } from './cityWeather';
+import { formatStopRange } from './dateUtils';
+import type { BookingTarget } from './WebBookingModal';
 
 type Props = {
   stop: PlannedStop;
   places: Place[];
+  onBook: (target: BookingTarget) => void;
 };
 
 type TabId = 'overview' | 'stay' | 'eat' | 'drink' | 'see' | 'religious';
@@ -50,7 +61,7 @@ const SUB_FILTERS: Record<TabId, SubFilter[]> = {
   ],
 };
 
-export function WebCityPanel({ stop, places }: Props) {
+export function WebCityPanel({ stop, places, onBook }: Props) {
   const [activeTab, setActiveTab] = useState<TabId>('overview');
   const [activeSub, setActiveSub] = useState<PlaceCategory | 'all'>('all');
 
@@ -125,6 +136,7 @@ export function WebCityPanel({ stop, places }: Props) {
           <PlacesList
             places={filterAndSortPlaces(places, activeTabDef.categories, activeSub)}
             emptyLabel={activeTabDef.label.toLowerCase()}
+            onBook={onBook}
           />
         )}
       </div>
@@ -149,63 +161,137 @@ function filterAndSortPlaces(
 
 function OverviewTab({ stop }: { stop: PlannedStop }) {
   const description = cityDescription(stop.id, stop.note);
+  const photos = cityPhotos(stop.id);
   return (
     <div className="flex flex-col gap-md">
-      <PhotoPlaceholders />
+      {photos.length > 0 && <PhotoGrid photos={photos} cityName={stop.nameEn} />}
       {description && (
         <p className="font-sans text-body text-cocoa leading-relaxed">
           {description}
         </p>
       )}
-      <WeatherSkeleton
-        arrivalIso={stop.arrivalDate}
-        departureIso={stop.departureDate}
-      />
+      <WeatherStrip stop={stop} />
     </div>
   );
 }
 
-function PhotoPlaceholders() {
+function PhotoGrid({ photos, cityName }: { photos: string[]; cityName: string }) {
   return (
-    <div className="grid grid-cols-3 gap-sm" aria-hidden="true">
-      {[0, 1, 2].map((i) => (
+    <div className="grid grid-cols-3 gap-sm">
+      {photos.map((src, i) => (
         <div
-          key={i}
-          className="aspect-square rounded-xl bg-gradient-to-br from-rope to-sand"
-        />
+          key={src}
+          className="relative aspect-square rounded-xl overflow-hidden bg-gradient-to-br from-rope to-sand"
+        >
+          <img
+            src={src}
+            alt={`${cityName} photo ${i + 1}`}
+            loading="lazy"
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+        </div>
       ))}
     </div>
   );
 }
 
-function WeatherSkeleton({
-  arrivalIso,
-  departureIso,
-}: {
-  arrivalIso: string;
-  departureIso: string;
-}) {
-  const days = ['Day 1', 'Day 2', 'Day 3', 'Day 4'];
+function weatherIcon(condition: WeatherCondition) {
+  if (condition === 'sun') return Sun;
+  if (condition === 'partly-cloudy') return CloudSun;
+  if (condition === 'rain') return CloudRain;
+  return Cloud;
+}
+
+function WeatherStrip({ stop }: { stop: PlannedStop }) {
+  const days = cityWeather(stop.id);
+  if (days.length === 0) {
+    return (
+      <div className="bg-sand border border-rope rounded-2xl p-md">
+        <p className="text-small text-cocoa-55 text-center">
+          Forecast loading from API soon.
+        </p>
+      </div>
+    );
+  }
+  const arrival = new Date(stop.arrivalDate + 'T12:00:00').getTime();
+  const departure = new Date(stop.departureDate + 'T12:00:00').getTime();
+
   return (
     <div className="bg-sand border border-rope rounded-2xl p-md flex flex-col gap-sm">
       <div className="flex items-center justify-between">
         <p className="meta-caps text-cocoa-55">Forecast</p>
-        <p className="text-meta uppercase text-cocoa-55 tnum">
-          {formatShortDate(arrivalIso)} – {formatShortDate(departureIso)}
+        <p className="text-meta italic text-cocoa-55">
+          ± 2 days · trip days highlighted
         </p>
       </div>
-      <div className="grid grid-cols-4 gap-sm opacity-50">
-        {days.map((day) => (
-          <div key={day} className="flex flex-col items-center gap-xs">
-            <p className="text-meta uppercase text-cocoa-30">{day}</p>
-            <Cloud size={20} strokeWidth={1.5} className="text-cocoa-30" />
-            <p className="font-serif text-lede text-cocoa-30 tnum">—°</p>
-          </div>
-        ))}
+      <div className="flex gap-xs overflow-x-auto -mx-md px-md pb-xs">
+        {days.map((day) => {
+          const ts = new Date(day.isoDate + 'T12:00:00').getTime();
+          const inTrip = ts >= arrival && ts <= departure;
+          return (
+            <WeatherDayCard key={day.isoDate} day={day} highlighted={inTrip} />
+          );
+        })}
       </div>
       <p className="text-meta italic text-cocoa-55 text-center">
-        Live forecast coming soon
+        Mocked forecast · live data coming soon
       </p>
+    </div>
+  );
+}
+
+function WeatherDayCard({
+  day,
+  highlighted,
+}: {
+  day: WeatherDay;
+  highlighted: boolean;
+}) {
+  const Icon = weatherIcon(day.condition);
+  const date = new Date(day.isoDate + 'T12:00:00');
+  const dayLabel = date.toLocaleDateString('en-US', { weekday: 'short' });
+  const dateNum = date.getDate();
+  return (
+    <div
+      className={clsx(
+        'shrink-0 w-14 flex flex-col items-center gap-xs rounded-xl py-sm border',
+        highlighted
+          ? 'bg-ivory border-copper'
+          : 'bg-transparent border-transparent opacity-50',
+      )}
+    >
+      <p
+        className={clsx(
+          'text-meta uppercase tracking-wider',
+          highlighted ? 'text-copper' : 'text-cocoa-55',
+        )}
+      >
+        {dayLabel}
+      </p>
+      <p
+        className={clsx(
+          'text-small font-serif tnum',
+          highlighted ? 'text-cocoa' : 'text-cocoa-55',
+        )}
+      >
+        {dateNum}
+      </p>
+      <Icon
+        size={20}
+        strokeWidth={1.5}
+        className={highlighted ? 'text-cocoa-70' : 'text-cocoa-30'}
+      />
+      <div className="flex flex-col items-center leading-none">
+        <p
+          className={clsx(
+            'text-small font-serif tnum',
+            highlighted ? 'text-cocoa' : 'text-cocoa-55',
+          )}
+        >
+          {day.tempHighC}°
+        </p>
+        <p className="text-meta tnum text-cocoa-55">{day.tempLowC}°</p>
+      </div>
     </div>
   );
 }
@@ -213,9 +299,11 @@ function WeatherSkeleton({
 function PlacesList({
   places,
   emptyLabel,
+  onBook,
 }: {
   places: Place[];
   emptyLabel: string;
+  onBook: (target: BookingTarget) => void;
 }) {
   if (places.length === 0) {
     return (
@@ -227,20 +315,19 @@ function PlacesList({
   return (
     <div className="flex flex-col gap-sm">
       {places.map((place) => (
-        <PlaceCard key={place.id} place={place} />
+        <PlaceCard key={place.id} place={place} onBook={onBook} />
       ))}
     </div>
   );
 }
 
-function PlaceCard({ place }: { place: Place }) {
-  const onBook = () => {
-    window.open(
-      `https://www.google.com/search?q=${encodeURIComponent(place.englishName)}`,
-      '_blank',
-      'noopener',
-    );
-  };
+function PlaceCard({
+  place,
+  onBook,
+}: {
+  place: Place;
+  onBook: (target: BookingTarget) => void;
+}) {
   return (
     <article className="bg-sand border border-rope rounded-2xl p-sm flex flex-col gap-sm">
       <div className="flex gap-sm">
@@ -255,10 +342,10 @@ function PlaceCard({ place }: { place: Place }) {
               {place.rating.toFixed(1)}
             </span>
             {place.friendsKnow > 0 && (
-              <span className="inline-flex items-center gap-xs text-small text-cocoa-55">
-                <Users size={12} strokeWidth={2} />
-                {place.friendsKnow}
-              </span>
+              <FriendCluster
+                count={place.friendsKnow}
+                visits={place.friendVisits}
+              />
             )}
             <span className="text-meta uppercase text-cocoa-55">
               {place.category}
@@ -273,11 +360,52 @@ function PlaceCard({ place }: { place: Place }) {
       </div>
       <DescriptionWithMore text={place.englishDescription} />
       <div className="flex justify-end">
-        <Button variant="accent" size="sm" onClick={onBook}>
+        <Button
+          variant="accent"
+          size="sm"
+          onClick={() =>
+            onBook({
+              kind: 'place',
+              name: place.englishName,
+              category: place.category,
+            })
+          }
+        >
           Book
         </Button>
       </div>
     </article>
+  );
+}
+
+function FriendCluster({
+  count,
+  visits,
+}: {
+  count: number;
+  visits?: FriendVisit[];
+}) {
+  const initials = (visits ?? []).slice(0, 3);
+  return (
+    <span className="inline-flex items-center gap-xs text-small text-cocoa-55">
+      {initials.length > 0 ? (
+        <span className="flex items-center -space-x-2">
+          {initials.map((v, i) => (
+            <span
+              key={`${v.friendInitial}-${i}`}
+              aria-hidden="true"
+              className="h-5 w-5 rounded-full bg-cocoa text-ivory text-meta font-medium flex items-center justify-center border border-ivory"
+              title={v.friendName}
+            >
+              {v.friendInitial}
+            </span>
+          ))}
+        </span>
+      ) : (
+        <Users size={12} strokeWidth={2} />
+      )}
+      {count}
+    </span>
   );
 }
 

@@ -1,27 +1,48 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import clsx from 'clsx';
 import { X } from 'lucide-react';
 import type { PlannedStop } from '../../data/plannedStops';
 import type { Place } from '../../data/places';
 import type { Selection } from './types';
 import { WebCityPanel } from './WebCityPanel';
 import { WebTransportPanel } from './WebTransportPanel';
+import type { BookingTarget } from './WebBookingModal';
 
 type Props = {
   selection: Selection;
   stops: PlannedStop[];
   places: Place[];
   onClose: () => void;
+  onBook: (target: BookingTarget) => void;
 };
 
-export function WebBubble({ selection, stops, places, onClose }: Props) {
+export function WebBubble({
+  selection,
+  stops,
+  places,
+  onClose,
+  onBook,
+}: Props) {
+  const isOpen = selection.type !== 'none';
+  const [animateIn, setAnimateIn] = useState(false);
+
   useEffect(() => {
-    if (selection.type === 'none') return;
+    if (!isOpen) {
+      setAnimateIn(false);
+      return;
+    }
+    const id = requestAnimationFrame(() => setAnimateIn(true));
+    return () => cancelAnimationFrame(id);
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [selection.type, onClose]);
+  }, [isOpen, onClose]);
 
   if (selection.type === 'none') return null;
 
@@ -34,7 +55,12 @@ export function WebBubble({ selection, stops, places, onClose }: Props) {
         role="dialog"
         aria-modal="false"
         style={{ width: '440px', maxHeight: '100%' }}
-        className="bg-ivory border border-rope rounded-3xl shadow-panel flex flex-col pointer-events-auto relative overflow-hidden"
+        className={clsx(
+          'bg-ivory border border-rope rounded-3xl shadow-panel flex flex-col pointer-events-auto relative overflow-hidden',
+          'transition-[opacity,transform] duration-considered ease-out-quart motion-reduce:transition-none',
+          'origin-center',
+          animateIn ? 'opacity-100 scale-100' : 'opacity-0 scale-95',
+        )}
       >
         <button
           type="button"
@@ -48,12 +74,14 @@ export function WebBubble({ selection, stops, places, onClose }: Props) {
           <WebCityPanel
             stop={requireStop(stops, selection.stopId)}
             places={places.filter((p) => p.destinationId === selection.stopId)}
+            onBook={onBook}
           />
         )}
         {selection.type === 'leg' && (
           <WebTransportPanel
             fromStop={requireStop(stops, selection.fromStopId)}
             toStop={requireStop(stops, selection.toStopId)}
+            onBook={onBook}
           />
         )}
       </div>
