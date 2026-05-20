@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import {
   DndContext,
@@ -22,6 +22,7 @@ import { Button } from '../../components/Button';
 import type { PlannedStop } from '../../data/plannedStops';
 import type { HomeCity } from './homeCity';
 import { generateLeg } from './transportGenerator';
+import { fetchDrivingMinutes, formatDriveDuration } from './osrmApi';
 import { formatShortDate, formatStopRange } from './dateUtils';
 import type { Selection } from './types';
 
@@ -410,11 +411,6 @@ function StopRow({
                 {stop.nights} {stop.nights === 1 ? 'night' : 'nights'}
               </p>
             )}
-            {!editing && stop.note && (
-              <p className="text-small text-cocoa-55 italic mt-xs leading-snug">
-                {stop.note}
-              </p>
-            )}
           </button>
           <div className="flex flex-col gap-xs opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity duration-instant ease-out-quart">
             <IconButton
@@ -563,6 +559,16 @@ function LegRow({ from, to, selected, onClick }: LegRowProps) {
         : dominantMode === 'ferry'
           ? Ship
           : Bus;
+  const [driveMinutes, setDriveMinutes] = useState<number | null>(null);
+  useEffect(() => {
+    let cancelled = false;
+    fetchDrivingMinutes(from.lat, from.lng, to.lat, to.lng).then((m) => {
+      if (!cancelled) setDriveMinutes(m);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [from.lat, from.lng, to.lat, to.lng]);
   return (
     <button
       type="button"
@@ -593,7 +599,12 @@ function LegRow({ from, to, selected, onClick }: LegRowProps) {
               : 'text-cocoa-55 group-hover:text-copper',
           )}
         >
-          {dominantMode}
+          Transport
+          {driveMinutes !== null && (
+            <span className="text-cocoa-30 normal-case tracking-normal ms-xs">
+              · {formatDriveDuration(driveMinutes)}
+            </span>
+          )}
         </span>
       </div>
     </button>
