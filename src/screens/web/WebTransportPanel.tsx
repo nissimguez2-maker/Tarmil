@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import clsx from 'clsx';
-import { ArrowRight, Plane, Bus, Ship, Car, X } from 'lucide-react';
+import { ArrowRight, Plane, Bus, Ship, Car } from 'lucide-react';
 import { Button } from '../../components/Button';
 import type { PlannedStop } from '../../data/plannedStops';
 import {
@@ -13,7 +13,6 @@ import { formatLongDate } from './dateUtils';
 type Props = {
   fromStop: PlannedStop;
   toStop: PlannedStop;
-  onClose: () => void;
 };
 
 type BadgeFilter = TransportOffer['badge'];
@@ -25,27 +24,24 @@ const BADGE_TABS: { value: NonNullable<BadgeFilter>; label: string }[] = [
   { value: 'recommended', label: 'Recommended' },
 ];
 
-export function WebTransportPanel({ fromStop, toStop, onClose }: Props) {
+export function WebTransportPanel({ fromStop, toStop }: Props) {
   const leg = findLeg(fromStop.id, toStop.id);
   const [activeBadge, setActiveBadge] = useState<BadgeFilter>(null);
 
   return (
     <div className="flex flex-col h-full min-h-0">
       <header className="shrink-0 p-md border-b border-cocoa-15 flex flex-col gap-sm">
-        <div className="flex items-start gap-sm">
-          <div className="flex-1 flex flex-col gap-xs">
-            <div className="flex items-center gap-xs font-serif text-lede text-cocoa">
-              <span>{fromStop.nameEn}</span>
-              <ArrowRight size={14} strokeWidth={2} className="text-cocoa-55" />
-              <span>{toStop.nameEn}</span>
-            </div>
-            {leg && (
-              <p className="text-small text-cocoa-55">
-                {formatLongDate(leg.travelDate)}
-              </p>
-            )}
+        <div className="flex flex-col gap-xs">
+          <div className="flex items-center gap-xs font-serif text-lede text-cocoa">
+            <span>{fromStop.nameEn}</span>
+            <ArrowRight size={14} strokeWidth={2} className="text-cocoa-55" />
+            <span>{toStop.nameEn}</span>
           </div>
-          <CloseButton onClick={onClose} />
+          {leg && (
+            <p className="text-small text-cocoa-55">
+              {formatLongDate(leg.travelDate)}
+            </p>
+          )}
         </div>
         <div className="flex gap-xs flex-wrap">
           {BADGE_TABS.map((tab) => (
@@ -179,18 +175,5 @@ function OfferCard({
         </Button>
       </div>
     </article>
-  );
-}
-
-function CloseButton({ onClick }: { onClick: () => void }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-label="Close panel"
-      className="shrink-0 h-8 w-8 rounded-full flex items-center justify-center text-cocoa-55 hover:text-cocoa hover:bg-cocoa-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory"
-    >
-      <X size={16} strokeWidth={2} />
-    </button>
   );
 }
