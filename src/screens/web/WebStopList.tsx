@@ -10,9 +10,10 @@ type Props = {
   stops: PlannedStop[];
   selection: Selection;
   onSelect: (s: Selection) => void;
+  onAddStop: () => void;
 };
 
-export function WebStopList({ stops, selection, onSelect }: Props) {
+export function WebStopList({ stops, selection, onSelect, onAddStop }: Props) {
   return (
     <aside className="w-96 shrink-0 border-e border-cocoa-15 bg-ivory overflow-y-auto min-h-0 py-md flex flex-col gap-md">
       <TripOverviewCard stops={stops} />
@@ -57,7 +58,7 @@ export function WebStopList({ stops, selection, onSelect }: Props) {
         </ol>
       </div>
       <div className="px-md mx-md pt-md border-t border-cocoa-08">
-        <Button variant="ghost" size="sm" fullWidth>
+        <Button variant="ghost" size="sm" fullWidth onClick={onAddStop}>
           <Plus size={14} strokeWidth={2} />
           Add stop
         </Button>

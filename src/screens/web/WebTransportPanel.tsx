@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import clsx from 'clsx';
 import { ArrowRight, Plane, Bus, Ship, Car } from 'lucide-react';
 import { Button } from '../../components/Button';
@@ -6,35 +6,60 @@ import type { PlannedStop } from '../../data/plannedStops';
 import {
   findLeg,
   type TransportOffer,
-  type TransportLeg,
 } from '../../data/mockTransport';
 import { formatLongDate } from './dateUtils';
+import type { BookingTarget } from './WebBookingModal';
 
 type Props = {
   fromStop: PlannedStop;
   toStop: PlannedStop;
+  onBook: (target: BookingTarget) => void;
 };
 
-type BadgeFilter = TransportOffer['badge'];
+type Mode = TransportOffer['mode'];
 
-const BADGE_TABS: { value: NonNullable<BadgeFilter>; label: string }[] = [
-  { value: 'cheapest', label: 'Cheapest' },
-  { value: 'fastest', label: 'Fastest' },
-  { value: 'easiest', label: 'Easiest' },
-  { value: 'recommended', label: 'Recommended' },
+const MODE_META: { mode: Mode; label: string; Icon: typeof Plane }[] = [
+  { mode: 'flight', label: 'Flight', Icon: Plane },
+  { mode: 'bus', label: 'Bus', Icon: Bus },
+  { mode: 'ferry', label: 'Ferry', Icon: Ship },
+  { mode: 'transfer', label: 'Transfer', Icon: Car },
 ];
 
-export function WebTransportPanel({ fromStop, toStop }: Props) {
+export function WebTransportPanel({ fromStop, toStop, onBook }: Props) {
   const leg = findLeg(fromStop.id, toStop.id);
-  const [activeBadge, setActiveBadge] = useState<BadgeFilter>(null);
+
+  const availableModes = useMemo<Set<Mode>>(() => {
+    if (!leg) return new Set();
+    return new Set(leg.offers.map((o) => o.mode));
+  }, [leg]);
+
+  const [enabledModes, setEnabledModes] = useState<Set<Mode>>(availableModes);
+
+  useEffect(() => {
+    setEnabledModes(new Set(availableModes));
+  }, [availableModes]);
+
+  const toggleMode = (mode: Mode) => {
+    setEnabledModes((prev) => {
+      const next = new Set(prev);
+      if (next.has(mode)) next.delete(mode);
+      else next.add(mode);
+      return next;
+    });
+  };
+
+  const visibleOffers = useMemo(() => {
+    if (!leg) return [];
+    return leg.offers.filter((o) => enabledModes.has(o.mode));
+  }, [leg, enabledModes]);
 
   return (
     <div className="flex flex-col h-full min-h-0">
-      <header className="shrink-0 p-md border-b border-cocoa-15 flex flex-col gap-sm">
+      <header className="shrink-0 px-md pt-md pb-sm border-b border-cocoa-15 flex flex-col gap-sm pe-12">
         <div className="flex flex-col gap-xs">
-          <div className="flex items-center gap-xs font-serif text-lede text-cocoa">
+          <div className="flex items-center gap-xs font-serif text-sub text-cocoa leading-tight">
             <span>{fromStop.nameEn}</span>
-            <ArrowRight size={14} strokeWidth={2} className="text-cocoa-55" />
+            <ArrowRight size={16} strokeWidth={2} className="text-cocoa-55" />
             <span>{toStop.nameEn}</span>
           </div>
           {leg && (
@@ -43,68 +68,75 @@ export function WebTransportPanel({ fromStop, toStop }: Props) {
             </p>
           )}
         </div>
-        <div className="flex gap-xs flex-wrap">
-          {BADGE_TABS.map((tab) => (
-            <button
-              key={tab.value}
-              type="button"
-              onClick={() =>
-                setActiveBadge(activeBadge === tab.value ? null : tab.value)
-              }
-              className={clsx(
-                'rounded-full px-sm py-xs text-meta uppercase border transition-[background-color,border-color,color] duration-instant ease-out-quart motion-reduce:transition-none',
-                'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory',
-                activeBadge === tab.value
-                  ? 'bg-copper text-ivory border-copper'
-                  : 'bg-ivory text-cocoa-70 border-cocoa-15 hover:border-copper hover:text-copper',
+        {availableModes.size > 1 && (
+          <div className="flex flex-col gap-xs">
+            <p className="meta-caps text-cocoa-55">Travel modes</p>
+            <div className="flex gap-xs flex-wrap">
+              {MODE_META.filter((m) => availableModes.has(m.mode)).map(
+                ({ mode, label, Icon }) => {
+                  const on = enabledModes.has(mode);
+                  return (
+                    <button
+                      key={mode}
+                      type="button"
+                      onClick={() => toggleMode(mode)}
+                      aria-pressed={on}
+                      className={clsx(
+                        'inline-flex items-center gap-xs px-sm py-xs rounded-full border text-small transition-[background-color,border-color,color,opacity] duration-instant ease-out-quart motion-reduce:transition-none',
+                        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory',
+                        on
+                          ? 'bg-cocoa text-ivory border-cocoa'
+                          : 'bg-ivory text-cocoa-55 border-cocoa-15 opacity-50 hover:opacity-100 hover:border-cocoa',
+                      )}
+                    >
+                      <Icon size={12} strokeWidth={2} />
+                      {label}
+                    </button>
+                  );
+                },
               )}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
+            </div>
+          </div>
+        )}
       </header>
       <div className="flex-1 overflow-y-auto p-md flex flex-col gap-sm">
         {!leg ? (
           <p className="text-small text-cocoa-55 text-center py-xl">
             No transport options on this leg yet.
           </p>
+        ) : visibleOffers.length === 0 ? (
+          <p className="text-small text-cocoa-55 text-center py-xl">
+            No offers match the selected modes. Toggle a mode back on.
+          </p>
         ) : (
-          <OfferList leg={leg} activeBadge={activeBadge} />
+          visibleOffers.map((offer) => (
+            <OfferCard
+              key={offer.id}
+              offer={offer}
+              onBook={() =>
+                onBook({
+                  kind: 'transport',
+                  from: fromStop.nameEn,
+                  to: toStop.nameEn,
+                  provider: offer.provider,
+                })
+              }
+            />
+          ))
         )}
       </div>
     </div>
   );
 }
 
-function OfferList({
-  leg,
-  activeBadge,
-}: {
-  leg: TransportLeg;
-  activeBadge: BadgeFilter;
-}) {
-  return (
-    <>
-      {leg.offers.map((offer) => (
-        <OfferCard
-          key={offer.id}
-          offer={offer}
-          highlighted={activeBadge != null && offer.badge === activeBadge}
-        />
-      ))}
-    </>
-  );
-}
-
-function modeIcon(mode: TransportOffer['mode']) {
+function modeIcon(mode: Mode) {
   if (mode === 'flight') return Plane;
   if (mode === 'bus') return Bus;
   if (mode === 'ferry') return Ship;
   return Car;
 }
 
-function badgeColor(badge: NonNullable<BadgeFilter>): string {
+function badgeColor(badge: NonNullable<TransportOffer['badge']>): string {
   if (badge === 'cheapest') return 'bg-stone text-ivory';
   if (badge === 'fastest') return 'bg-cocoa text-ivory';
   if (badge === 'easiest') return 'bg-rope text-cocoa';
@@ -113,27 +145,14 @@ function badgeColor(badge: NonNullable<BadgeFilter>): string {
 
 function OfferCard({
   offer,
-  highlighted,
+  onBook,
 }: {
   offer: TransportOffer;
-  highlighted: boolean;
+  onBook: () => void;
 }) {
   const Icon = modeIcon(offer.mode);
-  const onBook = () => {
-    const query = `${offer.provider} ${offer.fromStopId} to ${offer.toStopId}`;
-    window.open(
-      `https://www.google.com/search?q=${encodeURIComponent(query)}`,
-      '_blank',
-      'noopener',
-    );
-  };
   return (
-    <article
-      className={clsx(
-        'rounded-2xl p-sm border flex flex-col gap-sm transition-[border-color,background-color] duration-instant ease-out-quart motion-reduce:transition-none',
-        highlighted ? 'bg-sand border-copper' : 'bg-sand border-rope',
-      )}
-    >
+    <article className="rounded-2xl p-sm border bg-sand border-rope flex flex-col gap-sm">
       <div className="flex items-start gap-sm">
         <span className="shrink-0 h-9 w-9 rounded-full bg-ivory border border-cocoa-15 flex items-center justify-center text-cocoa">
           <Icon size={16} strokeWidth={2} />

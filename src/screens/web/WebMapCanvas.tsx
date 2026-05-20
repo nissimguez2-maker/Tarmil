@@ -62,7 +62,7 @@ function FlyToSelection({
     if (selection.type === 'stop') {
       const stop = stops.find((s) => s.id === selection.stopId);
       if (stop) {
-        map.flyTo([stop.lat, stop.lng], 12, { duration: 0.8 });
+        map.flyTo([stop.lat, stop.lng], 9, { duration: 1.4 });
       }
     } else if (selection.type === 'leg') {
       const from = stops.find((s) => s.id === selection.fromStopId);
@@ -72,7 +72,7 @@ function FlyToSelection({
           [from.lat, from.lng],
           [to.lat, to.lng],
         ]);
-        map.flyToBounds(bounds, { padding: [80, 80], duration: 0.8 });
+        map.flyToBounds(bounds, { padding: [80, 80], duration: 1.4 });
       }
     }
   }, [map, stops, selection]);

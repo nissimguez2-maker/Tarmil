@@ -1,18 +1,23 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSupabaseData } from '../../lib/SupabaseDataProvider';
-import { LoadingPanel, ErrorPanel } from '../../components/DataState';
+import { ErrorPanel } from '../../components/DataState';
 import { WebHeader } from './WebHeader';
 import { WebStopList } from './WebStopList';
 import { WebMapCanvas } from './WebMapCanvas';
 import { WebBubble } from './WebBubble';
+import { WebBookingModal, type BookingTarget } from './WebBookingModal';
+import { WebAddStopModal } from './WebAddStopModal';
+import { WebPlannerSkeleton } from './WebPlannerSkeleton';
 import type { Selection } from './types';
 
 export function WebPlannerScreen() {
   const { data, loading, error } = useSupabaseData();
   const [selection, setSelection] = useState<Selection>({ type: 'none' });
+  const [bookingTarget, setBookingTarget] = useState<BookingTarget | null>(null);
+  const [addStopOpen, setAddStopOpen] = useState(false);
 
-  if (loading) return <LoadingPanel />;
+  if (loading) return <WebPlannerSkeleton />;
   if (error || !data) return <ErrorPanel error={error} />;
 
   const stops = data.plannedStops;
@@ -28,6 +33,7 @@ export function WebPlannerScreen() {
             stops={stops}
             selection={selection}
             onSelect={setSelection}
+            onAddStop={() => setAddStopOpen(true)}
           />
           <div className="flex-1 relative">
             <WebMapCanvas
@@ -41,6 +47,7 @@ export function WebPlannerScreen() {
               stops={stops}
               places={places}
               onClose={() => setSelection({ type: 'none' })}
+              onBook={setBookingTarget}
             />
           </div>
         </div>
@@ -56,6 +63,14 @@ export function WebPlannerScreen() {
           Go to the mobile app →
         </Link>
       </div>
+      <WebBookingModal
+        target={bookingTarget}
+        onClose={() => setBookingTarget(null)}
+      />
+      <WebAddStopModal
+        open={addStopOpen}
+        onClose={() => setAddStopOpen(false)}
+      />
     </>
   );
 }
