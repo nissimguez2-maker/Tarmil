@@ -217,7 +217,7 @@ export function WebStopList({
               items={stops.map((s) => s.id)}
               strategy={verticalListSortingStrategy}
             >
-              <ol className="flex flex-col">
+              <ol className="flex flex-col gap-xs">
               {stops.map((stop, i) => {
                 const next = stops[i + 1];
                 const isStopSelected =
@@ -349,7 +349,7 @@ function HomeRow({
           <div className="w-px flex-1 border-s border-dashed border-cocoa-15 mt-xs" />
         )}
       </div>
-      <div className="flex-1 min-w-0 rounded-2xl px-sm py-xs group-hover:bg-cocoa-8 transition-[background-color] duration-instant ease-out-quart motion-reduce:transition-none">
+      <div className="flex-1 min-w-0 rounded-2xl px-md py-sm group-hover:bg-cocoa-8 transition-[background-color] duration-instant ease-out-quart motion-reduce:transition-none">
         <div className="flex items-start gap-sm">
           <div className="flex-1 min-w-0">
             <p className="meta-caps text-cocoa-55">
@@ -524,7 +524,7 @@ function StopRow({
       </div>
       <div
         className={clsx(
-          'flex-1 min-w-0 rounded-2xl px-sm py-xs transition-[background-color] duration-instant ease-out-quart motion-reduce:transition-none',
+          'flex-1 min-w-0 rounded-2xl px-md py-sm transition-[background-color] duration-instant ease-out-quart motion-reduce:transition-none',
           selected ? 'bg-sand' : 'group-hover:bg-cocoa-8',
         )}
       >
@@ -823,7 +823,7 @@ function LegRow({ from, to, selected, onClick }: LegRowProps) {
         </div>
         <div className="w-px flex-1 border-s border-dashed border-cocoa-15 min-h-3" />
       </div>
-      <div className="flex-1 flex flex-col gap-xs py-xs">
+      <div className="flex-1 min-w-0 flex flex-col gap-xs py-xs">
         <button
           type="button"
           onClick={onClick}
@@ -847,7 +847,7 @@ function LegRow({ from, to, selected, onClick }: LegRowProps) {
           </span>
         </button>
         {bookings.length > 0 && (
-          <div className="flex flex-col gap-xs px-sm">
+          <div className="flex flex-col gap-xs px-sm min-w-0">
             {bookings.map((b) => (
               <TransitBookingRow key={b.id} item={b} />
             ))}
@@ -875,21 +875,24 @@ function TransitBookingRow({ item }: { item: TransitItem }) {
     showToast(`${offer.provider} removed`);
   };
   return (
-    <div className="group/booking flex items-center gap-xs py-xs px-xs rounded-xl bg-cocoa-8 hover:bg-cocoa-15 transition-[background-color] duration-instant ease-out-quart motion-reduce:transition-none">
+    <div className="group/booking flex items-center gap-sm py-sm px-sm rounded-xl bg-cocoa-8 hover:bg-cocoa-15 transition-[background-color] duration-instant ease-out-quart motion-reduce:transition-none min-w-0">
       <span className="shrink-0 text-copper">
-        <Icon size={11} strokeWidth={2} />
+        <Icon size={12} strokeWidth={2} />
       </span>
-      <span className="flex-1 min-w-0 text-small text-cocoa truncate">
-        <span className="font-medium">{offer.provider}</span>
-        {offer.mode !== 'drive' && (
-          <>
-            <span className="text-cocoa-55"> · </span>
-            <span className="tnum">{offer.departureTime}→{offer.arrivalTime}</span>
-          </>
-        )}
-        <span className="text-cocoa-55"> · </span>
-        <span className="tnum">{offer.currency} {offer.price}</span>
-      </span>
+      <div className="flex-1 min-w-0 flex flex-col gap-px leading-tight">
+        <p className="text-small font-medium text-cocoa truncate">
+          {offer.provider}
+        </p>
+        <p className="text-meta text-cocoa-55 tnum truncate">
+          {offer.mode !== 'drive' && (
+            <>
+              {offer.departureTime} → {offer.arrivalTime}
+              <span className="text-cocoa-30"> · </span>
+            </>
+          )}
+          {offer.currency} {offer.price}
+        </p>
+      </div>
       <button
         type="button"
         onClick={onRemove}
