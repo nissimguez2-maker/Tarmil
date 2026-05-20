@@ -13,7 +13,8 @@ import type { PlannedStop } from '../../data/plannedStops';
 import type { FriendVisit, Place, PlaceCategory } from '../../data/places';
 import { cityDescription } from './cityCopy';
 import { cityPhotos } from './cityPhotos';
-import { cityWeatherRange, type WeatherCondition, type WeatherDay } from './cityWeather';
+import type { WeatherCondition, WeatherDay } from './cityWeather';
+import { fetchWeather, type WeatherSource } from './weatherApi';
 import { formatStopRange } from './dateUtils';
 import type { BookingTarget } from './WebBookingModal';
 
@@ -209,20 +210,36 @@ function WeatherStrip({ stop }: { stop: PlannedStop }) {
   from.setDate(from.getDate() - 2);
   const to = new Date(departureDate);
   to.setDate(to.getDate() + 2);
-  const days = cityWeatherRange(
-    stop.id,
-    from.toISOString().slice(0, 10),
-    to.toISOString().slice(0, 10),
-  );
-  if (days.length === 0) {
+  const fromIso = from.toISOString().slice(0, 10);
+  const toIso = to.toISOString().slice(0, 10);
+
+  const [days, setDays] = useState<WeatherDay[]>([]);
+  const [source, setSource] = useState<WeatherSource | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    setLoading(true);
+    fetchWeather(stop.id, stop.lat, stop.lng, fromIso, toIso).then((res) => {
+      if (cancelled) return;
+      setDays(res.days);
+      setSource(res.source);
+      setLoading(false);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [stop.id, stop.lat, stop.lng, fromIso, toIso]);
+
+  if (loading) {
     return (
-      <div className="bg-sand border border-rope rounded-2xl p-md">
-        <p className="text-small text-cocoa-55 text-center">
-          Forecast loading from API soon.
-        </p>
+      <div className="bg-sand border border-rope rounded-2xl p-md min-h-[120px] flex items-center justify-center">
+        <p className="text-small text-cocoa-55 italic">Loading forecast…</p>
       </div>
     );
   }
+  if (days.length === 0) return null;
+
   const arrival = arrivalDate.getTime();
   const departure = departureDate.getTime();
 
@@ -244,10 +261,18 @@ function WeatherStrip({ stop }: { stop: PlannedStop }) {
         })}
       </div>
       <p className="text-meta italic text-cocoa-55 text-center">
-        Mocked forecast · live data coming soon
+        {sourceLabel(source)}
       </p>
     </div>
   );
+}
+
+function sourceLabel(source: WeatherSource | null): string {
+  if (source === 'forecast') return 'Live forecast · Open-Meteo';
+  if (source === 'archive') return 'Historical data · Open-Meteo';
+  if (source === 'archive-shifted')
+    return 'Typical for this season · Open-Meteo';
+  return 'Pattern-based estimate';
 }
 
 function WeatherDayCard({
