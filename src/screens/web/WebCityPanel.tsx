@@ -12,7 +12,8 @@ import {
 import { Button } from '../../components/Button';
 import type { PlannedStop } from '../../data/plannedStops';
 import type { FriendVisit, Place, PlaceCategory } from '../../data/places';
-import { cityDescription } from './cityCopy';
+import { cityDescription, CITY_DESCRIPTIONS } from './cityCopy';
+import { rewriteAsTravelIntro } from './groqApi';
 import { cityPhotos } from './cityPhotos';
 import type { WeatherCondition, WeatherDay } from './cityWeather';
 import { fetchWeather, type WeatherSource } from './weatherApi';
@@ -244,24 +245,35 @@ function filterAndSortPlaces(
 }
 
 function OverviewTab({ stop }: { stop: PlannedStop }) {
-  const fallbackText = cityDescription(stop.id, stop.note);
+  const hardcodedText = cityDescription(stop.id);
+  const hasHardcoded = stop.id in CITY_DESCRIPTIONS;
   const wikiTitle = wikiTitleFor(stop.id, stop.nameEn);
   const [wiki, setWiki] = useState<WikiSummary | null>(null);
-  const [wikiLoading, setWikiLoading] = useState(true);
+  const [wikiLoading, setWikiLoading] = useState(!hasHardcoded);
+  const [polished, setPolished] = useState<string | null>(null);
 
   useEffect(() => {
     setWiki(null);
+    setPolished(null);
+    if (hasHardcoded) {
+      setWikiLoading(false);
+      return;
+    }
     setWikiLoading(true);
     let cancelled = false;
-    fetchWikiSummary(wikiTitle).then((res) => {
+    fetchWikiSummary(wikiTitle).then(async (res) => {
       if (cancelled) return;
       setWiki(res);
       setWikiLoading(false);
+      if (res?.extract) {
+        const rewritten = await rewriteAsTravelIntro(stop.nameEn, res.extract);
+        if (!cancelled && rewritten) setPolished(rewritten);
+      }
     });
     return () => {
       cancelled = true;
     };
-  }, [wikiTitle]);
+  }, [hasHardcoded, wikiTitle, stop.nameEn]);
 
   const curatedPhotos = cityPhotos(stop.id);
   const heroPhoto = wiki?.originalImage ?? wiki?.thumbnail;
@@ -270,7 +282,9 @@ function OverviewTab({ stop }: { stop: PlannedStop }) {
     return heroPhoto ? [heroPhoto] : [];
   }, [curatedPhotos, heroPhoto]);
 
-  const description = wiki?.extract ?? fallbackText;
+  const description = hasHardcoded
+    ? hardcodedText
+    : (polished ?? wiki?.extract ?? stop.note ?? '');
 
   return (
     <div className="flex flex-col gap-md">
@@ -285,11 +299,6 @@ function OverviewTab({ stop }: { stop: PlannedStop }) {
           <p className="font-sans text-body text-cocoa leading-relaxed">
             {description}
           </p>
-          {wiki && (
-            <p className="text-meta uppercase text-cocoa-55">
-              Source · Wikipedia
-            </p>
-          )}
         </div>
       )}
       <WeatherStrip stop={stop} />
@@ -410,11 +419,10 @@ function WeatherStrip({ stop }: { stop: PlannedStop }) {
 }
 
 function sourceLabel(source: WeatherSource | null): string {
-  if (source === 'forecast') return 'Live forecast · Open-Meteo';
-  if (source === 'archive') return 'Historical data · Open-Meteo';
-  if (source === 'archive-shifted')
-    return 'Typical for this season · Open-Meteo';
-  return 'Pattern-based estimate';
+  if (source === 'forecast') return 'Updated today';
+  if (source === 'archive') return 'Historical pattern';
+  if (source === 'archive-shifted') return 'Seasonal average';
+  return 'Seasonal estimate';
 }
 
 function WeatherDayCard({
@@ -544,7 +552,7 @@ function NearbyOsmList({
   if (loading) {
     return (
       <div className="flex flex-col gap-sm">
-        <p className="meta-caps text-cocoa-55">Nearby on OpenStreetMap</p>
+        <p className="meta-caps text-cocoa-55">Nearby</p>
         <div className="h-10 rounded-xl bg-sand animate-pulse" />
         <div className="h-10 rounded-xl bg-sand animate-pulse" />
       </div>
@@ -554,7 +562,7 @@ function NearbyOsmList({
     if (curatedCount === 0) {
       return (
         <p className="text-small text-cocoa-55 text-center py-xl">
-          No nearby spots found on OSM for this area.
+          No nearby spots indexed for this area yet.
         </p>
       );
     }
@@ -563,7 +571,7 @@ function NearbyOsmList({
 
   return (
     <div className="flex flex-col gap-sm">
-      <p className="meta-caps text-cocoa-55">Nearby on OpenStreetMap</p>
+      <p className="meta-caps text-cocoa-55">Nearby</p>
       {items.map((item) => (
         <NearbyOsmRow key={item.id} item={item} />
       ))}
