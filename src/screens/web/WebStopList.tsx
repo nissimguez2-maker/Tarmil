@@ -14,7 +14,7 @@ type Props = {
 
 export function WebStopList({ stops, selection, onSelect }: Props) {
   return (
-    <div className="flex-1 overflow-y-auto min-h-0 py-md flex flex-col gap-md">
+    <aside className="w-96 shrink-0 border-e border-cocoa-15 bg-ivory overflow-y-auto min-h-0 py-md flex flex-col gap-md">
       <TripOverviewCard stops={stops} />
       <div>
         <p className="meta-caps text-cocoa-55 px-md mb-md">Itinerary</p>
@@ -62,7 +62,7 @@ export function WebStopList({ stops, selection, onSelect }: Props) {
           Add stop
         </Button>
       </div>
-    </div>
+    </aside>
   );
 }
 
