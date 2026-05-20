@@ -7,7 +7,6 @@ import type { HomeCity } from './homeCity';
 import type { Selection } from './types';
 import { WebCityPanel } from './WebCityPanel';
 import { WebTransportPanel } from './WebTransportPanel';
-import type { BookingTarget } from './WebBookingModal';
 
 type Props = {
   selection: Selection;
@@ -15,7 +14,6 @@ type Props = {
   home: HomeCity;
   places: Place[];
   onClose: () => void;
-  onBook: (target: BookingTarget) => void;
 };
 
 export function WebBubble({
@@ -24,7 +22,6 @@ export function WebBubble({
   home,
   places,
   onClose,
-  onBook,
 }: Props) {
   const isOpen = selection.type !== 'none';
   const [animateIn, setAnimateIn] = useState(false);
@@ -68,7 +65,6 @@ export function WebBubble({
           <WebCityPanel
             stop={requireStop(stops, selection.stopId)}
             places={places.filter((p) => p.destinationId === selection.stopId)}
-            onBook={onBook}
           />
         )}
         {selection.type === 'leg' && (() => {
@@ -83,7 +79,6 @@ export function WebBubble({
               fromStop={fromStop}
               toStop={toStop}
               travelDate={travelDate}
-              onBook={onBook}
             />
           );
         })()}

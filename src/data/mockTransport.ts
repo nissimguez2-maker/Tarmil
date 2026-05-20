@@ -10,7 +10,8 @@ export type TransportMode =
   | 'bus'
   | 'ferry'
   | 'transfer'
-  | 'train';
+  | 'train'
+  | 'drive';
 
 export type TransportOffer = {
   id: string;

@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import L from 'leaflet';
 import {
   MapContainer,
@@ -30,21 +30,44 @@ function tomtomTileUrl(): string {
   return 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 }
 
-function pinIcon(index: number, selected: boolean): L.DivIcon {
+function pinIcon(
+  index: number,
+  selected: boolean,
+  label?: string,
+): L.DivIcon {
   const ring = selected
     ? 'box-shadow: 0 0 0 2px var(--ivory), 0 0 0 5px var(--copper), 0 2px 6px rgba(0,0,0,0.18);'
     : 'box-shadow: 0 2px 6px rgba(0,0,0,0.18);';
+  const labelHtml = label
+    ? `<div style="
+        margin-top:4px;
+        background-color:var(--ivory);
+        color:var(--cocoa);
+        font-family:Heebo,sans-serif;
+        font-weight:600;
+        font-size:11px;
+        line-height:1;
+        padding:3px 7px;
+        border-radius:9999px;
+        box-shadow:0 1px 3px rgba(0,0,0,0.18);
+        white-space:nowrap;
+        pointer-events:none;
+      ">${label}</div>`
+    : '';
   return L.divIcon({
     className: '',
     iconSize: [32, 32],
     iconAnchor: [16, 16],
-    html: `<div style="
-      width:32px;height:32px;border-radius:9999px;
-      background-color:var(--copper);
-      display:flex;align-items:center;justify-content:center;
-      color:white;font-family:Fraunces,serif;font-weight:600;font-size:14px;
-      ${ring}
-    ">${index + 1}</div>`,
+    html: `<div style="display:flex;flex-direction:column;align-items:center;">
+      <div style="
+        width:32px;height:32px;border-radius:9999px;
+        background-color:var(--copper);
+        display:flex;align-items:center;justify-content:center;
+        color:white;font-family:Fraunces,serif;font-weight:600;font-size:14px;
+        ${ring}
+      ">${index + 1}</div>
+      ${labelHtml}
+    </div>`,
   });
 }
 
@@ -136,7 +159,22 @@ function MapClickDismiss({ onDismiss }: { onDismiss: () => void }) {
   return null;
 }
 
+function ZoomWatcher({ onZoom }: { onZoom: (z: number) => void }) {
+  const map = useMap();
+  useEffect(() => {
+    onZoom(map.getZoom());
+    const handler = () => onZoom(map.getZoom());
+    map.on('zoomend', handler);
+    return () => {
+      map.off('zoomend', handler);
+    };
+  }, [map, onZoom]);
+  return null;
+}
+
 export function WebMapCanvas({ stops, home, selection, onSelect }: Props) {
+  const [zoom, setZoom] = useState(4);
+  const showLabels = zoom >= 6;
   const initialCenter = useMemo<LatLng>(() => {
     if (!stops.length) return [home.lat, home.lng];
     return [stops[0].lat, stops[0].lng];
@@ -310,9 +348,9 @@ export function WebMapCanvas({ stops, home, selection, onSelect }: Props) {
           const isSelected = selectedStopId === s.id;
           return (
             <Marker
-              key={`${s.id}-${isSelected ? 'sel' : 'idle'}`}
+              key={`${s.id}-${isSelected ? 'sel' : 'idle'}-${showLabels ? 'lbl' : 'no'}`}
               position={[s.lat, s.lng]}
-              icon={pinIcon(i, isSelected)}
+              icon={pinIcon(i, isSelected, showLabels ? s.nameEn : undefined)}
               title={s.nameEn}
               eventHandlers={{
                 click: () => onSelect({ type: 'stop', stopId: s.id }),
@@ -324,6 +362,7 @@ export function WebMapCanvas({ stops, home, selection, onSelect }: Props) {
         <FitBounds stops={stops} home={home} />
         <FlyToSelection stops={stops} home={home} selection={selection} />
         <MapClickDismiss onDismiss={() => onSelect({ type: 'none' })} />
+        <ZoomWatcher onZoom={setZoom} />
       </MapContainer>
     </div>
   );

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 import {
   DndContext,
@@ -17,13 +17,47 @@ import {
 } from '@dnd-kit/sortable';
 import type { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
 import { CSS } from '@dnd-kit/utilities';
-import { Bus, GripVertical, Home, Pencil, Plane, Plus, Ship, Train, Trash2 } from 'lucide-react';
+import {
+  Bed,
+  Bus,
+  ChevronDown,
+  ChevronRight as ChevronRightIcon,
+  Coffee,
+  GripVertical,
+  Home,
+  Landmark,
+  MapPin,
+  Music,
+  Pencil,
+  Plane,
+  Plus,
+  Ship,
+  Sparkles,
+  Train,
+  Trash2,
+  Utensils,
+  UtensilsCrossed,
+  Waves,
+  Wine,
+  X,
+} from 'lucide-react';
 import { Button } from '../../components/Button';
 import type { PlannedStop } from '../../data/plannedStops';
 import type { HomeCity } from './homeCity';
 import { generateLeg } from './transportGenerator';
 import { fetchDrivingMinutes, formatDriveDuration } from './osrmApi';
 import { formatShortDate, formatStopRange } from './dateUtils';
+import {
+  placesForStop,
+  removePlace,
+  removeTransit,
+  transitForLeg,
+  useWishlist,
+  type PlaceItem,
+  type TransitItem,
+} from './wishlist';
+import { showToast } from './WebToast';
+import { WebRemoveStopConfirm } from './WebRemoveStopConfirm';
 import type { Selection } from './types';
 
 type Props = {
@@ -49,12 +83,79 @@ export function WebStopList({
   onEditDates,
   onEditHome,
 }: Props) {
+  useWishlist();
+
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     }),
   );
+
+  const [expandedStops, setExpandedStops] = useState<Set<string>>(new Set());
+  const prevCounts = useRef<Record<string, number>>({});
+
+  useEffect(() => {
+    setExpandedStops((prev) => {
+      let next = prev;
+      let changed = false;
+      for (const stop of stops) {
+        const count = placesForStop(stop.id).length;
+        const prevCount = prevCounts.current[stop.id] ?? 0;
+        if (count > prevCount && !prev.has(stop.id)) {
+          if (!changed) {
+            next = new Set(prev);
+            changed = true;
+          }
+          next.add(stop.id);
+        }
+        prevCounts.current[stop.id] = count;
+      }
+      return changed ? next : prev;
+    });
+  });
+
+  const toggleExpand = (id: string) => {
+    setExpandedStops((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const [pendingRemove, setPendingRemove] = useState<{
+    stopId: string;
+    placeCount: number;
+    transitCount: number;
+  } | null>(null);
+
+  const requestRemoveStop = (stopId: string) => {
+    const places = placesForStop(stopId).length;
+    const transit = stops.length
+      ? stops.reduce((sum, s) => {
+          if (s.id === stopId) return sum;
+          return (
+            sum +
+            transitForLeg(stopId, s.id).length +
+            transitForLeg(s.id, stopId).length
+          );
+        }, 0)
+      : 0;
+    if (places === 0 && transit === 0) {
+      onRemoveStop(stopId);
+      showToast('Stop removed');
+      return;
+    }
+    setPendingRemove({ stopId, placeCount: places, transitCount: transit });
+  };
+
+  const confirmRemove = () => {
+    if (!pendingRemove) return;
+    onRemoveStop(pendingRemove.stopId);
+    showToast('Stop and its saved items removed');
+    setPendingRemove(null);
+  };
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
@@ -63,6 +164,7 @@ export function WebStopList({
     const toIdx = stops.findIndex((s) => s.id === over.id);
     if (fromIdx === -1 || toIdx === -1) return;
     onReorder(fromIdx, toIdx);
+    showToast('Trip reordered');
   };
 
   const homeStop = homeAsStop(home, stops[0]?.arrivalDate ?? '2026-01-01');
@@ -81,7 +183,7 @@ export function WebStopList({
 
   return (
     <aside className="w-96 shrink-0 border-e border-cocoa-15 bg-ivory overflow-y-auto min-h-0 py-md flex flex-col gap-md">
-      <TripOverviewCard stops={stops} />
+      <TripOverviewCard stops={stops} home={home} />
       <div>
         <p className="meta-caps text-cocoa-55 px-md mb-md">Itinerary</p>
         <div className="flex flex-col px-md">
@@ -133,11 +235,16 @@ export function WebStopList({
                       hasNext={!!next || stops.length > 0}
                       selected={isStopSelected}
                       canRemove={stops.length > 1}
+                      expanded={expandedStops.has(stop.id)}
+                      onToggleExpand={() => toggleExpand(stop.id)}
                       onClick={() =>
                         onSelect({ type: 'stop', stopId: stop.id })
                       }
-                      onRemove={() => onRemoveStop(stop.id)}
-                      onEditDates={(a, d) => onEditDates(stop.id, a, d)}
+                      onRemove={() => requestRemoveStop(stop.id)}
+                      onEditDates={(a, d) => {
+                        onEditDates(stop.id, a, d);
+                        showToast('Dates updated');
+                      }}
                     />
                     {next && (
                       <LegRow
@@ -187,6 +294,18 @@ export function WebStopList({
           Add stop
         </Button>
       </div>
+      <WebRemoveStopConfirm
+        open={!!pendingRemove}
+        stopName={
+          pendingRemove
+            ? stops.find((s) => s.id === pendingRemove.stopId)?.nameEn ?? 'this stop'
+            : ''
+        }
+        placeCount={pendingRemove?.placeCount ?? 0}
+        transitCount={pendingRemove?.transitCount ?? 0}
+        onConfirm={confirmRemove}
+        onCancel={() => setPendingRemove(null)}
+      />
     </aside>
   );
 }
@@ -255,7 +374,13 @@ function HomeRow({
   );
 }
 
-function TripOverviewCard({ stops }: { stops: PlannedStop[] }) {
+function TripOverviewCard({
+  stops,
+  home,
+}: {
+  stops: PlannedStop[];
+  home: HomeCity;
+}) {
   const legs = stops.length > 0 ? stops.length - 1 : 0;
   const nights = stops.reduce((sum, s) => sum + s.nights, 0);
   const first = stops[0];
@@ -275,6 +400,9 @@ function TripOverviewCard({ stops }: { stops: PlannedStop[] }) {
         {dateSpan}
         {year && <span className="text-cocoa-55">, {year}</span>}
       </h2>
+      <p className="text-small text-cocoa-55">
+        From {home.nameEn} → back to {home.nameEn}
+      </p>
       <dl className="grid grid-cols-3 gap-sm pt-sm border-t border-cocoa-15">
         <Stat label="Stops" value={stops.length} />
         <Stat label="Legs" value={legs} />
@@ -301,6 +429,8 @@ type SortableStopRowProps = {
   hasNext: boolean;
   selected: boolean;
   canRemove: boolean;
+  expanded: boolean;
+  onToggleExpand: () => void;
   onClick: () => void;
   onRemove: () => void;
   onEditDates: (arrivalIso: string, departureIso: string) => void;
@@ -352,6 +482,8 @@ function StopRow({
   hasNext,
   selected,
   canRemove,
+  expanded,
+  onToggleExpand,
   onClick,
   onRemove,
   onEditDates,
@@ -360,6 +492,8 @@ function StopRow({
   isDragging,
 }: StopRowProps) {
   const [editing, setEditing] = useState(false);
+  const savedItems = placesForStop(stop.id);
+  const savedCount = savedItems.length;
 
   return (
     <div className="group flex gap-sm w-full text-start rounded-2xl">
@@ -405,25 +539,51 @@ function StopRow({
               {stop.nameEn}
             </h3>
             {!editing && (
-              <p className="text-small text-cocoa-55 tnum mt-xs">
-                {formatStopRange(stop.arrivalDate, stop.departureDate)}
-                <span className="text-cocoa-30"> · </span>
-                {stop.nights} {stop.nights === 1 ? 'night' : 'nights'}
-              </p>
+              <div className="flex items-center gap-sm mt-xs flex-wrap">
+                <p className="text-small text-cocoa-55 tnum">
+                  {formatStopRange(stop.arrivalDate, stop.departureDate)}
+                  <span className="text-cocoa-30"> · </span>
+                  {stop.nights} {stop.nights === 1 ? 'night' : 'nights'}
+                </p>
+                {savedCount > 0 && (
+                  <span
+                    key={savedCount}
+                    className="inline-flex items-center text-meta uppercase font-medium px-sm py-px rounded-full bg-cocoa-8 text-cocoa-70 animate-[bump_300ms_ease-out-quart_1]"
+                    style={{
+                      animation: 'tarmil-bump 300ms cubic-bezier(0.25,1,0.5,1)',
+                    }}
+                  >
+                    {savedCount} saved
+                  </span>
+                )}
+              </div>
             )}
           </button>
-          <div className="flex flex-col gap-xs opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity duration-instant ease-out-quart">
+          <div className="flex flex-col gap-xs">
             <IconButton
-              onClick={() => setEditing((v) => !v)}
-              label={editing ? 'Cancel edit' : 'Edit dates'}
+              onClick={onToggleExpand}
+              label={expanded ? 'Collapse wishlist' : 'Expand wishlist'}
+              persistent
             >
-              <Pencil size={12} strokeWidth={2} />
+              {expanded ? (
+                <ChevronDown size={12} strokeWidth={2} />
+              ) : (
+                <ChevronRightIcon size={12} strokeWidth={2} />
+              )}
             </IconButton>
-            {canRemove && (
-              <IconButton onClick={onRemove} label={`Remove ${stop.nameEn}`}>
-                <Trash2 size={12} strokeWidth={2} />
+            <div className="opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity duration-instant ease-out-quart flex flex-col gap-xs">
+              <IconButton
+                onClick={() => setEditing((v) => !v)}
+                label={editing ? 'Cancel edit' : 'Edit dates'}
+              >
+                <Pencil size={12} strokeWidth={2} />
               </IconButton>
-            )}
+              {canRemove && (
+                <IconButton onClick={onRemove} label={`Remove ${stop.nameEn}`}>
+                  <Trash2 size={12} strokeWidth={2} />
+                </IconButton>
+              )}
+            </div>
           </div>
         </div>
         {editing && (
@@ -437,7 +597,77 @@ function StopRow({
             onCancel={() => setEditing(false)}
           />
         )}
+        {expanded && savedCount > 0 && (
+          <div className="mt-sm pt-sm border-t border-cocoa-08 flex flex-col gap-xs">
+            {savedItems.map((item) => (
+              <WishlistRow
+                key={item.id}
+                item={item}
+                onRemove={() => {
+                  removePlace(item.stopId, item.placeId);
+                  showToast(`${item.placeName} removed`);
+                }}
+              />
+            ))}
+          </div>
+        )}
+        {expanded && savedCount === 0 && (
+          <p className="mt-sm pt-sm border-t border-cocoa-08 text-small text-cocoa-55 italic">
+            No saved places yet for {stop.nameEn}.
+          </p>
+        )}
       </div>
+    </div>
+  );
+}
+
+function wishlistIcon(category: string): typeof MapPin {
+  if (category === 'hostel') return Bed;
+  if (category === 'restaurant') return Utensils;
+  if (category === 'cafe') return Coffee;
+  if (category === 'bar') return Wine;
+  if (category === 'club') return Music;
+  if (category === 'landmark') return Landmark;
+  if (category === 'beach') return Waves;
+  if (category === 'chabad') return Sparkles;
+  if (category === 'kosher') return UtensilsCrossed;
+  return MapPin;
+}
+
+function WishlistRow({
+  item,
+  onRemove,
+}: {
+  item: PlaceItem;
+  onRemove: () => void;
+}) {
+  const Icon = wishlistIcon(item.category);
+  return (
+    <div className="group/wish flex items-center gap-sm py-xs px-xs rounded-xl hover:bg-cocoa-8 transition-[background-color] duration-instant ease-out-quart motion-reduce:transition-none">
+      <span className="shrink-0 text-cocoa-55">
+        <Icon size={12} strokeWidth={2} />
+      </span>
+      <span className="flex-1 min-w-0 text-small text-cocoa truncate">
+        {item.placeName}
+      </span>
+      <span
+        className={clsx(
+          'shrink-0 text-meta uppercase font-medium px-sm py-px rounded-full',
+          item.status === 'saved'
+            ? 'bg-cocoa-8 text-cocoa-70'
+            : 'bg-copper text-ivory',
+        )}
+      >
+        {item.status}
+      </span>
+      <button
+        type="button"
+        onClick={onRemove}
+        aria-label={`Remove ${item.placeName}`}
+        className="shrink-0 h-5 w-5 rounded-full flex items-center justify-center text-cocoa-55 hover:text-copper hover:bg-cocoa-8 opacity-0 group-hover/wish:opacity-100 focus-visible:opacity-100 transition-opacity duration-instant ease-out-quart focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory"
+      >
+        <X size={10} strokeWidth={2} />
+      </button>
     </div>
   );
 }
@@ -446,10 +676,12 @@ function IconButton({
   children,
   onClick,
   label,
+  persistent,
 }: {
   children: React.ReactNode;
   onClick: () => void;
   label: string;
+  persistent?: boolean;
 }) {
   return (
     <button
@@ -457,7 +689,10 @@ function IconButton({
       onClick={onClick}
       aria-label={label}
       title={label}
-      className="h-6 w-6 rounded-full flex items-center justify-center text-cocoa-55 hover:text-copper hover:bg-cocoa-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory"
+      className={clsx(
+        'h-6 w-6 rounded-full flex items-center justify-center text-cocoa-55 hover:text-copper hover:bg-cocoa-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory',
+        persistent && 'shrink-0',
+      )}
     >
       {children}
     </button>
@@ -569,13 +804,11 @@ function LegRow({ from, to, selected, onClick }: LegRowProps) {
       cancelled = true;
     };
   }, [from.lat, from.lng, to.lat, to.lng]);
+
+  const bookings = transitForLeg(from.id, to.id);
+
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-label={`Transport from ${from.nameEn} to ${to.nameEn}`}
-      className="group flex gap-sm w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory rounded-2xl"
-    >
+    <div className="group flex gap-sm w-full items-stretch">
       <div className="shrink-0 w-8 flex flex-col items-center">
         <div className="h-3 w-px border-s border-dashed border-cocoa-15" />
         <div
@@ -588,25 +821,83 @@ function LegRow({ from, to, selected, onClick }: LegRowProps) {
         >
           <Icon size={12} strokeWidth={2} />
         </div>
-        <div className="h-3 w-px border-s border-dashed border-cocoa-15" />
+        <div className="w-px flex-1 border-s border-dashed border-cocoa-15 min-h-3" />
       </div>
-      <div className="flex-1 flex items-center px-sm">
-        <span
-          className={clsx(
-            'meta-caps transition-colors duration-instant ease-out-quart motion-reduce:transition-none',
-            selected
-              ? 'text-copper'
-              : 'text-cocoa-55 group-hover:text-copper',
-          )}
+      <div className="flex-1 flex flex-col gap-xs py-xs">
+        <button
+          type="button"
+          onClick={onClick}
+          aria-label={`Transport from ${from.nameEn} to ${to.nameEn}`}
+          className="flex items-center px-sm rounded-sm text-start focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory"
         >
-          Transport
-          {driveMinutes !== null && (
-            <span className="text-cocoa-30 normal-case tracking-normal ms-xs">
-              · {formatDriveDuration(driveMinutes)}
-            </span>
-          )}
-        </span>
+          <span
+            className={clsx(
+              'meta-caps transition-colors duration-instant ease-out-quart motion-reduce:transition-none',
+              selected
+                ? 'text-copper'
+                : 'text-cocoa-55 group-hover:text-copper',
+            )}
+          >
+            Transport
+            {driveMinutes !== null && (
+              <span className="text-cocoa-30 normal-case tracking-normal ms-xs">
+                · {formatDriveDuration(driveMinutes)}
+              </span>
+            )}
+          </span>
+        </button>
+        {bookings.length > 0 && (
+          <div className="flex flex-col gap-xs px-sm">
+            {bookings.map((b) => (
+              <TransitBookingRow key={b.id} item={b} />
+            ))}
+          </div>
+        )}
       </div>
-    </button>
+    </div>
+  );
+}
+
+function TransitBookingRow({ item }: { item: TransitItem }) {
+  const offer = item.offer;
+  const Icon =
+    offer.mode === 'flight'
+      ? Plane
+      : offer.mode === 'train'
+        ? Train
+        : offer.mode === 'ferry'
+          ? Ship
+          : offer.mode === 'bus'
+            ? Bus
+            : Plane;
+  const onRemove = () => {
+    removeTransit(item.fromStopId, item.toStopId, item.offerId);
+    showToast(`${offer.provider} removed`);
+  };
+  return (
+    <div className="group/booking flex items-center gap-xs py-xs px-xs rounded-xl bg-cocoa-8 hover:bg-cocoa-15 transition-[background-color] duration-instant ease-out-quart motion-reduce:transition-none">
+      <span className="shrink-0 text-copper">
+        <Icon size={11} strokeWidth={2} />
+      </span>
+      <span className="flex-1 min-w-0 text-small text-cocoa truncate">
+        <span className="font-medium">{offer.provider}</span>
+        {offer.mode !== 'drive' && (
+          <>
+            <span className="text-cocoa-55"> · </span>
+            <span className="tnum">{offer.departureTime}→{offer.arrivalTime}</span>
+          </>
+        )}
+        <span className="text-cocoa-55"> · </span>
+        <span className="tnum">{offer.currency} {offer.price}</span>
+      </span>
+      <button
+        type="button"
+        onClick={onRemove}
+        aria-label={`Remove ${offer.provider} booking`}
+        className="shrink-0 h-5 w-5 rounded-full flex items-center justify-center text-cocoa-55 hover:text-copper hover:bg-ivory opacity-0 group-hover/booking:opacity-100 focus-visible:opacity-100 transition-opacity duration-instant ease-out-quart focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory"
+      >
+        <X size={10} strokeWidth={2} />
+      </button>
+    </div>
   );
 }

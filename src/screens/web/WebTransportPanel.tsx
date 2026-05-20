@@ -1,18 +1,37 @@
 import { useEffect, useMemo, useState } from 'react';
 import clsx from 'clsx';
-import { ArrowRight, Bus, Car, Plane, Ship, Train } from 'lucide-react';
+import {
+  ArrowRight,
+  Bus,
+  Car,
+  Check,
+  CircleDollarSign,
+  Plane,
+  Ship,
+  Train,
+} from 'lucide-react';
 import { Button } from '../../components/Button';
 import type { PlannedStop } from '../../data/plannedStops';
 import type { TransportOffer } from '../../data/mockTransport';
 import { generateLeg } from './transportGenerator';
 import { formatLongDate } from './dateUtils';
-import type { BookingTarget } from './WebBookingModal';
+import {
+  fetchDrivingRoute,
+  formatDriveDuration,
+  formatDriveKm,
+} from './osrmApi';
+import {
+  addTransit,
+  findTransit,
+  removeTransit,
+  useWishlist,
+} from './wishlist';
+import { showToast } from './WebToast';
 
 type Props = {
   fromStop: PlannedStop;
   toStop: PlannedStop;
   travelDate: string;
-  onBook: (target: BookingTarget) => void;
 };
 
 type Mode = TransportOffer['mode'];
@@ -23,22 +42,55 @@ const MODE_META: { mode: Mode; label: string; Icon: typeof Plane }[] = [
   { mode: 'bus', label: 'Bus', Icon: Bus },
   { mode: 'ferry', label: 'Ferry', Icon: Ship },
   { mode: 'transfer', label: 'Transfer', Icon: Car },
+  { mode: 'drive', label: 'Drive', Icon: Car },
 ];
 
-export function WebTransportPanel({
-  fromStop,
-  toStop,
-  travelDate,
-  onBook,
-}: Props) {
+export function WebTransportPanel({ fromStop, toStop, travelDate }: Props) {
+  // Subscribe to wishlist changes for re-render.
+  useWishlist();
+
   const leg = useMemo(
     () => generateLeg(fromStop, toStop, travelDate),
     [fromStop, toStop, travelDate],
   );
 
+  const [drive, setDrive] = useState<TransportOffer | null>(null);
+  useEffect(() => {
+    let cancelled = false;
+    setDrive(null);
+    fetchDrivingRoute(fromStop.lat, fromStop.lng, toStop.lat, toStop.lng).then(
+      (route) => {
+        if (cancelled || !route) return;
+        setDrive({
+          id: `${fromStop.id}-${toStop.id}-drive`,
+          fromStopId: fromStop.id,
+          toStopId: toStop.id,
+          mode: 'drive',
+          provider: 'Drive yourself',
+          departureTime: '—',
+          arrivalTime: '—',
+          durationLabel: formatDriveDuration(route.minutes),
+          price: Math.round(route.km * 0.12),
+          currency: 'USD',
+          badge: null,
+          stops: 0,
+          note: `${formatDriveKm(route.km)} · fuel estimate`,
+        });
+      },
+    );
+    return () => {
+      cancelled = true;
+    };
+  }, [fromStop.id, toStop.id, fromStop.lat, fromStop.lng, toStop.lat, toStop.lng]);
+
+  const allOffers = useMemo(
+    () => (drive ? [...leg.offers, drive] : leg.offers),
+    [leg, drive],
+  );
+
   const availableModes = useMemo<Set<Mode>>(() => {
-    return new Set(leg.offers.map((o) => o.mode));
-  }, [leg]);
+    return new Set(allOffers.map((o) => o.mode));
+  }, [allOffers]);
 
   const [enabledModes, setEnabledModes] = useState<Set<Mode>>(availableModes);
 
@@ -56,9 +108,8 @@ export function WebTransportPanel({
   };
 
   const visibleOffers = useMemo(() => {
-    if (!leg) return [];
-    return leg.offers.filter((o) => enabledModes.has(o.mode));
-  }, [leg, enabledModes]);
+    return allOffers.filter((o) => enabledModes.has(o.mode));
+  }, [allOffers, enabledModes]);
 
   return (
     <div className="flex flex-col h-full min-h-0">
@@ -106,26 +157,28 @@ export function WebTransportPanel({
       </header>
       <div className="flex-1 overflow-y-auto p-md flex flex-col gap-sm">
         {visibleOffers.length === 0 ? (
-          <p className="text-small text-cocoa-55 text-center py-xl">
-            No offers match the selected modes. Toggle a mode back on.
-          </p>
+          <EmptyOffers />
         ) : (
           visibleOffers.map((offer) => (
             <OfferCard
               key={offer.id}
               offer={offer}
-              onBook={() =>
-                onBook({
-                  kind: 'transport',
-                  from: fromStop.nameEn,
-                  to: toStop.nameEn,
-                  provider: offer.provider,
-                })
-              }
+              fromStop={fromStop}
+              toStop={toStop}
             />
           ))
         )}
       </div>
+    </div>
+  );
+}
+
+function EmptyOffers() {
+  return (
+    <div className="bg-sand border border-rope rounded-2xl p-md text-center">
+      <p className="text-small text-cocoa-55">
+        No offers match the selected modes. Toggle a mode back on.
+      </p>
     </div>
   );
 }
@@ -147,14 +200,39 @@ function badgeColor(badge: NonNullable<TransportOffer['badge']>): string {
 
 function OfferCard({
   offer,
-  onBook,
+  fromStop,
+  toStop,
 }: {
   offer: TransportOffer;
-  onBook: () => void;
+  fromStop: PlannedStop;
+  toStop: PlannedStop;
 }) {
+  const booked = !!findTransit(fromStop.id, toStop.id, offer.id);
   const Icon = modeIcon(offer.mode);
+  const isDrive = offer.mode === 'drive';
+
+  const onBook = () => {
+    if (booked) return;
+    addTransit({ fromStopId: fromStop.id, toStopId: toStop.id, offer });
+    showToast(`${offer.provider} booked`, () => {
+      removeTransit(fromStop.id, toStop.id, offer.id);
+    });
+  };
+  const onRemove = () => {
+    if (!booked) return;
+    removeTransit(fromStop.id, toStop.id, offer.id);
+    showToast(`${offer.provider} removed`, () => {
+      addTransit({ fromStopId: fromStop.id, toStopId: toStop.id, offer });
+    });
+  };
+
   return (
-    <article className="rounded-2xl p-sm border bg-sand border-rope flex flex-col gap-sm">
+    <article
+      className={clsx(
+        'rounded-2xl p-sm border flex flex-col gap-sm transition-[border-color,background-color] duration-instant ease-out-quart motion-reduce:transition-none',
+        booked ? 'bg-sand border-copper' : 'bg-sand border-rope',
+      )}
+    >
       <div className="flex items-start gap-sm">
         <span className="shrink-0 h-9 w-9 rounded-full bg-ivory border border-cocoa-15 flex items-center justify-center text-cocoa">
           <Icon size={16} strokeWidth={2} />
@@ -163,16 +241,22 @@ function OfferCard({
           <p className="font-sans font-semibold text-lede text-cocoa">
             {offer.provider}
           </p>
-          <p className="text-small text-cocoa-70 inline-flex items-center gap-xs">
-            <span className="tnum">{offer.departureTime}</span>
-            <ArrowRight size={12} strokeWidth={2} className="text-cocoa-55" />
-            <span className="tnum">{offer.arrivalTime}</span>
-            <span className="text-cocoa-55">· {offer.durationLabel}</span>
-          </p>
+          {!isDrive ? (
+            <p className="text-small text-cocoa-70 inline-flex items-center gap-xs">
+              <span className="tnum">{offer.departureTime}</span>
+              <ArrowRight size={12} strokeWidth={2} className="text-cocoa-55" />
+              <span className="tnum">{offer.arrivalTime}</span>
+              <span className="text-cocoa-55">· {offer.durationLabel}</span>
+            </p>
+          ) : (
+            <p className="text-small text-cocoa-70">{offer.durationLabel}</p>
+          )}
           <p className="text-small text-cocoa-55">
-            {offer.stops === 0
+            {isDrive
               ? 'Direct'
-              : `${offer.stops} ${offer.stops === 1 ? 'stop' : 'stops'}`}
+              : offer.stops === 0
+                ? 'Direct'
+                : `${offer.stops} ${offer.stops === 1 ? 'stop' : 'stops'}`}
             {offer.note && <> · {offer.note}</>}
           </p>
         </div>
@@ -188,12 +272,30 @@ function OfferCard({
         )}
       </div>
       <div className="flex items-end justify-between gap-sm">
-        <p className="font-serif text-sub text-copper">
+        <p className="font-serif text-sub text-copper inline-flex items-baseline gap-xs">
+          {isDrive && (
+            <CircleDollarSign
+              size={14}
+              strokeWidth={2}
+              className="text-cocoa-30"
+            />
+          )}
           {offer.currency} {offer.price}
         </p>
-        <Button variant="accent" size="sm" onClick={onBook}>
-          Book
-        </Button>
+        {booked ? (
+          <button
+            type="button"
+            onClick={onRemove}
+            className="inline-flex items-center gap-xs text-meta uppercase font-medium text-copper hover:text-cocoa transition-colors duration-instant ease-out-quart motion-reduce:transition-none focus-visible:outline-none focus-visible:underline rounded-sm"
+          >
+            <Check size={12} strokeWidth={2} />
+            Booked · Remove
+          </button>
+        ) : (
+          <Button variant="accent" size="sm" onClick={onBook}>
+            Book
+          </Button>
+        )}
       </div>
     </article>
   );

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import clsx from 'clsx';
 import {
+  Check,
   Cloud,
   CloudRain,
   CloudSun,
@@ -27,13 +28,32 @@ import {
   type OsmCategory,
   type OsmPlace,
 } from './overpassApi';
-import type { BookingTarget } from './WebBookingModal';
+import { openLightbox } from './WebPhotoLightbox';
+import {
+  addPlace,
+  findPlace,
+  removePlace,
+  useWishlist,
+} from './wishlist';
+import { showToast } from './WebToast';
 
 type Props = {
   stop: PlannedStop;
   places: Place[];
-  onBook: (target: BookingTarget) => void;
 };
+
+const RESERVABLE: PlaceCategory[] = [
+  'hostel',
+  'restaurant',
+  'cafe',
+  'bar',
+  'club',
+  'kosher',
+];
+
+function isReservable(category: PlaceCategory): boolean {
+  return RESERVABLE.includes(category);
+}
 
 type TabId = 'overview' | 'stay' | 'eat' | 'drink' | 'see' | 'religious';
 
@@ -96,7 +116,8 @@ function tabOsmCategory(
   return null;
 }
 
-export function WebCityPanel({ stop, places, onBook }: Props) {
+export function WebCityPanel({ stop, places }: Props) {
+  useWishlist();
   const [activeTab, setActiveTab] = useState<TabId>('overview');
   const [activeSub, setActiveSub] = useState<PlaceCategory | 'all'>('all');
 
@@ -156,22 +177,25 @@ export function WebCityPanel({ stop, places, onBook }: Props) {
         )}
       </nav>
 
-      <div className="flex-1 overflow-y-auto p-md">
-        {activeTab === 'overview' ? (
-          <OverviewTab stop={stop} />
-        ) : (
-          <PlacesList
-            places={filterAndSortPlaces(
-              places,
-              activeTabDef.categories,
-              activeSub,
-            )}
-            emptyLabel={activeTabDef.label.toLowerCase()}
-            onBook={onBook}
-            osmCategory={tabOsmCategory(activeTab, activeSub)}
-            stop={stop}
-          />
-        )}
+      <div className="relative flex-1 min-h-0">
+        <div className="absolute inset-x-0 top-0 h-4 bg-gradient-to-b from-ivory to-transparent pointer-events-none z-10" />
+        <div className="absolute inset-x-0 bottom-0 h-4 bg-gradient-to-t from-ivory to-transparent pointer-events-none z-10" />
+        <div className="absolute inset-0 overflow-y-auto p-md">
+          {activeTab === 'overview' ? (
+            <OverviewTab stop={stop} />
+          ) : (
+            <PlacesList
+              places={filterAndSortPlaces(
+                places,
+                activeTabDef.categories,
+                activeSub,
+              )}
+              emptyLabel={activeTabDef.label.toLowerCase()}
+              osmCategory={tabOsmCategory(activeTab, activeSub)}
+              stop={stop}
+            />
+          )}
+        </div>
       </div>
     </div>
   );
@@ -324,10 +348,13 @@ function PhotoGrid({
       )}
     >
       {photos.map((src, i) => (
-        <div
+        <button
           key={src}
+          type="button"
+          onClick={() => openLightbox(photos, i, cityName)}
+          aria-label={`Open ${cityName} photo ${i + 1}`}
           className={clsx(
-            'relative rounded-xl overflow-hidden bg-gradient-to-br from-rope to-sand',
+            'relative rounded-xl overflow-hidden bg-gradient-to-br from-rope to-sand transition-[transform] duration-instant ease-out-quart motion-reduce:transition-none hover:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory',
             cols === 1 ? 'aspect-video' : 'aspect-square',
           )}
         >
@@ -337,7 +364,7 @@ function PhotoGrid({
             loading="lazy"
             className="absolute inset-0 h-full w-full object-cover"
           />
-        </div>
+        </button>
       ))}
     </div>
   );
@@ -484,13 +511,11 @@ function WeatherDayCard({
 function PlacesList({
   places,
   emptyLabel,
-  onBook,
   osmCategory,
   stop,
 }: {
   places: Place[];
   emptyLabel: string;
-  onBook: (target: BookingTarget) => void;
   osmCategory: OsmCategory | null;
   stop: PlannedStop;
 }) {
@@ -499,14 +524,19 @@ function PlacesList({
       {places.length > 0 ? (
         <div className="flex flex-col gap-sm">
           {places.map((place) => (
-            <PlaceCard key={place.id} place={place} onBook={onBook} />
+            <PlaceCard key={place.id} place={place} stop={stop} />
           ))}
         </div>
       ) : (
         !osmCategory && (
-          <p className="text-small text-cocoa-55 text-center py-xl">
-            No {emptyLabel} places curated yet for this stop.
-          </p>
+          <div className="bg-sand border border-rope rounded-2xl p-md text-center">
+            <p className="font-serif text-lede text-cocoa">
+              Tarmil curators are working on this one
+            </p>
+            <p className="text-small text-cocoa-55 mt-xs">
+              New {emptyLabel} places will land here soon.
+            </p>
+          </div>
         )
       )}
       {osmCategory && (
@@ -610,11 +640,67 @@ function NearbyOsmRow({ item }: { item: OsmPlace }) {
 
 function PlaceCard({
   place,
-  onBook,
+  stop,
 }: {
   place: Place;
-  onBook: (target: BookingTarget) => void;
+  stop: PlannedStop;
 }) {
+  const existing = findPlace(stop.id, place.id);
+  const status = existing?.status ?? null;
+  const reservable = isReservable(place.category);
+
+  const onSave = () => {
+    if (status === 'saved') {
+      removePlace(stop.id, place.id);
+      showToast(`${place.englishName} removed`, () => {
+        addPlace({
+          stopId: stop.id,
+          placeId: place.id,
+          placeName: place.englishName,
+          category: place.category,
+          status: 'saved',
+        });
+      });
+      return;
+    }
+    addPlace({
+      stopId: stop.id,
+      placeId: place.id,
+      placeName: place.englishName,
+      category: place.category,
+      status: 'saved',
+    });
+    showToast(`${place.englishName} saved to ${stop.nameEn}`, () => {
+      removePlace(stop.id, place.id);
+    });
+  };
+
+  const onReserve = () => {
+    if (status === 'reserved') {
+      removePlace(stop.id, place.id);
+      showToast(`${place.englishName} removed`, () => {
+        addPlace({
+          stopId: stop.id,
+          placeId: place.id,
+          placeName: place.englishName,
+          category: place.category,
+          status: 'reserved',
+        });
+      });
+      return;
+    }
+    addPlace({
+      stopId: stop.id,
+      placeId: place.id,
+      placeName: place.englishName,
+      category: place.category,
+      status: 'reserved',
+    });
+    showToast(`${place.englishName} reserved for ${stop.nameEn}`, () => {
+      removePlace(stop.id, place.id);
+    });
+  };
+
   return (
     <article className="bg-sand border border-rope rounded-2xl p-sm flex flex-col gap-sm">
       <div className="flex gap-sm">
@@ -646,20 +732,37 @@ function PlaceCard({
         </div>
       </div>
       <DescriptionWithMore text={place.englishDescription} />
-      <div className="flex justify-end">
+      <div className="flex justify-end gap-sm">
         <Button
-          variant="accent"
+          variant={status === 'saved' ? 'primary' : 'ghost'}
           size="sm"
-          onClick={() =>
-            onBook({
-              kind: 'place',
-              name: place.englishName,
-              category: place.category,
-            })
-          }
+          onClick={onSave}
         >
-          Book
+          {status === 'saved' ? (
+            <>
+              <Check size={12} strokeWidth={2} />
+              Saved
+            </>
+          ) : (
+            'Save'
+          )}
         </Button>
+        {reservable && (
+          <Button
+            variant={status === 'reserved' ? 'accent' : 'ghost'}
+            size="sm"
+            onClick={onReserve}
+          >
+            {status === 'reserved' ? (
+              <>
+                <Check size={12} strokeWidth={2} />
+                Reserved
+              </>
+            ) : (
+              'Reserve'
+            )}
+          </Button>
+        )}
       </div>
     </article>
   );
