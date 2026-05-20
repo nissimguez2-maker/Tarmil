@@ -4,8 +4,17 @@ export type AddableCity = {
   lat: number;
   lng: number;
   defaultNights: number;
-  blurb: string;
+  blurb?: string;
 };
+
+export function slugifyId(input: string): string {
+  return input
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+}
 
 export const ADDABLE_CITIES: AddableCity[] = [
   {
