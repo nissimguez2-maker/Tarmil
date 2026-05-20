@@ -177,25 +177,21 @@ export function WebCityPanel({ stop, places }: Props) {
         )}
       </nav>
 
-      <div className="relative flex-1 min-h-0">
-        <div className="absolute inset-x-0 top-0 h-4 bg-gradient-to-b from-ivory to-transparent pointer-events-none z-10" />
-        <div className="absolute inset-x-0 bottom-0 h-4 bg-gradient-to-t from-ivory to-transparent pointer-events-none z-10" />
-        <div className="absolute inset-0 overflow-y-auto p-md">
-          {activeTab === 'overview' ? (
-            <OverviewTab stop={stop} />
-          ) : (
-            <PlacesList
-              places={filterAndSortPlaces(
-                places,
-                activeTabDef.categories,
-                activeSub,
-              )}
-              emptyLabel={activeTabDef.label.toLowerCase()}
-              osmCategory={tabOsmCategory(activeTab, activeSub)}
-              stop={stop}
-            />
-          )}
-        </div>
+      <div className="flex-1 overflow-y-auto p-md">
+        {activeTab === 'overview' ? (
+          <OverviewTab stop={stop} />
+        ) : (
+          <PlacesList
+            places={filterAndSortPlaces(
+              places,
+              activeTabDef.categories,
+              activeSub,
+            )}
+            emptyLabel={activeTabDef.label.toLowerCase()}
+            osmCategory={tabOsmCategory(activeTab, activeSub)}
+            stop={stop}
+          />
+        )}
       </div>
     </div>
   );
