@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import { X } from 'lucide-react';
 import type { PlannedStop } from '../../data/plannedStops';
 import type { Place } from '../../data/places';
+import type { HomeCity } from './homeCity';
 import type { Selection } from './types';
 import { WebCityPanel } from './WebCityPanel';
 import { WebTransportPanel } from './WebTransportPanel';
@@ -11,6 +12,7 @@ import type { BookingTarget } from './WebBookingModal';
 type Props = {
   selection: Selection;
   stops: PlannedStop[];
+  home: HomeCity;
   places: Place[];
   onClose: () => void;
   onBook: (target: BookingTarget) => void;
@@ -19,6 +21,7 @@ type Props = {
 export function WebBubble({
   selection,
   stops,
+  home,
   places,
   onClose,
   onBook,
@@ -61,7 +64,7 @@ export function WebBubble({
         >
           <X size={16} strokeWidth={2} />
         </button>
-        {selection.type === 'stop' && (
+        {selection.type === 'stop' && selection.stopId !== 'home' && (
           <WebCityPanel
             stop={requireStop(stops, selection.stopId)}
             places={places.filter((p) => p.destinationId === selection.stopId)}
@@ -69,10 +72,12 @@ export function WebBubble({
           />
         )}
         {selection.type === 'leg' && (() => {
-          const fromStop = requireStop(stops, selection.fromStopId);
-          const toStop = requireStop(stops, selection.toStopId);
-          const idx = stops.findIndex((s) => s.id === fromStop.id);
-          const travelDate = idx >= 0 ? fromStop.departureDate : new Date().toISOString().slice(0, 10);
+          const fromStop = stopOrHome(stops, home, selection.fromStopId);
+          const toStop = stopOrHome(stops, home, selection.toStopId);
+          const travelDate =
+            selection.fromStopId === 'home'
+              ? stops[0]?.arrivalDate ?? new Date().toISOString().slice(0, 10)
+              : fromStop.departureDate;
           return (
             <WebTransportPanel
               fromStop={fromStop}
@@ -93,4 +98,27 @@ function requireStop(stops: PlannedStop[], id: string): PlannedStop {
     throw new Error(`Selection referenced missing stop ${id}`);
   }
   return stop;
+}
+
+function stopOrHome(
+  stops: PlannedStop[],
+  home: HomeCity,
+  id: string,
+): PlannedStop {
+  if (id === 'home') {
+    return {
+      id: 'home',
+      nameEn: home.nameEn,
+      nameHe: home.nameEn,
+      type: 'city',
+      lat: home.lat,
+      lng: home.lng,
+      arrivalDate: stops[0]?.arrivalDate ?? '2026-01-01',
+      departureDate:
+        stops[stops.length - 1]?.departureDate ?? '2026-01-01',
+      nights: 0,
+      privacy: 'private',
+    };
+  }
+  return requireStop(stops, id);
 }
