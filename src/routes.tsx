@@ -13,6 +13,8 @@ import { FriendProfileScreen } from './screens/profile/FriendProfileScreen';
 import { SettingsScreen } from './screens/profile/settings/SettingsScreen';
 import { PlaceScreen } from './screens/place/PlaceScreen';
 import { ToolsScreen } from './screens/tools/ToolsScreen';
+import { ModeToggleScreen } from './screens/web/ModeToggleScreen';
+import { WebPlannerScreen } from './screens/web/WebPlannerScreen';
 
 /**
  * Route table — v0.8 IA.
@@ -35,9 +37,12 @@ import { ToolsScreen } from './screens/tools/ToolsScreen';
 export function AppRoutes() {
   return (
     <Routes>
-      <Route element={<AppLayout />}>
-        <Route index element={<Navigate to="/trip" replace />} />
+      {/* Standalone full-viewport screens — OUTSIDE AppLayout so they don't
+          inherit the DeviceFrame + TabBar phone chrome. */}
+      <Route path="/" element={<ModeToggleScreen />} />
+      <Route path="/web" element={<WebPlannerScreen />} />
 
+      <Route element={<AppLayout />}>
         <Route path="/trip" element={<TripScreen />} />
         <Route path="/trip/stop/:plannedStopId" element={<TripDetailScreen />} />
         <Route path="/place/:id" element={<PlaceScreen />} />
