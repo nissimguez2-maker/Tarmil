@@ -7,10 +7,11 @@ import { WebHeader } from './WebHeader';
 import { WebStopList } from './WebStopList';
 import { WebMapCanvas } from './WebMapCanvas';
 import { WebBubble } from './WebBubble';
-import { WebBookingModal, type BookingTarget } from './WebBookingModal';
 import { WebAddStopModal } from './WebAddStopModal';
 import { WebHomeEditor } from './WebHomeEditor';
 import { WebPlannerSkeleton } from './WebPlannerSkeleton';
+import { WebToastLayer } from './WebToast';
+import { WebPhotoLightbox } from './WebPhotoLightbox';
 import { DEFAULT_HOME, loadHome, saveHome, type HomeCity } from './homeCity';
 import {
   addStop as addStopMut,
@@ -28,7 +29,6 @@ export function WebPlannerScreen() {
     return loadHome();
   });
   const [selection, setSelection] = useState<Selection>({ type: 'none' });
-  const [bookingTarget, setBookingTarget] = useState<BookingTarget | null>(null);
   const [addStopOpen, setAddStopOpen] = useState(false);
   const [homeEditorOpen, setHomeEditorOpen] = useState(false);
 
@@ -45,9 +45,7 @@ export function WebPlannerScreen() {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== 'Escape') return;
-      if (bookingTarget) {
-        setBookingTarget(null);
-      } else if (homeEditorOpen) {
+      if (homeEditorOpen) {
         setHomeEditorOpen(false);
       } else if (addStopOpen) {
         setAddStopOpen(false);
@@ -57,7 +55,7 @@ export function WebPlannerScreen() {
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [bookingTarget, addStopOpen, homeEditorOpen, selection.type]);
+  }, [addStopOpen, homeEditorOpen, selection.type]);
 
   if (loading) return <WebPlannerSkeleton />;
   if (error || !data) return <ErrorPanel error={error} />;
@@ -121,7 +119,6 @@ export function WebPlannerScreen() {
               home={home}
               places={places}
               onClose={() => setSelection({ type: 'none' })}
-              onBook={setBookingTarget}
             />
           </div>
         </div>
@@ -137,10 +134,6 @@ export function WebPlannerScreen() {
           Go to the mobile app →
         </Link>
       </div>
-      <WebBookingModal
-        target={bookingTarget}
-        onClose={() => setBookingTarget(null)}
-      />
       <WebAddStopModal
         open={addStopOpen}
         onClose={() => setAddStopOpen(false)}
@@ -153,6 +146,8 @@ export function WebPlannerScreen() {
         onPick={(h) => setHome(h)}
         currentName={home.nameEn}
       />
+      <WebPhotoLightbox />
+      <WebToastLayer />
     </>
   );
 }
