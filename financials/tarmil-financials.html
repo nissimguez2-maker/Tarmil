@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Tarmil — Financial Model</title>
+<style>
+  :root{
+    --bg:#f4f5f7; --panel:#ffffff; --ink:#0f172a; --muted:#64748b; --faint:#94a3b8;
+    --line:#e2e8f0; --line2:#eef2f6; --accent:#2563eb; --accent-weak:#dbeafe;
+    --pos:#0f9d58; --neg:#d93025; --warn:#b45309;
+    --c-sub:#2563eb; --c-feat:#7c3aed; --c-card:#0891b2; --c-visa:#0d9488;
+    --c-acc:#d97706; --c-esim:#65a30d; --c-trans:#db2777; --c-flt:#4f46e5;
+    --c-burn:#d93025; --c-cash:#0f9d58;
+    --c-t-annual:#1e3a8a; --c-t-t1:#2563eb; --c-t-t2:#0891b2; --c-t-t3:#0f9d58; --c-t-t4:#d97706; --c-t-t5:#d93025;
+    --radius:10px; --shadow:0 1px 2px rgba(15,23,42,.06),0 1px 3px rgba(15,23,42,.04);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg); color:var(--ink); font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased; padding:0 0 80px;
+  }
+  .wrap{max-width:1180px; margin:0 auto; padding:0 20px}
+  header.top{
+    background:var(--panel); border-bottom:1px solid var(--line); position:sticky; top:0; z-index:20;
+    box-shadow:var(--shadow);
+  }
+  .top .wrap{display:flex; align-items:center; gap:16px; padding:14px 20px; flex-wrap:wrap}
+  .brand h1{font-size:18px; margin:0; letter-spacing:-.01em}
+  .brand p{margin:2px 0 0; color:var(--muted); font-size:12px}
+  .spacer{flex:1}
+  .controls{display:flex; gap:8px; align-items:center; flex-wrap:wrap}
+  .badge{font-size:11px; padding:3px 9px; border-radius:999px; border:1px solid var(--line); color:var(--muted); white-space:nowrap}
+  .badge.mod{color:var(--warn); border-color:#fcd9a8; background:#fff7ed}
+  button.btn{
+    font:inherit; font-size:13px; padding:7px 13px; border-radius:8px; border:1px solid var(--line);
+    background:#fff; color:var(--ink); cursor:pointer; transition:.12s;
+  }
+  button.btn:hover{background:#f8fafc; border-color:#cbd5e1}
+  button.btn.primary{background:var(--accent); border-color:var(--accent); color:#fff}
+  button.btn.primary:hover{background:#1d4ed8}
+  button.btn.ghost{border-color:transparent; color:var(--muted)}
+  button.btn.ghost:hover{color:var(--neg); background:#fef2f2}
+
+  section.block{margin-top:26px}
+  .block > h2{font-size:13px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); margin:0 0 12px; font-weight:600}
+
+  /* KPI cards */
+  .kpis{display:grid; grid-template-columns:repeat(6,1fr); gap:12px}
+  .kpi{background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:14px 16px; box-shadow:var(--shadow)}
+  .kpi .label{font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:.04em}
+  .kpi .value{font-size:22px; font-weight:650; margin-top:6px; letter-spacing:-.02em; font-variant-numeric:tabular-nums}
+  .kpi .sub{font-size:11px; color:var(--faint); margin-top:3px}
+  .kpi .value.pos{color:var(--pos)} .kpi .value.neg{color:var(--neg)}
+
+  /* Charts */
+  .card{background:var(--panel); border:1px solid var(--line); border-radius:var(--radius); padding:16px 18px 18px; box-shadow:var(--shadow)}
+  .card h3{margin:0 0 2px; font-size:15px; letter-spacing:-.01em}
+  .card .hint{margin:0 0 10px; color:var(--muted); font-size:12px}
+  .charts{display:grid; grid-template-columns:1fr; gap:16px}
+  .chart-svg{width:100%; height:auto; display:block}
+  .legend{display:flex; flex-wrap:wrap; gap:10px 16px; margin-top:10px}
+  .legend .item{display:flex; align-items:center; gap:6px; font-size:12px; color:var(--muted)}
+  .legend .swatch{width:11px; height:11px; border-radius:3px; flex:none}
+  .legend .swatch.line{height:3px; border-radius:2px; width:16px}
+
+  /* Inputs */
+  .grid-assump{display:grid; grid-template-columns:repeat(4,1fr); gap:12px 18px}
+  .fld{display:flex; flex-direction:column; gap:4px}
+  .fld label{font-size:11px; color:var(--muted)}
+  .fld .inwrap{position:relative; display:flex; align-items:center}
+  .fld .pre,.fld .post{position:absolute; color:var(--faint); font-size:12px; pointer-events:none}
+  .fld .pre{left:9px} .fld .post{right:9px}
+  input.num{
+    font:inherit; font-size:13px; width:100%; padding:7px 9px; border:1px solid var(--line); border-radius:7px;
+    background:#fff; color:var(--ink); font-variant-numeric:tabular-nums; text-align:right;
+  }
+  input.num.has-pre{padding-left:18px} input.num.has-post{padding-right:20px}
+  input.num:focus{outline:none; border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-weak)}
+  .subhead{font-size:12px; font-weight:600; color:var(--ink); margin:16px 0 8px}
+
+  details.adv{margin-top:14px; border-top:1px solid var(--line2); padding-top:6px}
+  details.adv > summary{cursor:pointer; font-size:12px; color:var(--accent); padding:6px 0; list-style:none}
+  details.adv > summary::-webkit-details-marker{display:none}
+  details.adv > summary::before{content:"▸ "; color:var(--faint)}
+  details.adv[open] > summary::before{content:"▾ "}
+
+  /* Tables */
+  .scroll{overflow-x:auto; border:1px solid var(--line); border-radius:var(--radius); background:var(--panel); box-shadow:var(--shadow)}
+  table.grid{border-collapse:collapse; width:100%; font-size:12.5px; font-variant-numeric:tabular-nums}
+  table.grid th, table.grid td{padding:6px 10px; text-align:right; white-space:nowrap; border-bottom:1px solid var(--line2)}
+  table.grid thead th{position:sticky; top:0; background:#f8fafc; color:var(--muted); font-weight:600; font-size:11px; z-index:2; border-bottom:1px solid var(--line)}
+  table.grid th.rowlab, table.grid td.rowlab{text-align:left; position:sticky; left:0; background:var(--panel); z-index:1; min-width:230px; box-shadow:1px 0 0 var(--line2)}
+  table.grid thead th.rowlab{background:#f8fafc; z-index:3}
+  table.grid tr.section td{background:#f1f5f9; color:var(--muted); font-weight:600; text-transform:uppercase; font-size:10.5px; letter-spacing:.05em}
+  table.grid tr.section td.rowlab{background:#f1f5f9}
+  table.grid tr.total td{font-weight:650}
+  table.grid td.neg{color:var(--neg)} table.grid td.pos{color:var(--pos)}
+  table.grid td.indent{padding-left:24px; color:var(--muted)}
+  table.grid tr.total td.rowlab, table.grid tr:hover td{background:#fbfdff}
+  table.grid tr:hover td.rowlab{background:#f1f6ff}
+  td input.cell{font:inherit; font-size:12.5px; width:84px; text-align:right; border:1px solid var(--line); border-radius:6px; padding:4px 6px; background:#fffdf5; font-variant-numeric:tabular-nums}
+  td input.cell:focus{outline:none; border-color:var(--accent); box-shadow:0 0 0 2px var(--accent-weak); background:#fff}
+  .driver-note{font-size:11px;color:var(--faint);margin:8px 2px 0}
+
+  .two{display:grid; grid-template-columns:1.3fr 1fr; gap:16px; align-items:start}
+  table.ask{border-collapse:collapse; width:100%; font-size:13px; font-variant-numeric:tabular-nums}
+  table.ask td{padding:6px 8px; border-bottom:1px solid var(--line2)}
+  table.ask td.v{text-align:right; white-space:nowrap}
+  table.ask tr.tot td{font-weight:650; border-top:1px solid var(--line)}
+  table.ask td input.cell{width:96px}
+  .ask-cap{font-size:11px;color:var(--faint);margin:8px 2px 0}
+  footer{margin-top:30px; color:var(--faint); font-size:11px; text-align:center}
+  @media (max-width:980px){ .kpis{grid-template-columns:repeat(3,1fr)} .grid-assump{grid-template-columns:repeat(2,1fr)} .two{grid-template-columns:1fr} }
+  @media (max-width:560px){ .kpis{grid-template-columns:repeat(2,1fr)} }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="brand">
+      <h1>Tarmil — Financial Model</h1>
+      <p>Interactive seed-stage projection · 17 months (Aug ’26 – Dec ’27)</p>
+    </div>
+    <div class="spacer"></div>
+    <div class="controls">
+      <span id="modBadge" class="badge">Baseline scenario</span>
+      <button class="btn" id="btnExport">Export</button>
+      <button class="btn" id="btnImport">Import</button>
+      <button class="btn ghost" id="btnReset">Reset</button>
+      <input type="file" id="importFile" accept="application/json" hidden />
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <section class="block"><div class="kpis" id="kpis"></div></section>
+
+  <section class="block">
+    <h2>Charts</h2>
+    <div class="charts">
+      <div class="card">
+        <h3>Cash runway</h3>
+        <p class="hint">Running cash balance at month-end. Seeded by the raise, then compounded by monthly net.</p>
+        <div id="chartRunway"></div><div class="legend" id="legRunway"></div>
+      </div>
+      <div class="card">
+        <h3>Revenue by stream vs. burn</h3>
+        <p class="hint">Stacked monthly revenue (subscriptions + each in-app stream) against total operating burn.</p>
+        <div id="chartRev"></div><div class="legend" id="legRev"></div>
+      </div>
+      <div class="card">
+        <h3>User growth &amp; tier mix</h3>
+        <p class="hint">Total active users (line) with new paying users split by subscription tier (bars).</p>
+        <div id="chartUsers"></div><div class="legend" id="legUsers"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2>Assumptions <span style="text-transform:none;font-weight:400;color:var(--faint)">— edit any value; everything recomputes live</span></h2>
+    <div class="card">
+      <div class="subhead">Operating &amp; cost assumptions</div>
+      <div class="grid-assump" id="assumpGrid"></div>
+      <div class="subhead">Subscription tiers (price &amp; retention)</div>
+      <div class="grid-assump" id="tierGrid"></div>
+      <details class="adv">
+        <summary>Seasonality — monthly tier mix (advanced)</summary>
+        <div class="scroll" style="margin-top:8px"><div id="seasonTable"></div></div>
+        <p class="driver-note">Each calendar-month column distributes paying users across tiers and should sum to 100%.</p>
+      </details>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2>Monthly drivers</h2>
+    <div class="scroll"><div id="driverTable"></div></div>
+    <p class="driver-note">Yellow cells are editable: new users acquired, their conversion to paying, and the two salaried roles.</p>
+  </section>
+
+  <section class="block">
+    <h2>Profit &amp; loss — full monthly detail</h2>
+    <div class="scroll"><div id="pnlTable"></div></div>
+  </section>
+
+  <section class="block">
+    <h2>Investor ask</h2>
+    <div class="two">
+      <div class="card">
+        <div class="subhead">The seed round</div>
+        <table class="ask"><tbody id="askSeed"></tbody></table>
+        <p class="ask-cap">“Runway” seeds the cash balance in the model above.</p>
+      </div>
+      <div class="card">
+        <div class="subhead">Pre-launch one-time costs</div>
+        <table class="ask"><tbody id="askPre"></tbody></table>
+      </div>
+    </div>
+  </section>
+
+  <footer>Generated from <strong>Tarmil Master Excel.xlsx</strong> · figures recompute in your browser and persist locally. Export to share a scenario.</footer>
+</div>
+
+<script>
+/* ============================================================
+   MODEL — faithful JS port of "Tarmil Master Excel.xlsx" (Monthly Burn tab).
+   Validated cell-for-cell against the workbook's cached values (425/425).
+   Index 0..16 = model months 1..17 (Aug'26 .. Dec'27).
+   ============================================================ */
+(function (root) {
+  "use strict";
+  var MONTH_LABELS = ["Aug 26","Sep 26","Oct 26","Nov 26","Dec 26","Jan 27","Feb 27","Mar 27","Apr 27","May 27","Jun 27","Jul 27","Aug 27","Sep 27","Oct 27","Nov 27","Dec 27"];
+  var CAL_MONTH    = ["Aug","Sep","Oct","Nov","Dec","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  var TIERS = ["annual","t1","t2","t3","t4","t5"];
+  var N = 17;
+
+  var BASELINE = {
+    newUsers:   [2500,3500,7500,15000,35000,35000,35000,30000,25000,20000,15000,15000,50000,50000,25000,20000,30000],
+    conversion: [0,0,0,0.11,0.08,0.08,0.08,0.08,0.06,0.08,0.10,0.11,0.14,0.14,0.10,0.13,0.15],
+    ceoSalary:  [3000,3000,3000,4000,4000,4000,4000,4000,4000,4000,4000,4000,4000,4000,4000,4000,4000],
+    devSalary:  [3000,3000,3000,4000,4000,4000,4000,4000,4000,4000,4000,4000,4000,4000,4000,4000,4000],
+    assumptions: {
+      office: 2000, bookkeeping: 1500, unpredictable: 2000, misc: 1000,
+      cac: 3.0, varPaying: 0.07, varFree: 0.02,
+      cardLaunch: 20000, cardMonthly: 2000, visaLaunch: 20000, visaMonthly: 5000,
+      apiPct: 0.04, esimComm: 0.10, flightsComm: 0.03, accomComm: 0.02, transportComm: 0.04,
+      runway: 100000
+    },
+    tierPrices:  { annual: 59.99, t1: 7.99, t2: 12.99, t3: 19.99, t4: 24.99, t5: 39.99 },
+    tierMonths:  { annual: 12, t1: 0.5, t2: 1, t3: 2, t4: 3, t5: 6 },
+    seasonality: {
+      Jul: [0.04,0.40,0.30,0.14,0.04,0.08], Aug: [0.04,0.38,0.32,0.14,0.04,0.08],
+      Sep: [0.04,0.30,0.28,0.16,0.08,0.14], Oct: [0.04,0.20,0.22,0.20,0.12,0.22],
+      Nov: [0.04,0.10,0.18,0.20,0.14,0.34], Dec: [0.04,0.10,0.16,0.18,0.12,0.40],
+      Jan: [0.04,0.08,0.18,0.18,0.12,0.38], Feb: [0.04,0.10,0.20,0.18,0.12,0.36],
+      Mar: [0.04,0.15,0.22,0.18,0.12,0.29], Apr: [0.04,0.28,0.30,0.16,0.08,0.14],
+      May: [0.04,0.32,0.32,0.14,0.06,0.12], Jun: [0.04,0.36,0.30,0.14,0.04,0.12]
+    },
+    accomBook:  [1000,300,500,600,700,1000],
+    travelBook: [25,12,25,35,50,90],
+    // Investor-ask (Summary tab). Only "runway" (assumptions.runway) feeds the monthly model.
+    summaryPrelaunch: [
+      ["Accountant — Ba'am formation + bank account",2500],["Company Lawyer",1500],
+      ["Privacy/data lawyer consulting",4000],["Wework spot + Gear for founder",5000],["CTO + Tools",7000]
+    ],
+    summarySeedOther: [
+      ["Privacy Infrastructure (DB + GDPR/CCPA + Tech Setup)",15000],["Initial database curation. Data curator",10000],
+      ["Office + Gear for team of 3",7000],["Full branding + CMO outsourcing",30000],["Budget for O-CMO to deploy",70000]
+    ],
+    contingencyPct: 0.10
+  };
+
+  function trailingSum(arr, idx, win){ var s=0; for(var k=Math.max(0,idx-win+1);k<=idx;k++) s+=arr[k]; return s; }
+
+  function compute(inp){
+    var a=inp.assumptions, p=inp.tierPrices, S=inp.seasonality;
+    var r={ monthLabel:MONTH_LABELS.slice(), calMonth:CAL_MONTH.slice(),
+      newUsers:inp.newUsers.slice(), conversion:inp.conversion.slice(),
+      paying:[], newTier:{annual:[],t1:[],t2:[],t3:[],t4:[],t5:[]},
+      annualRolling:[], r20:[], r21:[], r22:[], r23:[], r24:[], totalActive:[],
+      arppu:[], arpu:[], subRev:[],
+      featured:[], card:[], visa:[], accom:[], esim:[], transport:[], flights:[], monetTotal:[],
+      ceo:[], dev:[], marketing:[], fixedOpex:[], varOpex:[],
+      totalBurn:[], newMoney:[], vat:[], corpTax:[], appFees:[], net:[], running:[] };
+    var i,t,mix,paying,mn,free,sub,bA,bT;
+    for(i=0;i<N;i++){
+      mn=i+1; mix=S[CAL_MONTH[i]]; paying=inp.newUsers[i]*inp.conversion[i];
+      r.paying[i]=paying;
+      for(t=0;t<6;t++) r.newTier[TIERS[t]][i]=paying*mix[t];
+      r.annualRolling[i]=trailingSum(r.newTier.annual,i,12);
+      r.r20[i]=paying;
+      r.r21[i]=r.newTier.t1[i];
+      r.r22[i]=trailingSum(r.newTier.t3,i,2);
+      r.r23[i]=trailingSum(r.newTier.t4,i,3);
+      r.r24[i]=trailingSum(r.newTier.t5,i,6);
+      r.totalActive[i]=r.r20[i]+r.r21[i]+r.r22[i]+r.r23[i]+r.r24[i];
+      sub=r.newTier.t1[i]*p.t1+r.newTier.t2[i]*p.t2+r.newTier.t3[i]*p.t3+r.newTier.t4[i]*p.t4+r.newTier.t5[i]*p.t5+r.newTier.annual[i]*p.annual;
+      r.subRev[i]=sub;
+      r.arppu[i]=paying?sub/paying:0;
+      r.arpu[i]=inp.newUsers[i]?sub/inp.newUsers[i]:0;
+      r.featured[i]=mn>=4?Math.pow(mn,2.5)*50:0;
+      r.card[i]=mn>=11?0.1*1000*r.totalActive[i]*0.15:0;
+      r.visa[i]=mn>=9?70*a.apiPct*inp.newUsers[i]:0;
+      bA=0; bT=0;
+      for(t=0;t<6;t++){ bA+=inp.newUsers[i]*mix[t]*inp.accomBook[t]; bT+=inp.newUsers[i]*mix[t]*inp.travelBook[t]; }
+      r.accom[i]=bA*a.apiPct*a.accomComm;
+      r.esim[i]=bT*a.apiPct*a.esimComm;
+      r.transport[i]=bT*a.apiPct*a.transportComm;
+      r.flights[i]=inp.newUsers[i]*0.7*1.5*0.5;
+      r.monetTotal[i]=r.featured[i]+r.card[i]+r.visa[i]+r.accom[i]+r.esim[i]+r.transport[i]+r.flights[i];
+      r.newMoney[i]=sub+r.monetTotal[i];
+      r.ceo[i]=inp.ceoSalary[i]; r.dev[i]=inp.devSalary[i];
+      r.marketing[i]= i<10 ? 15000 : Math.max(7000, 0.075*r.newMoney[i]);
+      var fx=(mn<=4?(a.office+a.bookkeeping+a.misc+a.unpredictable):(a.office+a.bookkeeping+a.misc))+a.cac*paying;
+      if(mn>=9) fx+=a.visaMonthly; if(mn===9) fx+=a.visaLaunch;
+      if(mn>=11) fx+=a.cardMonthly; if(mn===11) fx+=a.cardLaunch;
+      r.fixedOpex[i]=fx;
+      free=inp.newUsers[i]*(1-inp.conversion[i]);
+      r.varOpex[i]=(r.r20[i]*a.varPaying*15)+(30.5*((r.r21[i]+r.r22[i]+r.r23[i]+r.r24[i])*a.varPaying))+(r.annualRolling[i]*30.5)+(free*a.varFree);
+      r.totalBurn[i]=-(r.ceo[i]+r.dev[i]+r.marketing[i]+r.fixedOpex[i]+r.varOpex[i]);
+      r.vat[i]=-(r.monetTotal[i]*0.18);
+      var pretax=r.newMoney[i]+r.vat[i]+r.totalBurn[i];
+      r.corpTax[i]=pretax>0?-(pretax*0.23):0;
+      r.appFees[i]=-0.15*r.newMoney[i];
+      r.net[i]=r.totalBurn[i]+r.newMoney[i]+r.vat[i]+r.corpTax[i]+r.appFees[i];
+    }
+    for(i=0;i<N;i++){
+      if(i===0){ var cap=r.net[0]>0?Math.min(10000,r.net[0]*0.5):0; r.running[0]=r.net[0]+a.runway-cap; }
+      else r.running[i]=r.net[i]+r.running[i-1];
+    }
+    return r;
+  }
+  root.TarmilModel={BASELINE:BASELINE,compute:compute,MONTH_LABELS:MONTH_LABELS,CAL_MONTH:CAL_MONTH,TIERS:TIERS,N:N};
+})(window);
+
+/* ============================================================  APP  ============================================================ */
+(function(){
+  "use strict";
+  var M=window.TarmilModel, KEY="tarmil_fin_v1";
+  var CAL=["Jul","Aug","Sep","Oct","Nov","Dec","Jan","Feb","Mar","Apr","May","Jun"];
+  var TIER_META=[
+    {key:"annual",name:"Annual",color:"var(--c-t-annual)"},{key:"t1",name:"Tier 1",color:"var(--c-t-t1)"},
+    {key:"t2",name:"Tier 2",color:"var(--c-t-t2)"},{key:"t3",name:"Tier 3",color:"var(--c-t-t3)"},
+    {key:"t4",name:"Tier 4",color:"var(--c-t-t4)"},{key:"t5",name:"Tier 5",color:"var(--c-t-t5)"}
+  ];
+  var state={inputs:null,result:null};
+
+  function clone(o){return JSON.parse(JSON.stringify(o));}
+  function deepMerge(base,ov){
+    if(Array.isArray(base)) return Array.isArray(ov)?ov.slice():base;
+    if(base&&typeof base==="object"){ var out={}; for(var k in base){ out[k]= (ov&&k in ov)?deepMerge(base[k],ov[k]):clone(base[k]); } return out; }
+    return ov===undefined?base:ov;
+  }
+  function load(){ try{ var s=localStorage.getItem(KEY); if(s) return deepMerge(M.BASELINE,JSON.parse(s)); }catch(e){} return clone(M.BASELINE); }
+  function save(){ try{ localStorage.setItem(KEY,JSON.stringify(state.inputs)); }catch(e){} refreshBadge(); }
+  function isModified(){ return JSON.stringify(state.inputs)!==JSON.stringify(M.BASELINE); }
+  function refreshBadge(){ var b=document.getElementById("modBadge"); if(isModified()){b.textContent="Modified scenario";b.classList.add("mod");} else {b.textContent="Baseline scenario";b.classList.remove("mod");} }
+
+  /* ---- formatters ---- */
+  function f0(x){return Math.round(x).toLocaleString("en-US");}
+  function money(x){ if(!isFinite(x))return"—"; return (x<0?"-$":"$")+f0(Math.abs(x)); }
+  function money2(x){ if(!isFinite(x))return"—"; return (x<0?"-$":"$")+Math.abs(x).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2}); }
+  function pct(x){ var v=x*100; return (Math.abs(v-Math.round(v))<1e-9?Math.round(v):v.toFixed(1))+"%"; }
+  function compact(x){ var a=Math.abs(x), s=x<0?"-":""; if(a>=1e6)return s+"$"+(a/1e6).toFixed(a>=1e7?0:1)+"M"; if(a>=1e3)return s+"$"+Math.round(a/1e3)+"k"; return s+"$"+Math.round(a); }
+  function intc(x){return Math.round(x).toLocaleString("en-US");}
+
+  /* ---- input element ---- */
+  function numInput(opts){ // {value,kind,onChange,step,min} kind: money|pct|num|int
+    var wrap=document.createElement("div"); wrap.className="inwrap";
+    var inp=document.createElement("input"); inp.type="number"; inp.className="num"; inp.value=opts.value;
+    if(opts.step!=null) inp.step=opts.step;
+    if(opts.kind==="money"){ var pre=document.createElement("span"); pre.className="pre"; pre.textContent="$"; wrap.appendChild(pre); inp.classList.add("has-pre"); }
+    if(opts.kind==="pct"){ var post=document.createElement("span"); post.className="post"; post.textContent="%"; wrap.appendChild(post); inp.classList.add("has-post"); }
+    wrap.appendChild(inp);
+    inp.addEventListener("input",function(){ var v=parseFloat(inp.value); if(isNaN(v))return; opts.onChange(opts.kind==="pct"?v/100:v); });
+    return wrap;
+  }
+  function cellInput(value,kind,onChange){
+    var inp=document.createElement("input"); inp.type="number"; inp.className="cell"; inp.value=kind==="pct"?+(value*100).toFixed(4):value;
+    inp.addEventListener("input",function(){ var v=parseFloat(inp.value); if(isNaN(v))return; onChange(kind==="pct"?v/100:v); });
+    return inp;
+  }
+
+  /* ---- build editable inputs (once) ---- */
+  var ASSUMP_DEFS=[
+    ["office","Office (USD/mo)","money"],["bookkeeping","Bookkeeping + legal (USD/mo)","money"],
+    ["unpredictable","Unpredictable (USD/mo)","money"],["misc","Misc — tools/subs (USD/mo)","money"],
+    ["cac","Client acquisition + KYC (USD/user)","money"],["varPaying","Variable cost / paying user / day","money"],
+    ["varFree","Variable cost / free user","money"],["runway","Starting runway (USD)","money"],
+    ["visaLaunch","TarmilVisa launch cost","money"],["visaMonthly","TarmilVisa monthly cost","money"],
+    ["cardLaunch","TarmilCard launch cost","money"],["cardMonthly","TarmilCard monthly cost","money"],
+    ["apiPct","Users using planning APIs","pct"],["esimComm","e-Sim commission","pct"],
+    ["accomComm","Accommodation commission","pct"],["transportComm","Transport commission","pct"]
+  ];
+  function buildAssumptions(){
+    var g=document.getElementById("assumpGrid"); g.innerHTML="";
+    ASSUMP_DEFS.forEach(function(d){
+      var key=d[0],label=d[1],kind=d[2];
+      var fld=document.createElement("div"); fld.className="fld";
+      var lab=document.createElement("label"); lab.textContent=label; fld.appendChild(lab);
+      var val=kind==="pct"?+(state.inputs.assumptions[key]*100).toFixed(4):state.inputs.assumptions[key];
+      fld.appendChild(numInput({value:val,kind:kind,onChange:function(v){ state.inputs.assumptions[key]=v; onChange(); }}));
+      g.appendChild(fld);
+    });
+    // tiers
+    var tg=document.getElementById("tierGrid"); tg.innerHTML="";
+    TIER_META.forEach(function(t){
+      var fld=document.createElement("div"); fld.className="fld";
+      var lab=document.createElement("label"); lab.textContent=t.name+" price (USD)  ·  "+state.inputs.tierMonths[t.key]+" mo"; fld.appendChild(lab);
+      fld.appendChild(numInput({value:state.inputs.tierPrices[t.key],kind:"money",step:"0.01",onChange:function(v){ state.inputs.tierPrices[t.key]=v; onChange(); }}));
+      tg.appendChild(fld);
+    });
+  }
+
+  function buildSeasonality(){
+    var host=document.getElementById("seasonTable");
+    var t=document.createElement("table"); t.className="grid";
+    var thead="<thead><tr><th class='rowlab'>Tier</th>"+CAL.map(function(m){return "<th>"+m+"</th>";}).join("")+"</tr></thead>";
+    t.innerHTML=thead; var tb=document.createElement("tbody");
+    TIER_META.forEach(function(tm,ti){
+      var tr=document.createElement("tr");
+      var lb=document.createElement("td"); lb.className="rowlab"; lb.textContent=tm.name; tr.appendChild(lb);
+      CAL.forEach(function(mn){
+        var td=document.createElement("td");
+        td.appendChild(cellInput(state.inputs.seasonality[mn][ti],"pct",function(v){ state.inputs.seasonality[mn][ti]=v; onChange(); updateSeasonTotals(); }));
+        tr.appendChild(td);
+      });
+      tb.appendChild(tr);
+    });
+    var trT=document.createElement("tr"); trT.className="total"; trT.id="seasonTotals";
+    var l2=document.createElement("td"); l2.className="rowlab"; l2.textContent="Total"; trT.appendChild(l2);
+    CAL.forEach(function(){ trT.appendChild(document.createElement("td")); });
+    tb.appendChild(trT);
+    t.appendChild(tb); host.innerHTML=""; host.appendChild(t); updateSeasonTotals();
+  }
+  function updateSeasonTotals(){
+    var tr=document.getElementById("seasonTotals"); if(!tr)return;
+    CAL.forEach(function(mn,ci){
+      var sum=state.inputs.seasonality[mn].reduce(function(a,b){return a+b;},0);
+      var td=tr.children[ci+1]; td.textContent=pct(sum);
+      td.className= Math.abs(sum-1)>1e-6 ? "neg":"pos";
+    });
+  }
+
+  var DRIVER_ROWS=[
+    {key:"newUsers",label:"New users",kind:"int"},
+    {key:"conversion",label:"Conversion to paying",kind:"pct"},
+    {key:"ceoSalary",label:"Assistant CEO (USD/mo)",kind:"money"},
+    {key:"devSalary",label:"Additional dev (USD/mo)",kind:"money"}
+  ];
+  function buildDrivers(){
+    var host=document.getElementById("driverTable");
+    var t=document.createElement("table"); t.className="grid";
+    var head="<thead><tr><th class='rowlab'>Driver</th>"+M.MONTH_LABELS.map(function(m){return "<th>"+m+"</th>";}).join("")+"</tr></thead>";
+    t.innerHTML=head; var tb=document.createElement("tbody");
+    DRIVER_ROWS.forEach(function(row){
+      var tr=document.createElement("tr");
+      var lb=document.createElement("td"); lb.className="rowlab"; lb.textContent=row.label; tr.appendChild(lb);
+      for(var i=0;i<M.N;i++){ (function(i){
+        var td=document.createElement("td");
+        td.appendChild(cellInput(state.inputs[row.key][i],row.kind,function(v){ state.inputs[row.key][i]=v; onChange(); }));
+        tr.appendChild(td);
+      })(i); }
+      tb.appendChild(tr);
+    });
+    t.appendChild(tb); host.innerHTML=""; host.appendChild(t);
+  }
+
+  function buildAsk(){
+    var seed=document.getElementById("askSeed"), pre=document.getElementById("askPre");
+    seed.innerHTML=""; pre.innerHTML="";
+    // Seed: runway row (bound to assumptions.runway) + the other seed items
+    function row(host,label,value,onCh){
+      var tr=document.createElement("tr");
+      var l=document.createElement("td"); l.textContent=label; tr.appendChild(l);
+      var v=document.createElement("td"); v.className="v";
+      v.appendChild(cellInput(value,"money",onCh)); tr.appendChild(v); host.appendChild(tr);
+    }
+    row(seed,"Runway",state.inputs.assumptions.runway,function(v){state.inputs.assumptions.runway=v;onChange();});
+    state.inputs.summarySeedOther.forEach(function(it,idx){ row(seed,it[0],it[1],function(v){state.inputs.summarySeedOther[idx][1]=v;onChange();}); });
+    var trC=document.createElement("tr");
+    trC.innerHTML="<td>Contingency buffer ("+pct(state.inputs.contingencyPct)+")</td><td class='v' id='askCont'></td>"; seed.appendChild(trC);
+    var trT=document.createElement("tr"); trT.className="tot";
+    trT.innerHTML="<td>Total seed ask</td><td class='v' id='askTotal'></td>"; seed.appendChild(trT);
+
+    state.inputs.summaryPrelaunch.forEach(function(it,idx){ row(pre,it[0],it[1],function(v){state.inputs.summaryPrelaunch[idx][1]=v;onChange();}); });
+    var trP=document.createElement("tr"); trP.className="tot";
+    trP.innerHTML="<td>Total pre-launch</td><td class='v' id='askPreTotal'></td>"; pre.appendChild(trP);
+  }
+  function renderAskTotals(){
+    var seedSum=state.inputs.assumptions.runway+state.inputs.summarySeedOther.reduce(function(a,b){return a+b[1];},0);
+    var cont=seedSum*state.inputs.contingencyPct;
+    var pe=state.inputs.summaryPrelaunch.reduce(function(a,b){return a+b[1];},0);
+    var c=document.getElementById("askCont"), tot=document.getElementById("askTotal"), p=document.getElementById("askPreTotal");
+    if(c)c.textContent=money(cont); if(tot)tot.textContent=money(seedSum+cont); if(p)p.textContent=money(pe);
+  }
+
+  /* ---- KPIs ---- */
+  function renderKPIs(){
+    var r=state.result, host=document.getElementById("kpis");
+    var seedSum=state.inputs.assumptions.runway+state.inputs.summarySeedOther.reduce(function(a,b){return a+b[1];},0);
+    var totalAsk=seedSum*(1+state.inputs.contingencyPct);
+    var beIdx=r.net.findIndex(function(v){return v>0;});
+    var minIdx=0; for(var i=1;i<r.running.length;i++) if(r.running[i]<r.running[minIdx]) minIdx=i;
+    var peakBurn=Math.max.apply(null,r.totalBurn.map(function(v){return -v;}));
+    var totalRev=r.newMoney.reduce(function(a,b){return a+b;},0);
+    var cards=[
+      {label:"Total seed ask",value:money(totalAsk),sub:"incl. "+pct(state.inputs.contingencyPct)+" contingency"},
+      {label:"Starting runway",value:money(state.inputs.assumptions.runway),sub:"seeds the cash balance"},
+      {label:"Break-even month",value: beIdx<0?"—":r.monthLabel[beIdx], sub: beIdx<0?"not reached in 17 mo":"first net-positive month",cls:beIdx<0?"neg":"pos"},
+      {label:"Lowest cash point",value:money(r.running[minIdx]),sub:r.monthLabel[minIdx],cls:r.running[minIdx]<0?"neg":""},
+      {label:"Ending cash (mo 17)",value:money(r.running[r.running.length-1]),sub:r.monthLabel[r.monthLabel.length-1],cls:r.running[r.running.length-1]<0?"neg":"pos"},
+      {label:"Revenue · 17 mo",value:money(totalRev),sub:"peak burn "+money(peakBurn)+"/mo"}
+    ];
+    host.innerHTML="";
+    cards.forEach(function(c){
+      var d=document.createElement("div"); d.className="kpi";
+      d.innerHTML="<div class='label'>"+c.label+"</div><div class='value "+(c.cls||"")+"'>"+c.value+"</div><div class='sub'>"+c.sub+"</div>";
+      host.appendChild(d);
+    });
+  }
+
+  /* ---- SVG charts ---- */
+  var W=960;
+  function svgEl(s){return s;}
+  function niceTicks(min,max,n){ var span=max-min||1, step0=span/n, mag=Math.pow(10,Math.floor(Math.log10(step0))), norm=step0/mag; var step=(norm>=5?5:norm>=2?2:1)*mag; var lo=Math.floor(min/step)*step, hi=Math.ceil(max/step)*step, t=[]; for(var v=lo; v<=hi+step/2; v+=step) ti( t,v ); function ti(a,v){a.push(Math.abs(v)<step/1e6?0:v);} return {ticks:t,lo:lo,hi:hi}; }
+
+  function lineChart(host,opts){
+    var H=opts.height||300, m={t:14,r:18,b:34,l:62}, iw=W-m.l-m.r, ih=H-m.t-m.b;
+    var all=[]; opts.series.forEach(function(s){all=all.concat(s.data);});
+    var dmin=Math.min.apply(null,all), dmax=Math.max.apply(null,all); if(dmin>0)dmin=0; if(dmax<0)dmax=0;
+    var nt=niceTicks(dmin,dmax,5), lo=nt.lo, hi=nt.hi; if(hi===lo)hi=lo+1;
+    var n=opts.labels.length;
+    var X=function(i){return m.l+(n<=1?0:iw*i/(n-1));};
+    var Y=function(v){return m.t+ih*(1-(v-lo)/(hi-lo));};
+    var s='<svg class="chart-svg" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="xMidYMid meet" font-family="inherit">';
+    nt.ticks.forEach(function(v){ var y=Y(v); s+='<line x1="'+m.l+'" x2="'+(W-m.r)+'" y1="'+y+'" y2="'+y+'" stroke="'+(v===0?'#cbd5e1':'#eef2f6')+'"/>'; s+='<text x="'+(m.l-8)+'" y="'+(y+3.5)+'" text-anchor="end" font-size="10.5" fill="#94a3b8">'+compact(v)+'</text>'; });
+    opts.labels.forEach(function(lb,i){ if(i%2===0||i===n-1){ s+='<text x="'+X(i)+'" y="'+(H-12)+'" text-anchor="middle" font-size="10" fill="#94a3b8">'+lb.split(" ")[0]+(i===0||lb.indexOf("26")>-1&&i===0?"":"")+'</text>'; } });
+    opts.series.forEach(function(se){
+      var pts=se.data.map(function(v,i){return X(i)+","+Y(v);}).join(" ");
+      if(se.fill){ s+='<polygon points="'+(m.l+","+Y(lo))+" "+pts+" "+((W-m.r)+","+Y(lo))+'" fill="'+se.color+'" opacity="0.10"/>'; }
+      s+='<polyline points="'+pts+'" fill="none" stroke="'+se.color+'" stroke-width="2.2" '+(se.dash?'stroke-dasharray="5 4"':'')+' stroke-linejoin="round"/>';
+      se.data.forEach(function(v,i){ s+='<circle cx="'+X(i)+'" cy="'+Y(v)+'" r="2.4" fill="'+se.color+'"><title>'+opts.labels[i]+": "+(opts.tip?opts.tip(v):compact(v))+'</title></circle>'; });
+    });
+    (opts.markers||[]).forEach(function(mk){ var x=X(mk.i),y=Y(mk.v); s+='<line x1="'+x+'" x2="'+x+'" y1="'+m.t+'" y2="'+(H-m.b)+'" stroke="'+mk.color+'" stroke-dasharray="3 3" opacity="0.5"/>'; s+='<text x="'+x+'" y="'+(m.t+10)+'" text-anchor="middle" font-size="9.5" fill="'+mk.color+'">'+mk.label+'</text>'; });
+    s+='</svg>'; host.innerHTML=s;
+  }
+
+  function stackedBars(host,opts){
+    var H=opts.height||300, m={t:14,r:18,b:34,l:62}, iw=W-m.l-m.r, ih=H-m.t-m.b;
+    var n=opts.labels.length, totals=[];
+    for(var i=0;i<n;i++){ var s=0; opts.segments.forEach(function(seg){s+=seg.data[i];}); totals.push(s); }
+    var lineMax=opts.line?Math.max.apply(null,opts.line.data):0;
+    var dmax=Math.max(Math.max.apply(null,totals),lineMax,1);
+    var nt=niceTicks(0,dmax,5), hi=nt.hi;
+    var bw=iw/n*0.62, gap=iw/n;
+    var X=function(i){return m.l+gap*i+gap/2;};
+    var Y=function(v){return m.t+ih*(1-v/hi);};
+    var s='<svg class="chart-svg" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="xMidYMid meet" font-family="inherit">';
+    nt.ticks.forEach(function(v){ var y=Y(v); s+='<line x1="'+m.l+'" x2="'+(W-m.r)+'" y1="'+y+'" y2="'+y+'" stroke="#eef2f6"/>'; s+='<text x="'+(m.l-8)+'" y="'+(y+3.5)+'" text-anchor="end" font-size="10.5" fill="#94a3b8">'+compact(v)+'</text>'; });
+    for(i=0;i<n;i++){
+      var yacc=0, x=X(i)-bw/2;
+      opts.segments.forEach(function(seg){
+        var v=seg.data[i]; if(v<=0)return; var h=ih*v/hi; var y=Y(yacc+v);
+        s+='<rect x="'+x+'" y="'+y+'" width="'+bw+'" height="'+Math.max(0,h)+'" fill="'+seg.color+'"><title>'+opts.labels[i]+" · "+seg.name+": "+money(v)+'</title></rect>';
+        yacc+=v;
+      });
+      if(i%2===0||i===n-1) s+='<text x="'+X(i)+'" y="'+(H-12)+'" text-anchor="middle" font-size="10" fill="#94a3b8">'+opts.labels[i].split(" ")[0]+'</text>';
+    }
+    if(opts.line){
+      var pts=opts.line.data.map(function(v,i){return X(i)+","+Y(v);}).join(" ");
+      s+='<polyline points="'+pts+'" fill="none" stroke="'+opts.line.color+'" stroke-width="2.4" stroke-linejoin="round"/>';
+      opts.line.data.forEach(function(v,i){ s+='<circle cx="'+X(i)+'" cy="'+Y(v)+'" r="2.3" fill="'+opts.line.color+'"><title>'+opts.labels[i]+" · "+opts.line.name+": "+money(v)+'</title></circle>'; });
+    }
+    s+='</svg>'; host.innerHTML=s;
+  }
+
+  function legend(host,items){ host.innerHTML=items.map(function(it){ return '<span class="item"><span class="swatch'+(it.line?' line':'')+'" style="background:'+it.color+'"></span>'+it.name+'</span>'; }).join(""); }
+
+  /* ---- charts render ---- */
+  function renderCharts(){
+    var r=state.result;
+    var beIdx=r.net.findIndex(function(v){return v>0;});
+    var minIdx=0; for(var i=1;i<r.running.length;i++) if(r.running[i]<r.running[minIdx]) minIdx=i;
+    var marks=[]; if(beIdx>=0) marks.push({i:beIdx,v:r.running[beIdx],color:"#0f9d58",label:"break-even"});
+    lineChart(document.getElementById("chartRunway"),{
+      series:[{data:r.running,color:"var(--c-cash)",fill:true}], labels:r.monthLabel, height:300,
+      tip:money, markers:marks
+    });
+    legend(document.getElementById("legRunway"),[{name:"Running cash balance",color:"var(--c-cash)",line:true}]);
+
+    var revSegs=[
+      {name:"Subscriptions",color:"var(--c-sub)",data:r.subRev},
+      {name:"Featured partners",color:"var(--c-feat)",data:r.featured},
+      {name:"Tarmil Card",color:"var(--c-card)",data:r.card},
+      {name:"Tarmil Visa",color:"var(--c-visa)",data:r.visa},
+      {name:"Accommodation",color:"var(--c-acc)",data:r.accom},
+      {name:"e-Sim",color:"var(--c-esim)",data:r.esim},
+      {name:"Transport",color:"var(--c-trans)",data:r.transport},
+      {name:"Flights",color:"var(--c-flt)",data:r.flights}
+    ];
+    stackedBars(document.getElementById("chartRev"),{ segments:revSegs, labels:r.monthLabel, height:320, line:{name:"Total burn",color:"var(--c-burn)",data:r.totalBurn.map(function(v){return -v;})} });
+    legend(document.getElementById("legRev"), revSegs.map(function(s){return {name:s.name,color:s.color};}).concat([{name:"Total burn",color:"var(--c-burn)",line:true}]));
+
+    var tierSegs=TIER_META.map(function(t){ return {name:t.name,color:t.color,data:r.newTier[t.key]}; });
+    stackedBars(document.getElementById("chartUsers"),{ segments:tierSegs, labels:r.monthLabel, height:300, line:{name:"Total active users",color:"#0f172a",data:r.totalActive} });
+    legend(document.getElementById("legUsers"), tierSegs.map(function(s){return {name:s.name+" (new)",color:s.color};}).concat([{name:"Total active users",color:"#0f172a",line:true}]));
+  }
+
+  /* ---- P&L table ---- */
+  var PNL=[
+    {section:"Users & subscriptions"},
+    {label:"New users",key:"newUsers",fmt:"int"},
+    {label:"Conversion to paying",key:"conversion",fmt:"pct"},
+    {label:"New paying users",key:"paying",fmt:"int",total:true},
+    {label:"Annual",sub:"newTier.annual",fmt:"int",indent:true},
+    {label:"Tier 1",sub:"newTier.t1",fmt:"int",indent:true},
+    {label:"Tier 2",sub:"newTier.t2",fmt:"int",indent:true},
+    {label:"Tier 3",sub:"newTier.t3",fmt:"int",indent:true},
+    {label:"Tier 4",sub:"newTier.t4",fmt:"int",indent:true},
+    {label:"Tier 5",sub:"newTier.t5",fmt:"int",indent:true},
+    {label:"Total active users",key:"totalActive",fmt:"int",total:true},
+    {label:"Weighted ARPPU",key:"arppu",fmt:"money2"},
+    {label:"Weighted ARPU",key:"arpu",fmt:"money2"},
+    {section:"In-app monetization"},
+    {label:"Featured partners",key:"featured",fmt:"money"},
+    {label:"Tarmil Card",key:"card",fmt:"money"},
+    {label:"Tarmil Visa",key:"visa",fmt:"money"},
+    {label:"Accommodation",key:"accom",fmt:"money"},
+    {label:"e-Sim",key:"esim",fmt:"money"},
+    {label:"Transport",key:"transport",fmt:"money"},
+    {label:"Flights",key:"flights",fmt:"money"},
+    {label:"Total monetization",key:"monetTotal",fmt:"money",total:true},
+    {label:"Subscription revenue",key:"subRev",fmt:"money"},
+    {label:"TOTAL NEW MONEY",key:"newMoney",fmt:"money",total:true},
+    {section:"Monthly burn"},
+    {label:"Assistant CEO",key:"ceo",fmt:"money"},
+    {label:"Additional dev",key:"dev",fmt:"money"},
+    {label:"Marketing",key:"marketing",fmt:"money"},
+    {label:"Fixed OPEX",key:"fixedOpex",fmt:"money"},
+    {label:"Variable OPEX",key:"varOpex",fmt:"money"},
+    {label:"TOTAL MONTHLY BURN",key:"totalBurn",fmt:"money",total:true},
+    {section:"Taxes & fees"},
+    {label:"VAT (18% of monetization)",key:"vat",fmt:"money"},
+    {label:"Corporate tax (23%)",key:"corpTax",fmt:"money"},
+    {label:"App Store / Google fees",key:"appFees",fmt:"money"},
+    {section:"Bottom line"},
+    {label:"NET MONTHLY",key:"net",fmt:"money",total:true},
+    {label:"Running cash",key:"running",fmt:"money",total:true}
+  ];
+  function getSeries(r,row){ if(row.key)return r[row.key]; var p=row.sub.split("."); return r[p[0]][p[1]]; }
+  function fmtVal(v,fmt){ if(fmt==="int")return intc(v); if(fmt==="pct")return pct(v); if(fmt==="money2")return money2(v); return money(v); }
+  function renderPnl(){
+    var r=state.result, host=document.getElementById("pnlTable");
+    var t=document.createElement("table"); t.className="grid";
+    var head="<thead><tr><th class='rowlab'>Line item</th>"+r.monthLabel.map(function(m){return "<th>"+m+"</th>";}).join("")+"</tr></thead>";
+    var body="";
+    PNL.forEach(function(row){
+      if(row.section){ body+="<tr class='section'><td class='rowlab'>"+row.section+"</td>"+r.monthLabel.map(function(){return "<td></td>";}).join("")+"</tr>"; return; }
+      var data=getSeries(r,row);
+      body+="<tr class='"+(row.total?"total":"")+"'><td class='rowlab"+(row.indent?" indent":"")+"'>"+row.label+"</td>";
+      for(var i=0;i<M.N;i++){ var v=data[i]; var cls=(row.fmt!=="pct"&&row.fmt!=="int"&&v<0)?"neg":((row.total&&v>0&&(row.key==="net"||row.key==="newMoney"))?"":""); body+="<td class='"+cls+"'>"+fmtVal(v,row.fmt)+"</td>"; }
+      body+="</tr>";
+    });
+    t.innerHTML=head+"<tbody>"+body+"</tbody>"; host.innerHTML=""; host.appendChild(t);
+  }
+
+  /* ---- orchestration ---- */
+  function recompute(){ state.result=M.compute(state.inputs); }
+  function renderOutputs(){ renderKPIs(); renderCharts(); renderPnl(); renderAskTotals(); }
+  function onChange(){ recompute(); renderOutputs(); save(); }
+  function rebuildInputs(){ buildAssumptions(); buildSeasonality(); buildDrivers(); buildAsk(); }
+
+  function exportJSON(){
+    var blob=new Blob([JSON.stringify(state.inputs,null,2)],{type:"application/json"});
+    var a=document.createElement("a"); a.href=URL.createObjectURL(blob);
+    a.download="tarmil-financials-"+new Date().toISOString().slice(0,10)+".json"; a.click();
+    setTimeout(function(){URL.revokeObjectURL(a.href);},2000);
+  }
+  function importJSON(file){
+    var fr=new FileReader();
+    fr.onload=function(){ try{ var obj=JSON.parse(fr.result); state.inputs=deepMerge(M.BASELINE,obj); rebuildInputs(); onChange(); }catch(e){ alert("Could not read that file: "+e.message); } };
+    fr.readAsText(file);
+  }
+  function reset(){ if(!confirm("Reset all inputs to the original spreadsheet values?"))return; state.inputs=clone(M.BASELINE); rebuildInputs(); onChange(); }
+
+  function init(){
+    state.inputs=load();
+    document.getElementById("btnExport").addEventListener("click",exportJSON);
+    document.getElementById("btnReset").addEventListener("click",reset);
+    document.getElementById("btnImport").addEventListener("click",function(){document.getElementById("importFile").click();});
+    document.getElementById("importFile").addEventListener("change",function(e){ if(e.target.files[0])importJSON(e.target.files[0]); e.target.value=""; });
+    rebuildInputs(); recompute(); renderOutputs(); refreshBadge();
+  }
+  if(document.readyState==="loading") document.addEventListener("DOMContentLoaded",init); else init();
+})();
+</script>
+</body>
+</html>
