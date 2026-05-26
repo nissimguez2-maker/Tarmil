@@ -27,7 +27,7 @@ export function TripDetailScreen() {
     return (
       <Screen>
         <TopBar back title="Trip not found" />
-        <div className="p-md text-cocoa-55">This stop is no longer on your route.</div>
+        <div className="p-md text-charcoal-55">This stop is no longer on your route.</div>
       </Screen>
     );
   }
@@ -48,21 +48,21 @@ export function TripDetailScreen() {
 
       <div className="flex flex-col gap-lg p-md pb-xl">
         <section className="flex flex-col gap-xs rounded-2xl bg-sand shadow-card p-md">
-          <span className="font-serif text-display leading-none text-cocoa">
+          <span className="font-serif text-display leading-none text-charcoal">
             {stop.nameHe}
           </span>
-          <span className="text-small text-cocoa-70">
+          <span className="text-small text-charcoal-70">
             {formatDateRange(stop.arrivalDate, stop.departureDate)} ·{' '}
             <span className="tnum">{stop.nights}</span> nights
           </span>
           {stop.note && (
-            <p className="mt-xs text-body italic text-cocoa-70">{stop.note}</p>
+            <p className="mt-xs text-body italic text-charcoal-70">{stop.note}</p>
           )}
         </section>
 
         {friends.length > 0 && (
           <section className="flex flex-col gap-sm">
-            <h2 className="font-serif text-lede italic text-cocoa">
+            <h2 className="font-serif text-lede italic text-charcoal">
               Friends who'll be there
             </h2>
             <ul className="flex flex-col gap-sm">
@@ -70,7 +70,7 @@ export function TripDetailScreen() {
                 <li key={f.id}>
                   <Link
                     to={`/profile/friend/${f.id}`}
-                    className="flex items-center gap-sm rounded-2xl bg-ivory shadow-card p-md transition-colors duration-instant ease-out-quart hover:bg-sand/40 active:bg-sand/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory"
+                    className="flex items-center gap-sm rounded-2xl bg-cream shadow-card p-md transition-colors duration-instant ease-out-quart hover:bg-sand/40 active:bg-sand/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
                   >
                     <Avatar
                       photoUrl={f.photoUrl}
@@ -80,10 +80,10 @@ export function TripDetailScreen() {
                       statusDot={f.status === 'present'}
                     />
                     <span className="flex min-w-0 flex-1 flex-col gap-px">
-                      <span className="truncate font-serif text-lede italic text-cocoa">
+                      <span className="truncate font-serif text-lede italic text-charcoal">
                         {f.friendName}
                       </span>
-                      <span className="text-small text-cocoa-70">
+                      <span className="text-small text-charcoal-70">
                         {f.detail}
                       </span>
                     </span>
@@ -96,7 +96,7 @@ export function TripDetailScreen() {
 
         {forum && threads.length > 0 && (
           <section className="flex flex-col gap-sm">
-            <h2 className="font-serif text-lede italic text-cocoa">
+            <h2 className="font-serif text-lede italic text-charcoal">
               {forum.nameHe} · What people are talking about
             </h2>
             <ul className="flex flex-col gap-sm">
@@ -104,12 +104,12 @@ export function TripDetailScreen() {
                 <li key={t.id}>
                   <Link
                     to={`/forums/${forum.id}/${t.id}`}
-                    className="flex flex-col gap-px rounded-2xl bg-ivory shadow-card p-md transition-colors duration-instant ease-out-quart hover:bg-sand/40 active:bg-sand/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory"
+                    className="flex flex-col gap-px rounded-2xl bg-cream shadow-card p-md transition-colors duration-instant ease-out-quart hover:bg-sand/40 active:bg-sand/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
                   >
-                    <span className="font-serif text-lede italic text-cocoa">
+                    <span className="font-serif text-lede italic text-charcoal">
                       {t.title}
                     </span>
-                    <span className="line-clamp-2 text-small text-cocoa-70">
+                    <span className="line-clamp-2 text-small text-charcoal-70">
                       {t.body}
                     </span>
                   </Link>
@@ -120,12 +120,12 @@ export function TripDetailScreen() {
         )}
 
         <section className="flex flex-col gap-sm">
-          <h2 className="font-serif text-lede italic text-cocoa">Tools for this stop</h2>
+          <h2 className="font-serif text-lede italic text-charcoal">Tools for this stop</h2>
           <div className="grid grid-cols-3 gap-sm">
             {['Currency converter', 'eSIM', 'Voice translation'].map((tool) => (
               <div
                 key={tool}
-                className="rounded-2xl bg-ivory shadow-card p-sm text-center text-small text-cocoa"
+                className="rounded-2xl bg-cream shadow-card p-sm text-center text-small text-charcoal"
               >
                 {tool}
               </div>

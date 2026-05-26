@@ -97,39 +97,39 @@ function CurrencyConverter() {
 
   return (
     <div className="flex flex-col gap-md">
-      <p className="text-small text-cocoa-70">
+      <p className="text-small text-charcoal-70">
         Live rates. Values update once a day and keep the last rate even when
         offline.
       </p>
 
       <div className="flex flex-col gap-xs">
-        <label className="meta-caps text-cocoa-55">Amount</label>
+        <label className="meta-caps text-charcoal-55">Amount</label>
         <input
           type="text"
           inputMode="decimal"
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
-          className="h-12 w-full rounded-full border border-cocoa-15 bg-sand px-md text-lede tnum text-cocoa transition-colors duration-instant ease-out-quart focus:border-copper focus:outline-none"
+          className="h-12 w-full rounded-full border border-charcoal-15 bg-sand px-md text-lede tnum text-charcoal transition-colors duration-instant ease-out-quart focus:border-amber focus:outline-none"
         />
       </div>
 
       <div className="grid grid-cols-2 gap-sm">
         <div className="flex flex-col gap-xs">
-          <label className="meta-caps text-cocoa-55">From</label>
+          <label className="meta-caps text-charcoal-55">From</label>
           <CurrencySelect value={from} onChange={setFrom} />
         </div>
         <div className="flex flex-col gap-xs">
-          <label className="meta-caps text-cocoa-55">To</label>
+          <label className="meta-caps text-charcoal-55">To</label>
           <CurrencySelect value={to} onChange={setTo} />
         </div>
       </div>
 
       <div className="rounded-2xl bg-sand shadow-card p-md">
-        <span className="meta-caps text-copper">Result</span>
-        <p className="mt-xs font-serif text-display leading-none text-cocoa">
+        <span className="meta-caps text-amber">Result</span>
+        <p className="mt-xs font-serif text-display leading-none text-charcoal">
           <span className="tnum">{formatNumber(result)}</span>
         </p>
-        <p className="mt-xs text-small text-cocoa-70">
+        <p className="mt-xs text-small text-charcoal-70">
           {CURRENCY_LABEL[to]}
         </p>
       </div>
@@ -148,7 +148,7 @@ function CurrencySelect({
     <select
       value={value}
       onChange={(e) => onChange(e.target.value as Currency)}
-      className="h-12 w-full appearance-none rounded-full border border-cocoa-15 bg-sand px-md text-body text-cocoa transition-colors duration-instant ease-out-quart focus:border-copper focus:outline-none"
+      className="h-12 w-full appearance-none rounded-full border border-charcoal-15 bg-sand px-md text-body text-charcoal transition-colors duration-instant ease-out-quart focus:border-amber focus:outline-none"
     >
       {(Object.keys(CURRENCY_LABEL) as Currency[]).map((c) => (
         <option key={c} value={c}>
@@ -189,10 +189,10 @@ function PreTripChecklist() {
   return (
     <div className="flex flex-col gap-md">
       <div className="flex items-baseline justify-between">
-        <p className="text-small text-cocoa-70">
+        <p className="text-small text-charcoal-70">
           Run through everything before you leave. Keeps your head clear on the way out.
         </p>
-        <span className="text-small text-cocoa-55 tnum">
+        <span className="text-small text-charcoal-55 tnum">
           {done}/{CHECKLIST_ITEMS.length}
         </span>
       </div>
@@ -204,21 +204,21 @@ function PreTripChecklist() {
             <li
               key={item.id}
               className={clsx(
-                i > 0 && 'border-t border-cocoa-15',
+                i > 0 && 'border-t border-charcoal-15',
               )}
             >
               <button
                 type="button"
                 onClick={() => toggle(item.id)}
-                className="flex w-full items-center gap-sm py-sm text-start transition-colors duration-instant ease-out-quart active:bg-cocoa-08"
+                className="flex w-full items-center gap-sm py-sm text-start transition-colors duration-instant ease-out-quart active:bg-charcoal-08"
               >
                 <span
                   className={clsx(
                     'inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full border',
                     'transition-colors duration-instant ease-out-quart',
                     isChecked
-                      ? 'border-copper bg-copper text-ivory'
-                      : 'border-cocoa-30 bg-ivory text-transparent',
+                      ? 'border-amber bg-amber text-cream'
+                      : 'border-charcoal-30 bg-cream text-transparent',
                   )}
                   aria-hidden
                 >
@@ -228,8 +228,8 @@ function PreTripChecklist() {
                   className={clsx(
                     'text-body',
                     isChecked
-                      ? 'text-cocoa-55 line-through'
-                      : 'text-cocoa',
+                      ? 'text-charcoal-55 line-through'
+                      : 'text-charcoal',
                   )}
                 >
                   {item.label}
@@ -250,17 +250,17 @@ function VoiceTranslator() {
 
   return (
     <div className="flex flex-col gap-md">
-      <p className="text-small text-cocoa-70">
+      <p className="text-small text-charcoal-70">
         Speak English, we'll translate to Portuguese, Spanish, Hebrew, Thai or
         French. Works online; offline it falls back to the last translation.
       </p>
 
       <div className="rounded-2xl bg-sand shadow-card p-md">
-        <span className="meta-caps text-cocoa-55">Last example</span>
-        <p className="mt-xs font-serif text-lede italic text-cocoa">
+        <span className="meta-caps text-charcoal-55">Last example</span>
+        <p className="mt-xs font-serif text-lede italic text-charcoal">
           Where can I get a taxi?
         </p>
-        <p className="mt-xs text-body text-cocoa-70 ltr">
+        <p className="mt-xs text-body text-charcoal-70 ltr">
           Onde posso pedir um táxi?
         </p>
       </div>
@@ -272,14 +272,14 @@ function VoiceTranslator() {
           'mx-auto inline-flex h-20 w-20 items-center justify-center rounded-full',
           'transition-[transform,background-color] duration-instant ease-out-quart',
           'shadow-fab active:scale-[0.96]',
-          recording ? 'bg-copper text-ivory animate-pulse' : 'bg-cocoa text-ivory',
+          recording ? 'bg-amber text-cream animate-pulse' : 'bg-charcoal text-cream',
         )}
         aria-label={recording ? 'Stop recording' : 'Start recording'}
       >
         <Mic className="h-7 w-7" strokeWidth={1.7} aria-hidden />
       </button>
 
-      <p className="text-center text-small text-cocoa-55">
+      <p className="text-center text-small text-charcoal-55">
         {recording ? 'Recording…' : 'Tap to record'}
       </p>
     </div>
@@ -298,36 +298,36 @@ const SAMPLE_MENU = [
 function MenuTranslator() {
   return (
     <div className="flex flex-col gap-md">
-      <p className="text-small text-cocoa-70">
+      <p className="text-small text-charcoal-70">
         Point the camera at a menu. We'll flag non-vegan dishes, pork and
         seafood based on your preferences.
       </p>
 
-      <div className="flex h-32 items-center justify-center rounded-2xl border-2 border-dashed border-cocoa-30 bg-sand">
-        <Camera className="h-8 w-8 text-cocoa-55" strokeWidth={1.5} aria-hidden />
+      <div className="flex h-32 items-center justify-center rounded-2xl border-2 border-dashed border-charcoal-30 bg-sand">
+        <Camera className="h-8 w-8 text-charcoal-55" strokeWidth={1.5} aria-hidden />
       </div>
 
-      <span className="meta-caps text-cocoa-55">Last scan</span>
+      <span className="meta-caps text-charcoal-55">Last scan</span>
       <ul className="flex flex-col">
         {SAMPLE_MENU.map((dish, i) => (
           <li
             key={dish.pt}
             className={clsx(
               'flex items-start justify-between gap-sm py-sm',
-              i > 0 && 'border-t border-cocoa-15',
+              i > 0 && 'border-t border-charcoal-15',
             )}
           >
             <div className="flex min-w-0 flex-1 flex-col">
-              <span className="text-body text-cocoa">{dish.he}</span>
-              <span className="text-small text-cocoa-55 ltr">{dish.pt}</span>
+              <span className="text-body text-charcoal">{dish.he}</span>
+              <span className="text-small text-charcoal-55 ltr">{dish.pt}</span>
             </div>
             {dish.alert && (
               <span
                 className={clsx(
                   'shrink-0 rounded-full px-2 py-1 meta-caps',
                   dish.alert === 'Vegan'
-                    ? 'bg-copper-70 text-ivory'
-                    : 'bg-cocoa text-ivory',
+                    ? 'bg-amber-70 text-cream'
+                    : 'bg-charcoal text-cream',
                 )}
               >
                 {dish.alert}
@@ -345,21 +345,21 @@ function MenuTranslator() {
 function SignScanner() {
   return (
     <div className="flex flex-col gap-md">
-      <p className="text-small text-cocoa-70">
+      <p className="text-small text-charcoal-70">
         Translates signs, info boards and flyers in real time. Point, snap,
         get the translation overlaid on the text.
       </p>
 
-      <div className="flex h-32 items-center justify-center rounded-2xl border-2 border-dashed border-cocoa-30 bg-sand">
-        <Camera className="h-8 w-8 text-cocoa-55" strokeWidth={1.5} aria-hidden />
+      <div className="flex h-32 items-center justify-center rounded-2xl border-2 border-dashed border-charcoal-30 bg-sand">
+        <Camera className="h-8 w-8 text-charcoal-55" strokeWidth={1.5} aria-hidden />
       </div>
 
       <div className="rounded-2xl bg-sand shadow-card p-md">
-        <span className="meta-caps text-cocoa-55">Last example</span>
-        <p className="mt-xs font-serif text-lede italic text-cocoa ltr">
+        <span className="meta-caps text-charcoal-55">Last example</span>
+        <p className="mt-xs font-serif text-lede italic text-charcoal ltr">
           Cuidado: piso molhado
         </p>
-        <p className="mt-xs text-body text-cocoa-70">Caution: wet floor</p>
+        <p className="mt-xs text-body text-charcoal-70">Caution: wet floor</p>
       </div>
     </div>
   );
@@ -385,7 +385,7 @@ function FriendBalances() {
 
   return (
     <div className="flex flex-col gap-md">
-      <p className="text-small text-cocoa-70">
+      <p className="text-small text-charcoal-70">
         Open tab between friends. Live balances — who paid, who owes, who's
         even.
       </p>
@@ -398,21 +398,21 @@ function FriendBalances() {
               key={b.friend.id}
               className={clsx(
                 'flex items-center justify-between gap-sm py-sm',
-                i > 0 && 'border-t border-cocoa-15',
+                i > 0 && 'border-t border-charcoal-15',
               )}
             >
               <div className="flex min-w-0 flex-1 flex-col">
-                <span className="font-serif text-lede italic text-cocoa">
+                <span className="font-serif text-lede italic text-charcoal">
                   {b.friend.friendName}
                 </span>
-                <span className="text-small text-cocoa-55">
+                <span className="text-small text-charcoal-55">
                   {owesYou ? 'Owes you' : 'You owe'}
                 </span>
               </div>
               <span
                 className={clsx(
                   'tnum text-lede font-medium',
-                  owesYou ? 'text-copper' : 'text-cocoa-70',
+                  owesYou ? 'text-amber' : 'text-charcoal-70',
                 )}
               >
                 {owesYou ? '+' : ''}
@@ -498,18 +498,18 @@ function EsimPlans() {
 
   return (
     <div className="flex flex-col gap-md">
-      <p className="text-small text-cocoa-70">
+      <p className="text-small text-charcoal-70">
         eSIM in 30 seconds — no SIM swap, no roaming fees. Pulls your trip
         region and duration so Airalo lands you on the matching plan page.
       </p>
 
       {trip ? (
         <div className="rounded-2xl bg-sand shadow-card p-md">
-          <span className="meta-caps text-copper">Your trip</span>
-          <p className="mt-xs font-serif text-lede italic leading-tight text-cocoa">
+          <span className="meta-caps text-amber">Your trip</span>
+          <p className="mt-xs font-serif text-lede italic leading-tight text-charcoal">
             {trip.region.label}
           </p>
-          <p className="mt-xs text-small text-cocoa-70">
+          <p className="mt-xs text-small text-charcoal-70">
             <span className="tnum">{trip.days}</span> days ·{' '}
             <span className="tnum">{stops.length}</span> stops
             {trip.countries.length > 0 && (
@@ -521,7 +521,7 @@ function EsimPlans() {
           </p>
         </div>
       ) : (
-        <div className="rounded-2xl bg-sand shadow-card p-md text-small leading-snug text-cocoa-70">
+        <div className="rounded-2xl bg-sand shadow-card p-md text-small leading-snug text-charcoal-70">
           Add a stop to your trip first — we'll pre-fill the region and
           duration so Airalo opens on the right plan.
         </div>
@@ -533,10 +533,10 @@ function EsimPlans() {
           target="_blank"
           rel="noopener noreferrer"
           className={clsx(
-            'inline-flex w-full items-center justify-center gap-2 rounded-full bg-copper px-md py-3 text-body font-medium text-ivory shadow-card',
+            'inline-flex w-full items-center justify-center gap-2 rounded-full bg-charcoal px-md py-3 text-body font-medium text-cream shadow-card',
             'transition-[transform,background-color] duration-instant ease-out-quart',
-            'hover:bg-copper-85 active:scale-[0.98]',
-            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory',
+            'hover:bg-charcoal-70 active:scale-[0.98]',
+            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream',
           )}
         >
           <ExternalLink className="h-4 w-4" strokeWidth={1.8} aria-hidden />
@@ -544,7 +544,7 @@ function EsimPlans() {
         </a>
       )}
 
-      <p className="text-small leading-snug text-cocoa-55">
+      <p className="text-small leading-snug text-charcoal-55">
         Pre-fills the {trip ? trip.region.label : 'matching'} region and{' '}
         {trip ? `${trip.days}-day` : 'your trip'} window. Confirm the plan in
         Airalo, pay, install in one tap.

@@ -3,14 +3,14 @@ import { Smartphone, Monitor, ArrowRight } from 'lucide-react';
 
 export function ModeToggleScreen() {
   return (
-    <div className="h-dvh w-full bg-ivory flex items-center justify-center p-xl">
+    <div className="h-dvh w-full bg-cream flex items-center justify-center p-xl">
       <div className="w-full max-w-3xl flex flex-col items-center gap-xl">
         <div className="text-center">
-          <p className="meta-caps text-copper">Tarmil</p>
-          <h1 className="font-serif text-display text-cocoa mt-sm">
+          <p className="meta-caps text-amber">Tarmil</p>
+          <h1 className="font-serif text-display text-charcoal mt-sm">
             Choose your view
           </h1>
-          <p className="font-sans text-body text-cocoa-55 mt-sm max-w-md mx-auto">
+          <p className="font-sans text-body text-charcoal-55 mt-sm max-w-md mx-auto">
             The same trip, two ways to plan it.
           </p>
         </div>
@@ -47,15 +47,15 @@ function ModeCard({ to, icon, eyebrow, title, description }: ModeCardProps) {
   return (
     <Link
       to={to}
-      className="group bg-sand border border-rope rounded-3xl p-xl flex flex-col gap-md hover:border-copper transition-[border-color,box-shadow] duration-instant ease-out-quart motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory"
+      className="group bg-sand border border-charcoal-15 rounded-3xl p-xl flex flex-col gap-md hover:border-amber transition-[border-color,box-shadow] duration-instant ease-out-quart motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
     >
-      <div className="text-copper">{icon}</div>
+      <div className="text-amber">{icon}</div>
       <div className="flex flex-col gap-xs">
-        <p className="meta-caps text-cocoa-55">{eyebrow}</p>
-        <h2 className="font-serif text-sub text-cocoa">{title}</h2>
-        <p className="font-sans text-body text-cocoa-70">{description}</p>
+        <p className="meta-caps text-charcoal-55">{eyebrow}</p>
+        <h2 className="font-serif text-sub text-charcoal">{title}</h2>
+        <p className="font-sans text-body text-charcoal-70">{description}</p>
       </div>
-      <div className="mt-auto flex items-center gap-xs text-small text-copper group-hover:gap-sm transition-[gap] duration-instant ease-out-quart motion-reduce:transition-none">
+      <div className="mt-auto flex items-center gap-xs text-small text-amber group-hover:gap-sm transition-[gap] duration-instant ease-out-quart motion-reduce:transition-none">
         Open
         <ArrowRight size={14} strokeWidth={2} />
       </div>

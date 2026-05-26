@@ -51,23 +51,23 @@ export function PlannedStopSheet({
 
   return (
     <div className="flex h-full flex-col">
-      <header className="flex items-start justify-between gap-sm border-b border-cocoa-08 px-md pb-sm pt-sm">
+      <header className="flex items-start justify-between gap-sm border-b border-charcoal-08 px-md pb-sm pt-sm">
         <div className="flex min-w-0 flex-1 flex-col gap-px">
           <button
             type="button"
             onClick={onBack}
-            className="meta-caps inline-flex items-center gap-1 self-start text-cocoa-55 transition-colors duration-instant ease-out-quart active:text-cocoa"
+            className="meta-caps inline-flex items-center gap-1 self-start text-charcoal-55 transition-colors duration-instant ease-out-quart active:text-charcoal"
           >
             <ChevronLeft className="h-3 w-3" aria-hidden />
             <span>To your plan</span>
           </button>
-          <h3 className="truncate font-serif text-sub leading-tight text-cocoa">
+          <h3 className="truncate font-serif text-sub leading-tight text-charcoal">
             {stop.nameHe}
           </h3>
-          <span className="text-small text-cocoa-70">
+          <span className="text-small text-charcoal-70">
             {formatDateRange(stop.arrivalDate, stop.departureDate)} ·{' '}
             <span className="tnum">{stop.nights}</span> nights ·{' '}
-            <span className="text-cocoa-55">
+            <span className="text-charcoal-55">
               {PRIVACY_LABEL[stop.privacy]}
             </span>
           </span>
@@ -76,7 +76,7 @@ export function PlannedStopSheet({
           type="button"
           aria-label="Close"
           onClick={onClose}
-          className="-me-1 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-cocoa-55 transition-colors duration-instant ease-out-quart hover:bg-cocoa-8 active:bg-cocoa-15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory"
+          className="-me-1 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-charcoal-55 transition-colors duration-instant ease-out-quart hover:bg-charcoal-8 active:bg-charcoal-15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
         >
           <X className="h-4 w-4" strokeWidth={1.8} aria-hidden />
         </button>
@@ -84,33 +84,33 @@ export function PlannedStopSheet({
 
       <div className="flex flex-1 flex-col gap-md overflow-y-auto p-md">
         {stop.note && (
-          <p className="text-body leading-snug text-cocoa-70">{stop.note}</p>
+          <p className="text-body leading-snug text-charcoal-70">{stop.note}</p>
         )}
 
         {overlaps.length > 0 && (
           <section className="flex flex-col gap-sm">
-            <span className="meta-caps text-cocoa-70">Friends overlapping with you</span>
+            <span className="meta-caps text-charcoal-70">Friends overlapping with you</span>
             <div className="flex flex-col gap-sm">
               {overlaps.map((f) => (
                 <div
                   key={f.id}
-                  className="flex items-start gap-sm rounded-xl border border-cocoa-08 bg-sand p-sm"
+                  className="flex items-start gap-sm rounded-xl border border-charcoal-08 bg-sand p-sm"
                 >
                   <span
-                    className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 border-dashed border-copper bg-ivory font-serif text-body text-copper"
+                    className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 border-dashed border-amber bg-cream font-serif text-body text-amber"
                     aria-hidden
                   >
                     {f.friendInitial}
                   </span>
                   <div className="flex flex-col">
-                    <span className="text-body text-cocoa">{f.friendName}</span>
+                    <span className="text-body text-charcoal">{f.friendName}</span>
                     {f.overlapStart && f.overlapEnd && (
-                      <span className="text-small text-copper">
+                      <span className="text-small text-amber">
                         {f.zoneLabel} ·{' '}
                         {formatDateRange(f.overlapStart, f.overlapEnd)}
                       </span>
                     )}
-                    <span className="text-small leading-snug text-cocoa-55">
+                    <span className="text-small leading-snug text-charcoal-55">
                       {f.detail}
                     </span>
                   </div>
@@ -122,7 +122,7 @@ export function PlannedStopSheet({
 
         {sections.length > 0 && (
           <div className="flex flex-col gap-1">
-            <span className="meta-caps text-cocoa-70">Recommended places</span>
+            <span className="meta-caps text-charcoal-70">Recommended places</span>
             {sections.map((sec) => (
               <CollapsibleSection key={sec.id} label={sec.labelHe}>
                 {sec.places.map((p) => (
@@ -139,7 +139,7 @@ export function PlannedStopSheet({
         )}
 
         {sections.length === 0 && (
-          <p className="text-small text-cocoa-55">
+          <p className="text-small text-charcoal-55">
             No recommended places for this stop yet. You can save some from the map.
           </p>
         )}
@@ -158,7 +158,7 @@ export function PlannedStopSheet({
           )}
         </div>
 
-        <p className="text-small leading-snug text-cocoa-55">
+        <p className="text-small leading-snug text-charcoal-55">
           Your dates are private. Tarmil never shows friends your exact address —
           overlaps appear at city level only.
         </p>
@@ -178,16 +178,16 @@ function CollapsibleSection({
 }) {
   const [open, setOpen] = useState(defaultOpen);
   return (
-    <section className="border-b border-cocoa-08 last:border-b-0">
+    <section className="border-b border-charcoal-08 last:border-b-0">
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
         className="flex w-full items-center justify-between gap-sm py-sm text-start"
       >
-        <span className="font-serif text-body text-cocoa">{label}</span>
+        <span className="font-serif text-body text-charcoal">{label}</span>
         <ChevronDown
           className={clsx(
-            'h-4 w-4 text-cocoa-55',
+            'h-4 w-4 text-charcoal-55',
             'transition-transform duration-instant ease-out-quart',
             open && 'rotate-180',
           )}
@@ -212,20 +212,20 @@ function PlaceRow({
     <button
       type="button"
       onClick={onClick}
-      className="flex items-start justify-between gap-sm rounded-xl py-2 text-start active:bg-cocoa-08"
+      className="flex items-start justify-between gap-sm rounded-xl py-2 text-start active:bg-charcoal-08"
     >
       <div className="flex flex-col">
         <div className="flex items-baseline gap-2">
-          <span className="text-body text-cocoa">{place.hebrewName}</span>
+          <span className="text-body text-charcoal">{place.hebrewName}</span>
           {place.tarmilPick && (
-            <span className="meta-caps text-copper">Pick</span>
+            <span className="meta-caps text-amber">Pick</span>
           )}
         </div>
-        <span className="inline-flex items-center gap-2 text-small text-cocoa-55">
+        <span className="inline-flex items-center gap-2 text-small text-charcoal-55">
           <span>{categoryLabel(place.category)}</span>
           <span className="inline-flex items-center gap-1">
             <Star
-              className="h-3 w-3 fill-copper text-copper"
+              className="h-3 w-3 fill-amber text-amber"
               strokeWidth={0}
               aria-hidden
             />
@@ -239,7 +239,7 @@ function PlaceRow({
         </span>
       </div>
       {saved && (
-        <span className="meta-caps mt-1 shrink-0 text-copper">Saved</span>
+        <span className="meta-caps mt-1 shrink-0 text-amber">Saved</span>
       )}
     </button>
   );

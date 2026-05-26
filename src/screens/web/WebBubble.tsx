@@ -47,7 +47,7 @@ export function WebBubble({
         aria-modal="false"
         style={{ width: '440px', maxHeight: '100%' }}
         className={clsx(
-          'bg-ivory border border-rope rounded-3xl shadow-panel flex flex-col pointer-events-auto relative overflow-hidden',
+          'bg-cream border border-charcoal-15 rounded-3xl shadow-panel flex flex-col pointer-events-auto relative overflow-hidden',
           'transition-[opacity,transform] duration-considered ease-out-quart motion-reduce:transition-none',
           'origin-center',
           animateIn ? 'opacity-100 scale-100' : 'opacity-0 scale-95',
@@ -57,7 +57,7 @@ export function WebBubble({
           type="button"
           onClick={onClose}
           aria-label="Close"
-          className="absolute top-sm end-sm h-8 w-8 rounded-full flex items-center justify-center text-cocoa-55 hover:text-cocoa hover:bg-cocoa-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory z-10"
+          className="absolute top-sm end-sm h-8 w-8 rounded-full flex items-center justify-center text-charcoal-55 hover:text-charcoal hover:bg-charcoal-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream z-10"
         >
           <X size={16} strokeWidth={2} />
         </button>

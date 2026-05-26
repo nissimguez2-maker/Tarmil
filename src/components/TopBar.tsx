@@ -26,7 +26,7 @@ export function TopBar({ title, eyebrow, back, end, className }: Props) {
     <header
       className={clsx(
         'relative flex h-lg items-center justify-center',
-        'border-b border-cocoa-08 bg-ivory/95 backdrop-blur',
+        'border-b border-charcoal-08 bg-cream/95 backdrop-blur',
         'px-md',
         className,
       )}
@@ -38,10 +38,10 @@ export function TopBar({ title, eyebrow, back, end, className }: Props) {
           onClick={() => navigate(-1)}
           className={clsx(
             'absolute start-md inline-flex h-9 w-9 items-center justify-center',
-            'rounded-full text-cocoa',
+            'rounded-full text-charcoal',
             'transition-[transform,background-color] duration-instant ease-out-quart motion-reduce:transition-none',
-            'hover:bg-cocoa-8 active:scale-95 active:bg-cocoa-15',
-            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory',
+            'hover:bg-charcoal-8 active:scale-95 active:bg-charcoal-15',
+            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream',
           )}
         >
           <ChevronLeft className="h-5 w-5" strokeWidth={1.7} aria-hidden />
@@ -50,10 +50,10 @@ export function TopBar({ title, eyebrow, back, end, className }: Props) {
 
       <div className="flex flex-col items-center gap-px">
         {eyebrow && (
-          <span className="text-meta text-cocoa-55">{eyebrow}</span>
+          <span className="text-meta text-charcoal-55">{eyebrow}</span>
         )}
         {title && (
-          <h1 className="font-serif text-lede font-bold leading-none tracking-tight text-cocoa">
+          <h1 className="font-serif text-lede font-bold leading-none tracking-tight text-charcoal">
             {title}
           </h1>
         )}

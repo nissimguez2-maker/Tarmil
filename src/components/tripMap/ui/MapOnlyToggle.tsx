@@ -24,11 +24,11 @@ export function MapOnlyToggle({ active, onClick }: Props) {
       className={clsx(
         'pointer-events-auto absolute end-md top-md z-[750]',
         'inline-flex h-10 w-10 items-center justify-center rounded-full',
-        'border border-cocoa-15 shadow-device',
+        'border border-charcoal-15 shadow-device',
         'transition-colors duration-instant ease-out-quart',
         active
-          ? 'bg-cocoa text-ivory'
-          : 'bg-ivory text-cocoa active:bg-cocoa-08',
+          ? 'bg-charcoal text-cream'
+          : 'bg-cream text-charcoal active:bg-charcoal-08',
       )}
     >
       <Icon className="h-4 w-4" strokeWidth={1.7} aria-hidden />

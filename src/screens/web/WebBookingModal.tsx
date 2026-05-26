@@ -28,7 +28,7 @@ export function WebBookingModal({ target, onClose }: Props) {
 
   return (
     <div
-      className="fixed inset-0 z-[2000] bg-cocoa/40 flex items-center justify-center p-md"
+      className="fixed inset-0 z-[2000] bg-charcoal/40 flex items-center justify-center p-md"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
@@ -36,22 +36,22 @@ export function WebBookingModal({ target, onClose }: Props) {
       <div
         onClick={(e) => e.stopPropagation()}
         style={{ width: '360px' }}
-        className="bg-ivory border border-rope rounded-3xl shadow-panel p-md flex flex-col gap-md relative"
+        className="bg-cream border border-charcoal-15 rounded-3xl shadow-panel p-md flex flex-col gap-md relative"
       >
         <button
           type="button"
           onClick={onClose}
           aria-label="Close"
-          className="absolute top-sm end-sm h-8 w-8 rounded-full flex items-center justify-center text-cocoa-55 hover:text-cocoa hover:bg-cocoa-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory"
+          className="absolute top-sm end-sm h-8 w-8 rounded-full flex items-center justify-center text-charcoal-55 hover:text-charcoal hover:bg-charcoal-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
         >
           <X size={16} strokeWidth={2} />
         </button>
         <div className="flex flex-col gap-xs pe-12">
-          <p className="meta-caps text-cocoa-55">Book</p>
-          <h2 className="font-serif text-sub text-cocoa leading-tight">
+          <p className="meta-caps text-charcoal-55">Book</p>
+          <h2 className="font-serif text-sub text-charcoal leading-tight">
             {title}
           </h2>
-          <p className="text-small text-cocoa-55">{subtitle}</p>
+          <p className="text-small text-charcoal-55">{subtitle}</p>
         </div>
         <div className="flex flex-col gap-sm">
           {PROVIDERS.map((p) => (
@@ -61,7 +61,7 @@ export function WebBookingModal({ target, onClose }: Props) {
             </Button>
           ))}
         </div>
-        <p className="text-meta italic text-cocoa-55 text-center">
+        <p className="text-meta italic text-charcoal-55 text-center">
           Booking partner integrations coming soon
         </p>
       </div>

@@ -17,7 +17,7 @@ type Props = {
 } & Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'aria-label'>;
 
 /**
- * Floating action button. Copper fill, ivory mark, one shape grammar across the
+ * Floating action button. Umber fill, cream mark, one shape grammar across the
  * app. Two shapes:
  *  - circle (default)   — icon only, 56px square. Used on Activity / Messages.
  *  - extended           — pill with icon + label. Used on the Trip map where
@@ -50,10 +50,10 @@ export function Fab({
       {...rest}
       className={clsx(
         'absolute end-md z-[750] inline-flex items-center justify-center',
-        'rounded-full bg-copper text-ivory shadow-fab',
+        'rounded-full bg-umber text-cream shadow-fab',
         'transition-[transform,background-color] duration-instant ease-out-quart motion-reduce:transition-none',
-        'hover:bg-copper-85 active:scale-[0.97] active:bg-copper',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory',
+        'hover:bg-umber/90 active:scale-[0.97] active:bg-umber',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream',
         extended ? 'h-12 gap-2 ps-md pe-lg' : 'h-14 w-14',
         className,
       )}

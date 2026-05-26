@@ -36,13 +36,13 @@ function pinIcon(
   label?: string,
 ): L.DivIcon {
   const ring = selected
-    ? 'box-shadow: 0 0 0 2px var(--ivory), 0 0 0 5px var(--copper), 0 2px 6px rgba(0,0,0,0.18);'
+    ? 'box-shadow: 0 0 0 2px var(--cream), 0 0 0 5px var(--amber), 0 2px 6px rgba(0,0,0,0.18);'
     : 'box-shadow: 0 2px 6px rgba(0,0,0,0.18);';
   const labelHtml = label
     ? `<div style="
         margin-top:4px;
-        background-color:var(--ivory);
-        color:var(--cocoa);
+        background-color:var(--cream);
+        color:var(--charcoal);
         font-family:Heebo,sans-serif;
         font-weight:600;
         font-size:11px;
@@ -61,7 +61,7 @@ function pinIcon(
     html: `<div style="display:flex;flex-direction:column;align-items:center;">
       <div style="
         width:32px;height:32px;border-radius:9999px;
-        background-color:var(--copper);
+        background-color:var(--amber);
         display:flex;align-items:center;justify-content:center;
         color:white;font-family:Fraunces,serif;font-weight:600;font-size:14px;
         ${ring}
@@ -78,10 +78,10 @@ function homeIcon(): L.DivIcon {
     iconAnchor: [14, 14],
     html: `<div style="
       width:28px;height:28px;border-radius:9999px;
-      background-color:var(--cocoa);
+      background-color:var(--charcoal);
       display:flex;align-items:center;justify-content:center;
       color:white;
-      box-shadow:0 0 0 2px var(--ivory), 0 0 0 4px var(--cocoa), 0 2px 6px rgba(0,0,0,0.18);
+      box-shadow:0 0 0 2px var(--cream), 0 0 0 4px var(--charcoal), 0 2px 6px rgba(0,0,0,0.18);
     ">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2v-4a2 2 0 0 0-2-2h-0a2 2 0 0 0-2 2v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
@@ -226,7 +226,7 @@ export function WebMapCanvas({ stops, home, selection, onSelect }: Props) {
             key={`dep-${isDepartureSelected ? 'sel' : 'idle'}`}
             positions={departureLeg}
             pathOptions={{
-              color: isDepartureSelected ? 'var(--copper)' : 'var(--cocoa-30)',
+              color: isDepartureSelected ? 'var(--amber)' : 'var(--charcoal-30)',
               weight: isDepartureSelected ? 3 : 2,
               dashArray: '6 4',
             }}
@@ -242,13 +242,13 @@ export function WebMapCanvas({ stops, home, selection, onSelect }: Props) {
               },
               mouseover: (e) => {
                 if (!isDepartureSelected) {
-                  e.target.setStyle({ color: 'var(--copper)', weight: 3 });
+                  e.target.setStyle({ color: 'var(--amber)', weight: 3 });
                 }
               },
               mouseout: (e) => {
                 if (!isDepartureSelected) {
                   e.target.setStyle({
-                    color: 'var(--cocoa-30)',
+                    color: 'var(--charcoal-30)',
                     weight: 2,
                   });
                 }
@@ -269,7 +269,7 @@ export function WebMapCanvas({ stops, home, selection, onSelect }: Props) {
                 [next.lat, next.lng] as LatLng,
               ]}
               pathOptions={{
-                color: isSelected ? 'var(--copper)' : 'var(--cocoa-30)',
+                color: isSelected ? 'var(--amber)' : 'var(--charcoal-30)',
                 weight: isSelected ? 3 : 2,
                 dashArray: '6 4',
               }}
@@ -283,7 +283,7 @@ export function WebMapCanvas({ stops, home, selection, onSelect }: Props) {
                 mouseover: (e) => {
                   if (!isSelected) {
                     e.target.setStyle({
-                      color: 'var(--copper)',
+                      color: 'var(--amber)',
                       weight: 3,
                     });
                   }
@@ -291,7 +291,7 @@ export function WebMapCanvas({ stops, home, selection, onSelect }: Props) {
                 mouseout: (e) => {
                   if (!isSelected) {
                     e.target.setStyle({
-                      color: 'var(--cocoa-30)',
+                      color: 'var(--charcoal-30)',
                       weight: 2,
                     });
                   }
@@ -306,7 +306,7 @@ export function WebMapCanvas({ stops, home, selection, onSelect }: Props) {
             key={`ret-${isReturnSelected ? 'sel' : 'idle'}`}
             positions={returnLeg}
             pathOptions={{
-              color: isReturnSelected ? 'var(--copper)' : 'var(--cocoa-30)',
+              color: isReturnSelected ? 'var(--amber)' : 'var(--charcoal-30)',
               weight: isReturnSelected ? 3 : 2,
               dashArray: '6 4',
             }}
@@ -322,13 +322,13 @@ export function WebMapCanvas({ stops, home, selection, onSelect }: Props) {
               },
               mouseover: (e) => {
                 if (!isReturnSelected) {
-                  e.target.setStyle({ color: 'var(--copper)', weight: 3 });
+                  e.target.setStyle({ color: 'var(--amber)', weight: 3 });
                 }
               },
               mouseout: (e) => {
                 if (!isReturnSelected) {
                   e.target.setStyle({
-                    color: 'var(--cocoa-30)',
+                    color: 'var(--charcoal-30)',
                     weight: 2,
                   });
                 }

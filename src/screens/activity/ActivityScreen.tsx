@@ -206,12 +206,12 @@ function RightNowStrip({
 }) {
   return (
     <section
-      className="border-b border-cocoa-08 bg-sand/40 px-md py-sm"
+      className="border-b border-charcoal-08 bg-sand/40 px-md py-sm"
       aria-label="Friends in your city right now"
     >
       <div className="flex items-baseline justify-between">
-        <span className="meta-caps text-copper">Right now</span>
-        <span className="text-small text-cocoa-55">
+        <span className="meta-caps text-amber">Right now</span>
+        <span className="text-small text-charcoal-55">
           <span className="tnum">{friends.length}</span>{' '}
           {friends.length === 1 ? 'friend' : 'friends'} in your city
         </span>
@@ -221,7 +221,7 @@ function RightNowStrip({
           const pinged = hasPinged(friend.id);
           return (
             <li key={friend.id} className="shrink-0">
-              <article className="flex w-[220px] items-center gap-sm rounded-2xl bg-ivory shadow-card p-sm">
+              <article className="flex w-[220px] items-center gap-sm rounded-2xl bg-cream shadow-card p-sm">
                 <Avatar
                   photoUrl={friend.photoUrl}
                   initial={friend.friendInitial}
@@ -230,10 +230,10 @@ function RightNowStrip({
                   statusDot
                 />
                 <div className="flex min-w-0 flex-1 flex-col leading-tight">
-                  <span className="truncate font-serif text-body italic text-cocoa">
+                  <span className="truncate font-serif text-body italic text-charcoal">
                     {friend.friendName}
                   </span>
-                  <span className="truncate text-small text-cocoa-55">
+                  <span className="truncate text-small text-charcoal-55">
                     {friend.zoneLabel}
                   </span>
                 </div>
@@ -264,13 +264,13 @@ function PingBellButton({
       type="button"
       aria-label="Ping history"
       onClick={onClick}
-      className="relative inline-flex h-9 w-9 items-center justify-center rounded-full text-cocoa transition-[transform,background-color] duration-instant ease-out-quart hover:bg-cocoa-8 active:scale-95 active:bg-cocoa-15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory"
+      className="relative inline-flex h-9 w-9 items-center justify-center rounded-full text-charcoal transition-[transform,background-color] duration-instant ease-out-quart hover:bg-charcoal-8 active:scale-95 active:bg-charcoal-15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
     >
       <Bell className="h-5 w-5" strokeWidth={1.6} aria-hidden />
       {count > 0 && (
         <span
           aria-hidden
-          className="tnum absolute end-1 top-1 inline-flex h-3 min-w-3 items-center justify-center rounded-full bg-copper px-1 text-meta font-bold leading-none text-ivory ring-2 ring-ivory"
+          className="tnum absolute end-1 top-1 inline-flex h-3 min-w-3 items-center justify-center rounded-full bg-amber px-1 text-meta font-bold leading-none text-cream ring-2 ring-cream"
         >
           {count > 9 ? '9+' : count}
         </span>
@@ -306,13 +306,13 @@ function PingHistorySheet({
       title="Pings"
     >
       <div className="flex flex-col gap-md">
-        <p className="text-small leading-snug text-cocoa-70">
+        <p className="text-small leading-snug text-charcoal-70">
           One ping per direction per co-presence event — no re-ping until
           a new overlap surfaces. The receiver opens the channel they
           already use.
         </p>
 
-        <div className="inline-flex self-start rounded-full bg-cocoa-08 p-1">
+        <div className="inline-flex self-start rounded-full bg-charcoal-08 p-1">
           {(['received', 'sent'] as const).map((id) => (
             <button
               key={id}
@@ -322,8 +322,8 @@ function PingHistorySheet({
                 'rounded-full px-md py-1.5 text-small font-medium leading-none',
                 'transition-colors duration-instant ease-out-quart',
                 segment === id
-                  ? 'bg-cocoa text-ivory'
-                  : 'text-cocoa-70 hover:text-cocoa',
+                  ? 'bg-charcoal text-cream'
+                  : 'text-charcoal-70 hover:text-charcoal',
               )}
             >
               {id === 'received' ? 'Received' : 'Sent'}
@@ -332,7 +332,7 @@ function PingHistorySheet({
         </div>
 
         {visible.length === 0 ? (
-          <p className="rounded-2xl bg-sand p-md text-small leading-snug text-cocoa-70">
+          <p className="rounded-2xl bg-sand p-md text-small leading-snug text-charcoal-70">
             {segment === 'sent'
               ? 'No pings sent yet. Tap a friend pin on the map or in the Right-now strip to ping them.'
               : "No pings received yet. When a friend pings you, it'll land here."}

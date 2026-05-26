@@ -19,14 +19,14 @@ const OPTIONS: Array<{
 export function PrivacyRadios({ value, onChange }: Props) {
   return (
     <div className="flex flex-col gap-xs">
-      <span className="meta-caps text-cocoa-55">Who can see overlaps?</span>
+      <span className="meta-caps text-charcoal-55">Who can see overlaps?</span>
       <div className="flex flex-col">
         {OPTIONS.map((opt, i) => (
           <label
             key={opt.value}
             className={clsx(
               'flex cursor-pointer items-start gap-sm py-sm',
-              i > 0 && 'border-t border-cocoa-15',
+              i > 0 && 'border-t border-charcoal-15',
             )}
           >
             <input
@@ -34,11 +34,11 @@ export function PrivacyRadios({ value, onChange }: Props) {
               name="planned-stop-privacy"
               checked={value === opt.value}
               onChange={() => onChange(opt.value)}
-              className="mt-1 h-4 w-4 shrink-0 accent-copper"
+              className="mt-1 h-4 w-4 shrink-0 accent-amber"
             />
             <div className="flex min-w-0 flex-1 flex-col gap-px">
-              <span className="text-body text-cocoa">{opt.label}</span>
-              <span className="text-small text-cocoa-55">{opt.hint}</span>
+              <span className="text-body text-charcoal">{opt.label}</span>
+              <span className="text-small text-charcoal-55">{opt.hint}</span>
             </div>
           </label>
         ))}

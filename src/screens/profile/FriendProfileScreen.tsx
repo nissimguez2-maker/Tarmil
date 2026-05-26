@@ -81,10 +81,10 @@ export function FriendProfileScreen() {
             copperBorder
             statusDot={friend.status === 'present'}
           />
-          <span className="font-serif text-sub leading-tight text-cocoa">
+          <span className="font-serif text-sub leading-tight text-charcoal">
             {friend.friendName}
           </span>
-          <span className="rounded-full bg-sand ps-md pe-md py-1 text-small text-cocoa-70">
+          <span className="rounded-full bg-sand ps-md pe-md py-1 text-small text-charcoal-70">
             {status}
           </span>
           <div className="mt-1 flex flex-wrap items-center justify-center gap-2">
@@ -95,14 +95,14 @@ export function FriendProfileScreen() {
         </header>
 
         <section className="flex flex-col gap-sm">
-          <h2 className="font-serif text-lede italic text-cocoa">Past routes</h2>
-          <p className="text-small text-cocoa-55">
+          <h2 className="font-serif text-lede italic text-charcoal">Past routes</h2>
+          <p className="text-small text-charcoal-55">
             Dates always at season + year resolution — Tarmil never exposes
             a friend's exact dates.
           </p>
           <ul className="flex flex-col gap-sm">
             {pastTrips.length === 0 && (
-              <li className="rounded-2xl bg-sand p-md text-small text-cocoa-70">
+              <li className="rounded-2xl bg-sand p-md text-small text-charcoal-70">
                 No shared past routes yet. We'll add them as overlaps come up.
               </li>
             )}
@@ -117,14 +117,14 @@ export function FriendProfileScreen() {
           </ul>
         </section>
 
-        <p className="text-small text-cocoa-70">{friend.detail}</p>
+        <p className="text-small text-charcoal-70">{friend.detail}</p>
       </div>
 
       <div
-        className="flex items-center justify-end gap-sm border-t border-cocoa-15 bg-ivory p-md"
+        className="flex items-center justify-end gap-sm border-t border-charcoal-15 bg-cream p-md"
         style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 16px)' }}
       >
-        <span className="me-auto text-small leading-snug text-cocoa-55">
+        <span className="me-auto text-small leading-snug text-charcoal-55">
           One ping per co-presence event.
         </span>
         <PingButton

@@ -38,26 +38,26 @@ export function PlaceCard({
       onClick={onClick}
       className={clsx(
         'group flex w-full flex-col gap-xs rounded-2xl bg-sand shadow-card p-md text-start',
-        'transition-colors duration-instant ease-out-quart hover:bg-sand/80 active:bg-rope',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory',
+        'transition-colors duration-instant ease-out-quart hover:bg-sand/80 active:bg-clay',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream',
         className,
       )}
     >
       <div className="flex items-baseline justify-between gap-sm">
-        <h3 className="font-serif text-lede leading-tight text-cocoa">{name}</h3>
+        <h3 className="font-serif text-lede leading-tight text-charcoal">{name}</h3>
         {tarmilPick && (
-          <span className="meta-caps shrink-0 text-copper">Tarmil pick</span>
+          <span className="meta-caps shrink-0 text-amber">Tarmil pick</span>
         )}
       </div>
 
-      {meta && <p className="text-small text-cocoa-55">{meta}</p>}
+      {meta && <p className="text-small text-charcoal-55">{meta}</p>}
 
       {(rating !== undefined || friendsKnow !== undefined) && (
         <div className="mt-xs flex items-center gap-md">
           {rating !== undefined && (
-            <span className="inline-flex items-center gap-1 text-small text-cocoa">
+            <span className="inline-flex items-center gap-1 text-small text-charcoal">
               <Star
-                className="h-3.5 w-3.5 fill-copper text-copper"
+                className="h-3.5 w-3.5 fill-amber text-amber"
                 strokeWidth={0}
                 aria-hidden
               />
@@ -65,7 +65,7 @@ export function PlaceCard({
             </span>
           )}
           {friendsKnow !== undefined && friendsKnow > 0 && (
-            <span className="text-small text-cocoa-70">
+            <span className="text-small text-charcoal-70">
               <span className="tnum">{friendsKnow}</span> friends know it
             </span>
           )}

@@ -8,22 +8,26 @@ export default {
       current: 'currentColor',
       black: '#000',
       white: '#fff',
-      ivory: 'rgb(var(--ivory-rgb) / <alpha-value>)',
+
+      // DA v0.3 palette
+      cream: 'rgb(var(--cream-rgb) / <alpha-value>)',
       sand: 'rgb(var(--sand-rgb) / <alpha-value>)',
-      rope: 'rgb(var(--rope-rgb) / <alpha-value>)',
-      stone: 'rgb(var(--stone-rgb) / <alpha-value>)',
-      cocoa: {
-        DEFAULT: 'rgb(var(--cocoa-rgb) / <alpha-value>)',
-        70: 'var(--cocoa-70)',
-        55: 'var(--cocoa-55)',
-        30: 'var(--cocoa-30)',
-        15: 'var(--cocoa-15)',
-        8: 'var(--cocoa-08)',
+      linen: 'rgb(var(--linen-rgb) / <alpha-value>)',
+      clay: 'rgb(var(--clay-rgb) / <alpha-value>)',
+      blush: 'rgb(var(--blush-rgb) / <alpha-value>)',
+      charcoal: {
+        DEFAULT: 'rgb(var(--charcoal-rgb) / <alpha-value>)',
+        70: 'var(--charcoal-70)',
+        55: 'var(--charcoal-55)',
+        30: 'var(--charcoal-30)',
+        15: 'var(--charcoal-15)',
+        8: 'var(--charcoal-08)',
       },
-      copper: {
-        DEFAULT: 'rgb(var(--copper-rgb) / <alpha-value>)',
-        85: 'var(--copper-85)',
-        70: 'var(--copper-70)',
+      umber: 'rgb(var(--umber-rgb) / <alpha-value>)',
+      amber: {
+        DEFAULT: 'rgb(var(--amber-rgb) / <alpha-value>)',
+        85: 'var(--amber-85)',
+        70: 'var(--amber-70)',
       },
     },
     fontFamily: {
@@ -77,7 +81,7 @@ export default {
         meta: '0.18em',
       },
       boxShadow: {
-        device: '0 30px 80px -20px rgba(53, 40, 24, 0.4)',
+        device: '0 30px 80px -20px rgba(46, 36, 23, 0.4)',
         card: 'var(--shadow-card)',
         sheet: 'var(--shadow-sheet)',
         fab: 'var(--shadow-fab)',

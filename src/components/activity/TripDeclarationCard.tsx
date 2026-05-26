@@ -23,7 +23,7 @@ type Props = {
 export function TripDeclarationCard({ post, author, reactions, onReact }: Props) {
   const grouped = groupReactions(reactions);
   return (
-    <article className="flex flex-col gap-sm rounded-2xl bg-ivory shadow-card p-md">
+    <article className="flex flex-col gap-sm rounded-2xl bg-cream shadow-card p-md">
       <header className="flex items-center gap-sm">
         <Avatar
           photoUrl={author?.photoUrl}
@@ -32,16 +32,16 @@ export function TripDeclarationCard({ post, author, reactions, onReact }: Props)
           size="md"
         />
         <div className="flex min-w-0 flex-1 flex-col gap-px leading-tight">
-          <span className="truncate font-serif text-lede italic text-cocoa">
+          <span className="truncate font-serif text-lede italic text-charcoal">
             {author?.friendName ?? 'User'}
           </span>
-          <span className="meta-caps text-cocoa-55">Trip declaration</span>
+          <span className="meta-caps text-charcoal-55">Trip declaration</span>
         </div>
       </header>
 
-      <p className="text-body text-cocoa-70">{post.bodyHe}</p>
+      <p className="text-body text-charcoal-70">{post.bodyHe}</p>
 
-      <div className="overflow-hidden rounded-xl ring-1 ring-cocoa-08">
+      <div className="overflow-hidden rounded-xl ring-1 ring-charcoal-08">
         <TripMapPreview
           destinationId={post.destinationId}
           ariaLabel={

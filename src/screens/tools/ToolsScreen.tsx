@@ -17,7 +17,7 @@ export function ToolsScreen() {
       <div className="flex flex-col gap-lg p-md pb-xl">
         <section className="flex flex-col gap-sm">
           <SectionLabel number="01" label="Tools for the road." />
-          <p className="max-w-body text-small leading-snug text-cocoa-70">
+          <p className="max-w-body text-small leading-snug text-charcoal-70">
             Everyday tools for trips abroad. Each one stands alone — open, use,
             close. Works offline too.
           </p>

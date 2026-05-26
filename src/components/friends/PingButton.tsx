@@ -7,7 +7,7 @@ type Props = {
 };
 
 /**
- * Single-shot Ping affordance. Copper pill when unsent; rope pill marked
+ * Single-shot Ping affordance. Umber pill when unsent; muted pill marked
  * "Pinged" once fired. Disabled after sending — re-ping is only possible
  * when a new co-presence event surfaces (different city, or the same city
  * after a clean separation). Mirrors brief §04 Ping rules.
@@ -22,11 +22,11 @@ export function PingButton({ pinged, onPing }: Props) {
       className={clsx(
         'inline-flex h-9 shrink-0 items-center gap-1 rounded-full ps-3 pe-4 font-sans text-small font-medium leading-none',
         'transition-[transform,background-color,color] duration-instant ease-out-quart motion-reduce:transition-none',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream',
         'disabled:active:scale-100',
         pinged
-          ? 'bg-rope/40 text-cocoa-55'
-          : 'bg-copper text-ivory shadow-card hover:bg-copper-85 active:scale-[0.97]',
+          ? 'bg-charcoal-08 text-charcoal-55'
+          : 'bg-umber text-cream shadow-card hover:bg-umber/90 active:scale-[0.97]',
       )}
     >
       {pinged ? (

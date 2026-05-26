@@ -18,7 +18,7 @@ export function ToolsButton() {
         type="button"
         aria-label="Tools"
         onClick={() => setOpen(true)}
-        className="inline-flex h-9 w-9 items-center justify-center rounded-full text-cocoa transition-[transform,background-color] duration-instant ease-out-quart motion-reduce:transition-none hover:bg-cocoa-8 active:scale-95 active:bg-cocoa-15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory"
+        className="inline-flex h-9 w-9 items-center justify-center rounded-full text-charcoal transition-[transform,background-color] duration-instant ease-out-quart motion-reduce:transition-none hover:bg-charcoal-8 active:scale-95 active:bg-charcoal-15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
       >
         <Wrench className="h-5 w-5" strokeWidth={1.6} aria-hidden />
       </button>
@@ -29,7 +29,7 @@ export function ToolsButton() {
         eyebrow="For the road"
         title="Tools"
       >
-        <p className="mb-md max-w-body text-small leading-snug text-cocoa-70">
+        <p className="mb-md max-w-body text-small leading-snug text-charcoal-70">
           Everyday tools for trips abroad. Each one stands alone — open, use,
           close. Works offline too.
         </p>

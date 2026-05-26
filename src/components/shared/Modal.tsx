@@ -78,7 +78,7 @@ export function Modal({
         tabIndex={open ? 0 : -1}
         onClick={onClose}
         className={clsx(
-          'absolute inset-0 cursor-default bg-cocoa-30',
+          'absolute inset-0 cursor-default bg-charcoal-30',
           'transition-opacity duration-considered ease-out-quart',
           open ? 'opacity-100' : 'opacity-0',
         )}
@@ -86,22 +86,22 @@ export function Modal({
 
       <div
         className={clsx(
-          'relative flex max-h-[88%] flex-col rounded-t-3xl bg-ivory shadow-sheet',
+          'relative flex max-h-[88%] flex-col rounded-t-3xl bg-cream shadow-sheet',
           'transition-transform duration-considered ease-out-quart',
           open ? 'translate-y-0' : 'translate-y-full',
         )}
       >
         <span
           aria-hidden
-          className="mx-auto mt-2.5 block h-1 w-9 shrink-0 rounded-full bg-cocoa-15"
+          className="mx-auto mt-2.5 block h-1 w-9 shrink-0 rounded-full bg-charcoal-15"
         />
 
         <header className="flex items-start justify-between gap-sm px-md pb-sm pt-sm">
           <div className="flex min-w-0 flex-1 flex-col gap-px">
             {eyebrow && (
-              <span className="meta-caps text-copper">{eyebrow}</span>
+              <span className="meta-caps text-amber">{eyebrow}</span>
             )}
-            <h2 className="font-serif text-lede leading-tight text-balance text-cocoa">
+            <h2 className="font-serif text-lede leading-tight text-balance text-charcoal">
               {title}
             </h2>
           </div>
@@ -109,7 +109,7 @@ export function Modal({
             type="button"
             aria-label="Close"
             onClick={onClose}
-            className="-me-1 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-cocoa-55 transition-[transform,background-color] duration-instant ease-out-quart hover:bg-cocoa-8 hover:text-cocoa active:scale-95 active:bg-cocoa-15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory"
+            className="-me-1 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-charcoal-55 transition-[transform,background-color] duration-instant ease-out-quart hover:bg-charcoal-8 hover:text-charcoal active:scale-95 active:bg-charcoal-15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
           >
             <X className="h-4 w-4" strokeWidth={1.8} aria-hidden />
           </button>
@@ -121,7 +121,7 @@ export function Modal({
 
         {footer && (
           <div
-            className="border-t border-cocoa-08 px-md pt-sm"
+            className="border-t border-charcoal-08 px-md pt-sm"
             style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 16px)' }}
           >
             {footer}

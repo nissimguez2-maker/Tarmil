@@ -20,18 +20,18 @@ export function DeviceFrame({ children }: Props) {
     <div
       className={clsx(
         // mobile: full-bleed ivory
-        'h-dvh w-full bg-ivory',
+        'h-dvh w-full bg-cream',
         // desktop: cream-shadow stage
-        'md:flex md:h-dvh md:items-center md:justify-center md:bg-cocoa-15 md:p-md',
+        'md:flex md:h-dvh md:items-center md:justify-center md:bg-charcoal-15 md:p-md',
       )}
     >
       <div
         className={clsx(
-          'relative h-full w-full bg-ivory overflow-hidden',
+          'relative h-full w-full bg-cream overflow-hidden',
           // device shell on desktop
           'md:h-[844px] md:w-[390px] md:max-h-[calc(100dvh-32px)]',
           'md:rounded-device md:shadow-device',
-          'md:ring-1 md:ring-cocoa-15',
+          'md:ring-1 md:ring-charcoal-15',
         )}
       >
         {/* notch — desktop only.
@@ -41,7 +41,7 @@ export function DeviceFrame({ children }: Props) {
           aria-hidden
           className="pointer-events-none absolute top-0 inset-x-0 z-30 flex hidden justify-center md:flex"
         >
-          <div className="h-[28px] w-[120px] rounded-b-notch bg-cocoa" />
+          <div className="h-[28px] w-[120px] rounded-b-notch bg-charcoal" />
         </div>
 
         {/* status bar mock — desktop only.
@@ -52,7 +52,7 @@ export function DeviceFrame({ children }: Props) {
           dir="ltr"
           className={clsx(
             'absolute top-0 inset-x-0 z-20 flex items-start justify-between',
-            'h-[44px] pt-3 px-9 text-cocoa text-small font-medium tnum',
+            'h-[44px] pt-3 px-9 text-charcoal text-small font-medium tnum',
             'hidden md:flex',
           )}
         >

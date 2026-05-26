@@ -18,8 +18,8 @@ export function PollCard({ poll, selfVotes, onVote }: Props) {
   const total = poll.options.reduce((acc, o) => acc + o.voteCount, 0);
   return (
     <section className="flex flex-col gap-xs rounded-2xl bg-sand/60 p-md">
-      <span className="meta-caps text-copper">Poll</span>
-      <p className="text-body text-cocoa">{poll.question}</p>
+      <span className="meta-caps text-amber">Poll</span>
+      <p className="text-body text-charcoal">{poll.question}</p>
       <ul className="flex flex-col gap-1">
         {poll.options.map((option, i) => {
           const picked = selfVotes.includes(i);
@@ -30,12 +30,12 @@ export function PollCard({ poll, selfVotes, onVote }: Props) {
                 type="button"
                 onClick={() => onVote(i)}
                 className={clsx(
-                  'relative w-full overflow-hidden rounded-xl border bg-ivory text-start',
+                  'relative w-full overflow-hidden rounded-xl border bg-cream text-start',
                   'transition-colors duration-instant ease-out-quart',
-                  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory',
+                  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream',
                   picked
-                    ? 'border-copper'
-                    : 'border-cocoa-15 hover:border-cocoa-30',
+                    ? 'border-amber'
+                    : 'border-charcoal-15 hover:border-charcoal-30',
                 )}
               >
                 <span
@@ -46,18 +46,18 @@ export function PollCard({ poll, selfVotes, onVote }: Props) {
                   )}
                   style={{ width: `${pct}%` }}
                 />
-                <span className="relative flex items-center justify-between gap-sm px-md py-2.5 text-body text-cocoa">
+                <span className="relative flex items-center justify-between gap-sm px-md py-2.5 text-body text-charcoal">
                   <span className="inline-flex items-center gap-2">
                     {picked && (
                       <Check
-                        className="h-4 w-4 text-copper"
+                        className="h-4 w-4 text-amber"
                         strokeWidth={2.2}
                         aria-hidden
                       />
                     )}
                     {option.text}
                   </span>
-                  <span className="text-small tabular-nums text-cocoa-55">
+                  <span className="text-small tabular-nums text-charcoal-55">
                     {option.voteCount}
                   </span>
                 </span>
@@ -66,7 +66,7 @@ export function PollCard({ poll, selfVotes, onVote }: Props) {
           );
         })}
       </ul>
-      <p className="text-meta text-cocoa-55">
+      <p className="text-meta text-charcoal-55">
         {total} {total === 1 ? 'vote' : 'votes'}
         {poll.multipleChoice && ' · multiple choice'}
       </p>

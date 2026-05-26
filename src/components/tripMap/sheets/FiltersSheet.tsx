@@ -29,8 +29,8 @@ export function FiltersSheet({
     <div className="flex h-full flex-col">
       <header className="flex items-center justify-between gap-sm px-md pb-sm pt-sm">
         <div className="flex flex-col">
-          <span className="meta-caps text-copper">Trip map</span>
-          <h2 className="font-serif text-lede leading-tight text-cocoa">
+          <span className="meta-caps text-amber">Trip map</span>
+          <h2 className="font-serif text-lede leading-tight text-charcoal">
             Filters
           </h2>
         </div>
@@ -38,7 +38,7 @@ export function FiltersSheet({
           type="button"
           aria-label="Close"
           onClick={onClose}
-          className="-me-1 inline-flex h-9 w-9 items-center justify-center rounded-full text-cocoa-55 transition-colors duration-instant ease-out-quart hover:bg-cocoa-8 active:bg-cocoa-15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory"
+          className="-me-1 inline-flex h-9 w-9 items-center justify-center rounded-full text-charcoal-55 transition-colors duration-instant ease-out-quart hover:bg-charcoal-8 active:bg-charcoal-15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
         >
           <X className="h-4 w-4" strokeWidth={1.8} aria-hidden />
         </button>
@@ -46,13 +46,13 @@ export function FiltersSheet({
 
       <div className="flex-1 overflow-y-auto px-md pb-lg pt-sm">
         <section className="flex flex-col gap-sm">
-          <h3 className="text-body font-medium text-cocoa">Friends on the map</h3>
+          <h3 className="text-body font-medium text-charcoal">Friends on the map</h3>
           <SegmentedControl
             value={friendsView}
             onChange={onSetFriendsView}
             options={FRIENDS_OPTIONS}
           />
-          <p className="text-small leading-snug text-cocoa-70">
+          <p className="text-small leading-snug text-charcoal-70">
             {FRIENDS_HINT[friendsView]}
           </p>
         </section>
@@ -71,7 +71,7 @@ function SegmentedControl<T extends string>({
   options: Array<{ value: T; label: string }>;
 }) {
   return (
-    <div className="flex rounded-full bg-cocoa-08 p-1">
+    <div className="flex rounded-full bg-charcoal-08 p-1">
       {options.map((opt) => {
         const active = value === opt.value;
         return (
@@ -84,10 +84,10 @@ function SegmentedControl<T extends string>({
               'flex-1 rounded-full px-sm py-2 text-body font-medium leading-none',
               'transition-[transform,background-color,box-shadow,color] duration-instant ease-out-quart',
               'active:scale-[0.97]',
-              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory',
+              'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream',
               active
-                ? 'bg-cocoa text-ivory shadow-card'
-                : 'text-cocoa-70 hover:text-cocoa',
+                ? 'bg-charcoal text-cream shadow-card'
+                : 'text-charcoal-70 hover:text-charcoal',
             )}
           >
             {opt.label}

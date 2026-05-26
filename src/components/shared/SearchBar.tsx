@@ -22,12 +22,12 @@ export function SearchBar({ value, onChange, placeholder, className }: Props) {
     <div
       className={clsx(
         'flex h-lg items-center gap-2 rounded-full bg-sand ps-md pe-md',
-        'text-body text-cocoa placeholder:text-cocoa-55',
+        'text-body text-charcoal placeholder:text-charcoal-55',
         className,
       )}
     >
       <Search
-        className="h-4 w-4 shrink-0 text-cocoa-55"
+        className="h-4 w-4 shrink-0 text-charcoal-55"
         strokeWidth={1.5}
         aria-hidden
       />

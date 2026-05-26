@@ -182,10 +182,10 @@ export function WebStopList({
     selection.toStopId === 'home';
 
   return (
-    <aside className="w-96 shrink-0 border-e border-cocoa-15 bg-ivory overflow-y-auto min-h-0 py-md flex flex-col gap-md">
+    <aside className="w-96 shrink-0 border-e border-charcoal-15 bg-cream overflow-y-auto min-h-0 py-md flex flex-col gap-md">
       <TripOverviewCard stops={stops} home={home} />
       <div>
-        <p className="meta-caps text-cocoa-55 px-md mb-md">Itinerary</p>
+        <p className="meta-caps text-charcoal-55 px-md mb-md">Itinerary</p>
         <div className="flex flex-col px-md">
           <HomeRow
             home={home}
@@ -288,7 +288,7 @@ export function WebStopList({
           />
         </div>
       </div>
-      <div className="px-md mx-md pt-md border-t border-cocoa-08">
+      <div className="px-md mx-md pt-md border-t border-charcoal-08">
         <Button variant="ghost" size="sm" fullWidth onClick={onAddStop}>
           <Plus size={14} strokeWidth={2} />
           Add stop
@@ -341,21 +341,21 @@ function HomeRow({
       <div className="shrink-0 w-8 flex flex-col items-center">
         <span
           aria-hidden="true"
-          className="h-8 w-8 rounded-full bg-cocoa text-ivory flex items-center justify-center shrink-0"
+          className="h-8 w-8 rounded-full bg-charcoal text-cream flex items-center justify-center shrink-0"
         >
           <Home size={14} strokeWidth={2} />
         </span>
         {hasNext && (
-          <div className="w-px flex-1 border-s border-dashed border-cocoa-15 mt-xs" />
+          <div className="w-px flex-1 border-s border-dashed border-charcoal-15 mt-xs" />
         )}
       </div>
-      <div className="flex-1 min-w-0 rounded-2xl px-md py-sm group-hover:bg-cocoa-8 transition-[background-color] duration-instant ease-out-quart motion-reduce:transition-none">
+      <div className="flex-1 min-w-0 rounded-2xl px-md py-sm group-hover:bg-charcoal-8 transition-[background-color] duration-instant ease-out-quart motion-reduce:transition-none">
         <div className="flex items-start gap-sm">
           <div className="flex-1 min-w-0">
-            <p className="meta-caps text-cocoa-55">
+            <p className="meta-caps text-charcoal-55">
               {variant === 'departure' ? 'Departure' : 'Return'}
             </p>
-            <h3 className="font-serif text-lede text-cocoa leading-tight truncate">
+            <h3 className="font-serif text-lede text-charcoal leading-tight truncate">
               {home.nameEn}
             </h3>
           </div>
@@ -364,7 +364,7 @@ function HomeRow({
             onClick={onEdit}
             aria-label="Change home"
             title="Change home"
-            className="opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity duration-instant ease-out-quart h-6 w-6 rounded-full flex items-center justify-center text-cocoa-55 hover:text-copper hover:bg-cocoa-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory"
+            className="opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity duration-instant ease-out-quart h-6 w-6 rounded-full flex items-center justify-center text-charcoal-55 hover:text-amber hover:bg-charcoal-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
           >
             <Pencil size={12} strokeWidth={2} />
           </button>
@@ -394,16 +394,16 @@ function TripOverviewCard({
     : '';
 
   return (
-    <article className="mx-md bg-sand border border-rope rounded-2xl p-md flex flex-col gap-sm">
-      <p className="meta-caps text-cocoa-55">Trip overview</p>
-      <h2 className="font-serif text-lede text-cocoa">
+    <article className="mx-md bg-sand border border-charcoal-15 rounded-2xl p-md flex flex-col gap-sm">
+      <p className="meta-caps text-charcoal-55">Trip overview</p>
+      <h2 className="font-serif text-lede text-charcoal">
         {dateSpan}
-        {year && <span className="text-cocoa-55">, {year}</span>}
+        {year && <span className="text-charcoal-55">, {year}</span>}
       </h2>
-      <p className="text-small text-cocoa-55">
+      <p className="text-small text-charcoal-55">
         From {home.nameEn} → back to {home.nameEn}
       </p>
-      <dl className="grid grid-cols-3 gap-sm pt-sm border-t border-cocoa-15">
+      <dl className="grid grid-cols-3 gap-sm pt-sm border-t border-charcoal-15">
         <Stat label="Stops" value={stops.length} />
         <Stat label="Legs" value={legs} />
         <Stat label="Nights" value={nights} />
@@ -415,10 +415,10 @@ function TripOverviewCard({
 function Stat({ label, value }: { label: string; value: number }) {
   return (
     <div className="flex flex-col gap-xs">
-      <dd className="font-serif text-sub text-cocoa tnum leading-none">
+      <dd className="font-serif text-sub text-charcoal tnum leading-none">
         {value}
       </dd>
-      <dt className="text-small text-cocoa-55">{label}</dt>
+      <dt className="text-small text-charcoal-55">{label}</dt>
     </div>
   );
 }
@@ -457,7 +457,7 @@ function SortableStopRow(props: SortableStopRowProps) {
       style={style}
       className={clsx(
         'relative',
-        isDragging && 'z-10 opacity-90 shadow-card rounded-2xl bg-ivory',
+        isDragging && 'z-10 opacity-90 shadow-card rounded-2xl bg-cream',
       )}
     >
       <StopRow
@@ -504,9 +504,9 @@ function StopRow({
           {...dragListeners}
           aria-label={`Drag ${stop.nameEn}`}
           className={clsx(
-            'h-8 w-8 rounded-full bg-copper text-ivory font-serif text-body flex items-center justify-center shrink-0 relative',
+            'h-8 w-8 rounded-full bg-amber text-cream font-serif text-body flex items-center justify-center shrink-0 relative',
             'cursor-grab active:cursor-grabbing touch-none',
-            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory',
+            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream',
           )}
         >
           <span className="group-hover:opacity-0 transition-opacity duration-instant ease-out-quart">
@@ -519,36 +519,36 @@ function StopRow({
           />
         </button>
         {hasNext && (
-          <div className="w-px flex-1 border-s border-dashed border-cocoa-15 mt-xs" />
+          <div className="w-px flex-1 border-s border-dashed border-charcoal-15 mt-xs" />
         )}
       </div>
       <div
         className={clsx(
           'flex-1 min-w-0 rounded-2xl px-md py-sm transition-[background-color] duration-instant ease-out-quart motion-reduce:transition-none',
-          selected ? 'bg-sand' : 'group-hover:bg-cocoa-8',
+          selected ? 'bg-sand' : 'group-hover:bg-charcoal-8',
         )}
       >
         <div className="flex items-start gap-sm">
           <button
             type="button"
             onClick={onClick}
-            className="flex-1 min-w-0 text-start focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory rounded-sm"
+            className="flex-1 min-w-0 text-start focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream rounded-sm"
             disabled={isDragging}
           >
-            <h3 className="font-serif text-lede text-cocoa leading-tight">
+            <h3 className="font-serif text-lede text-charcoal leading-tight">
               {stop.nameEn}
             </h3>
             {!editing && (
               <div className="flex items-center gap-sm mt-xs flex-wrap">
-                <p className="text-small text-cocoa-55 tnum">
+                <p className="text-small text-charcoal-55 tnum">
                   {formatStopRange(stop.arrivalDate, stop.departureDate)}
-                  <span className="text-cocoa-30"> · </span>
+                  <span className="text-charcoal-30"> · </span>
                   {stop.nights} {stop.nights === 1 ? 'night' : 'nights'}
                 </p>
                 {savedCount > 0 && (
                   <span
                     key={savedCount}
-                    className="inline-flex items-center text-meta uppercase font-medium px-sm py-px rounded-full bg-cocoa-8 text-cocoa-70 animate-[bump_300ms_ease-out-quart_1]"
+                    className="inline-flex items-center text-meta uppercase font-medium px-sm py-px rounded-full bg-charcoal-8 text-charcoal-70 animate-[bump_300ms_ease-out-quart_1]"
                     style={{
                       animation: 'tarmil-bump 300ms cubic-bezier(0.25,1,0.5,1)',
                     }}
@@ -598,7 +598,7 @@ function StopRow({
           />
         )}
         {expanded && savedCount > 0 && (
-          <div className="mt-sm pt-sm border-t border-cocoa-08 flex flex-col gap-xs">
+          <div className="mt-sm pt-sm border-t border-charcoal-08 flex flex-col gap-xs">
             {savedItems.map((item) => (
               <WishlistRow
                 key={item.id}
@@ -612,7 +612,7 @@ function StopRow({
           </div>
         )}
         {expanded && savedCount === 0 && (
-          <p className="mt-sm pt-sm border-t border-cocoa-08 text-small text-cocoa-55 italic">
+          <p className="mt-sm pt-sm border-t border-charcoal-08 text-small text-charcoal-55 italic">
             No saved places yet for {stop.nameEn}.
           </p>
         )}
@@ -643,19 +643,19 @@ function WishlistRow({
 }) {
   const Icon = wishlistIcon(item.category);
   return (
-    <div className="group/wish flex items-center gap-sm py-xs px-xs rounded-xl hover:bg-cocoa-8 transition-[background-color] duration-instant ease-out-quart motion-reduce:transition-none">
-      <span className="shrink-0 text-cocoa-55">
+    <div className="group/wish flex items-center gap-sm py-xs px-xs rounded-xl hover:bg-charcoal-8 transition-[background-color] duration-instant ease-out-quart motion-reduce:transition-none">
+      <span className="shrink-0 text-charcoal-55">
         <Icon size={12} strokeWidth={2} />
       </span>
-      <span className="flex-1 min-w-0 text-small text-cocoa truncate">
+      <span className="flex-1 min-w-0 text-small text-charcoal truncate">
         {item.placeName}
       </span>
       <span
         className={clsx(
           'shrink-0 text-meta uppercase font-medium px-sm py-px rounded-full',
           item.status === 'saved'
-            ? 'bg-cocoa-8 text-cocoa-70'
-            : 'bg-copper text-ivory',
+            ? 'bg-charcoal-8 text-charcoal-70'
+            : 'bg-amber text-cream',
         )}
       >
         {item.status}
@@ -664,7 +664,7 @@ function WishlistRow({
         type="button"
         onClick={onRemove}
         aria-label={`Remove ${item.placeName}`}
-        className="shrink-0 h-5 w-5 rounded-full flex items-center justify-center text-cocoa-55 hover:text-copper hover:bg-cocoa-8 opacity-0 group-hover/wish:opacity-100 focus-visible:opacity-100 transition-opacity duration-instant ease-out-quart focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory"
+        className="shrink-0 h-5 w-5 rounded-full flex items-center justify-center text-charcoal-55 hover:text-amber hover:bg-charcoal-8 opacity-0 group-hover/wish:opacity-100 focus-visible:opacity-100 transition-opacity duration-instant ease-out-quart focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
       >
         <X size={10} strokeWidth={2} />
       </button>
@@ -690,7 +690,7 @@ function IconButton({
       aria-label={label}
       title={label}
       className={clsx(
-        'h-6 w-6 rounded-full flex items-center justify-center text-cocoa-55 hover:text-copper hover:bg-cocoa-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory',
+        'h-6 w-6 rounded-full flex items-center justify-center text-charcoal-55 hover:text-amber hover:bg-charcoal-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream',
         persistent && 'shrink-0',
       )}
     >
@@ -729,14 +729,14 @@ function DateEditor({
       <p
         className={clsx(
           'text-small tnum',
-          valid ? 'text-cocoa-55' : 'text-copper',
+          valid ? 'text-charcoal-55' : 'text-amber',
         )}
       >
         {valid
           ? `${nights} ${nights === 1 ? 'night' : 'nights'}`
           : 'Departure must be after arrival'}
       </p>
-      <div className="flex gap-sm justify-end pt-xs border-t border-cocoa-08">
+      <div className="flex gap-sm justify-end pt-xs border-t border-charcoal-08">
         <Button variant="ghost" size="sm" onClick={onCancel}>
           Cancel
         </Button>
@@ -763,12 +763,12 @@ function DateField({
 }) {
   return (
     <label className="flex-1 flex flex-col gap-xs">
-      <span className="meta-caps text-cocoa-55">{label}</span>
+      <span className="meta-caps text-charcoal-55">{label}</span>
       <input
         type="date"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="h-10 rounded-xl px-sm bg-ivory border border-cocoa-15 text-body text-cocoa focus:border-copper focus:outline-none transition-[border-color] duration-instant ease-out-quart"
+        className="h-10 rounded-xl px-sm bg-cream border border-charcoal-15 text-body text-charcoal focus:border-amber focus:outline-none transition-[border-color] duration-instant ease-out-quart"
       />
     </label>
   );
@@ -810,37 +810,37 @@ function LegRow({ from, to, selected, onClick }: LegRowProps) {
   return (
     <div className="group flex gap-sm w-full items-stretch">
       <div className="shrink-0 w-8 flex flex-col items-center">
-        <div className="h-3 w-px border-s border-dashed border-cocoa-15" />
+        <div className="h-3 w-px border-s border-dashed border-charcoal-15" />
         <div
           className={clsx(
-            'h-6 w-6 rounded-full bg-ivory border flex items-center justify-center shrink-0 transition-[border-color,color] duration-instant ease-out-quart motion-reduce:transition-none',
+            'h-6 w-6 rounded-full bg-cream border flex items-center justify-center shrink-0 transition-[border-color,color] duration-instant ease-out-quart motion-reduce:transition-none',
             selected
-              ? 'border-copper text-copper'
-              : 'border-cocoa-15 text-cocoa-55 group-hover:border-copper group-hover:text-copper',
+              ? 'border-amber text-amber'
+              : 'border-charcoal-15 text-charcoal-55 group-hover:border-amber group-hover:text-amber',
           )}
         >
           <Icon size={12} strokeWidth={2} />
         </div>
-        <div className="w-px flex-1 border-s border-dashed border-cocoa-15 min-h-3" />
+        <div className="w-px flex-1 border-s border-dashed border-charcoal-15 min-h-3" />
       </div>
       <div className="flex-1 min-w-0 flex flex-col gap-xs py-xs">
         <button
           type="button"
           onClick={onClick}
           aria-label={`Transport from ${from.nameEn} to ${to.nameEn}`}
-          className="flex items-center px-sm rounded-sm text-start focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory"
+          className="flex items-center px-sm rounded-sm text-start focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
         >
           <span
             className={clsx(
               'meta-caps transition-colors duration-instant ease-out-quart motion-reduce:transition-none',
               selected
-                ? 'text-copper'
-                : 'text-cocoa-55 group-hover:text-copper',
+                ? 'text-amber'
+                : 'text-charcoal-55 group-hover:text-amber',
             )}
           >
             Transport
             {driveMinutes !== null && (
-              <span className="text-cocoa-30 normal-case tracking-normal ms-xs">
+              <span className="text-charcoal-30 normal-case tracking-normal ms-xs">
                 · {formatDriveDuration(driveMinutes)}
               </span>
             )}
@@ -875,19 +875,19 @@ function TransitBookingRow({ item }: { item: TransitItem }) {
     showToast(`${offer.provider} removed`);
   };
   return (
-    <div className="group/booking flex items-center gap-sm py-sm px-sm rounded-xl bg-cocoa-8 hover:bg-cocoa-15 transition-[background-color] duration-instant ease-out-quart motion-reduce:transition-none min-w-0">
-      <span className="shrink-0 text-copper">
+    <div className="group/booking flex items-center gap-sm py-sm px-sm rounded-xl bg-charcoal-8 hover:bg-charcoal-15 transition-[background-color] duration-instant ease-out-quart motion-reduce:transition-none min-w-0">
+      <span className="shrink-0 text-amber">
         <Icon size={12} strokeWidth={2} />
       </span>
       <div className="flex-1 min-w-0 flex flex-col gap-px leading-tight">
-        <p className="text-small font-medium text-cocoa truncate">
+        <p className="text-small font-medium text-charcoal truncate">
           {offer.provider}
         </p>
-        <p className="text-meta text-cocoa-55 tnum truncate">
+        <p className="text-meta text-charcoal-55 tnum truncate">
           {offer.mode !== 'drive' && (
             <>
               {offer.departureTime} → {offer.arrivalTime}
-              <span className="text-cocoa-30"> · </span>
+              <span className="text-charcoal-30"> · </span>
             </>
           )}
           {offer.currency} {offer.price}
@@ -897,7 +897,7 @@ function TransitBookingRow({ item }: { item: TransitItem }) {
         type="button"
         onClick={onRemove}
         aria-label={`Remove ${offer.provider} booking`}
-        className="shrink-0 h-5 w-5 rounded-full flex items-center justify-center text-cocoa-55 hover:text-copper hover:bg-ivory opacity-0 group-hover/booking:opacity-100 focus-visible:opacity-100 transition-opacity duration-instant ease-out-quart focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory"
+        className="shrink-0 h-5 w-5 rounded-full flex items-center justify-center text-charcoal-55 hover:text-amber hover:bg-cream opacity-0 group-hover/booking:opacity-100 focus-visible:opacity-100 transition-opacity duration-instant ease-out-quart focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
       >
         <X size={10} strokeWidth={2} />
       </button>

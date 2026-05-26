@@ -92,7 +92,7 @@ export function WebPlannerScreen() {
 
   return (
     <>
-      <div className="hidden lg:flex h-dvh flex-col bg-ivory">
+      <div className="hidden lg:flex h-dvh flex-col bg-cream">
         <WebHeader stops={stops} />
         <div className="flex-1 flex min-h-0">
           <WebStopList
@@ -123,13 +123,13 @@ export function WebPlannerScreen() {
           </div>
         </div>
       </div>
-      <div className="flex lg:hidden h-dvh flex-col items-center justify-center p-xl text-center gap-md bg-ivory">
-        <p className="font-serif text-sub text-cocoa-55">
+      <div className="flex lg:hidden h-dvh flex-col items-center justify-center p-xl text-center gap-md bg-cream">
+        <p className="font-serif text-sub text-charcoal-55">
           Open on desktop (≥ 1024 px) to use the planner.
         </p>
         <Link
           to="/trip"
-          className="text-small text-copper hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory rounded-sm"
+          className="text-small text-amber hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream rounded-sm"
         >
           Go to the mobile app →
         </Link>

@@ -13,17 +13,17 @@ type Props = {
  */
 export function PastTripCard({ destinationHe, metaLine, flag }: Props) {
   return (
-    <div className="flex items-center gap-sm rounded-2xl bg-ivory shadow-card p-md">
+    <div className="flex items-center gap-sm rounded-2xl bg-cream shadow-card p-md">
       {flag && (
         <span className="text-sub leading-none" aria-hidden>
           {flag}
         </span>
       )}
       <div className="flex min-w-0 flex-1 flex-col gap-px">
-        <span className="font-serif text-lede italic text-cocoa">
+        <span className="font-serif text-lede italic text-charcoal">
           {destinationHe}
         </span>
-        <span className="text-small text-cocoa-55">{metaLine}</span>
+        <span className="text-small text-charcoal-55">{metaLine}</span>
       </div>
     </div>
   );

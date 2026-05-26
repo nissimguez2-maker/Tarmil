@@ -34,7 +34,7 @@ export function OverlapNotificationCard({
       : null;
 
   return (
-    <article className="flex flex-col gap-sm rounded-2xl bg-sand shadow-card ring-1 ring-copper-70 p-md">
+    <article className="flex flex-col gap-sm rounded-2xl bg-sand shadow-card ring-1 ring-amber-70 p-md">
       <header className="flex items-center gap-sm">
         <Avatar
           photoUrl={friend?.photoUrl}
@@ -44,10 +44,10 @@ export function OverlapNotificationCard({
           statusDot
         />
         <div className="flex min-w-0 flex-1 flex-col gap-px leading-tight">
-          <span className="truncate font-serif text-lede italic text-cocoa">
+          <span className="truncate font-serif text-lede italic text-charcoal">
             {friend?.friendName ?? 'Friend'}
           </span>
-          <span className="meta-caps text-copper">
+          <span className="meta-caps text-amber">
             {overlapDays
               ? `${overlapDays}-day overlap`
               : 'Calendar overlap'}
@@ -55,16 +55,16 @@ export function OverlapNotificationCard({
         </div>
       </header>
 
-      <p className="font-serif text-lede italic leading-snug text-cocoa">
+      <p className="font-serif text-lede italic leading-snug text-charcoal">
         {post.bodyHe}
       </p>
 
       {dateLabel && (
-        <p className="text-small text-cocoa-70">
+        <p className="text-small text-charcoal-70">
           <span className="tnum">{dateLabel}</span>
           {friend?.zoneLabel && (
             <>
-              <span aria-hidden className="px-1 text-cocoa-30">·</span>
+              <span aria-hidden className="px-1 text-charcoal-30">·</span>
               <span>{friend.zoneLabel}</span>
             </>
           )}
@@ -72,7 +72,7 @@ export function OverlapNotificationCard({
       )}
 
       <div className="flex items-center justify-between gap-sm pt-xs">
-        <span className="text-small leading-snug text-cocoa-55">
+        <span className="text-small leading-snug text-charcoal-55">
           One ping per co-presence event.
         </span>
         <PingButton pinged={pinged} onPing={onPing} />

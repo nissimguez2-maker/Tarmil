@@ -20,7 +20,7 @@ export function PingHistoryRow({ direction, friend, zoneLabel, at }: Props) {
       ? `${friend?.friendName ?? 'A friend'} is in your city`
       : `You pinged ${friend?.friendName ?? 'a friend'}`;
   return (
-    <article className="flex items-center gap-sm rounded-2xl bg-ivory shadow-card p-md">
+    <article className="flex items-center gap-sm rounded-2xl bg-cream shadow-card p-md">
       <Avatar
         photoUrl={friend?.photoUrl}
         initial={friend?.friendInitial ?? '·'}
@@ -29,10 +29,10 @@ export function PingHistoryRow({ direction, friend, zoneLabel, at }: Props) {
         statusDot={direction === 'received'}
       />
       <div className="flex min-w-0 flex-1 flex-col leading-tight">
-        <span className="truncate font-serif text-lede italic text-cocoa">
+        <span className="truncate font-serif text-lede italic text-charcoal">
           {headline}
         </span>
-        <span className="text-small text-cocoa-55">
+        <span className="text-small text-charcoal-55">
           {zoneLabel} · {relativeTime(at)}
         </span>
       </div>

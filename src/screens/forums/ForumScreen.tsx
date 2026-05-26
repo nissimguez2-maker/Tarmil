@@ -24,7 +24,7 @@ export function ForumScreen() {
     return (
       <Screen>
         <TopBar back title="Forum not found" />
-        <div className="p-md text-cocoa-55">This forum isn't active right now.</div>
+        <div className="p-md text-charcoal-55">This forum isn't active right now.</div>
       </Screen>
     );
   }
@@ -37,15 +37,15 @@ export function ForumScreen() {
       <TopBar back title={title} eyebrow={forum.cityLabel} />
 
       <div className="flex flex-col gap-md p-md">
-        <p className="font-serif text-lede italic text-cocoa-70">
+        <p className="font-serif text-lede italic text-charcoal-70">
           {forum.heroBlurbHe}
         </p>
-        <span className="text-small text-cocoa-55">
+        <span className="text-small text-charcoal-55">
           <span className="tnum">{forum.memberCount}</span> members
         </span>
 
         {threads.length === 0 ? (
-          <p className="rounded-2xl bg-sand shadow-card p-md text-small leading-snug text-cocoa-70">
+          <p className="rounded-2xl bg-sand shadow-card p-md text-small leading-snug text-charcoal-70">
             No threads in this forum yet. Tap any subject pill on the
             Forums tab to find a busier one.
           </p>
@@ -62,7 +62,7 @@ export function ForumScreen() {
                 <li key={t.id}>
                   <Link
                     to={`/forums/${forum.id}/${t.id}`}
-                    className="flex items-start gap-sm rounded-2xl bg-sand shadow-card p-md transition-colors duration-instant ease-out-quart hover:bg-sand/80 active:bg-rope/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory"
+                    className="flex items-start gap-sm rounded-2xl bg-sand shadow-card p-md transition-colors duration-instant ease-out-quart hover:bg-sand/80 active:bg-clay/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
                   >
                     <Avatar
                       photoUrl={author?.photoUrl}
@@ -71,19 +71,19 @@ export function ForumScreen() {
                       size="sm"
                     />
                     <div className="flex min-w-0 flex-1 flex-col gap-px">
-                      <span className="font-serif text-lede italic text-cocoa">
+                      <span className="font-serif text-lede italic text-charcoal">
                         {t.title}
                       </span>
-                      <span className="line-clamp-2 text-small text-cocoa-70">
+                      <span className="line-clamp-2 text-small text-charcoal-70">
                         {t.body}
                       </span>
-                      <span className="text-small text-cocoa-55">
+                      <span className="text-small text-charcoal-55">
                         {authorName} ·{' '}
                         <span className="tnum">{t.replyCount}</span> replies
                       </span>
                     </div>
                     <ChevronRight
-                      className="mt-1 h-5 w-5 shrink-0 text-cocoa-30"
+                      className="mt-1 h-5 w-5 shrink-0 text-charcoal-30"
                       strokeWidth={1.5}
                       aria-hidden
                     />

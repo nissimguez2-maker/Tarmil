@@ -57,13 +57,13 @@ export function Avatar({
     <span
       className={clsx(
         'relative inline-flex shrink-0 items-center justify-center overflow-visible rounded-full',
-        copperBorder && 'ring-2 ring-copper ring-offset-1 ring-offset-ivory',
+        copperBorder && 'ring-2 ring-amber ring-offset-1 ring-offset-cream',
         className,
       )}
     >
       <span
         className={clsx(
-          'relative inline-flex items-center justify-center overflow-hidden rounded-full bg-cocoa text-ivory',
+          'relative inline-flex items-center justify-center overflow-hidden rounded-full bg-charcoal text-cream',
           s.box,
         )}
       >
@@ -88,7 +88,7 @@ export function Avatar({
         <span
           aria-hidden
           className={clsx(
-            'absolute end-0 bottom-0 inline-block rounded-full bg-copper ring-2 ring-ivory',
+            'absolute end-0 bottom-0 inline-block rounded-full bg-amber ring-2 ring-cream',
             s.dot,
           )}
         />

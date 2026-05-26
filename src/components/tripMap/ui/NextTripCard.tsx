@@ -47,15 +47,15 @@ export function NextTripCard({ stops, onTap, onAdd }: Props) {
         onClick={() => setCollapsed(false)}
         aria-label="Expand trip details"
         aria-expanded={false}
-        className="block w-full border-b border-cocoa-08 bg-sand text-start transition-colors duration-instant ease-out-quart hover:bg-sand/80 active:bg-rope/40 focus-visible:outline-none focus-visible:bg-sand/80"
+        className="block w-full border-b border-charcoal-08 bg-sand text-start transition-colors duration-instant ease-out-quart hover:bg-sand/80 active:bg-clay/40 focus-visible:outline-none focus-visible:bg-sand/80"
       >
         <div className="flex items-center gap-sm px-md py-2">
-          <span className="meta-caps shrink-0 text-copper">Trip</span>
-          <span className="line-clamp-1 flex-1 font-serif text-body italic text-cocoa">
+          <span className="meta-caps shrink-0 text-amber">Trip</span>
+          <span className="line-clamp-1 flex-1 font-serif text-body italic text-charcoal">
             {title}
           </span>
           <ChevronUp
-            className="h-4 w-4 shrink-0 rotate-180 text-cocoa-55"
+            className="h-4 w-4 shrink-0 rotate-180 text-charcoal-55"
             strokeWidth={1.7}
             aria-hidden
           />
@@ -67,7 +67,7 @@ export function NextTripCard({ stops, onTap, onAdd }: Props) {
   return (
     <div
       className={clsx(
-        'group/card block w-full border-b border-cocoa-08 bg-sand',
+        'group/card block w-full border-b border-charcoal-08 bg-sand',
         'transition-colors duration-instant ease-out-quart',
       )}
     >
@@ -75,19 +75,19 @@ export function NextTripCard({ stops, onTap, onAdd }: Props) {
         <button
           type="button"
           onClick={onTap}
-          className="flex-1 flex-col gap-1 px-md pb-sm pt-md text-start transition-colors duration-instant ease-out-quart hover:bg-sand/80 active:bg-rope/40 focus-visible:outline-none focus-visible:bg-sand/80"
+          className="flex-1 flex-col gap-1 px-md pb-sm pt-md text-start transition-colors duration-instant ease-out-quart hover:bg-sand/80 active:bg-clay/40 focus-visible:outline-none focus-visible:bg-sand/80"
         >
-          <span className="meta-caps text-copper">Next trip</span>
+          <span className="meta-caps text-amber">Next trip</span>
 
-          <h2 className="truncate font-serif text-sub font-bold leading-tight text-cocoa">
+          <h2 className="truncate font-serif text-sub font-bold leading-tight text-charcoal">
             {title}
           </h2>
 
           <DaysUntilLine days={days} />
 
-          <p className="text-small text-cocoa-55">
-            <span className="text-cocoa-70">{span}</span>
-            <span aria-hidden className="px-1.5 text-cocoa-30">·</span>
+          <p className="text-small text-charcoal-55">
+            <span className="text-charcoal-70">{span}</span>
+            <span aria-hidden className="px-1.5 text-charcoal-30">·</span>
             <span>
               <span className="tnum">{totalNights}</span> nights
             </span>
@@ -99,7 +99,7 @@ export function NextTripCard({ stops, onTap, onAdd }: Props) {
             type="button"
             onClick={onAdd}
             aria-label="Add a stop"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-copper text-ivory shadow-card transition-[transform,background-color] duration-instant ease-out-quart hover:bg-copper-85 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-sand"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-amber text-cream shadow-card transition-[transform,background-color] duration-instant ease-out-quart hover:bg-amber-85 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-sand"
           >
             <Plus className="h-5 w-5" strokeWidth={2.2} aria-hidden />
           </button>
@@ -108,7 +108,7 @@ export function NextTripCard({ stops, onTap, onAdd }: Props) {
             onClick={() => setCollapsed(true)}
             aria-label="Collapse trip details"
             aria-expanded={true}
-            className="inline-flex h-7 w-7 items-center justify-center rounded-full text-cocoa-55 transition-colors duration-instant ease-out-quart hover:bg-cocoa-8 hover:text-cocoa focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory"
+            className="inline-flex h-7 w-7 items-center justify-center rounded-full text-charcoal-55 transition-colors duration-instant ease-out-quart hover:bg-charcoal-8 hover:text-charcoal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
           >
             <ChevronUp className="h-4 w-4" strokeWidth={1.7} aria-hidden />
           </button>
@@ -123,21 +123,21 @@ function EmptyState({ onAdd }: { onAdd: () => void }) {
     <button
       type="button"
       onClick={onAdd}
-      className="block w-full border-b border-cocoa-08 bg-sand text-start transition-colors duration-instant ease-out-quart hover:bg-sand/80 active:bg-rope/40 focus-visible:outline-none focus-visible:bg-sand/80"
+      className="block w-full border-b border-charcoal-08 bg-sand text-start transition-colors duration-instant ease-out-quart hover:bg-sand/80 active:bg-clay/40 focus-visible:outline-none focus-visible:bg-sand/80"
     >
       <div className="flex items-center gap-sm px-md py-md">
-        <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-copper text-ivory shadow-card">
+        <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-amber text-cream shadow-card">
           <MapPin className="h-5 w-5" strokeWidth={1.8} aria-hidden />
         </span>
         <div className="flex flex-1 flex-col gap-px">
-          <span className="meta-caps text-copper">Your trip</span>
-          <h2 className="font-serif text-lede italic leading-tight text-cocoa">
+          <span className="meta-caps text-amber">Your trip</span>
+          <h2 className="font-serif text-lede italic leading-tight text-charcoal">
             Where will you be? · When?
           </h2>
         </div>
         <span
           aria-hidden
-          className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-ivory text-cocoa shadow-card"
+          className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-cream text-charcoal shadow-card"
         >
           <Plus className="h-4 w-4" strokeWidth={2.2} />
         </span>
@@ -149,18 +149,18 @@ function EmptyState({ onAdd }: { onAdd: () => void }) {
 function DaysUntilLine({ days }: { days: number }) {
   if (days < 0) {
     return (
-      <p className="text-small font-medium text-copper">On the trip now</p>
+      <p className="text-small font-medium text-amber">On the trip now</p>
     );
   }
   if (days === 0) {
-    return <p className="text-small font-medium text-copper">Leaving today</p>;
+    return <p className="text-small font-medium text-amber">Leaving today</p>;
   }
   if (days === 1) {
-    return <p className="text-small font-medium text-copper">Leaving tomorrow</p>;
+    return <p className="text-small font-medium text-amber">Leaving tomorrow</p>;
   }
   return (
-    <p className="text-small text-cocoa-70">
-      <span className="tnum text-cocoa">{days}</span> days to go
+    <p className="text-small text-charcoal-70">
+      <span className="tnum text-charcoal">{days}</span> days to go
     </p>
   );
 }

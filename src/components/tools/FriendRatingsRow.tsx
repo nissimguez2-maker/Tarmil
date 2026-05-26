@@ -54,16 +54,16 @@ export function FriendRatingsRow({
           );
         })}
         {overflow > 0 && (
-          <span className="-me-2 inline-flex h-7 w-7 items-center justify-center rounded-full border-2 border-sand bg-cocoa-15 text-meta font-medium tnum text-cocoa-70">
+          <span className="-me-2 inline-flex h-7 w-7 items-center justify-center rounded-full border-2 border-sand bg-charcoal-15 text-meta font-medium tnum text-charcoal-70">
             +{overflow}
           </span>
         )}
       </div>
       <span className="ms-2 inline-flex items-center gap-1">
         <StarRow rating={avg} size={12} />
-        <span className="text-small tnum text-cocoa-70">
+        <span className="text-small tnum text-charcoal-70">
           {avg.toFixed(1)} ·{' '}
-          <span className="text-cocoa-55">
+          <span className="text-charcoal-55">
             {friendReviews.length} friend{friendReviews.length > 1 ? 's' : ''}
           </span>
         </span>

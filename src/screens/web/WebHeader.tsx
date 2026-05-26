@@ -17,35 +17,35 @@ export function WebHeader({ stops }: Props) {
       )
     : '';
   return (
-    <header className="h-14 shrink-0 bg-ivory border-b border-cocoa-15 flex items-center px-md gap-md">
-      <span className="font-serif text-lede text-cocoa">Tarmil</span>
+    <header className="h-14 shrink-0 bg-cream border-b border-charcoal-15 flex items-center px-md gap-md">
+      <span className="font-serif text-lede text-charcoal">Tarmil</span>
       <div className="flex-1 flex flex-col items-center leading-tight">
-        <span className="meta-caps text-cocoa-55">Planned trip</span>
-        <span className="font-serif text-lede text-cocoa">
+        <span className="meta-caps text-charcoal-55">Planned trip</span>
+        <span className="font-serif text-lede text-charcoal">
           {TRIP_TITLE_REGION}
-          {range && <span className="text-cocoa-55"> · {range}</span>}
+          {range && <span className="text-charcoal-55"> · {range}</span>}
         </span>
       </div>
       <div className="flex items-center gap-md">
         <button
           type="button"
           onClick={() => window.alert('Share link copied (mock)')}
-          className="inline-flex items-center gap-xs text-small text-cocoa-70 hover:text-cocoa transition-colors duration-instant ease-out-quart motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory rounded-sm"
+          className="inline-flex items-center gap-xs text-small text-charcoal-70 hover:text-charcoal transition-colors duration-instant ease-out-quart motion-reduce:transition-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream rounded-sm"
         >
           <Share2 size={14} strokeWidth={2} />
           Share
         </button>
         <Link
           to="/trip"
-          className="text-small text-copper hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory rounded-sm"
+          className="text-small text-amber hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream rounded-sm"
         >
           Switch to App
         </Link>
         <div className="flex items-center gap-xs">
-          <span className="text-small text-cocoa-55">Yotam</span>
+          <span className="text-small text-charcoal-55">Yotam</span>
           <span
             aria-hidden="true"
-            className="h-8 w-8 rounded-full bg-cocoa text-ivory font-serif text-small flex items-center justify-center"
+            className="h-8 w-8 rounded-full bg-charcoal text-cream font-serif text-small flex items-center justify-center"
           >
             Y
           </span>

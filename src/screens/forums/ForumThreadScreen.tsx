@@ -46,7 +46,7 @@ export function ForumThreadScreen() {
     return (
       <Screen>
         <TopBar back title="Thread not found" />
-        <div className="p-md text-cocoa-55">Removed or no longer exists.</div>
+        <div className="p-md text-charcoal-55">Removed or no longer exists.</div>
       </Screen>
     );
   }
@@ -83,7 +83,7 @@ export function ForumThreadScreen() {
       <TopBar back title={thread.title} />
 
       <div className="flex flex-1 flex-col gap-md overflow-y-auto p-md">
-        <article className="flex flex-col gap-sm rounded-2xl bg-ivory shadow-card p-md">
+        <article className="flex flex-col gap-sm rounded-2xl bg-cream shadow-card p-md">
           <header className="flex items-center gap-sm">
             <Avatar
               photoUrl={author?.photoUrl}
@@ -91,11 +91,11 @@ export function ForumThreadScreen() {
               name={author?.friendName ?? SELF_NAME}
               size="md"
             />
-            <span className="min-w-0 flex-1 truncate font-serif text-lede italic text-cocoa">
+            <span className="min-w-0 flex-1 truncate font-serif text-lede italic text-charcoal">
               {author?.friendName ?? SELF_NAME}
             </span>
           </header>
-          <p className="text-body text-cocoa">{thread.body}</p>
+          <p className="text-body text-charcoal">{thread.body}</p>
           <div className="flex flex-wrap items-center gap-2">
             {grouped.map((g) => (
               <ReactionPill
@@ -135,7 +135,7 @@ export function ForumThreadScreen() {
                 className="flex items-start gap-sm rounded-2xl bg-sand p-md"
               >
                 {isAnonymous ? (
-                  <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-cocoa-30 text-ivory">
+                  <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-charcoal-30 text-cream">
                     <EyeOff
                       className="h-4 w-4"
                       strokeWidth={1.7}
@@ -154,12 +154,12 @@ export function ForumThreadScreen() {
                   <span
                     className={clsx(
                       'truncate font-serif text-body italic',
-                      isAnonymous ? 'text-cocoa-55' : 'text-cocoa',
+                      isAnonymous ? 'text-charcoal-55' : 'text-charcoal',
                     )}
                   >
                     {displayName}
                   </span>
-                  <p className="text-body text-cocoa">{r.body}</p>
+                  <p className="text-body text-charcoal">{r.body}</p>
                 </div>
               </li>
             );
@@ -169,7 +169,7 @@ export function ForumThreadScreen() {
 
       <form
         onSubmit={handleSubmit}
-        className="sticky bottom-0 flex flex-col gap-sm border-t border-cocoa-15 bg-ivory px-md pt-sm"
+        className="sticky bottom-0 flex flex-col gap-sm border-t border-charcoal-15 bg-cream px-md pt-sm"
         style={{ paddingBottom: 'max(env(safe-area-inset-bottom, 0px), 12px)' }}
       >
         <IdentityToggle
@@ -189,9 +189,9 @@ export function ForumThreadScreen() {
             }
             disabled={sending}
             className={clsx(
-              'h-10 min-w-0 flex-1 rounded-full bg-sand ps-md pe-md text-body text-cocoa placeholder:text-cocoa-55',
+              'h-10 min-w-0 flex-1 rounded-full bg-sand ps-md pe-md text-body text-charcoal placeholder:text-charcoal-55',
               'outline-none transition-colors duration-instant ease-out-quart',
-              'focus:bg-ivory focus:ring-2 focus:ring-copper-70',
+              'focus:bg-cream focus:ring-2 focus:ring-amber-70',
             )}
           />
           <button
@@ -200,9 +200,9 @@ export function ForumThreadScreen() {
             disabled={!draft.trim() || sending}
             className={clsx(
               'inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full',
-              'bg-copper text-ivory shadow-fab',
+              'bg-umber text-cream shadow-fab',
               'transition-[transform,background-color] duration-instant ease-out-quart',
-              'hover:bg-copper-85 active:scale-[0.96] active:bg-copper',
+              'hover:bg-umber/90 active:scale-[0.96] active:bg-umber',
               'disabled:opacity-30 disabled:shadow-none disabled:active:scale-100',
             )}
           >

@@ -43,7 +43,7 @@ export function StarRow({
           <Star
             width={size}
             height={size}
-            className={isFilled ? 'fill-copper text-copper' : 'text-cocoa-30'}
+            className={isFilled ? 'fill-amber text-amber' : 'text-charcoal-30'}
             strokeWidth={1.6}
             aria-hidden
           />
@@ -57,7 +57,7 @@ export function StarRow({
             aria-checked={i === filled}
             aria-label={`${i} star${i === 1 ? '' : 's'}`}
             onClick={() => onPick?.(i as 1 | 2 | 3 | 4 | 5)}
-            className="inline-flex items-center justify-center rounded-full p-0.5 transition-transform duration-instant ease-out-quart active:scale-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-1 focus-visible:ring-offset-ivory"
+            className="inline-flex items-center justify-center rounded-full p-0.5 transition-transform duration-instant ease-out-quart active:scale-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-1 focus-visible:ring-offset-cream"
           >
             {star}
           </button>

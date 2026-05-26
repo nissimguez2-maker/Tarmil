@@ -62,7 +62,7 @@ export function WhosDownCard({
   };
 
   return (
-    <article className="flex flex-col gap-sm rounded-2xl bg-ivory shadow-card p-md">
+    <article className="flex flex-col gap-sm rounded-2xl bg-cream shadow-card p-md">
       <header className="flex items-center gap-sm">
         <Avatar
           photoUrl={author?.photoUrl}
@@ -71,16 +71,16 @@ export function WhosDownCard({
           size="md"
         />
         <div className="flex min-w-0 flex-1 flex-col leading-tight">
-          <span className="truncate font-serif text-lede italic text-cocoa">
+          <span className="truncate font-serif text-lede italic text-charcoal">
             {author?.friendName ?? 'User'}
           </span>
-          <span className="text-small text-cocoa-55">
+          <span className="text-small text-charcoal-55">
             {dateLabel ?? 'Open invite'}
           </span>
         </div>
       </header>
 
-      <p className="text-body text-cocoa">{post.bodyHe}</p>
+      <p className="text-body text-charcoal">{post.bodyHe}</p>
 
       {poll && (
         <PollCard
@@ -108,7 +108,7 @@ export function WhosDownCard({
         <button
           type="button"
           onClick={() => setReplyOpen((o) => !o)}
-          className="text-small text-copper transition-colors duration-instant ease-out-quart hover:text-copper-85 focus-visible:outline-none focus-visible:underline focus-visible:underline-offset-2"
+          className="text-small text-amber transition-colors duration-instant ease-out-quart hover:text-amber-85 focus-visible:outline-none focus-visible:underline focus-visible:underline-offset-2"
         >
           {replies.length > 0
             ? `${replies.length} ${replies.length === 1 ? 'reply' : 'replies'} · Reply`
@@ -117,7 +117,7 @@ export function WhosDownCard({
       </div>
 
       {replies.length > 0 && (
-        <ul className="flex flex-col gap-2 border-t border-cocoa-08 pt-sm">
+        <ul className="flex flex-col gap-2 border-t border-charcoal-08 pt-sm">
           {replies.map((reply) => {
             const replyAuthor = reply.authorFriendId
               ? authorById.get(reply.authorFriendId)
@@ -131,10 +131,10 @@ export function WhosDownCard({
                   size="sm"
                 />
                 <div className="flex min-w-0 flex-1 flex-col leading-tight">
-                  <span className="font-serif text-body italic text-cocoa">
+                  <span className="font-serif text-body italic text-charcoal">
                     {replyAuthor?.friendName ?? 'You'}
                   </span>
-                  <span className="text-small text-cocoa-70">{reply.bodyHe}</span>
+                  <span className="text-small text-charcoal-70">{reply.bodyHe}</span>
                 </div>
               </li>
             );
@@ -143,13 +143,13 @@ export function WhosDownCard({
       )}
 
       {replyOpen && onReply && (
-        <div className="flex items-center gap-2 border-t border-cocoa-08 pt-sm">
+        <div className="flex items-center gap-2 border-t border-charcoal-08 pt-sm">
           <input
             type="text"
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
             placeholder="Add a reply"
-            className="flex-1 rounded-full border border-cocoa-15 bg-ivory ps-md pe-md py-2 text-body text-cocoa placeholder:text-cocoa-55 focus:border-copper focus:outline-none"
+            className="flex-1 rounded-full border border-charcoal-15 bg-cream ps-md pe-md py-2 text-body text-charcoal placeholder:text-charcoal-55 focus:border-amber focus:outline-none"
             onKeyDown={(e) => {
               if (e.key === 'Enter') submitReply();
             }}
@@ -159,7 +159,7 @@ export function WhosDownCard({
             onClick={submitReply}
             disabled={submitting || draft.trim().length === 0}
             aria-label="Send reply"
-            className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-copper text-ivory transition-colors duration-instant ease-out-quart hover:bg-copper-85 disabled:opacity-30 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory"
+            className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-amber text-cream transition-colors duration-instant ease-out-quart hover:bg-amber-85 disabled:opacity-30 disabled:pointer-events-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
           >
             <Send className="h-4 w-4" strokeWidth={2} aria-hidden />
           </button>

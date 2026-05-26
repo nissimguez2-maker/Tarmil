@@ -46,7 +46,7 @@ export function WebToastLayer() {
       {toasts.map((t) => (
         <div
           key={t.id}
-          className="pointer-events-auto bg-cocoa text-ivory rounded-full ps-md pe-sm py-sm shadow-panel flex items-center gap-md max-w-sm"
+          className="pointer-events-auto bg-charcoal text-cream rounded-full ps-md pe-sm py-sm shadow-panel flex items-center gap-md max-w-sm"
         >
           <span className="text-small">{t.message}</span>
           {t.undo && (
@@ -56,7 +56,7 @@ export function WebToastLayer() {
                 t.undo?.();
                 dismiss(t.id);
               }}
-              className="text-meta uppercase font-medium text-copper hover:text-ivory transition-colors duration-instant ease-out-quart motion-reduce:transition-none focus-visible:outline-none focus-visible:underline"
+              className="text-meta uppercase font-medium text-amber hover:text-cream transition-colors duration-instant ease-out-quart motion-reduce:transition-none focus-visible:outline-none focus-visible:underline"
             >
               Undo
             </button>
@@ -65,7 +65,7 @@ export function WebToastLayer() {
             type="button"
             aria-label="Dismiss"
             onClick={() => dismiss(t.id)}
-            className="text-cocoa-30 hover:text-ivory text-small"
+            className="text-charcoal-30 hover:text-cream text-small"
           >
             ✕
           </button>

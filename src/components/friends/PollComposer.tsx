@@ -35,14 +35,14 @@ export function PollComposer({ value, onChange, onRemove }: Props) {
     onChange({ ...value, multipleChoice: !value.multipleChoice });
 
   return (
-    <section className="flex flex-col gap-sm rounded-2xl border border-copper/40 bg-sand/40 p-md">
+    <section className="flex flex-col gap-sm rounded-2xl border border-amber/40 bg-sand/40 p-md">
       <header className="flex items-center justify-between">
-        <span className="meta-caps text-copper">Poll</span>
+        <span className="meta-caps text-amber">Poll</span>
         <button
           type="button"
           onClick={onRemove}
           aria-label="Remove poll"
-          className="inline-flex h-7 w-7 items-center justify-center rounded-full text-cocoa-55 transition-colors duration-instant ease-out-quart hover:bg-cocoa-8 hover:text-cocoa focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-sand"
+          className="inline-flex h-7 w-7 items-center justify-center rounded-full text-charcoal-55 transition-colors duration-instant ease-out-quart hover:bg-charcoal-8 hover:text-charcoal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-sand"
         >
           <X className="h-4 w-4" strokeWidth={1.8} aria-hidden />
         </button>
@@ -52,7 +52,7 @@ export function PollComposer({ value, onChange, onRemove }: Props) {
         value={value.question}
         onChange={(e) => setQuestion(e.target.value)}
         placeholder="What's the question?"
-        className="w-full rounded-xl border border-cocoa-15 bg-ivory px-md py-2 text-body text-cocoa placeholder:text-cocoa-55 focus:border-copper focus:outline-none"
+        className="w-full rounded-xl border border-charcoal-15 bg-cream px-md py-2 text-body text-charcoal placeholder:text-charcoal-55 focus:border-amber focus:outline-none"
       />
       <ul className="flex flex-col gap-1">
         {value.options.map((option, i) => (
@@ -62,14 +62,14 @@ export function PollComposer({ value, onChange, onRemove }: Props) {
               value={option}
               onChange={(e) => setOption(i, e.target.value)}
               placeholder={`Option ${i + 1}`}
-              className="flex-1 rounded-xl border border-cocoa-15 bg-ivory px-md py-2 text-body text-cocoa placeholder:text-cocoa-55 focus:border-copper focus:outline-none"
+              className="flex-1 rounded-xl border border-charcoal-15 bg-cream px-md py-2 text-body text-charcoal placeholder:text-charcoal-55 focus:border-amber focus:outline-none"
             />
             <button
               type="button"
               onClick={() => removeOption(i)}
               disabled={value.options.length <= 2}
               aria-label={`Remove option ${i + 1}`}
-              className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-cocoa-55 transition-colors duration-instant ease-out-quart hover:bg-cocoa-8 hover:text-cocoa focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-sand disabled:opacity-30 disabled:pointer-events-none"
+              className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-charcoal-55 transition-colors duration-instant ease-out-quart hover:bg-charcoal-8 hover:text-charcoal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-sand disabled:opacity-30 disabled:pointer-events-none"
             >
               <X className="h-4 w-4" strokeWidth={1.8} aria-hidden />
             </button>
@@ -80,7 +80,7 @@ export function PollComposer({ value, onChange, onRemove }: Props) {
         <button
           type="button"
           onClick={addOption}
-          className="inline-flex items-center gap-1 self-start text-small text-copper transition-colors duration-instant ease-out-quart hover:text-copper-85 focus-visible:outline-none focus-visible:underline focus-visible:underline-offset-2"
+          className="inline-flex items-center gap-1 self-start text-small text-amber transition-colors duration-instant ease-out-quart hover:text-amber-85 focus-visible:outline-none focus-visible:underline focus-visible:underline-offset-2"
         >
           <Plus className="h-3.5 w-3.5" strokeWidth={2} aria-hidden />
           Add option
@@ -92,10 +92,10 @@ export function PollComposer({ value, onChange, onRemove }: Props) {
           checked={value.multipleChoice}
           onChange={toggleMulti}
           className={clsx(
-            'h-4 w-4 rounded border-cocoa-30 text-copper focus:ring-copper',
+            'h-4 w-4 rounded border-charcoal-30 text-amber focus:ring-amber',
           )}
         />
-        <span className="text-small text-cocoa-70">
+        <span className="text-small text-charcoal-70">
           Allow multiple choices
         </span>
       </label>

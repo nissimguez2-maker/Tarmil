@@ -22,7 +22,7 @@ export function Screen({ children, noScroll, className }: Props) {
   return (
     <div
       className={clsx(
-        'flex-1 bg-ivory',
+        'flex-1 bg-cream',
         noScroll ? 'overflow-hidden' : 'overflow-y-auto',
         className,
       )}

@@ -19,7 +19,7 @@ export function IdentityToggle({ value, onChange, realName }: Props) {
     <div
       role="radiogroup"
       aria-label="Post identity"
-      className="inline-flex rounded-full bg-cocoa-08 p-1"
+      className="inline-flex rounded-full bg-charcoal-08 p-1"
     >
       <Button
         active={value === 'name'}
@@ -62,10 +62,10 @@ function Button({
       className={clsx(
         'inline-flex items-center gap-1.5 rounded-full ps-3 pe-3 py-1.5 text-small font-medium leading-none',
         'transition-colors duration-instant ease-out-quart motion-reduce:transition-none',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream',
         active
-          ? 'bg-cocoa text-ivory'
-          : 'text-cocoa-70 hover:text-cocoa',
+          ? 'bg-charcoal text-cream'
+          : 'text-charcoal-70 hover:text-charcoal',
       )}
     >
       {children}

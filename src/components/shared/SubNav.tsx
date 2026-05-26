@@ -34,7 +34,7 @@ export function SubNav<T extends string>({
   return (
     <div
       className={clsx(
-        'relative flex border-b border-cocoa-15 bg-ivory',
+        'relative flex border-b border-charcoal-15 bg-cream',
         className,
       )}
     >
@@ -48,10 +48,10 @@ export function SubNav<T extends string>({
             className={clsx(
               'flex-1 py-3 text-center font-sans text-body',
               'transition-colors duration-instant ease-out-quart',
-              'focus-visible:outline-none focus-visible:bg-cocoa-8',
+              'focus-visible:outline-none focus-visible:bg-charcoal-8',
               isActive
-                ? 'font-medium text-cocoa'
-                : 'text-cocoa-55 hover:text-cocoa-70',
+                ? 'font-medium text-charcoal'
+                : 'text-charcoal-55 hover:text-charcoal-70',
             )}
             aria-pressed={isActive}
           >
@@ -61,7 +61,7 @@ export function SubNav<T extends string>({
       })}
       <span
         aria-hidden
-        className="absolute bottom-0 h-[2px] rounded-t-full bg-copper transition-[inset-inline-start] duration-considered ease-out-quart"
+        className="absolute bottom-0 h-[2px] rounded-t-full bg-amber transition-[inset-inline-start] duration-considered ease-out-quart"
         style={{
           width: `${100 / items.length}%`,
           insetInlineStart: `${activeIndex * (100 / items.length)}%`,

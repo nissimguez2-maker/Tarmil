@@ -74,22 +74,22 @@ export function CityForumGroup({
         className={clsx(
           'flex w-full items-center gap-sm px-md py-sm text-start',
           'transition-colors duration-instant ease-out-quart motion-reduce:transition-none',
-          'hover:bg-sand/70 active:bg-rope/40',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory',
+          'hover:bg-sand/70 active:bg-clay/40',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream',
         )}
       >
         <div className="flex min-w-0 flex-1 flex-col gap-px">
-          <span className="font-serif text-lede italic leading-tight text-cocoa">
+          <span className="font-serif text-lede italic leading-tight text-charcoal">
             {cityLabel}
           </span>
-          <span className="text-small text-cocoa-55">
+          <span className="text-small text-charcoal-55">
             <span className="tnum">{subjectCount}</span> subjects ·{' '}
             <span className="tnum">{formatMembers(totalMembers)}</span> members
           </span>
         </div>
         <ChevronDown
           className={clsx(
-            'h-5 w-5 shrink-0 text-cocoa-55',
+            'h-5 w-5 shrink-0 text-charcoal-55',
             'transition-transform duration-instant ease-out-quart',
             expanded && 'rotate-180',
           )}
@@ -138,23 +138,23 @@ function SubjectPill({ forum, previewTitle, tabbable }: SubjectPillProps) {
     <Link
       to={`/forums/${forum.id}`}
       tabIndex={tabbable ? 0 : -1}
-      className="flex items-center gap-sm rounded-xl bg-ivory px-md py-sm transition-colors duration-instant ease-out-quart motion-reduce:transition-none hover:bg-sand active:bg-rope/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-sand"
+      className="flex items-center gap-sm rounded-xl bg-cream px-md py-sm transition-colors duration-instant ease-out-quart motion-reduce:transition-none hover:bg-sand active:bg-clay/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-sand"
     >
-      <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-cocoa text-ivory">
+      <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-charcoal text-cream">
         <Icon className="h-4 w-4" strokeWidth={1.7} aria-hidden />
       </span>
       <div className="flex min-w-0 flex-1 flex-col gap-px">
-        <span className="font-serif text-body italic leading-tight text-cocoa">
+        <span className="font-serif text-body italic leading-tight text-charcoal">
           {label}
         </span>
         {previewTitle && (
-          <span className="line-clamp-1 text-small text-cocoa-70">
+          <span className="line-clamp-1 text-small text-charcoal-70">
             {previewTitle}
           </span>
         )}
       </div>
       <ChevronRight
-        className="h-5 w-5 shrink-0 text-cocoa-30"
+        className="h-5 w-5 shrink-0 text-charcoal-30"
         strokeWidth={1.5}
         aria-hidden
       />
@@ -176,18 +176,18 @@ export function RecommendedForumRow({ forum, onJoin }: RecommendedForumRowProps)
   return (
     <Link
       to={`/forums/${forum.id}`}
-      className="flex items-center gap-sm rounded-2xl bg-sand shadow-card p-md transition-colors duration-instant ease-out-quart motion-reduce:transition-none hover:bg-sand/80 active:bg-rope/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory"
+      className="flex items-center gap-sm rounded-2xl bg-sand shadow-card p-md transition-colors duration-instant ease-out-quart motion-reduce:transition-none hover:bg-sand/80 active:bg-clay/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
     >
       <div className="flex min-w-0 flex-1 flex-col gap-px">
         <div className="flex flex-wrap items-baseline gap-2">
-          <span className="font-serif text-lede italic text-cocoa">
+          <span className="font-serif text-lede italic text-charcoal">
             {forum.cityLabel ?? forum.nameEn}
           </span>
-          <span className="text-small text-cocoa-55">
+          <span className="text-small text-charcoal-55">
             <span className="tnum">{forum.memberCount}</span> members
           </span>
         </div>
-        <span className="line-clamp-1 text-small text-cocoa-70">
+        <span className="line-clamp-1 text-small text-charcoal-70">
           {forum.heroBlurbHe}
         </span>
       </div>

@@ -64,10 +64,10 @@ export function ConfirmDestinationSheet({
     <div className="flex max-h-[80dvh] flex-col gap-md overflow-y-auto px-md pb-md pt-sm">
       <div className="flex items-start justify-between gap-sm">
         <div className="flex min-w-0 flex-1 flex-col gap-px">
-          <span className="meta-caps text-copper">
+          <span className="meta-caps text-amber">
             {isEditing ? 'Edit destination' : 'New destination'}
           </span>
-          <h3 className="font-serif text-lede leading-tight text-cocoa">
+          <h3 className="font-serif text-lede leading-tight text-charcoal">
             Destination details
           </h3>
         </div>
@@ -75,25 +75,25 @@ export function ConfirmDestinationSheet({
           type="button"
           aria-label="Close"
           onClick={onClose}
-          className="-me-1 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-cocoa-55 transition-colors duration-instant ease-out-quart hover:bg-cocoa-8 active:bg-cocoa-15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory"
+          className="-me-1 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-charcoal-55 transition-colors duration-instant ease-out-quart hover:bg-charcoal-8 active:bg-charcoal-15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
         >
           <X className="h-4 w-4" strokeWidth={1.8} aria-hidden />
         </button>
       </div>
 
       <div className="flex flex-col gap-xs">
-        <span className="meta-caps text-cocoa-55">Destination name</span>
+        <span className="meta-caps text-charcoal-55">Destination name</span>
         <input
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
           dir="ltr"
-          className="h-10 w-full rounded-full border border-cocoa-15 bg-sand px-md text-body text-cocoa transition-colors duration-instant ease-out-quart focus:border-copper focus:outline-none"
+          className="h-10 w-full rounded-full border border-charcoal-15 bg-sand px-md text-body text-charcoal transition-colors duration-instant ease-out-quart focus:border-amber focus:outline-none"
         />
       </div>
 
       <div className="flex flex-col gap-xs">
-        <span className="meta-caps text-cocoa-55">When will you be there?</span>
+        <span className="meta-caps text-charcoal-55">When will you be there?</span>
         <div className="flex flex-col gap-2">
           <DateField
             label="Arrival"
@@ -106,7 +106,7 @@ export function ConfirmDestinationSheet({
             onChange={setDepartureDate}
           />
         </div>
-        <span className="text-small text-cocoa-70">
+        <span className="text-small text-charcoal-70">
           <span className="tnum">{nights}</span> nights
         </span>
       </div>
@@ -114,14 +114,14 @@ export function ConfirmDestinationSheet({
       <PrivacyRadios value={privacy} onChange={setPrivacy} />
 
       <div className="flex flex-col gap-xs">
-        <span className="meta-caps text-cocoa-55">Note (optional)</span>
+        <span className="meta-caps text-charcoal-55">Note (optional)</span>
         <textarea
           value={note}
           onChange={(e) => setNote(e.target.value)}
           rows={2}
           dir="ltr"
           placeholder="e.g. check flight from Bangkok…"
-          className="resize-none rounded-xl border border-cocoa-15 bg-sand p-sm text-body text-cocoa placeholder:text-cocoa-55 transition-colors duration-instant ease-out-quart focus:border-copper focus:outline-none"
+          className="resize-none rounded-xl border border-charcoal-15 bg-sand p-sm text-body text-charcoal placeholder:text-charcoal-55 transition-colors duration-instant ease-out-quart focus:border-amber focus:outline-none"
         />
       </div>
 
@@ -142,15 +142,15 @@ function DateField({
   onChange: (v: string) => void;
 }) {
   return (
-    <label className="flex h-10 cursor-pointer items-center justify-between gap-sm rounded-full border border-cocoa-15 bg-sand px-md text-cocoa transition-colors duration-instant ease-out-quart focus-within:border-copper">
-      <span className="text-small text-cocoa-55">{label}</span>
+    <label className="flex h-10 cursor-pointer items-center justify-between gap-sm rounded-full border border-charcoal-15 bg-sand px-md text-charcoal transition-colors duration-instant ease-out-quart focus-within:border-amber">
+      <span className="text-small text-charcoal-55">{label}</span>
       <input
         type="date"
         value={value}
         onChange={(e) => onChange(e.target.value)}
         dir="ltr"
         aria-label={label}
-        className="tnum cursor-pointer border-none bg-transparent text-body text-cocoa focus:outline-none"
+        className="tnum cursor-pointer border-none bg-transparent text-body text-charcoal focus:outline-none"
       />
     </label>
   );

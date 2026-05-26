@@ -30,7 +30,7 @@ export function WebRemoveStopConfirm({
 
   return (
     <div
-      className="fixed inset-0 z-[2000] bg-cocoa/40 flex items-center justify-center p-md"
+      className="fixed inset-0 z-[2000] bg-charcoal/40 flex items-center justify-center p-md"
       role="dialog"
       aria-modal="true"
       onClick={onCancel}
@@ -38,25 +38,25 @@ export function WebRemoveStopConfirm({
       <div
         onClick={(e) => e.stopPropagation()}
         style={{ width: '380px' }}
-        className="bg-ivory border border-rope rounded-3xl shadow-panel p-md flex flex-col gap-md relative"
+        className="bg-cream border border-charcoal-15 rounded-3xl shadow-panel p-md flex flex-col gap-md relative"
       >
         <button
           type="button"
           onClick={onCancel}
           aria-label="Close"
-          className="absolute top-sm end-sm h-8 w-8 rounded-full flex items-center justify-center text-cocoa-55 hover:text-cocoa hover:bg-cocoa-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory"
+          className="absolute top-sm end-sm h-8 w-8 rounded-full flex items-center justify-center text-charcoal-55 hover:text-charcoal hover:bg-charcoal-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
         >
           <X size={16} strokeWidth={2} />
         </button>
         <div className="flex flex-col gap-xs pe-12">
-          <p className="meta-caps text-copper inline-flex items-center gap-xs">
+          <p className="meta-caps text-amber inline-flex items-center gap-xs">
             <AlertTriangle size={12} strokeWidth={2} />
             Confirm removal
           </p>
-          <h2 className="font-serif text-sub text-cocoa leading-tight">
+          <h2 className="font-serif text-sub text-charcoal leading-tight">
             Remove {stopName}?
           </h2>
-          <p className="text-small text-cocoa-70">
+          <p className="text-small text-charcoal-70">
             This will also remove {summary}.
           </p>
         </div>

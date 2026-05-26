@@ -147,7 +147,7 @@ export function DiscoverModal({ open, onClose, initialDestinationId }: Props) {
         tabIndex={open ? 0 : -1}
         onClick={onClose}
         className={clsx(
-          'absolute inset-0 cursor-default bg-cocoa-30',
+          'absolute inset-0 cursor-default bg-charcoal-30',
           'transition-opacity duration-considered ease-out-quart',
           open ? 'opacity-100' : 'opacity-0',
         )}
@@ -155,20 +155,20 @@ export function DiscoverModal({ open, onClose, initialDestinationId }: Props) {
 
       <div
         className={clsx(
-          'relative flex max-h-[92%] flex-col rounded-t-3xl bg-ivory shadow-sheet',
+          'relative flex max-h-[92%] flex-col rounded-t-3xl bg-cream shadow-sheet',
           'transition-transform duration-considered ease-out-quart',
           open ? 'translate-y-0' : 'translate-y-full',
         )}
       >
         <span
           aria-hidden
-          className="mx-auto mt-2.5 block h-1 w-9 shrink-0 rounded-full bg-cocoa-15"
+          className="mx-auto mt-2.5 block h-1 w-9 shrink-0 rounded-full bg-charcoal-15"
         />
 
         <header className="flex items-start justify-between gap-sm px-md pb-sm pt-sm">
           <div className="flex min-w-0 flex-1 flex-col gap-px">
-            <span className="meta-caps text-copper">Discover</span>
-            <h2 className="font-serif text-lede leading-tight text-cocoa">
+            <span className="meta-caps text-amber">Discover</span>
+            <h2 className="font-serif text-lede leading-tight text-charcoal">
               Curated places
             </h2>
           </div>
@@ -176,7 +176,7 @@ export function DiscoverModal({ open, onClose, initialDestinationId }: Props) {
             type="button"
             aria-label="Close"
             onClick={onClose}
-            className="-me-1 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-cocoa-55 transition-[transform,background-color] duration-instant ease-out-quart hover:bg-cocoa-8 hover:text-cocoa active:scale-95 active:bg-cocoa-15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory"
+            className="-me-1 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-charcoal-55 transition-[transform,background-color] duration-instant ease-out-quart hover:bg-charcoal-8 hover:text-charcoal active:scale-95 active:bg-charcoal-15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
           >
             <X className="h-4 w-4" strokeWidth={1.8} aria-hidden />
           </button>
@@ -268,17 +268,17 @@ function CityPicker({
         aria-haspopup="listbox"
         className={clsx(
           'flex items-center justify-between gap-sm rounded-full px-md py-2',
-          'bg-cocoa text-ivory shadow-card',
+          'bg-charcoal text-cream shadow-card',
           'transition-[transform,background-color] duration-instant ease-out-quart',
-          'active:scale-[0.98] hover:bg-cocoa/90',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory',
+          'active:scale-[0.98] hover:bg-charcoal/90',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream',
         )}
       >
         <span className="flex min-w-0 items-baseline gap-2">
           <span className="font-serif text-body italic">
             {selected.nameEn}
           </span>
-          <span className="text-small text-ivory/60">
+          <span className="text-small text-cream/60">
             <span className="tnum">{stops.length}</span> stops
           </span>
         </span>
@@ -309,26 +309,26 @@ function CityPicker({
                   onClick={() => onPick(s.id)}
                   className={clsx(
                     'flex w-full items-center justify-between gap-sm px-md py-sm text-start',
-                    'transition-colors duration-instant ease-out-quart hover:bg-rope/40 active:bg-rope/60',
-                    i > 0 && 'border-t border-cocoa-08',
+                    'transition-colors duration-instant ease-out-quart hover:bg-clay/40 active:bg-clay/60',
+                    i > 0 && 'border-t border-charcoal-08',
                   )}
                 >
                   <span className="flex flex-col">
                     <span
                       className={clsx(
                         'font-serif text-body italic leading-tight',
-                        isActive ? 'text-cocoa' : 'text-cocoa-70',
+                        isActive ? 'text-charcoal' : 'text-charcoal-70',
                       )}
                     >
                       {s.nameEn}
                     </span>
-                    <span className="text-small text-cocoa-55">
+                    <span className="text-small text-charcoal-55">
                       <span className="tnum">{s.nights}</span> nights
                     </span>
                   </span>
                   {isActive && (
                     <Check
-                      className="h-4 w-4 shrink-0 text-copper"
+                      className="h-4 w-4 shrink-0 text-amber"
                       strokeWidth={2.2}
                       aria-hidden
                     />
@@ -363,7 +363,7 @@ function EmptyState({
       : 'Nothing curated here yet.';
   }
   return (
-    <p className="rounded-2xl bg-sand p-md text-small leading-snug text-cocoa-70">
+    <p className="rounded-2xl bg-sand p-md text-small leading-snug text-charcoal-70">
       {copy}
     </p>
   );

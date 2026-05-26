@@ -73,7 +73,7 @@ export function WebPhotoLightbox() {
 
   return (
     <div
-      className="fixed inset-0 z-[3500] bg-cocoa/90 flex items-center justify-center p-xl"
+      className="fixed inset-0 z-[3500] bg-charcoal/90 flex items-center justify-center p-xl"
       role="dialog"
       aria-modal="true"
       onClick={closeLightbox}
@@ -85,7 +85,7 @@ export function WebPhotoLightbox() {
           closeLightbox();
         }}
         aria-label="Close"
-        className="absolute top-md end-md h-10 w-10 rounded-full bg-ivory/10 hover:bg-ivory/20 text-ivory flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper"
+        className="absolute top-md end-md h-10 w-10 rounded-full bg-cream/10 hover:bg-cream/20 text-cream flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber"
       >
         <X size={20} strokeWidth={2} />
       </button>
@@ -97,7 +97,7 @@ export function WebPhotoLightbox() {
             goPrev();
           }}
           aria-label="Previous photo"
-          className="absolute start-md top-1/2 -translate-y-1/2 h-12 w-12 rounded-full bg-ivory/10 hover:bg-ivory/20 text-ivory flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper"
+          className="absolute start-md top-1/2 -translate-y-1/2 h-12 w-12 rounded-full bg-cream/10 hover:bg-cream/20 text-cream flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber"
         >
           <ChevronLeft size={24} strokeWidth={2} />
         </button>
@@ -110,7 +110,7 @@ export function WebPhotoLightbox() {
             goNext();
           }}
           aria-label="Next photo"
-          className="absolute end-md top-1/2 -translate-y-1/2 h-12 w-12 rounded-full bg-ivory/10 hover:bg-ivory/20 text-ivory flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper"
+          className="absolute end-md top-1/2 -translate-y-1/2 h-12 w-12 rounded-full bg-cream/10 hover:bg-cream/20 text-cream flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber"
         >
           <ChevronRight size={24} strokeWidth={2} />
         </button>
@@ -124,9 +124,9 @@ export function WebPhotoLightbox() {
           alt={`${cityName} photo ${index + 1}`}
           className="max-w-full max-h-[80dvh] object-contain rounded-xl"
         />
-        <figcaption className="text-center text-ivory text-small">
+        <figcaption className="text-center text-cream text-small">
           <span className="font-serif">{cityName}</span>
-          <span className="text-cocoa-30 ms-sm">
+          <span className="text-charcoal-30 ms-sm">
             {index + 1} / {photos.length}
           </span>
         </figcaption>

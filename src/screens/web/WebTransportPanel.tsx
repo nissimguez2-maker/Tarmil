@@ -113,20 +113,20 @@ export function WebTransportPanel({ fromStop, toStop, travelDate }: Props) {
 
   return (
     <div className="flex flex-col h-full min-h-0">
-      <header className="shrink-0 px-md pt-md pb-sm border-b border-cocoa-15 flex flex-col gap-sm pe-12">
+      <header className="shrink-0 px-md pt-md pb-sm border-b border-charcoal-15 flex flex-col gap-sm pe-12">
         <div className="flex flex-col gap-xs">
-          <div className="flex items-center gap-xs font-serif text-sub text-cocoa leading-tight">
+          <div className="flex items-center gap-xs font-serif text-sub text-charcoal leading-tight">
             <span>{fromStop.nameEn}</span>
-            <ArrowRight size={16} strokeWidth={2} className="text-cocoa-55" />
+            <ArrowRight size={16} strokeWidth={2} className="text-charcoal-55" />
             <span>{toStop.nameEn}</span>
           </div>
-          <p className="text-small text-cocoa-55">
+          <p className="text-small text-charcoal-55">
             {formatLongDate(leg.travelDate)}
           </p>
         </div>
         {availableModes.size > 1 && (
           <div className="flex flex-col gap-xs">
-            <p className="meta-caps text-cocoa-55">Travel modes</p>
+            <p className="meta-caps text-charcoal-55">Travel modes</p>
             <div className="flex gap-xs flex-wrap">
               {MODE_META.filter((m) => availableModes.has(m.mode)).map(
                 ({ mode, label, Icon }) => {
@@ -139,10 +139,10 @@ export function WebTransportPanel({ fromStop, toStop, travelDate }: Props) {
                       aria-pressed={on}
                       className={clsx(
                         'inline-flex items-center gap-xs px-sm py-xs rounded-full border text-small transition-[background-color,border-color,color,opacity] duration-instant ease-out-quart motion-reduce:transition-none',
-                        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory',
+                        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream',
                         on
-                          ? 'bg-cocoa text-ivory border-cocoa'
-                          : 'bg-ivory text-cocoa-55 border-cocoa-15 opacity-50 hover:opacity-100 hover:border-cocoa',
+                          ? 'bg-charcoal text-cream border-charcoal'
+                          : 'bg-cream text-charcoal-55 border-charcoal-15 opacity-50 hover:opacity-100 hover:border-charcoal',
                       )}
                     >
                       <Icon size={12} strokeWidth={2} />
@@ -175,8 +175,8 @@ export function WebTransportPanel({ fromStop, toStop, travelDate }: Props) {
 
 function EmptyOffers() {
   return (
-    <div className="bg-sand border border-rope rounded-2xl p-md text-center">
-      <p className="text-small text-cocoa-55">
+    <div className="bg-sand border border-charcoal-15 rounded-2xl p-md text-center">
+      <p className="text-small text-charcoal-55">
         No offers match the selected modes. Toggle a mode back on.
       </p>
     </div>
@@ -192,10 +192,10 @@ function modeIcon(mode: Mode) {
 }
 
 function badgeColor(badge: NonNullable<TransportOffer['badge']>): string {
-  if (badge === 'cheapest') return 'bg-stone text-ivory';
-  if (badge === 'fastest') return 'bg-cocoa text-ivory';
-  if (badge === 'easiest') return 'bg-rope text-cocoa';
-  return 'bg-copper text-ivory';
+  if (badge === 'cheapest') return 'bg-clay text-cream';
+  if (badge === 'fastest') return 'bg-charcoal text-cream';
+  if (badge === 'easiest') return 'bg-clay text-charcoal';
+  return 'bg-amber text-cream';
 }
 
 function OfferCard({
@@ -230,28 +230,28 @@ function OfferCard({
     <article
       className={clsx(
         'rounded-2xl p-sm border flex flex-col gap-sm transition-[border-color,background-color] duration-instant ease-out-quart motion-reduce:transition-none',
-        booked ? 'bg-sand border-copper' : 'bg-sand border-rope',
+        booked ? 'bg-sand border-amber' : 'bg-sand border-charcoal-15',
       )}
     >
       <div className="flex items-start gap-sm">
-        <span className="shrink-0 h-9 w-9 rounded-full bg-ivory border border-cocoa-15 flex items-center justify-center text-cocoa">
+        <span className="shrink-0 h-9 w-9 rounded-full bg-cream border border-charcoal-15 flex items-center justify-center text-charcoal">
           <Icon size={16} strokeWidth={2} />
         </span>
         <div className="flex-1 min-w-0">
-          <p className="font-sans font-semibold text-lede text-cocoa">
+          <p className="font-sans font-semibold text-lede text-charcoal">
             {offer.provider}
           </p>
           {!isDrive ? (
-            <p className="text-small text-cocoa-70 inline-flex items-center gap-xs">
+            <p className="text-small text-charcoal-70 inline-flex items-center gap-xs">
               <span className="tnum">{offer.departureTime}</span>
-              <ArrowRight size={12} strokeWidth={2} className="text-cocoa-55" />
+              <ArrowRight size={12} strokeWidth={2} className="text-charcoal-55" />
               <span className="tnum">{offer.arrivalTime}</span>
-              <span className="text-cocoa-55">· {offer.durationLabel}</span>
+              <span className="text-charcoal-55">· {offer.durationLabel}</span>
             </p>
           ) : (
-            <p className="text-small text-cocoa-70">{offer.durationLabel}</p>
+            <p className="text-small text-charcoal-70">{offer.durationLabel}</p>
           )}
-          <p className="text-small text-cocoa-55">
+          <p className="text-small text-charcoal-55">
             {isDrive
               ? 'Direct'
               : offer.stops === 0
@@ -272,12 +272,12 @@ function OfferCard({
         )}
       </div>
       <div className="flex items-end justify-between gap-sm">
-        <p className="font-serif text-sub text-copper inline-flex items-baseline gap-xs">
+        <p className="font-serif text-sub text-amber inline-flex items-baseline gap-xs">
           {isDrive && (
             <CircleDollarSign
               size={14}
               strokeWidth={2}
-              className="text-cocoa-30"
+              className="text-charcoal-30"
             />
           )}
           {offer.currency} {offer.price}
@@ -286,7 +286,7 @@ function OfferCard({
           <button
             type="button"
             onClick={onRemove}
-            className="inline-flex items-center gap-xs text-meta uppercase font-medium text-copper hover:text-cocoa transition-colors duration-instant ease-out-quart motion-reduce:transition-none focus-visible:outline-none focus-visible:underline rounded-sm"
+            className="inline-flex items-center gap-xs text-meta uppercase font-medium text-amber hover:text-charcoal transition-colors duration-instant ease-out-quart motion-reduce:transition-none focus-visible:outline-none focus-visible:underline rounded-sm"
           >
             <Check size={12} strokeWidth={2} />
             Booked · Remove

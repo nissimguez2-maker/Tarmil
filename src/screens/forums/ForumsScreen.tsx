@@ -88,7 +88,7 @@ export function ForumsScreen() {
           placeholder="Search a city or subject"
         />
 
-        <p className="text-small leading-snug text-cocoa-70">
+        <p className="text-small leading-snug text-charcoal-70">
           One forum per (city × subject). Anyone verified can post —
           choose full name or anonymous each time.
         </p>
@@ -109,7 +109,7 @@ export function ForumsScreen() {
 
         {recommendedForums.length > 0 && (
           <>
-            <span className="meta-caps text-cocoa-55">Recommended for you</span>
+            <span className="meta-caps text-charcoal-55">Recommended for you</span>
             <ul className="flex flex-col gap-sm">
               {recommendedForums.map((f) => (
                 <li key={f.id}>

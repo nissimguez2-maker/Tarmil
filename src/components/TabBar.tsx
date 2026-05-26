@@ -44,7 +44,7 @@ export function TabBar() {
         aria-label="Main navigation"
         className={clsx(
           'pointer-events-auto relative isolate grid w-full max-w-[360px] grid-cols-5',
-          'rounded-full bg-cocoa shadow-fab',
+          'rounded-full bg-charcoal shadow-fab',
         )}
       >
         {TABS.map(({ to, label, Icon }) => (
@@ -57,10 +57,10 @@ export function TabBar() {
                 'group relative flex h-14 flex-col items-center justify-center gap-0.5',
                 'transition-[transform,color] duration-instant ease-out-quart motion-reduce:transition-none',
                 'active:scale-[0.94]',
-                'focus-visible:outline-none focus-visible:rounded-full focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-cocoa',
+                'focus-visible:outline-none focus-visible:rounded-full focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-charcoal',
                 isActive
-                  ? 'text-ivory'
-                  : 'text-ivory/45 hover:text-ivory/75',
+                  ? 'text-cream'
+                  : 'text-cream/45 hover:text-cream/75',
               )
             }
           >
@@ -69,7 +69,7 @@ export function TabBar() {
                 {isActive && (
                   <span
                     aria-hidden
-                    className="absolute inset-x-2 inset-y-1.5 -z-10 rounded-full bg-copper"
+                    className="absolute inset-x-2 inset-y-1.5 -z-10 rounded-full bg-amber"
                   />
                 )}
                 <Icon

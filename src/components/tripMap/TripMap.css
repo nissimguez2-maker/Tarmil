@@ -7,7 +7,7 @@
  */
 
 .tarmil-map {
-  background: var(--ivory);
+  background: var(--cream);
   font-family: 'Heebo', 'Google Sans Text', system-ui, sans-serif;
 }
 
@@ -26,9 +26,9 @@
   width: 17px;
   height: 17px;
   border-radius: 50%;
-  background: var(--cocoa);
-  border: 2.5px solid var(--ivory);
-  box-shadow: 0 1px 4px rgba(53, 40, 24, 0.35);
+  background: var(--charcoal);
+  border: 2.5px solid var(--cream);
+  box-shadow: 0 1px 4px rgba(46, 36, 23, 0.35);
   margin: 5.5px;
   transition: transform 0.15s ease;
   cursor: pointer;
@@ -41,8 +41,8 @@
 
 /* category accents — mostly cocoa for visual unity, copper only for picks */
 .tarmil-place-pick {
-  background: var(--copper);
-  box-shadow: 0 0 0 1px var(--copper-70), 0 1px 4px rgba(53, 40, 24, 0.35);
+  background: var(--amber);
+  box-shadow: 0 0 0 1px var(--amber-70), 0 1px 4px rgba(46, 36, 23, 0.35);
 }
 
 /* ─── Cluster icons (place markers grouped at low zoom) ───────────────── */
@@ -56,16 +56,16 @@
   height: 36px;
   margin: 1px;
   border-radius: 50%;
-  background: var(--cocoa);
-  color: var(--ivory);
-  border: 2.5px solid var(--ivory);
+  background: var(--charcoal);
+  color: var(--cream);
+  border: 2.5px solid var(--cream);
   display: flex;
   align-items: center;
   justify-content: center;
   font-family: 'Heebo', 'Google Sans Text', system-ui, sans-serif;
   font-weight: 700;
   font-size: 11pt;
-  box-shadow: 0 2px 6px rgba(53, 40, 24, 0.32);
+  box-shadow: 0 2px 6px rgba(46, 36, 23, 0.32);
   transition: transform 0.15s ease;
   cursor: pointer;
 }
@@ -108,17 +108,17 @@
 }
 
 .tarmil-friend-circle.is-present {
-  background: var(--copper);
-  color: var(--ivory);
-  border: 2px solid var(--ivory);
-  box-shadow: 0 2px 8px rgba(53, 40, 24, 0.28);
+  background: var(--amber);
+  color: var(--cream);
+  border: 2px solid var(--cream);
+  box-shadow: 0 2px 8px rgba(46, 36, 23, 0.28);
 }
 
 .tarmil-friend-circle.is-overlap {
-  background: var(--ivory);
-  color: var(--copper);
-  border: 2px dashed var(--copper);
-  box-shadow: 0 2px 8px rgba(53, 40, 24, 0.22);
+  background: var(--cream);
+  color: var(--amber);
+  border: 2px dashed var(--amber);
+  box-shadow: 0 2px 8px rgba(46, 36, 23, 0.22);
 }
 
 /*
@@ -132,11 +132,11 @@
   width: 24px;
   height: 24px;
   margin: 10px;
-  background: var(--ivory);
-  color: var(--cocoa-55);
-  border: 1.5px dashed var(--cocoa-30);
+  background: var(--cream);
+  color: var(--charcoal-55);
+  border: 1.5px dashed var(--charcoal-30);
   font-size: 10pt;
-  box-shadow: 0 1px 4px rgba(53, 40, 24, 0.14);
+  box-shadow: 0 1px 4px rgba(46, 36, 23, 0.14);
 }
 
 .tarmil-friend-circle:hover,
@@ -157,11 +157,11 @@
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: var(--copper);
-  border: 3px solid var(--ivory);
+  background: var(--amber);
+  border: 3px solid var(--cream);
   transform: translate(-50%, -50%);
   z-index: 2;
-  box-shadow: 0 1px 6px rgba(53, 40, 24, 0.45);
+  box-shadow: 0 1px 6px rgba(46, 36, 23, 0.45);
 }
 
 .tarmil-present-ring {
@@ -171,7 +171,7 @@
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: var(--copper);
+  background: var(--amber);
   transform: translate(-50%, -50%);
   z-index: 1;
   animation: tarmil-pulse 2.4s ease-out infinite;
@@ -218,11 +218,11 @@
   height: 14px;
   margin: 13px;
   border-radius: 50%;
-  background: var(--ivory);
-  border: 2px solid var(--copper);
+  background: var(--cream);
+  border: 2px solid var(--amber);
   box-shadow:
-    0 0 0 4px rgba(199, 93, 36, 0.10),
-    0 1px 4px rgba(53, 40, 24, 0.30);
+    0 0 0 4px rgba(198, 128, 61, 0.10),
+    0 1px 4px rgba(46, 36, 23, 0.30);
   transition: transform 0.15s ease, box-shadow 0.15s ease;
   cursor: pointer;
 }
@@ -234,9 +234,9 @@
 
 .tarmil-planned-circle.is-active {
   box-shadow:
-    0 0 0 6px rgba(199, 93, 36, 0.18),
-    0 0 0 14px rgba(199, 93, 36, 0.06),
-    0 1px 6px rgba(53, 40, 24, 0.40);
+    0 0 0 6px rgba(198, 128, 61, 0.18),
+    0 0 0 14px rgba(198, 128, 61, 0.06),
+    0 1px 6px rgba(46, 36, 23, 0.40);
 }
 
 /*
@@ -256,10 +256,10 @@
   gap: 0;
   padding: 4px 8px;
   border-radius: 9999px;
-  background: rgba(253, 251, 247, 0.92);
+  background: rgba(250, 245, 236, 0.92);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
-  box-shadow: 0 1px 3px rgba(53, 40, 24, 0.18);
+  box-shadow: 0 1px 3px rgba(46, 36, 23, 0.18);
   pointer-events: none;
   white-space: nowrap;
 }
@@ -269,7 +269,7 @@
   font-weight: 700;
   font-size: 10pt;
   line-height: 1.1;
-  color: var(--cocoa);
+  color: var(--charcoal);
 }
 
 .tarmil-planned-label-dates {
@@ -277,7 +277,7 @@
   font-size: 8pt;
   font-feature-settings: 'tnum' 1;
   line-height: 1.1;
-  color: var(--copper);
+  color: var(--amber);
 }
 
 /* ─── Pick-on-map reticle ────────────────────────────────────────────── */
@@ -295,8 +295,8 @@
   width: 64px;
   height: 64px;
   border-radius: 50%;
-  border: 2px dashed var(--copper);
-  background: rgba(199, 93, 36, 0.06);
+  border: 2px dashed var(--amber);
+  background: rgba(198, 128, 61, 0.06);
   pointer-events: none;
   z-index: 1500;
 }
@@ -309,7 +309,7 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--copper);
+  background: var(--amber);
   transform: translate(-50%, -50%);
 }
 

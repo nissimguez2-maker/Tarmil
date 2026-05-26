@@ -83,10 +83,10 @@ export function BusinessCard({
             'absolute end-sm top-sm z-10 inline-flex h-9 w-9 items-center justify-center rounded-full backdrop-blur',
             'transition-[transform,background-color,color] duration-instant ease-out-quart',
             'active:scale-[0.92]',
-            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-sand',
+            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-sand',
             saved
-              ? 'bg-copper text-ivory shadow-card hover:bg-copper-85'
-              : 'bg-ivory/90 text-cocoa shadow-card hover:bg-ivory',
+              ? 'bg-amber text-cream shadow-card hover:bg-amber-85'
+              : 'bg-cream/90 text-charcoal shadow-card hover:bg-cream',
           )}
         >
           <Bookmark
@@ -99,24 +99,24 @@ export function BusinessCard({
 
       <Link
         to={`/place/${place.id}`}
-        className="block transition-colors duration-instant ease-out-quart motion-reduce:transition-none hover:bg-sand/80 active:bg-rope/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory"
+        className="block transition-colors duration-instant ease-out-quart motion-reduce:transition-none hover:bg-sand/80 active:bg-clay/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
       >
         <Hero imageUrl={place.imageUrl} alt={place.englishName} />
         <div className="flex items-start gap-sm p-md">
           <div className="flex min-w-0 flex-1 flex-col gap-px">
-            <span className="meta-caps text-copper">
+            <span className="meta-caps text-amber">
               {category}
               {cityLabel && (
                 <>
-                  <span aria-hidden className="px-1 text-cocoa-30">·</span>
-                  <span className="text-cocoa-55">{cityLabel}</span>
+                  <span aria-hidden className="px-1 text-charcoal-30">·</span>
+                  <span className="text-charcoal-55">{cityLabel}</span>
                 </>
               )}
             </span>
-            <h3 className="font-serif text-lede italic leading-tight text-cocoa">
+            <h3 className="font-serif text-lede italic leading-tight text-charcoal">
               {place.englishName}
             </h3>
-            <p className="line-clamp-2 text-small text-cocoa-70">
+            <p className="line-clamp-2 text-small text-charcoal-70">
               {place.englishDescription}
             </p>
             <FriendRatingsRow
@@ -126,22 +126,22 @@ export function BusinessCard({
             />
           </div>
           <ChevronRight
-            className="mt-1 h-5 w-5 shrink-0 text-cocoa-30"
+            className="mt-1 h-5 w-5 shrink-0 text-charcoal-30"
             strokeWidth={1.5}
             aria-hidden
           />
         </div>
       </Link>
       {place.reservationUrl && (
-        <div className="border-t border-cocoa-08 p-sm pt-2">
+        <div className="border-t border-charcoal-08 p-sm pt-2">
           <a
             href={place.reservationUrl}
             target={ctaKind === 'external' ? '_blank' : undefined}
             rel={ctaKind === 'external' ? 'noopener noreferrer' : undefined}
             className={clsx(
-              'inline-flex w-full items-center justify-center gap-2 rounded-full bg-copper px-md py-2 text-body font-medium text-ivory shadow-card',
+              'inline-flex w-full items-center justify-center gap-2 rounded-full bg-charcoal px-md py-2 text-body font-medium text-cream shadow-card',
               'transition-[transform,background-color] duration-instant ease-out-quart motion-reduce:transition-none',
-              'hover:bg-copper-85 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-sand',
+              'hover:bg-charcoal-70 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-sand',
             )}
           >
             {ctaKind === 'tel' && <Phone className="h-4 w-4" aria-hidden />}
@@ -177,9 +177,9 @@ function StatusPill({ status }: { status: PlaceSaveStatus }) {
         'absolute start-sm top-sm z-10 inline-flex items-center gap-1 rounded-full px-2 py-1',
         'text-meta font-semibold uppercase tracking-[0.12em] leading-none',
         'shadow-card backdrop-blur',
-        status === 'reserved' && 'bg-copper text-ivory',
-        status === 'wishlist' && 'bg-ivory/95 text-copper',
-        status === 'visited' && 'bg-cocoa/85 text-ivory',
+        status === 'reserved' && 'bg-amber text-cream',
+        status === 'wishlist' && 'bg-cream/95 text-amber',
+        status === 'visited' && 'bg-charcoal/85 text-cream',
       )}
       aria-label={`Status: ${STATUS_LABEL[status]}`}
     >
@@ -187,9 +187,9 @@ function StatusPill({ status }: { status: PlaceSaveStatus }) {
         aria-hidden
         className={clsx(
           'inline-block h-1.5 w-1.5 rounded-full',
-          status === 'reserved' && 'bg-ivory',
-          status === 'wishlist' && 'bg-copper',
-          status === 'visited' && 'bg-ivory',
+          status === 'reserved' && 'bg-cream',
+          status === 'wishlist' && 'bg-amber',
+          status === 'visited' && 'bg-cream',
         )}
       />
       {STATUS_LABEL[status]}
@@ -214,7 +214,7 @@ function Hero({ imageUrl, alt }: { imageUrl?: string; alt: string }) {
       className="h-32 w-full"
       style={{
         background:
-          'linear-gradient(135deg, var(--sand) 0%, var(--rope) 100%)',
+          'linear-gradient(135deg, var(--sand) 0%, var(--clay) 100%)',
       }}
     />
   );

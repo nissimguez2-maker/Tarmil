@@ -52,10 +52,10 @@ export function FriendsListScreen() {
 
         <section className="flex items-center justify-between gap-sm rounded-2xl bg-sand p-md">
           <div className="flex min-w-0 flex-1 flex-col leading-tight">
-            <span className="font-serif text-body italic text-cocoa">
+            <span className="font-serif text-body italic text-charcoal">
               2 friend requests
             </span>
-            <span className="text-small text-cocoa-55">
+            <span className="text-small text-charcoal-55">
               Tamar Yaron, Itai Cohen
             </span>
           </div>
@@ -70,7 +70,7 @@ export function FriendsListScreen() {
           Re-sync from contacts
         </Button>
 
-        <section className="flex flex-col gap-1 rounded-2xl border border-cocoa-15 bg-ivory">
+        <section className="flex flex-col gap-1 rounded-2xl border border-charcoal-15 bg-cream">
           <ToggleRow
             label="See friends-of-friends posts"
             description="Friend-of-friend Activity posts appear only when you both opt in."
@@ -116,20 +116,20 @@ export function FriendsListScreen() {
                   />
                   <span className="flex min-w-0 flex-1 flex-col gap-xs">
                     <span className="flex flex-wrap items-baseline gap-2">
-                      <span className="font-serif text-lede leading-tight text-cocoa">
+                      <span className="font-serif text-lede leading-tight text-charcoal">
                         {friend.friendName}
                       </span>
-                      <span className="meta-caps text-copper">
+                      <span className="meta-caps text-amber">
                         {isPresent ? 'Here with you' : 'Future overlap'}
                       </span>
                     </span>
-                    <span className="text-small text-cocoa-70">
-                      <span className="text-cocoa">{friend.zoneLabel}</span>
+                    <span className="text-small text-charcoal-70">
+                      <span className="text-charcoal">{friend.zoneLabel}</span>
                       {dates && (
-                        <span className="text-cocoa-55"> · {dates}</span>
+                        <span className="text-charcoal-55"> · {dates}</span>
                       )}
                     </span>
-                    <span className="text-small text-cocoa-55">
+                    <span className="text-small text-charcoal-55">
                       {friend.detail}
                     </span>
                   </span>
@@ -139,7 +139,7 @@ export function FriendsListScreen() {
           })}
         </ul>
 
-        <p className="text-small leading-snug text-cocoa-55">
+        <p className="text-small leading-snug text-charcoal-55">
           City-level location only. Tarmil never shows friends your exact
           address — overlaps appear at city level only.
         </p>
@@ -160,10 +160,10 @@ function ToggleRow({
   onChange: () => void;
 }) {
   return (
-    <label className="flex cursor-pointer items-start gap-sm border-b border-cocoa-08 px-md py-3 last:border-b-0">
+    <label className="flex cursor-pointer items-start gap-sm border-b border-charcoal-08 px-md py-3 last:border-b-0">
       <span className="flex min-w-0 flex-1 flex-col leading-tight">
-        <span className="text-body text-cocoa">{label}</span>
-        <span className="text-small text-cocoa-55">{description}</span>
+        <span className="text-body text-charcoal">{label}</span>
+        <span className="text-small text-charcoal-55">{description}</span>
       </span>
       <button
         type="button"
@@ -173,14 +173,14 @@ function ToggleRow({
         className={clsx(
           'relative mt-1 inline-flex h-6 w-11 shrink-0 items-center rounded-full',
           'transition-colors duration-instant ease-out-quart',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory',
-          checked ? 'bg-copper' : 'bg-cocoa-15',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream',
+          checked ? 'bg-amber' : 'bg-charcoal-15',
         )}
       >
         <span
           aria-hidden
           className={clsx(
-            'inline-block h-5 w-5 transform rounded-full bg-ivory shadow-card transition-transform duration-instant ease-out-quart',
+            'inline-block h-5 w-5 transform rounded-full bg-cream shadow-card transition-transform duration-instant ease-out-quart',
             checked ? 'translate-x-5' : 'translate-x-0.5',
           )}
         />

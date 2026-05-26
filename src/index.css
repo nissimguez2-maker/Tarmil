@@ -32,7 +32,7 @@
 
   body {
     margin: 0;
-    color: var(--cocoa);
+    color: var(--charcoal);
     font-family: 'Heebo', 'Google Sans Text', system-ui, sans-serif;
     font-size: 11pt;
     line-height: 1.55;
@@ -58,7 +58,7 @@
     font-family: 'Fraunces', 'Frank Ruhl Libre', 'Times New Roman', serif;
     font-weight: 700;
     font-variation-settings: 'SOFT' 100, 'opsz' 144;
-    color: var(--cocoa);
+    color: var(--charcoal);
   }
 }
 
@@ -76,7 +76,7 @@
     font-weight: 500;
     font-style: italic;
     font-variation-settings: 'SOFT' 100;
-    color: var(--cocoa);
+    color: var(--charcoal);
   }
 
   /* metadata caps per DA: Heebo 500 uppercase 0.18em tracking copper or cocoa */

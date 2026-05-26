@@ -81,7 +81,7 @@ export function ProfileScreen() {
           <Link
             to="/profile/settings"
             aria-label="Settings"
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full text-cocoa transition-colors duration-instant ease-out-quart hover:bg-cocoa-8 active:bg-cocoa-15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full text-charcoal transition-colors duration-instant ease-out-quart hover:bg-charcoal-8 active:bg-charcoal-15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
           >
             <Settings className="h-5 w-5" aria-hidden />
           </Link>
@@ -93,7 +93,7 @@ export function ProfileScreen() {
           className="relative flex flex-col items-center gap-sm px-md pt-lg pb-md"
           style={{
             background:
-              'linear-gradient(180deg, rgba(234,216,192,0.75) 0%, rgba(253,251,247,1) 100%)',
+              'linear-gradient(180deg, rgba(231,218,198,0.75) 0%, rgba(250,245,236,1) 100%)',
           }}
         >
           <Avatar
@@ -103,10 +103,10 @@ export function ProfileScreen() {
             size="hero"
             copperBorder
           />
-          <span className="font-serif text-sub leading-tight text-cocoa">
+          <span className="font-serif text-sub leading-tight text-charcoal">
             Nissim Guez
           </span>
-          <span className="text-small text-cocoa-55">
+          <span className="text-small text-charcoal-55">
             Traveling since summer 2024
           </span>
           <div className="mt-1 flex flex-wrap items-center justify-center gap-2">
@@ -126,19 +126,19 @@ export function ProfileScreen() {
             <SectionLabel number="01" label="Your route." />
             <Link
               to="/trip"
-              className="flex items-center justify-between gap-sm rounded-2xl bg-sand shadow-card p-md transition-colors duration-instant ease-out-quart hover:bg-sand/70 active:bg-sand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory"
+              className="flex items-center justify-between gap-sm rounded-2xl bg-sand shadow-card p-md transition-colors duration-instant ease-out-quart hover:bg-sand/70 active:bg-sand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
             >
               <span className="flex min-w-0 flex-1 flex-col gap-px">
-                <span className="truncate font-serif text-lede italic text-cocoa">
+                <span className="truncate font-serif text-lede italic text-charcoal">
                   Your route
                 </span>
-                <span className="text-small text-cocoa-70">
+                <span className="text-small text-charcoal-70">
                   Rio right now ·{' '}
                   <span className="tnum">{stopsCount}</span> planned stop
                   {stopsCount === 1 ? '' : 's'} in LATAM
                 </span>
               </span>
-              <span className="meta-caps shrink-0 text-copper">Open map</span>
+              <span className="meta-caps shrink-0 text-amber">Open map</span>
             </Link>
           </section>
 
@@ -181,7 +181,7 @@ export function ProfileScreen() {
               <SectionLabel number="03" label="Friends in network." />
               <Link
                 to="/profile/friends"
-                className="text-small text-copper transition-colors duration-instant ease-out-quart hover:text-copper-85 focus-visible:outline-none focus-visible:underline focus-visible:underline-offset-2"
+                className="text-small text-amber transition-colors duration-instant ease-out-quart hover:text-amber-85 focus-visible:outline-none focus-visible:underline focus-visible:underline-offset-2"
               >
                 See all
               </Link>
@@ -200,11 +200,11 @@ export function ProfileScreen() {
 
           <section className="flex flex-col gap-sm">
             <SectionLabel number="04" label="Per-trip privacy." />
-            <p className="text-small leading-snug text-cocoa-70">
+            <p className="text-small leading-snug text-charcoal-70">
               Each declared stop is private by default. Opt in per trip to
               share with direct friends, or with friends-of-friends.
             </p>
-            <ul className="overflow-hidden rounded-2xl border border-cocoa-15 bg-ivory">
+            <ul className="overflow-hidden rounded-2xl border border-charcoal-15 bg-cream">
               {data.plannedStops.map((stop, i) => {
                 const v = visibilityFor(stop.id);
                 return (
@@ -212,14 +212,14 @@ export function ProfileScreen() {
                     key={stop.id}
                     className={clsx(
                       'flex flex-col gap-2 px-md py-3',
-                      i > 0 && 'border-t border-cocoa-08',
+                      i > 0 && 'border-t border-charcoal-08',
                     )}
                   >
                     <div className="flex items-baseline justify-between gap-sm">
-                      <span className="font-serif text-body italic text-cocoa">
+                      <span className="font-serif text-body italic text-charcoal">
                         {stop.nameEn}
                       </span>
-                      <span className="text-small text-cocoa-55">
+                      <span className="text-small text-charcoal-55">
                         <span className="tnum">{stop.nights}</span> nights
                       </span>
                     </div>
@@ -262,24 +262,24 @@ function OffGridCard({
       className={clsx(
         'flex items-center justify-between gap-sm rounded-2xl border p-md transition-colors duration-instant ease-out-quart',
         on
-          ? 'border-copper bg-copper/10'
-          : 'border-cocoa-15 bg-ivory',
+          ? 'border-amber bg-amber/10'
+          : 'border-charcoal-15 bg-cream',
       )}
     >
       <div className="flex items-center gap-sm">
         <span
           className={clsx(
             'inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full',
-            on ? 'bg-copper text-ivory' : 'bg-cocoa-08 text-cocoa-55',
+            on ? 'bg-amber text-cream' : 'bg-charcoal-08 text-charcoal-55',
           )}
         >
           <EyeOff className="h-5 w-5" strokeWidth={1.8} aria-hidden />
         </span>
         <div className="flex flex-col leading-tight">
-          <span className="font-serif text-lede italic text-cocoa">
+          <span className="font-serif text-lede italic text-charcoal">
             Off-grid mode
           </span>
-          <span className="text-small text-cocoa-70">
+          <span className="text-small text-charcoal-70">
             {on
               ? "You're invisible on every surface — overlaps, density, forums and pings."
               : 'Hide your route from every friend, in one tap.'}
@@ -294,15 +294,15 @@ function OffGridCard({
         className={clsx(
           'relative inline-flex h-7 w-12 shrink-0 items-center rounded-full',
           'transition-colors duration-instant ease-out-quart',
-          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory',
-          on ? 'bg-copper' : 'bg-cocoa-15',
+          'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream',
+          on ? 'bg-amber' : 'bg-charcoal-15',
         )}
         aria-label="Toggle off-grid mode"
       >
         <span
           aria-hidden
           className={clsx(
-            'inline-block h-6 w-6 transform rounded-full bg-ivory shadow-card transition-transform duration-instant ease-out-quart',
+            'inline-block h-6 w-6 transform rounded-full bg-cream shadow-card transition-transform duration-instant ease-out-quart',
             on ? 'translate-x-5' : 'translate-x-0.5',
           )}
         />
@@ -330,15 +330,15 @@ function TinyToggle({
         'inline-flex items-center gap-2 rounded-full ps-3 pe-3 py-1.5 text-small font-medium leading-none',
         'transition-colors duration-instant ease-out-quart',
         on
-          ? 'bg-copper text-ivory'
-          : 'border border-cocoa-15 text-cocoa-70 hover:text-cocoa',
+          ? 'bg-amber text-cream'
+          : 'border border-charcoal-15 text-charcoal-70 hover:text-charcoal',
       )}
     >
       <span
         aria-hidden
         className={clsx(
           'inline-block h-2.5 w-2.5 rounded-full',
-          on ? 'bg-ivory' : 'bg-cocoa-30',
+          on ? 'bg-cream' : 'bg-charcoal-30',
         )}
       />
       {label}

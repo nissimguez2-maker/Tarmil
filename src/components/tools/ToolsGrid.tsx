@@ -51,15 +51,15 @@ export function ToolsGrid() {
             <button
               type="button"
               onClick={() => setOpenTool(id)}
-              className="flex h-full w-full flex-col items-start gap-xs rounded-2xl bg-sand shadow-card p-md text-start transition-colors duration-instant ease-out-quart hover:bg-sand/80 active:bg-rope/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory"
+              className="flex h-full w-full flex-col items-start gap-xs rounded-2xl bg-sand shadow-card p-md text-start transition-colors duration-instant ease-out-quart hover:bg-sand/80 active:bg-clay/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
             >
-              <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-cocoa text-ivory">
+              <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-charcoal text-cream">
                 <Icon className="h-5 w-5" strokeWidth={1.5} aria-hidden />
               </span>
-              <span className="font-serif text-body italic leading-tight text-cocoa">
+              <span className="font-serif text-body italic leading-tight text-charcoal">
                 {name}
               </span>
-              <span className="text-small leading-tight text-cocoa-55">
+              <span className="text-small leading-tight text-charcoal-55">
                 {meta}
               </span>
             </button>

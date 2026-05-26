@@ -41,15 +41,15 @@ export function MapsActionSheet({ open, place, onClose }: Props) {
     <div
       role="menu"
       aria-label="Open in a maps app"
-      className="flex flex-col overflow-hidden rounded-2xl border border-cocoa-15 bg-sand"
+      className="flex flex-col overflow-hidden rounded-2xl border border-charcoal-15 bg-sand"
     >
-      <div className="flex items-center justify-between border-b border-cocoa-15 px-md py-sm">
-        <span className="meta-caps text-copper">Open in maps</span>
+      <div className="flex items-center justify-between border-b border-charcoal-15 px-md py-sm">
+        <span className="meta-caps text-amber">Open in maps</span>
         <button
           type="button"
           onClick={onClose}
           aria-label="Dismiss"
-          className="text-small text-cocoa-55 transition-colors duration-instant ease-out-quart hover:text-cocoa focus-visible:outline-none focus-visible:underline focus-visible:underline-offset-2"
+          className="text-small text-charcoal-55 transition-colors duration-instant ease-out-quart hover:text-charcoal focus-visible:outline-none focus-visible:underline focus-visible:underline-offset-2"
         >
           Cancel
         </button>
@@ -63,20 +63,20 @@ export function MapsActionSheet({ open, place, onClose }: Props) {
               onClick={() => handlePick(id)}
               className={clsx(
                 'flex w-full items-center gap-md px-md py-3 text-start',
-                'transition-colors duration-instant ease-out-quart active:bg-cocoa-08',
-                i < PROVIDERS.length - 1 && 'border-b border-cocoa-15',
+                'transition-colors duration-instant ease-out-quart active:bg-charcoal-08',
+                i < PROVIDERS.length - 1 && 'border-b border-charcoal-15',
               )}
             >
-              <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-cocoa text-ivory">
+              <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-charcoal text-cream">
                 <Icon className="h-4 w-4" strokeWidth={1.7} aria-hidden />
               </span>
               <span className="flex min-w-0 flex-1 flex-col">
-                <span className="font-serif text-lede leading-tight text-cocoa ltr">
+                <span className="font-serif text-lede leading-tight text-charcoal ltr">
                   {label}
                 </span>
-                <span className="text-small text-cocoa-55">{meta}</span>
+                <span className="text-small text-charcoal-55">{meta}</span>
               </span>
-              <ChevronRight className="h-4 w-4 shrink-0 text-cocoa-55" aria-hidden />
+              <ChevronRight className="h-4 w-4 shrink-0 text-charcoal-55" aria-hidden />
             </button>
           </li>
         ))}

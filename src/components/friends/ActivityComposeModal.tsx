@@ -96,11 +96,11 @@ export function ActivityComposeModal({ open, onClose, stops, onSubmit }: Props) 
           onChange={(e) => setBody(e.target.value)}
           placeholder="Trip declaration, who's down, a question, a party — text and emoji."
           rows={4}
-          className="w-full resize-none rounded-xl border border-cocoa-15 bg-ivory p-md text-body text-cocoa placeholder:text-cocoa-55 focus:border-copper focus:outline-none"
+          className="w-full resize-none rounded-xl border border-charcoal-15 bg-cream p-md text-body text-charcoal placeholder:text-charcoal-55 focus:border-amber focus:outline-none"
         />
 
         <div className="flex items-center gap-2">
-          <Smile className="h-4 w-4 text-cocoa-55" strokeWidth={1.8} aria-hidden />
+          <Smile className="h-4 w-4 text-charcoal-55" strokeWidth={1.8} aria-hidden />
           <div className="flex flex-wrap items-center gap-1">
             {QUICK_EMOJI.map((e) => (
               <button
@@ -108,7 +108,7 @@ export function ActivityComposeModal({ open, onClose, stops, onSubmit }: Props) 
                 type="button"
                 onClick={() => insertEmoji(e)}
                 aria-label={`Insert ${e}`}
-                className="inline-flex h-7 w-7 items-center justify-center rounded-full text-body transition-colors duration-instant ease-out-quart hover:bg-cocoa-8 active:bg-cocoa-15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory"
+                className="inline-flex h-7 w-7 items-center justify-center rounded-full text-body transition-colors duration-instant ease-out-quart hover:bg-charcoal-8 active:bg-charcoal-15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
               >
                 {e}
               </button>
@@ -118,8 +118,8 @@ export function ActivityComposeModal({ open, onClose, stops, onSubmit }: Props) 
 
         <section className="flex flex-col gap-1">
           <div className="flex items-center gap-2">
-            <MapPin className="h-4 w-4 text-cocoa-55" strokeWidth={1.8} aria-hidden />
-            <span className="text-small text-cocoa-70">Posting from</span>
+            <MapPin className="h-4 w-4 text-charcoal-55" strokeWidth={1.8} aria-hidden />
+            <span className="text-small text-charcoal-70">Posting from</span>
           </div>
           <ul className="flex flex-wrap gap-1">
             <li>
@@ -153,7 +153,7 @@ export function ActivityComposeModal({ open, onClose, stops, onSubmit }: Props) 
           <button
             type="button"
             onClick={addPoll}
-            className="inline-flex items-center gap-2 self-start rounded-full bg-cocoa-08 ps-3 pe-md py-2 text-small text-cocoa transition-colors duration-instant ease-out-quart hover:bg-cocoa-15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory"
+            className="inline-flex items-center gap-2 self-start rounded-full bg-charcoal-08 ps-3 pe-md py-2 text-small text-charcoal transition-colors duration-instant ease-out-quart hover:bg-charcoal-15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
           >
             <BarChart3 className="h-4 w-4" strokeWidth={1.8} aria-hidden />
             Add a poll
@@ -181,10 +181,10 @@ function PinChip({
       className={clsx(
         'inline-flex h-8 items-center rounded-full ps-3 pe-3 text-small leading-none',
         'transition-colors duration-instant ease-out-quart',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream',
         active
-          ? 'bg-cocoa text-ivory'
-          : 'bg-cocoa-08 text-cocoa-70 hover:bg-cocoa-15 hover:text-cocoa',
+          ? 'bg-charcoal text-cream'
+          : 'bg-charcoal-08 text-charcoal-70 hover:bg-charcoal-15 hover:text-charcoal',
       )}
     >
       {children}

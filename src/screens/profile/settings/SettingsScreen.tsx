@@ -126,23 +126,23 @@ export function SettingsScreen() {
         {SECTIONS.map((section) => (
           <section key={section.number} className="flex flex-col gap-sm">
             <SectionLabel number={section.number} label={section.label} />
-            <ul className="overflow-hidden rounded-2xl border border-cocoa-15 bg-ivory">
+            <ul className="overflow-hidden rounded-2xl border border-charcoal-15 bg-cream">
               {section.rows.map((row, i) => (
                 <li
                   key={row.label}
                   className={clsx(
-                    i < section.rows.length - 1 && 'border-b border-cocoa-15',
+                    i < section.rows.length - 1 && 'border-b border-charcoal-15',
                   )}
                 >
                   <button
                     type="button"
                     onClick={() => setOpenRow(row)}
-                    className="flex w-full items-center justify-between gap-sm px-md py-3 text-start transition-colors duration-instant ease-out-quart hover:bg-cocoa-8 active:bg-cocoa-15 focus-visible:outline-none focus-visible:bg-cocoa-8"
+                    className="flex w-full items-center justify-between gap-sm px-md py-3 text-start transition-colors duration-instant ease-out-quart hover:bg-charcoal-8 active:bg-charcoal-15 focus-visible:outline-none focus-visible:bg-charcoal-8"
                   >
-                    <span className="text-body text-cocoa">{row.label}</span>
-                    <span className="flex shrink-0 items-center gap-2 text-small text-cocoa-55">
+                    <span className="text-body text-charcoal">{row.label}</span>
+                    <span className="flex shrink-0 items-center gap-2 text-small text-charcoal-55">
                       {valueFor(row)}
-                      <ChevronRight className="h-4 w-4 text-cocoa-30" strokeWidth={1.5} aria-hidden />
+                      <ChevronRight className="h-4 w-4 text-charcoal-30" strokeWidth={1.5} aria-hidden />
                     </span>
                   </button>
                 </li>
@@ -154,7 +154,7 @@ export function SettingsScreen() {
         <section className="flex flex-col gap-sm">
           <SectionLabel number="05" label="Demo controls." />
           <div className="flex flex-col gap-sm rounded-2xl bg-sand shadow-card p-md">
-            <p className="text-small text-cocoa-70">
+            <p className="text-small text-charcoal-70">
               Restores the planned stops to the canonical demo state. Useful
               between investor demos.
             </p>
@@ -168,7 +168,7 @@ export function SettingsScreen() {
               {resetting ? 'Resetting…' : 'Reset demo state'}
             </Button>
             {resetMessage && (
-              <p className="text-small text-cocoa-55">{resetMessage}</p>
+              <p className="text-small text-charcoal-55">{resetMessage}</p>
             )}
           </div>
         </section>
@@ -218,7 +218,7 @@ function SettingDetailSheet({
     >
       <div className="flex flex-col gap-md">
         {row?.detail && (
-          <p className="text-small leading-snug text-cocoa-70">{row.detail}</p>
+          <p className="text-small leading-snug text-charcoal-70">{row.detail}</p>
         )}
 
         {row?.choices ? (
@@ -229,17 +229,17 @@ function SettingDetailSheet({
                 <li
                   key={choice}
                   className={clsx(
-                    i > 0 && 'border-t border-cocoa-15',
+                    i > 0 && 'border-t border-charcoal-15',
                   )}
                 >
                   <button
                     type="button"
                     onClick={() => onSelect(choice)}
-                    className="flex w-full items-center justify-between gap-sm py-sm text-start transition-colors duration-instant ease-out-quart active:bg-cocoa-08"
+                    className="flex w-full items-center justify-between gap-sm py-sm text-start transition-colors duration-instant ease-out-quart active:bg-charcoal-08"
                   >
-                    <span className="text-body text-cocoa">{choice}</span>
+                    <span className="text-body text-charcoal">{choice}</span>
                     {active && (
-                      <span className="meta-caps text-copper">Selected</span>
+                      <span className="meta-caps text-amber">Selected</span>
                     )}
                   </button>
                 </li>
@@ -248,8 +248,8 @@ function SettingDetailSheet({
           </ul>
         ) : (
           <div className="rounded-2xl bg-sand p-md">
-            <span className="meta-caps text-cocoa-55">Current value</span>
-            <p className="mt-xs text-body text-cocoa">{currentValue}</p>
+            <span className="meta-caps text-charcoal-55">Current value</span>
+            <p className="mt-xs text-body text-charcoal">{currentValue}</p>
           </div>
         )}
       </div>
@@ -289,10 +289,10 @@ function SignOutConfirm({
         </div>
       }
     >
-      <p className="text-body leading-snug text-cocoa-70">
+      <p className="text-body leading-snug text-charcoal-70">
         You can come back any time. Your route, friends and messages stay on Tarmil's servers.
       </p>
-      <p className="mt-sm text-small leading-snug text-cocoa-55">
+      <p className="mt-sm text-small leading-snug text-charcoal-55">
         Demo build — sign-out here is a no-op.
       </p>
     </Modal>

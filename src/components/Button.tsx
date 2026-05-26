@@ -13,9 +13,9 @@ type Props = {
 
 /**
  * Three variants:
- *  - primary : cocoa fill, ivory text. Default for most CTAs.
- *  - accent  : copper fill, ivory text. The "vibrant" CTA. Use sparingly.
- *  - ghost   : transparent, cocoa text, hairline cocoa-15 border. Secondary actions.
+ *  - primary : charcoal fill, cream text. Default for most CTAs.
+ *  - accent  : umber fill, cream text. The strong/"vibrant" action. Use sparingly.
+ *  - ghost   : transparent, charcoal text, hairline charcoal-15 border. Secondary actions.
  *
  * Sizes:
  *  - md (default) : h-lg (14mm) — main CTAs, sticky bottom actions, sheet primaries.
@@ -44,17 +44,17 @@ export function Button({
         'motion-reduce:transition-none',
         'active:scale-[0.97]',
         'disabled:opacity-30 disabled:pointer-events-none disabled:active:scale-100',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream',
         // size
         size === 'md' && 'h-lg',
         size === 'sm' && 'h-10',
         // variants
         variant === 'primary' &&
-          'bg-cocoa text-ivory shadow-card hover:bg-cocoa-70 active:bg-cocoa',
+          'bg-charcoal text-cream shadow-card hover:bg-charcoal-70 active:bg-charcoal',
         variant === 'accent' &&
-          'bg-copper text-ivory shadow-fab hover:bg-copper-85 active:bg-copper',
+          'bg-umber text-cream shadow-fab hover:bg-umber/90 active:bg-umber',
         variant === 'ghost' &&
-          'border border-cocoa-15 text-cocoa hover:border-cocoa-30 hover:bg-cocoa-8 active:bg-cocoa-15',
+          'border border-charcoal-15 text-charcoal hover:border-charcoal-30 hover:bg-charcoal-8 active:bg-charcoal-15',
         fullWidth && 'w-full',
         className,
       )}
