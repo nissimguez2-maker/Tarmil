@@ -99,7 +99,9 @@ export const TripMap = forwardRef<TripMapHandle, Props>(function TripMap(
       worldCopyJump: false,
     });
 
-    const tomtomKey = import.meta.env.VITE_TOMTOM_API_KEY;
+    // Same env var as the web planner (WebMapCanvas) + .env.example. Was
+    // VITE_TOMTOM_API_KEY, which never matched, so mobile always fell back.
+    const tomtomKey = import.meta.env.VITE_TOMTOM_KEY;
     if (tomtomKey) {
       L.tileLayer(
         `https://api.tomtom.com/map/1/tile/basic/main/{z}/{x}/{y}.png?key=${tomtomKey}&tileSize=512`,
