@@ -1,131 +1,143 @@
-# Tarmil — Design System (DA v0.2)
+# Tarmil — Design System (DA v0.3)
 
-Locked. Use these tokens better; don't invent new ones. CSS variables in `src/brand/tokens.css`, Tailwind mapping in `tailwind.config.ts`.
+Source of truth: `Branding/TARMIL DA.md` (Drive). CSS variables in
+`src/brand/tokens.css`, Tailwind mapping in `tailwind.config.ts`. Use these
+tokens better; don't invent new ones.
+
+> The hex values below are **derived** from the DA's named colours and roles
+> (the DA gives names, not codes). They're approved as a working set — easy to
+> nudge once the brand designer ships exact values.
 
 ## Theme
 
-**Light, warm, editorial.** The user opens the app in any ambient light — beach, café, hostel dorm, plane window. The palette is ivory paper, sand cards, cocoa ink, copper signal. Never neutral grey; every neutral is tinted toward the brand brown. No dark mode in v1.
+**Quiet confidence.** Warm cream backgrounds, dark ink type, generous negative
+space, a calm and highly controlled interface. Premium because restrained —
+depth comes from composition, tone, and whitespace, not from loud colour or
+heavy shadow. Reads as **cream + dark ink first**; warm tones add richness, not
+noise. Amber is a sparing premium/selected accent — never a CTA, never long
+copy. No dark mode.
 
 ## Colors
 
 | Token | Hex | Role |
 |---|---|---|
-| `ivory` | `#fdfbf7` | Default surface — "the paper" |
-| `sand` | `#ead8c0` | Elevated cards, panels, accordion bodies |
-| `rope` | `#d1bb9e` | Mid-tone, active-state backdrops |
-| `stone` | `#a79277` | Darkest neutral — **never primary type** |
-| `cocoa` | `#352818` | Headlines, body, structure |
-| `cocoa-70` | `#352818b3` | Secondary body, readable contextual text |
-| `cocoa-55` | `#3528188c` | Metadata, captions, minor labels |
-| `cocoa-30` | `#3528184d` | Decorative dividers, faint accents |
-| `cocoa-15` | `#35281826` | Hairline borders |
-| `cocoa-08` | `#35281814` | Subtle dividers inside light surfaces |
-| `copper` | `#c75d24` | Vibrant accent — primary actions, copper signal |
-| `copper-85` | `#c75d24d9` | Hover state on copper surfaces |
-| `copper-70` | `#c75d24b3` | The lowest copper opacity allowed. **Never below 70%.** |
+| `cream` | `#FAF5EC` | Soft Cream — the page; default canvas |
+| `sand` | `#E7DAC6` | Warm Stone — elevated surface: cards, panels, sections |
+| `linen` | `#F1E8D8` | Pale Sand — subtle grouped fills, filters, soft fields |
+| `clay` | `#C29B82` | Muted Clay — tags, soft emphasis, pressed/active fills |
+| `blush` | `#EAD3C8` | Dusty Blush — atmospheric support, very light usage only |
+| `charcoal` | `#2E2417` | Charcoal Brown — text, structure, **primary CTA fills** |
+| `charcoal-70` | `#2E2417b3` | Secondary body, readable contextual text |
+| `charcoal-55` | `#2E24178c` | Metadata, captions, the "Sponsored" label |
+| `charcoal-30` | `#2E24174d` | Decorative dividers, faint accents |
+| `charcoal-15` | `#2E241726` | Hairline borders (prefer tone shifts over heavy rules) |
+| `charcoal-8` | `#2E241714` | Subtle dividers inside light surfaces |
+| `umber` | `#4A3422` | Deep Umber — hover/anchors, **strong action fills** (accent button, send, FAB) |
+| `amber` | `#C6803D` | Amber Glass — **sparing** premium/selected accent, focus rings, warmth |
+| `amber-85` | `#C6803Dd9` | Hover on amber surfaces |
+| `amber-70` | `#C6803Db3` | Lowest amber opacity in use |
 
-Pre-blended `cocoa-N` and `copper-N` are baked alpha — used without the `/X` modifier.
+Pre-blended `charcoal-N` and `amber-N` are baked alpha — used without the `/X`
+modifier. No bare hex literals in `className` / `style`; inside Leaflet/SVG
+strings use the CSS variable (e.g. `var(--charcoal)`).
 
 ## Typography
 
-**Serif:** Fraunces + Frank Ruhl Libre (Hebrew). SOFT axis maxed. Italic for headlines and editorial labels.
-
-**Sans:** Heebo + Google Sans Text. The body workhorse.
+Unchanged from v0.2. **Serif:** Fraunces + Frank Ruhl Libre (Hebrew), SOFT axis
+maxed, italic for headlines/editorial labels. **Sans:** Heebo + Google Sans
+Text, the body workhorse. Headlines sit in `charcoal`; accent colours never
+carry long passages of copy.
 
 | Token | Size | Role |
 |---|---|---|
-| `text-meta` | 8pt | Eyebrows (uppercase 0.18em via `.meta-caps`), captions in corners |
+| `text-meta` | 8pt | Eyebrows (uppercase 0.18em via `.meta-caps`), corner captions |
 | `text-small` | 10pt | Metadata, secondary labels, microcopy |
 | `text-body` | 11pt | Default body, button labels |
 | `text-lede` | 14pt | Card titles, section headlines, friend names |
-| `text-sub` | 22pt | Profile/place hero names |
+| `text-sub` | 22pt | Profile / place hero names |
 | `text-display` | 44pt | Editorial display headlines |
 | `text-hero` | 92pt | Marketing-tier display (rare in product UI) |
 
-Line-heights baked into the Tailwind token. No arbitrary `text-[Xpt]`.
+No arbitrary `text-[Xpt]`. Line-heights are baked into the token.
 
 ## Spacing
 
-| Token | mm | Role |
-|---|---|---|
-| `xs` | 2mm | Tight inline gaps |
-| `sm` | 4mm | Compact list rows, button gutters |
-| `md` | 8mm | Default card / section padding |
-| `lg` | 14mm | Section gaps |
-| `xl` | 22mm | Hero / top padding |
-| `xxl` | 36mm | Marketing-tier rare |
-
-Plus `0`, `px`, `hair` (0.5mm), and the Tailwind default numeric scale survives (`gap-2`, `h-10`, etc.) for **dimensional** uses — never for editorial spacing. Logical utilities only.
+`xs` 2mm · `sm` 4mm · `md` 8mm · `lg` 14mm · `xl` 22mm · `xxl` 36mm. Plus `0`,
+`px`, `hair` (0.5mm). The Tailwind numeric scale (`gap-2`, `h-10`) survives for
+**dimensional** use (icons, avatars, FABs) — never for editorial spacing.
+Logical utilities only.
 
 ## Corner radii
 
-| Class | Surface |
-|---|---|
-| `rounded-2xl` | Cards, sheets, sand surfaces |
-| `rounded-xl` | Smaller elevated tiles, inner pills, segmented-control containers |
-| `rounded-full` | Chips, pills, avatars, FABs, toggles, buttons |
-| `rounded-device` | iPhone frame (54px) |
-| `rounded-notch` | Notch shape (20px) |
+`rounded-2xl` cards/sheets · `rounded-xl` inner tiles/segmented containers ·
+`rounded-full` chips/pills/avatars/FABs/toggles/buttons · `rounded-device`
+(54px) iPhone frame · `rounded-notch` (20px).
 
 ## Elevation (shadows)
 
-| Class | Use |
-|---|---|
-| `shadow-card` | Elevated surfaces on ivory or sand — every card, list item, modal interior |
-| `shadow-sheet` | Bottom sheets rising into ivory |
-| `shadow-fab` | Floating action button, the dark tab-bar capsule |
-| `shadow-panel` | Tools tray panel |
-| `shadow-device` | iPhone frame on desktop |
-
-Shadows are tinted cocoa or copper — **never neutral grey**.
+Quiet, **charcoal-tinted, never a coloured glow** (the old copper FAB glow is
+gone). `shadow-card` elevated surfaces · `shadow-sheet` bottom sheets ·
+`shadow-fab` FAB + dark tab capsule · `shadow-panel` tools tray ·
+`shadow-device` iPhone frame.
 
 ## Motion
 
-Two durations, one curve. Editorial, restrained, warm.
-
-| Token | Value | Use |
-|---|---|---|
-| `duration-instant` | 140ms | Taps, color swaps, segmented controls |
-| `duration-considered` | 280ms | Sheets, panels, accordions |
-| `ease-out-quart` | `cubic-bezier(0.25, 1, 0.5, 1)` | Everything. No bounce, no elastic. |
-
-Tactile feedback: `active:scale-[0.97]` on primary controls, `active:scale-[0.96]` on FABs. Always pair with `motion-reduce:transition-none`.
+Two durations, one curve. `duration-instant` 140ms (taps, colour swaps) ·
+`duration-considered` 280ms (sheets, panels) · `ease-out-quart`
+`cubic-bezier(0.25, 1, 0.5, 1)`. No bounce. Tactile `active:scale-[0.97]`
+(0.96 on FABs). Universal `prefers-reduced-motion` is honoured in `index.css`.
 
 ## Affordance grammar
 
-- **Buttons** (`<Button>` component): three variants — `primary` (cocoa fill, ivory text), `accent` (copper fill, ivory text), `ghost` (cocoa-15 border, cocoa text).
-- **Tap targets**: minimum 40px height for primary controls; 44px preferred. Inline secondary actions (text links, chips) can be 32–36px.
-- **Hover**: subtle bg shift (`bg-sand → bg-sand/70`, `hover:bg-cocoa-8`).
-- **Active**: `active:scale-[0.97]` + slight bg darkening.
-- **Focus-visible**: `focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-copper focus-visible:ring-offset-2 focus-visible:ring-offset-ivory`.
+- **Buttons** (`<Button>`): `primary` (charcoal fill, cream text), `accent`
+  (umber fill, cream text — the strong action, used sparingly), `ghost`
+  (charcoal-15 border, charcoal text). **Amber is never a button fill.**
+- **Amber belongs to**: selected states (active tab pill, segmented underline,
+  selected chips), toggles when on, presence/notification dots, focus rings,
+  the "Tarmil Selection" badge — i.e. warmth and selection, not actions.
+- **Tap targets**: 40px min for primary controls, 44px preferred.
+- **Hover**: subtle tone shift (`bg-sand → bg-sand/80`, `hover:bg-charcoal-8`).
+- **Focus-visible**: `focus-visible:ring-2 ring-amber ring-offset-2 ring-offset-cream` (or `focus-visible:underline` for inline text links).
 
 ## Iconography
 
-Lucide. `strokeWidth`: 1.5 (default inactive), 1.7 (medium emphasis), 2 / 2.2 (active state).
-
-Icon size proportional to text: `h-3.5 w-3.5` for `text-small` contexts, `h-4 w-4` for `text-body`, `h-5 w-5` for `text-lede`.
+Lucide. `strokeWidth` 1.5 inactive · 1.7 medium · 2 / 2.2 active. Size with
+text: `h-3.5` for `text-small`, `h-4` for `text-body`, `h-5` for `text-lede`.
 
 ## Forms
 
-- Inputs: `rounded-full` or `rounded-xl` depending on context. `bg-sand` or `bg-ivory`. `border-cocoa-15`. Focus border `copper`. Placeholder `text-cocoa-55`.
-- Textareas: `rounded-xl`, `p-md`, focus matches inputs.
-- Toggles: `copper` when on, `cocoa-15` when off. Knob is `bg-ivory` with `shadow-card`.
-- Segmented controls: `bg-cocoa-08` container; `bg-cocoa text-ivory` for active segment.
+Inputs `rounded-full`/`rounded-xl`, `bg-sand`/`bg-cream`, `border-charcoal-15`,
+focus border `amber`, placeholder `text-charcoal-55`. Toggles: `amber` when on,
+`charcoal-15` when off, knob `bg-cream` with `shadow-card`. Segmented controls:
+`bg-charcoal-8` container, `bg-charcoal text-cream` active segment.
+
+## Merchant disclosure
+
+Paid placement is disclosed (not hidden). `PlacementBadge` renders the earned
+**"Tarmil Selection"** in `amber` (premium warmth) and plain **"Sponsored"** in
+`charcoal-55` (quiet but legible). The place detail carries a one-line
+plain-language disclosure. Ranking order: Selection → Sponsored → public
+coverage; non-paying places are shown, never suppressed.
 
 ## Empty / loading / error states
 
-- `LoadingPanel` and `ErrorPanel` in `src/components/DataState.tsx` are the standard. Every screen uses them.
-- In-screen empty states (no overlaps, no threads, no pings): `rounded-2xl bg-sand p-md text-small leading-snug text-cocoa-70`.
+`LoadingPanel` / `ErrorPanel` in `src/components/DataState.tsx` are standard.
+In-screen empty states: `rounded-2xl bg-sand p-md text-small leading-snug
+text-charcoal-70`.
 
 ## RTL safety
 
-`index.html` is `lang="en" dir="ltr"` for the international investor mock today. The Hebrew launch will flip both. **Always use logical Tailwind utilities** so the Hebrew flip inherits free: `ps-*`, `pe-*`, `start-*`, `end-*`, `ms-*`, `me-*`, `border-s-*`, `border-e-*`, `rounded-s-*`, `rounded-e-*`.
+`index.html` is `lang="en" dir="ltr"` for the investor mock today; the Hebrew
+launch flips both. **Logical Tailwind utilities only** (`ps-*`, `pe-*`,
+`start-*`, `end-*`, `ms-*`, `me-*`, `border-s-*`, `border-e-*`, `rounded-s-*`,
+`rounded-e-*`) so the flip inherits free.
 
-## Open items (DA v0.2, flagged before solving)
+## Open items (flag before solving)
 
-- App icon (PNG variants for iOS / Android / maskable)
-- Photography rule (colour treatment, captions)
-- Custom tab bar / place marker iconography
-- Final motion vocabulary (the two durations above are proposals)
+- Exact brand hexes (current set is derived) and any mood-board calibration.
+- App icon PNG variants (iOS / Android / maskable).
+- Photography rule (warm, tactile, controlled — colour treatment, captions).
+- Custom tab-bar / place-marker iconography.
+- Final motion vocabulary (durations above are proposals).
 
-If a task touches any of these, escalate to the brand pass — don't invent.
+If a task touches these, escalate to the brand pass — don't invent.

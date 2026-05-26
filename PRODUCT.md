@@ -6,17 +6,19 @@
 
 A click-through mockup of the Tarmil mobile app for international investors. On phones it goes full-bleed and feels native; on desktop ≥768px it renders inside an iPhone frame. Pure visual demo — no real backend behavior beyond Supabase reads/writes for trip state.
 
-Five bottom tabs (v0.6 IA, one mental model per tab):
+Five bottom tabs (one mental model per tab), in order:
 
 | Tab | Surface |
 |---|---|
 | Trip | Continent-scale map with bubbles and pins; friend pins; next-trip card |
+| Plan | Saved places organised by trip (the list view of the map) + a Discover modal for curated places — Now / My trip / Search |
 | Activity | Social feed — "Right now" overlap strip + wall of trip declarations / who's-down / polls / questions; compose FAB; ping bell |
-| Around | Curated places (paid placements get internal ranking boost — never a public "Partner" / "Sponsored" label); Now / My trip / Search modes |
 | Forums | City × 8 subjects (Accommodation · Transits · Scams & danger · Food · Activities & treks · Nightlife & parties · Money & visas · Meetups); per-post identity choice |
 | Tools | 7 utility tiles — Currency, Pre-trip checklist, Voice translator, Menu translator, Sign scanner, Friend balances, eSIM |
 
-Profile is **not** a tab. Top-right avatar icon on every tab → drills to `/profile`.
+Profile is **not** a tab. Top-right avatar icon on every tab → drills to `/profile`. There's also a desktop planner at `/web` (a calmer, larger-screen planning surface) reached from the `/` mode toggle.
+
+Curated places lean into **kosher & Jewish-friendly** venues (restaurants, bakeries, synagogues, mikvaot, Chabad) alongside the general travel set, surfaced through a disclosed two-tier merchant model (Sponsored · earned Tarmil Selection).
 
 ## Users
 
@@ -30,7 +32,7 @@ This mock is shown to international investors. **English-only rendered UI today*
 
 - WhatsApp / Telegram — Tarmil deliberately ships **no DMs and no group chats**. Ping is the only one-to-one signal and carries no message body.
 - Facebook destination groups — the surface Tarmil replaces. Forums + Activity wall must feel cleaner, faster, more trustworthy.
-- Generic SaaS cream backgrounds, "hero metric" templates, side-stripe borders, gradient text. The brand is editorial and warm, not corporate.
+- Generic SaaS dashboards, "hero metric" templates, side-stripe borders, gradient text, glossy product-tech sheen. The brand is editorial, warm, and quiet — not corporate, not loud.
 - Maps apps that show street-level friend location. **City-level resolution only**, always. The architecture cannot store anything finer.
 - Doomscroll-style feeds — no images, no video, no link previews on Activity posts. Text + emoji + optional city pin + optional 2–4 option poll.
 
@@ -41,8 +43,8 @@ Editorial, warm, deliberate. Sentence cap ~28 words, prefer ~14. Active voice. P
 ## Strategic principles
 
 1. **Privacy is non-negotiable.** Resolution is capped at the city, always. Off-grid mode is a one-tap switch on Profile root. No street-level data ever leaves the device.
-2. **One mental model per tab.** Trip = location, Activity = social feed, Around = discovery, Forums = stranger Q&A, Tools = utilities.
+2. **One mental model per tab.** Trip = the map (location), Plan = saved places + discovery, Activity = social feed, Forums = stranger Q&A, Tools = utilities.
 3. **Quality over quantity.** Curated data, considered design, no feature bloat. Every surface earns its place.
-4. **Partner placements are invisible to the user.** Ranking boost happens internally; nothing in the UI labels a place as a partner or paid.
-5. **Religious content present, not accentuated.** Chabad houses and kosher spots stay in the place catalogue for travellers who want them, but the surface design doesn't lead with them — no religious forum subject in the city × subject set, no religious-coded paid-placement promotion. Tarmil is a travel app that includes religious-relevant places, not a religious app.
+4. **Paid placement is disclosed, not hidden.** Qualified businesses buy a labelled **Sponsored** placement; sustained Israeli-traveler ratings earn the **Tarmil Selection** badge on top. Both are labelled at the point of decision, ranking within tiers uses Tarmil ratings (Google only screens at intake), and non-paying places are shown — never suppressed.
+5. **Kosher & Jewish-friendly, the practical way.** Kosher spots, synagogues, mikvaot, and Chabad sit in the catalogue as traveler-relevant places — and they're where the disclosed merchant model lives. The forum subject set stays general (no religious subject). Tarmil is a travel companion for Israelis abroad that's genuinely useful for Jewish-friendly travel, not a religious app.
 6. **Logical Tailwind utilities only.** The Hebrew RTL launch flips `dir="rtl"` and physical utilities break then. Use `ps-*`, `pe-*`, `start-*`, `end-*`, `ms-*`, `me-*`, `border-s-*`, `border-e-*`, `rounded-s-*`, `rounded-e-*`.

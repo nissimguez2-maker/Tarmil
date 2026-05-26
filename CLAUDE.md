@@ -4,17 +4,19 @@ This is the Tarmil mobile-mockup repo. Read this BEFORE writing any code.
 
 ## What this is
 
-An English-first click-through mockup of the Tarmil mobile app, served as a static SPA. On phones it goes full-bleed and feels native; on desktop ≥768px it renders inside an iPhone frame. Pure visual demo — no real backend, no real maps API, no real translation.
+An English-first click-through mockup of Tarmil, served as a static SPA. It ships two surfaces: the **mobile app** (full-bleed on phones; inside an iPhone frame on desktop ≥768px) and a **desktop planner at `/web`** (a 3-column workspace with live map/weather/wiki APIs). A `/` mode toggle picks which to demo. Visual demo — Supabase-backed trip state, but no real auth or translation.
 
-Five bottom tabs (v0.6 IA — one mental model per tab):
+Five bottom tabs (one mental model per tab), in order:
 
 | Tab | Purpose |
 |---|---|
 | Trip | Continent-scale map (pins and bubbles, no line) + curated places + friend pins + next-trip card. Friend pins → Ping. |
+| Plan | Saved places organised by trip — the list view of the map. A "+ Discover" modal surfaces curated places (Now / My trip / Search). |
 | Activity | The social feed. "Right now" overlap strip + wall of trip declarations / who's-down / polls / questions. Compose FAB. Ping history bell. |
-| Around | Curated places discovery. Now / My trip / Search modes. Internal ranking boost on partner placements — no public "partner" / "sponsored" label. |
 | Forums | City × 8 subjects: Accommodation · Transits · Scams & danger · Food · Activities & treks · Nightlife & parties · Money & visas · Meetups. Per-post identity choice. |
 | Tools | Grid of 7 utility tiles (currency, checklist, voice, menu, signs, balances, eSIM). |
+
+Curated places lean into kosher & Jewish-friendly venues (synagogues, mikvaot, kosher food, Chabad) alongside the general set, with a **disclosed** two-tier merchant model: **Sponsored** (paid, labelled) and earned **Tarmil Selection**. See `PlacementBadge` + the place-detail disclosure.
 
 **Profile is not a tab.** Top-right avatar icon on every tab → drills to `/profile`. Friends list at `/profile/friends`; single-friend drill-down at `/profile/friend/:id`.
 
@@ -32,9 +34,9 @@ The brief mandates Hebrew-first for the real product. The mock is **English-only
 
 ## Hard rules — do not violate without asking
 
-### Token discipline (v0.6 polish series)
+### Token discipline (DA v0.3)
 
-After the v0.6 polish chunks landed, the codebase enforces zero drift on the DA token set. **Don't reintroduce drift.** Specifically:
+The codebase enforces zero drift on the DA token set. **Don't reintroduce drift.** Specifically:
 
 - No arbitrary `text-[Xpt]` values — pick from the 7-size scale.
 - No arbitrary spacing like `p-3` / `gap-2` for editorial spacing — use `xs/sm/md/lg/xl/xxl`. (Tailwind's numeric scale `h-10`, `w-12`, etc. is fine for *dimensional* use on icons / avatars / FABs.)
@@ -42,7 +44,7 @@ After the v0.6 polish chunks landed, the codebase enforces zero drift on the DA 
 - No side-stripe borders > 1px as a colored accent on cards. Full ring, full border, or nothing.
 - No `100vh`. Use `h-dvh` / `h-full` / `min-h-dvh`.
 - No bare hex literals in `className` or `style`.
-- Every interactive element has `focus-visible:ring-2 ring-copper` (or `focus-visible:underline` for inline text links).
+- Every interactive element has `focus-visible:ring-2 ring-amber` (or `focus-visible:underline` for inline text links).
 - Universal `prefers-reduced-motion` is honored via `index.css` — you don't need to sprinkle `motion-reduce:transition-none` on every element, but adding it on shared primitives makes intent explicit.
 
 ### RTL safety: logical properties only
@@ -55,9 +57,9 @@ For mixed-direction text down the road, wrap Latin spans in `<bdi>` or apply `.l
 
 ### Brand tokens only — no hex literals
 
-The DA v0.2 is locked. CSS variables in `src/brand/tokens.css`, mapped to Tailwind theme in `tailwind.config.ts`.
+The DA v0.3 palette lives in `src/brand/tokens.css`, mapped to Tailwind in `tailwind.config.ts`. (Hexes are *derived* from the DA's named colours — see DESIGN.md.)
 
-- Colors: `ivory`, `sand`, `rope`, `stone`, `cocoa` (+ `cocoa-70/55/30/15/8`), `copper` (+ `copper-85/70` only — never below 70%).
+- Colors — 8 named tokens: `cream` (page), `sand` (Warm Stone cards), `linen` (Pale Sand fills), `clay` (Muted Clay tags / pressed fills), `blush` (atmospheric), `charcoal` (text + primary CTA, + `-70/-55/-30/-15/-8`), `umber` (strong action + hover), `amber` (sparing premium/selected accent, + `-85/-70`). Primary CTAs are charcoal, the accent button is umber, and **amber is never a button fill** — reserve it for selected states, focus rings, and warmth.
 - Type sizes: `text-meta` (8pt) · `text-small` (10pt) · `text-body` (11pt) · `text-lede` (14pt) · `text-sub` (22pt) · `text-display` (44pt) · `text-hero` (92pt). Nothing else.
 - Spacing: `xs` (2mm) · `sm` (4mm) · `md` (8mm) · `lg` (14mm) · `xl` (22mm) · `xxl` (36mm). Plus `0` and `px`.
 - Fonts: `font-serif` (Fraunces + Frank Ruhl Libre) for headlines; `font-sans` (Heebo + Google Sans Text) for body.
@@ -72,11 +74,11 @@ Use `h-dvh`, `h-full`, or `min-h-dvh`. Plain `100vh` is wrong on mobile Safari (
 
 `src/screens/<tab>/<Name>Screen.tsx`. Drill-downs nest under their parent tab. **No barrel `index.ts` files.**
 
-Today the five tab folders are `trip/`, `activity/`, `around/`, `forums/`, `tools/`. The `profile/` folder holds Profile + its drill-downs (`FriendsListScreen`, `FriendProfileScreen`, `settings/SettingsScreen`). The `place/` folder holds the cross-tab `PlaceScreen` drill-down.
+Today the five tab folders are `trip/`, `plan/`, `activity/`, `forums/`, `tools/`, plus `web/` (the desktop planner surface). The `profile/` folder holds Profile + its drill-downs (`FriendsListScreen`, `FriendProfileScreen`, `settings/SettingsScreen`). The `place/` folder holds the cross-tab `PlaceScreen` drill-down.
 
 ### Wrap every screen in `<Screen>`
 
-`<Screen>` handles safe-area-top, ivory background, and scroll. Don't bypass it.
+`<Screen>` handles safe-area-top, cream background, and scroll. Don't bypass it. (The `/web` planner has its own shell — don't wrap it in `<Screen>`.)
 
 ## Brief alignment — what's in, what's out
 
@@ -92,7 +94,8 @@ The brief is the source of truth for product decisions. Today's mock implements 
 - Ping: one-shot signal, one per direction per co-presence event (enforced by `pings.unique (friend_id, direction)`).
 - Off-grid mode: one-tap switch on Profile root.
 - Per-trip privacy: visible-to-friends + visible-to-FoF toggles per planned stop.
-- Tools tiles: 7 from brief §05. The Around content is its own top-level tab in v0.6 (was a tile in v0.5).
+- Tools tiles: 7 from brief §05. Curated-place discovery lives in the Plan tab's Discover modal (the former Around tab dissolved into Plan).
+- Disclosed merchant model: curated places carry a labelled **Sponsored** tier and an earned **Tarmil Selection** tier (`placementTier`, derived from `paid_placement` / `tarmil_pick`); ranking is Selection → Sponsored → public, and non-payers are never suppressed.
 
 **Out (brief §06):**
 
@@ -125,7 +128,7 @@ The brief is the source of truth for product decisions. Today's mock implements 
 
 ### Add a new mutation
 
-1. Add the SQL change in a new migration file under `supabase/migrations/` (numbered after `0014`).
+1. Add the SQL change in a new migration file under `supabase/migrations/` (numbered after the latest, currently `0018`).
 2. Apply it (locally via Supabase CLI or via the Supabase MCP `apply_migration`).
 3. Regenerate types: re-run `generate_typescript_types` and overwrite `src/lib/database.types.ts`.
 4. Add a mutator method on `SupabaseDataProvider` (camelCase, async, refetches on success).
@@ -133,12 +136,12 @@ The brief is the source of truth for product decisions. Today's mock implements 
 
 ### Style a new component
 
-- Default surface: `bg-ivory`.
-- Elevated surface (cards, panels): `bg-sand` with `border border-rope` or `border-cocoa-15`.
-- Headlines: `font-serif text-lede` (or larger) with default `text-cocoa`.
-- Body copy: default sans, `text-body text-cocoa`. Lower-emphasis: `text-cocoa-70` or `text-cocoa-55`. Never `text-stone` for primary type (DA forbids).
-- Primary CTA: `<Button variant="primary">`.
-- Vibrant CTA: `<Button variant="accent">`.
+- Default surface: `bg-cream`.
+- Elevated surface (cards, panels): `bg-sand` with `border border-charcoal-15` (prefer a tone shift over a coloured rule).
+- Headlines: `font-serif text-lede` (or larger) with default `text-charcoal`.
+- Body copy: default sans, `text-body text-charcoal`. Lower-emphasis: `text-charcoal-70` or `text-charcoal-55`. Never `text-clay` for primary type.
+- Primary CTA: `<Button variant="primary">` (charcoal). Strong/accent action: `<Button variant="accent">` (umber). Amber is for selected states/badges, not buttons.
+- Merchant badge: `<PlacementBadge tier={place.placementTier} />`.
 - Section headers: `<SectionLabel number="01" label="..." />`.
 
 ### Add an icon
@@ -148,13 +151,13 @@ The brief is the source of truth for product decisions. Today's mock implements 
 
 ## DA open items — flag before solving
 
-These are listed in DA v0.2 §Open and should not be solved without brand input:
+These are open in the DA and should not be solved without brand input:
 
+- Exact brand hexes (the current 8-token set is derived) + mood-board calibration.
 - App icon (PNG variants for iOS/Android/maskable).
 - Photography rule — colour treatment, captions.
 - Custom tab bar / place marker iconography.
 - Motion vocabulary (durations + easing).
-- Loading / empty / error states.
 
 If a task touches any of these, point it out and ask the founder to escalate to the brand pass.
 

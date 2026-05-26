@@ -46,7 +46,7 @@ Five bottom tabs, one mental model per tab. Profile is a top-right avatar on eve
 |---|---|
 | **Trip** | Continent-scale map with bubbles and pins (past, present, declared future). Curated places, friend pins, next-trip card. Tap a friend → one-tap **Ping**. |
 | **Activity** | Social feed. "Right now" overlap strip with inline Ping. Wall of trip declarations, who's-down posts (with optional 2–4 option polls), questions, party invites. Reactions + flat one-level replies. Compose FAB. Top-right bell → Ping history. |
-| **Plan** | Saved-places spine (formerly Around). Three modes — **Now** (within 50 km), **My trip** (filter by planned stop), **Search** (global). Internal ranking boost on partner placements; no public "Sponsored" badge. |
+| **Plan** | Saved-places spine (formerly Around). Three modes — **Now** (within 50 km), **My trip** (filter by planned stop), **Search** (global). Curated places carry a disclosed **Sponsored** / earned **Tarmil Selection** badge; ranking is Selection → Sponsored → public coverage. |
 | **Forums** | City × 8 subjects (Accommodation · Transits · Scams & danger · Food · Activities & treks · Nightlife & parties · Money & visas · Meetups). Anyone verified can post; identity per post is the user's choice (real name or anonymous). |
 | **Tools** | 7 utility tiles — Currency converter · Pre-trip checklist · Voice translator · Menu translator · Sign scanner · Friend balances · eSIM & data. |
 
@@ -66,8 +66,8 @@ A 3-column workspace that pushes the same trip data harder. Below 1024 px it sho
 ├──────────────────────────────────┬──────────────────────────────────────┤
 │ SIDEBAR (384 px)                 │ MAP                                  │
 │  Trip overview card              │  · TomTom basic tiles (or OSM)       │
-│  Departure · Tel Aviv [✎]        │  · Copper numbered pins per stop     │
-│  Transport · ~Xh drive           │  · Home pin (cocoa, house icon)      │
+│  Departure · Tel Aviv [✎]        │  · Amber numbered pins per stop      │
+│  Transport · ~Xh drive           │  · Home pin (charcoal, house icon)   │
 │  1 Búzios     [3 saved] ▼        │  · Dashed polylines between stops    │
 │    🍴 Casa Bistro      Reserved  │  · Pin labels appear past zoom 6     │
 │    🏨 Hotel Praia       Saved    │                                      │
@@ -82,7 +82,7 @@ A 3-column workspace that pushes the same trip data harder. Below 1024 px it sho
 
 ### Editable trip
 
-- **Drag to reorder** stops in the sidebar. The copper number badge is the drag handle (a grip icon swaps in on hover). On drop, the dates auto-shift chronologically so the trip stays in order: each stop keeps its nights count, the first arrival anchors, the rest chain forward with a one-day transit gap.
+- **Drag to reorder** stops in the sidebar. The amber number badge is the drag handle (a grip icon swaps in on hover). On drop, the dates auto-shift chronologically so the trip stays in order: each stop keeps its nights count, the first arrival anchors, the rest chain forward with a one-day transit gap.
 - **Edit dates** via the pencil icon on each stop card. Inline form with two native date inputs, live "X nights" readout, Save / Cancel. Validates that departure is after arrival.
 - **Remove a stop** with the trash icon. If the stop has saved items or adjacent transit bookings, a confirm modal lists the cascade.
 - **Add a stop** opens a Nominatim-powered search modal: type any city, pick a result, it lands at the end of the trip with three nights by default. Three pre-cooked suggested cities (Rio de Janeiro, Foz do Iguaçu, Mendoza) appear when the search is empty.
@@ -103,7 +103,7 @@ Click a stop → a floating 440-px bubble appears dead-center of the map area. T
 | **See** | Landmarks / Beaches sub-filter, plus nearby OSM. |
 | **Religious** | Chabad + Kosher. |
 
-Each place card has a thumbnail (or a rope-gradient placeholder), name, rating, friends-know cluster (micro-avatars from `friendVisits`), category badge, optional "Tarmil Pick" badge, a 2-line description with inline "More" toggle, and the **wishlist actions**.
+Each place card has a thumbnail (or a clay-gradient placeholder), name, rating, friends-know cluster (micro-avatars from `friendVisits`), category badge, optional **Sponsored** / **Tarmil Selection** badge (`PlacementBadge`), a 2-line description with inline "More" toggle, and the **wishlist actions**.
 
 Bubble header shows the city name, dates, nights, country chip (flag + currency + language + UTC offset from REST Countries).
 
@@ -123,7 +123,7 @@ The sidebar leg shows the dominant mode icon + `Transport · ~Xh drive` (or no d
 
 The signature v2 mechanic. Every Save / Reserve / Book lands in the sidebar under the relevant city or leg.
 
-- **Place cards** have a `Save` button (always) and `Reserve` button (only on reservable categories: hostel, restaurant, cafe, kosher, bar, club). Both are dead-click mock actions — the wishlist row carries the right status pill ("Saved" cocoa, "Reserved" copper). Real OpenTable / Booking partners come later.
+- **Place cards** have a `Save` button (always) and `Reserve` button (only on reservable categories: hostel, restaurant, cafe, kosher, bar, club). Both are dead-click mock actions — the wishlist row carries the right status pill ("Saved" charcoal, "Reserved" amber). Real OpenTable / Booking partners come later.
 - **Transit offers** have a `Book` button. Click → offer flips to a "Booked ✓ · Remove" state and the leg's sidebar row shows the booking inline (provider on top, time + price below). Multiple per leg.
 - **Sidebar stops** show a `N saved` count chip when items exist; clicking the chevron expands the wishlist below the date line. When the user saves something from the bubble, the matching stop auto-expands and the chip pulses.
 - **Cascade delete**: removing a stop with saved items triggers a confirm modal listing the count. Confirm wipes the stop + its wishlist + transit bookings on adjacent legs.
@@ -133,9 +133,9 @@ The signature v2 mechanic. Every Save / Reserve / Book lands in the sidebar unde
 
 - **Photo lightbox**: click any Overview photo → centered full-screen carousel with arrow keys + Escape.
 - **Toast confirmations** on every wishlist action, reorder, date edit, share. Bottom-end stack, 5-second auto-dismiss, Undo affordance when the action is reversible.
-- **Map pin labels** appear in an ivory pill below each numbered pin once zoom ≥ 6.
+- **Map pin labels** appear in a cream pill below each numbered pin once zoom ≥ 6.
 - **Trip overview subtitle**: "From Tel Aviv → back to Tel Aviv".
-- **Empty Places filters** show a `bg-sand border-rope` card ("Tarmil curators are working on this one") instead of a thin line.
+- **Empty Places filters** show a `bg-sand border-charcoal-15` card ("Tarmil curators are working on this one") instead of a thin line.
 - **Loading skeleton** specific to the desktop planner (greyed sidebar + animated pulse map).
 
 ---
@@ -169,11 +169,11 @@ Easy to break, painful to debug later. Stick to them.
 
 ### 2. Brand tokens only — no hex literals in components
 
-**Don't write:** `bg-[#fdfbf7]`, `text-[#352818]`, `style={{ color: '#c75d24' }}`.
+**Don't write:** `bg-[#faf5ec]`, `text-[#2e2417]`, `style={{ color: '#c6803d' }}`.
 
-**Always write:** `bg-ivory`, `text-cocoa`, `text-copper`.
+**Always write:** `bg-cream`, `text-charcoal`, `text-amber`.
 
-When a hex must appear (e.g. inside a Leaflet `divIcon` HTML string where Tailwind doesn't apply), use the CSS variable: `var(--copper)`.
+When a hex must appear (e.g. inside a Leaflet `divIcon` HTML string where Tailwind doesn't apply), use the CSS variable: `var(--amber)`.
 
 ### 3. Type scale — 7 sizes, no others
 
@@ -193,7 +193,7 @@ Every new screen lives at `src/screens/<tab>/<Name>Screen.tsx`. Drill-downs nest
 
 ### 6. Wrap every mobile screen in `<Screen>`
 
-`<Screen>` handles safe-area-top, ivory background, and scroll for the mobile mockup. The `/web` desktop planner has its own shell (`WebPlannerScreen`) — don't wrap it in `<Screen>`.
+`<Screen>` handles safe-area-top, cream background, and scroll for the mobile mockup. The `/web` desktop planner has its own shell (`WebPlannerScreen`) — don't wrap it in `<Screen>`.
 
 ### 7. No `100vh`
 
@@ -209,12 +209,16 @@ CSS variables in `src/brand/tokens.css`; Tailwind theme references them in `tail
 
 | Tailwind class | CSS variable | Hex | Use |
 |---|---|---|---|
-| `ivory` | `--ivory` | `#fdfbf7` | Default surface, "the paper" |
-| `sand` | `--sand` | `#ead8c0` | Elevated cards, panels |
-| `rope` | `--rope` | `#d1bb9e` | Mid-tone, dividers |
-| `stone` | `--stone` | `#a79277` | Darkest neutral, never primary type |
-| `cocoa` (+ `-70 / -55 / -30 / -15 / -8`) | `--cocoa` | `#352818` | Headlines, body, structure |
-| `copper` (+ `-85 / -70`) | `--copper` | `#c75d24` | Vibrant accent, primary actions, **never below 70 % opacity** |
+| `cream` | `--cream` | `#FAF5EC` | Soft Cream — the page, default surface |
+| `sand` | `--sand` | `#E7DAC6` | Warm Stone — elevated cards, panels |
+| `linen` | `--linen` | `#F1E8D8` | Pale Sand — subtle grouped fills, filters |
+| `clay` | `--clay` | `#C29B82` | Muted Clay — tags, pressed / active fills |
+| `blush` | `--blush` | `#EAD3C8` | Dusty Blush — atmospheric, very light |
+| `charcoal` (+ `-70 / -55 / -30 / -15 / -8`) | `--charcoal` | `#2E2417` | Text, structure, **primary CTA** |
+| `umber` | `--umber` | `#4A3422` | Deep Umber — strong action fill, hover |
+| `amber` (+ `-85 / -70`) | `--amber` | `#C6803D` | Amber Glass — **sparing** premium/selected accent (never a button fill) |
+
+Hexes are *derived* from the DA's named colours — see `DESIGN.md`.
 
 ### Type sizes (Tailwind classes)
 
@@ -252,7 +256,7 @@ src/
     DeviceFrame.tsx            # iPhone shell (mobile on desktop)
     Button.tsx                 # primary / accent / ghost
     SectionLabel.tsx           # "01 — Concept" pattern
-    PlaceCard.tsx              # mobile place card
+    PlacementBadge.tsx         # Sponsored / Tarmil Selection disclosure chip
     DataState.tsx              # LoadingPanel + ErrorPanel
     Avatar.tsx · SearchBar.tsx · Modal.tsx · etc.
     activity/ · friends/ · forums/ · profile/ · tools/ · tripMap/
@@ -303,7 +307,7 @@ index.html                     # html lang="en" dir="ltr"
 tailwind.config.ts
 netlify.toml
 supabase/
-  migrations/                  # 0001–0014; 0014 dropped DMs/group-chats, added pings + polls
+  migrations/                  # 0001–0018; 0014 dropped DMs/chats + added pings/polls; 0016–0018 place_saves + Plan seed
 ```
 
 ---
@@ -313,7 +317,7 @@ supabase/
 A 90-second walk-through for an investor.
 
 1. **Land on `/`** — Mode toggle. Pick "Desktop Planner".
-2. **`/web` planner** — Tel Aviv pin at start, 5 cities in South America, dashed lines closing the loop back to Tel Aviv. Click São Paulo → city bubble opens with photos, description, and the live weather strip. Click the **Eat** tab → Save a restaurant ("Saved" pill in cocoa, toast bottom-end). Reserve another ("Reserved" pill in copper). Close the bubble → São Paulo's count chip shows "2 saved" and the wishlist expands inline.
+2. **`/web` planner** — Tel Aviv pin at start, 5 cities in South America, dashed lines closing the loop back to Tel Aviv. Click São Paulo → city bubble opens with photos, description, and the live weather strip. Click the **Eat** tab → Save a restaurant ("Saved" pill in charcoal, toast bottom-end). Reserve another ("Reserved" pill in amber). Close the bubble → São Paulo's count chip shows "2 saved" and the wishlist expands inline.
 3. **Drag** Buenos Aires above Jericoacoara → dates auto-shift chronologically. Toast confirms.
 4. **Click Add stop** → search "Cairo" → Nominatim returns results → pick Cairo → it lands at the end of the trip with a Tel Aviv → Cairo intercontinental leg. Click Cairo → bubble Overview shows the Wikipedia/Groq travel intro + a Wikipedia hero photo + live Open-Meteo weather + REST Countries chip (🇪🇬 EGP · Arabic · UTC+02:00).
 5. **Click the São Paulo → Jericoacoara leg** → transit bubble with realistic flight + bus + train (Europe-only normally; here flight + bus only) + Drive offer (real distance/ETA from OSRM). Book one → the leg's sidebar row gains the booking inline.
@@ -342,7 +346,7 @@ npm run dev
 
 ### Supabase
 
-`tarmil-mockup` project on Supabase (eu-central-1). Anon key is safe in the browser when RLS is on. Schema in `supabase/migrations/`. Core tables: `places`, `friend_overlaps`, `trip_waypoints`, `planned_stops`, `forums`, `forum_threads`, `forum_thread_replies`, `activity_posts` (with first-class `poll` jsonb), `reactions`, `place_reviews`, `pings`.
+`tarmil-mockup` project on Supabase (eu-central-1). Anon key is safe in the browser when RLS is on. Schema in `supabase/migrations/`. Core tables: `places`, `friend_overlaps`, `trip_waypoints`, `planned_stops`, `forums`, `forum_threads`, `forum_thread_replies`, `activity_posts` (with first-class `poll` jsonb), `reactions`, `place_reviews`, `pings`, `place_saves`.
 
 **Seed**: edit `src/data/*.ts`, then re-run `npx tsx --env-file=.env.local scripts/seed-supabase.ts`. Idempotent.
 
@@ -375,6 +379,7 @@ This repo is the **investor-facing mockup**. Real implementation lives in the na
 - Per-trip privacy persistence on `planned_stops` (UI today is local state).
 - Real authentication + per-user data (Supabase model is shared global demo state).
 - Real booking partners (OpenTable, Booking.com, Expedia) — the planner's Save / Reserve / Book buttons are dead mocks today.
+- Merchant model is disclosed but light: `placementTier` is derived from the existing `paid_placement` / `tarmil_pick` columns (no schema change). A dedicated kashrut-`certification` column and a routed "How Tarmil Works" page are future work.
 - Hebrew/RTL toggle — every utility is already logical so the flip is free, but no UI toggle ships yet.
 - Photography rule, app icon PNGs, custom iconography — brand pass open items.
 
@@ -383,5 +388,5 @@ This repo is the **investor-facing mockup**. Real implementation lives in the na
 ## Project documents
 
 - [`PRODUCT.md`](PRODUCT.md) — product context for the impeccable design skill (users, anti-references, tone, strategic principles)
-- [`DESIGN.md`](DESIGN.md) — full design system reference (DA v0.2)
+- [`DESIGN.md`](DESIGN.md) — full design system reference (DA v0.3)
 - [`CLAUDE.md`](CLAUDE.md) — handover notes for AI assistants working on the codebase
