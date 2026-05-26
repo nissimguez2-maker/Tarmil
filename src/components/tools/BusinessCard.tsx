@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Phone, MessageCircle, ExternalLink, ChevronRight, Star, Bookmark } from 'lucide-react';
 import clsx from 'clsx';
@@ -6,6 +7,7 @@ import type { FriendOverlap } from '../../data/myTrip';
 import type { PlaceReview } from '../../data/placeReviews';
 import type { PlaceSaveStatus } from '../../data/placeSaves';
 import { FriendRatingsRow } from './FriendRatingsRow';
+import { cityPhotos } from '../../screens/web/cityPhotos';
 
 type Props = {
   place: Place;
@@ -45,6 +47,8 @@ const CATEGORY_LABEL: Record<string, string> = {
   club: 'Club',
   chabad: 'Chabad',
   kosher: 'Kosher',
+  synagogue: 'Synagogue',
+  mikveh: 'Mikveh',
   landmark: 'Landmark',
 };
 
@@ -101,7 +105,7 @@ export function BusinessCard({
         to={`/place/${place.id}`}
         className="block transition-colors duration-instant ease-out-quart motion-reduce:transition-none hover:bg-sand/80 active:bg-clay/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
       >
-        <Hero imageUrl={place.imageUrl} alt={place.englishName} />
+        <Hero place={place} />
         <div className="flex items-start gap-sm p-md">
           <div className="flex min-w-0 flex-1 flex-col gap-px">
             <span className="meta-caps text-amber">
@@ -197,26 +201,21 @@ function StatusPill({ status }: { status: PlaceSaveStatus }) {
   );
 }
 
-function Hero({ imageUrl, alt }: { imageUrl?: string; alt: string }) {
-  if (imageUrl) {
-    return (
-      <img
-        src={imageUrl}
-        alt={alt}
-        className="h-32 w-full object-cover"
-        loading="lazy"
-      />
-    );
-  }
+function Hero({ place }: { place: Place }) {
+  const [ok, setOk] = useState(true);
+  const photo = place.imageUrl ?? cityPhotos(place.destinationId)[0];
   return (
-    <div
-      aria-hidden
-      className="h-32 w-full"
-      style={{
-        background:
-          'linear-gradient(135deg, var(--sand) 0%, var(--clay) 100%)',
-      }}
-    />
+    <div aria-hidden className="h-32 w-full bg-gradient-to-br from-sand to-clay">
+      {photo && ok && (
+        <img
+          src={photo}
+          alt=""
+          loading="lazy"
+          onError={() => setOk(false)}
+          className="h-full w-full object-cover"
+        />
+      )}
+    </div>
   );
 }
 
