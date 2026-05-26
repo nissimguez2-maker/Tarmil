@@ -1,4 +1,4 @@
-import { useId } from 'react';
+import { useId, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   ChevronRight,
@@ -18,6 +18,38 @@ import type { Forum } from '../../data/forums';
 import type { ForumSubject } from '../../data/forumThreads';
 import { SUBJECT_LABEL } from '../../data/forums';
 import { Button } from '../Button';
+import { cityPhotos } from '../../screens/web/cityPhotos';
+
+/** Rounded city photo thumbnail with a warm gradient fallback. */
+function CityThumb({
+  destinationId,
+  size = 'h-12 w-12',
+}: {
+  destinationId?: string;
+  size?: string;
+}) {
+  const [ok, setOk] = useState(true);
+  const photo = destinationId ? cityPhotos(destinationId)[0] : undefined;
+  return (
+    <span
+      className={clsx(
+        'shrink-0 overflow-hidden rounded-xl bg-gradient-to-br from-clay to-sand',
+        size,
+      )}
+      aria-hidden
+    >
+      {photo && ok && (
+        <img
+          src={photo}
+          alt=""
+          loading="lazy"
+          onError={() => setOk(false)}
+          className="h-full w-full object-cover"
+        />
+      )}
+    </span>
+  );
+}
 
 const SUBJECT_ICON: Record<ForumSubject, LucideIcon> = {
   accommodation: BedDouble,
@@ -78,6 +110,7 @@ export function CityForumGroup({
           'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream',
         )}
       >
+        <CityThumb destinationId={forums[0]?.destinationId} />
         <div className="flex min-w-0 flex-1 flex-col gap-px">
           <span className="font-serif text-lede italic leading-tight text-charcoal">
             {cityLabel}
@@ -178,6 +211,7 @@ export function RecommendedForumRow({ forum, onJoin }: RecommendedForumRowProps)
       to={`/forums/${forum.id}`}
       className="flex items-center gap-sm rounded-2xl bg-sand shadow-card p-md transition-colors duration-instant ease-out-quart motion-reduce:transition-none hover:bg-sand/80 active:bg-clay/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
     >
+      <CityThumb destinationId={forum.destinationId} />
       <div className="flex min-w-0 flex-1 flex-col gap-px">
         <div className="flex flex-wrap items-baseline gap-2">
           <span className="font-serif text-lede italic text-charcoal">
