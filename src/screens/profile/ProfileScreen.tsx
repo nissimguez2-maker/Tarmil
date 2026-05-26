@@ -149,28 +149,28 @@ export function ProfileScreen() {
                 <PastTripCard
                   destinationHe="Brazil — Rio, Petrópolis"
                   metaLine="Winter 2026 · 21 days"
-                  flag="🇧🇷"
+                  countryCode="br"
                 />
               </li>
               <li>
                 <PastTripCard
                   destinationHe="Southeast Asia"
                   metaLine="Autumn 2025 · Bangkok, Krabi, Chiang Mai"
-                  flag="🇹🇭"
+                  countryCode="th"
                 />
               </li>
               <li>
                 <PastTripCard
                   destinationHe="Côte d'Azur"
                   metaLine="Summer 2025 · Nice, Cannes, Monaco"
-                  flag="🇫🇷"
+                  countryCode="fr"
                 />
               </li>
               <li>
                 <PastTripCard
                   destinationHe="Greece — the Cyclades"
                   metaLine="Summer 2024 · Athens, Santorini, Mykonos"
-                  flag="🇬🇷"
+                  countryCode="gr"
                 />
               </li>
             </ul>
