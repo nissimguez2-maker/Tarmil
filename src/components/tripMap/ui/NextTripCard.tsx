@@ -41,7 +41,7 @@ export function NextTripCard({ stops, onTap, onAdd }: Props) {
   const span = formatTripSpan(stops);
   const totalNights = stops.reduce((acc, s) => acc + s.nights, 0);
   const days = daysUntil(stops[0].arrivalDate);
-  const photo = cityPhotos(stops[0].destinationId)[0];
+  const photo = cityPhotos(stops[0].id)[0];
 
   if (collapsed) {
     return (
