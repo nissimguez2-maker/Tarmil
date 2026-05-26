@@ -10,6 +10,7 @@ import { Dunes } from '../../components/Dunes';
 import { Avatar } from '../../components/shared/Avatar';
 import { PlacementBadge } from '../../components/PlacementBadge';
 import { StarRow } from '../../components/tools/StarRow';
+import { cityPhotos } from '../web/cityPhotos';
 import { useSupabaseData } from '../../lib/SupabaseDataProvider';
 import { LoadingPanel, ErrorPanel } from '../../components/DataState';
 import type { FriendVisit, PlaceCategory, Season } from '../../data/places';
@@ -25,6 +26,7 @@ export function PlaceScreen() {
     useSupabaseData();
   const navigate = useNavigate();
   const [mapsOpen, setMapsOpen] = useState(false);
+  const [heroOk, setHeroOk] = useState(true);
   if (loading) return <LoadingPanel />;
   if (error || !data) return <ErrorPanel error={error} />;
 
@@ -43,6 +45,7 @@ export function PlaceScreen() {
   const saved = data.placeSaves.some(
     (s) => s.placeId === place.id && s.friendId === null,
   );
+  const heroPhoto = place.imageUrl ?? cityPhotos(place.destinationId)[0];
 
   return (
     <Screen>
@@ -83,34 +86,57 @@ export function PlaceScreen() {
         }
       />
 
-      <div className="flex flex-col gap-lg p-md pb-xl">
-        <div className="flex flex-col gap-sm rounded-2xl bg-sand shadow-card p-md">
-          <div className="flex items-baseline justify-between gap-sm">
-            <h1 className="font-serif text-sub leading-tight text-charcoal">
-              {place.englishName}
-            </h1>
-            <PlacementBadge tier={place.placementTier} />
-          </div>
+      {/* Airbnb-style hero: a destination photo carrying the place name.
+          Real photo in prod; clean warm gradient if the asset fails. */}
+      <div className="relative h-56 w-full bg-gradient-to-br from-sand to-clay">
+        {heroPhoto && heroOk && (
+          <img
+            src={heroPhoto}
+            alt=""
+            onError={() => setHeroOk(false)}
+            className="h-full w-full object-cover"
+          />
+        )}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 bg-gradient-to-t from-charcoal/75 via-charcoal/15 to-transparent"
+        />
+        <div className="absolute inset-x-0 bottom-0 flex flex-col gap-px p-md">
+          <span className="meta-caps text-cream/75">
+            {categoryLabel(place.category)}
+          </span>
+          <h1 className="font-serif text-sub leading-tight text-cream">
+            {place.englishName}
+          </h1>
+        </div>
+      </div>
 
-          <div className="mt-xs flex items-center gap-md">
-            <span className="inline-flex items-center gap-1 text-body text-charcoal">
-              <Star
-                className="h-4 w-4 fill-amber text-amber"
-                strokeWidth={0}
-                aria-hidden
-              />
-              <span className="tnum font-medium">{place.rating.toFixed(1)}</span>
-              <span className="text-charcoal-55">· Tarmil</span>
-            </span>
-            <span className="inline-flex items-center gap-1 text-body text-charcoal-70">
-              <Star
-                className="h-4 w-4 fill-charcoal-30 text-charcoal-30"
-                strokeWidth={0}
-                aria-hidden
-              />
-              <span className="tnum">4.5</span>
-              <span className="text-charcoal-55">· Google</span>
-            </span>
+      <div className="flex flex-col gap-lg p-md pb-xl">
+        <div className="flex flex-col gap-sm">
+          <div className="flex items-center justify-between gap-sm">
+            <div className="flex items-center gap-md">
+              <span className="inline-flex items-center gap-1 text-body text-charcoal">
+                <Star
+                  className="h-4 w-4 fill-amber text-amber"
+                  strokeWidth={0}
+                  aria-hidden
+                />
+                <span className="tnum font-medium">
+                  {place.rating.toFixed(1)}
+                </span>
+                <span className="text-charcoal-55">· Tarmil</span>
+              </span>
+              <span className="inline-flex items-center gap-1 text-body text-charcoal-70">
+                <Star
+                  className="h-4 w-4 fill-charcoal-30 text-charcoal-30"
+                  strokeWidth={0}
+                  aria-hidden
+                />
+                <span className="tnum">4.5</span>
+                <span className="text-charcoal-55">· Google</span>
+              </span>
+            </div>
+            <PlacementBadge tier={place.placementTier} />
           </div>
 
           {place.placementTier && (
