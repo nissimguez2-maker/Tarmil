@@ -22,7 +22,7 @@ const SECTION_LABELS: Record<(typeof SECTION_ORDER)[number], string> = {
   beaches: 'Beaches',
   nightlife: 'Nightlife',
   kosher: 'Kosher',
-  chabad: 'Chabad house',
+  chabad: 'Chabad & community',
   other: 'More',
 };
 
@@ -41,6 +41,8 @@ function sectionFor(c: PlaceCategory): (typeof SECTION_ORDER)[number] {
     case 'kosher':
       return 'kosher';
     case 'chabad':
+    case 'synagogue':
+    case 'mikveh':
       return 'chabad';
     case 'landmark':
       return 'other';

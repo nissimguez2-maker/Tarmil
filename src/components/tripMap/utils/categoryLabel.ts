@@ -18,6 +18,10 @@ export function categoryLabel(c: Place['category']): string {
       return 'Chabad';
     case 'kosher':
       return 'Kosher';
+    case 'synagogue':
+      return 'Synagogue';
+    case 'mikveh':
+      return 'Mikveh';
     case 'landmark':
       return 'Landmark';
   }

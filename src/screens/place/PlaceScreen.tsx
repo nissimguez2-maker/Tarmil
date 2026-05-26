@@ -8,6 +8,7 @@ import { SectionLabel } from '../../components/SectionLabel';
 import { Button } from '../../components/Button';
 import { Dunes } from '../../components/Dunes';
 import { Avatar } from '../../components/shared/Avatar';
+import { PlacementBadge } from '../../components/PlacementBadge';
 import { StarRow } from '../../components/tools/StarRow';
 import { useSupabaseData } from '../../lib/SupabaseDataProvider';
 import { LoadingPanel, ErrorPanel } from '../../components/DataState';
@@ -88,9 +89,7 @@ export function PlaceScreen() {
             <h1 className="font-serif text-sub leading-tight text-charcoal">
               {place.englishName}
             </h1>
-            {place.tarmilPick && (
-              <span className="meta-caps shrink-0 text-amber">Tarmil pick</span>
-            )}
+            <PlacementBadge tier={place.placementTier} />
           </div>
 
           <div className="mt-xs flex items-center gap-md">
@@ -113,6 +112,14 @@ export function PlaceScreen() {
               <span className="text-charcoal-55">· Google</span>
             </span>
           </div>
+
+          {place.placementTier && (
+            <p className="text-small leading-snug text-charcoal-55">
+              {place.placementTier === 'selection'
+                ? 'Tarmil Selection — a paid member that earned recognition through sustained ratings from Israeli travelers. Ranking uses Tarmil ratings, not Google, and non-paying places are never hidden.'
+                : 'Sponsored — a paid placement, clearly disclosed. Ranking within tiers uses Israeli-traveler ratings, and non-paying places are always shown.'}
+            </p>
+          )}
         </div>
 
         <SectionLabel number="01" label="What this place is." />
@@ -381,6 +388,10 @@ function categoryLabel(c: PlaceCategory): string {
       return 'Chabad';
     case 'kosher':
       return 'Kosher';
+    case 'synagogue':
+      return 'Synagogue';
+    case 'mikveh':
+      return 'Mikveh';
     case 'landmark':
       return 'Landmark';
     default:

@@ -173,6 +173,12 @@ const placeRowToPlace = (r: Tables<'places'>): Place => ({
   reservationUrl: r.reservation_url ?? undefined,
   imageUrl: r.image_url ?? undefined,
   paidPlacement: r.paid_placement || undefined,
+  // Earned Selection outranks plain Sponsored; both are disclosed.
+  placementTier: r.tarmil_pick
+    ? 'selection'
+    : r.paid_placement
+      ? 'sponsored'
+      : undefined,
 });
 
 const placeReviewRowToReview = (

@@ -69,10 +69,11 @@ export function DiscoverModal({ open, onClose, initialDestinationId }: Props) {
 
   const rankedPlaces = useMemo(() => {
     if (!data) return [];
+    // Disclosed ranking: Tarmil Selection, then Sponsored, then public coverage.
+    const rank = (p: (typeof data.places)[number]) =>
+      p.placementTier === 'selection' ? 0 : p.placementTier === 'sponsored' ? 1 : 2;
     return [...data.places].sort((a, b) => {
-      if (!!a.paidPlacement !== !!b.paidPlacement) {
-        return a.paidPlacement ? -1 : 1;
-      }
+      if (rank(a) !== rank(b)) return rank(a) - rank(b);
       return a.englishName.localeCompare(b.englishName);
     });
   }, [data]);

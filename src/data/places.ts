@@ -17,7 +17,22 @@ export type PlaceCategory =
   | 'club'
   | 'chabad'
   | 'kosher'
+  | 'synagogue'
+  | 'mikveh'
   | 'landmark';
+
+/**
+ * Merchant placement, disclosed to the traveler (Business & Legal Strategy §4).
+ * Two paid tiers at one price point:
+ *  - 'sponsored' — paid placement, labelled "Sponsored".
+ *  - 'selection' — paid AND earned "Tarmil Selection" status through sustained
+ *                  Tarmil-internal ratings. Outranks plain Sponsored.
+ * Undefined = non-paying public coverage (shown, never suppressed).
+ *
+ * Derived at read time from the existing `paid_placement` / `tarmil_pick`
+ * columns (see SupabaseDataProvider) — no schema change.
+ */
+export type PlacementTier = 'sponsored' | 'selection';
 
 export type Season = 'spring' | 'summer' | 'autumn' | 'winter';
 
@@ -48,8 +63,13 @@ export type Place = {
   rating: number;
   /** Friends of the user who've been here. */
   friendsKnow: number;
-  /** Hand-picked Tarmil recommendation badge. */
+  /** Earned "Tarmil Selection" status (seed/DB: `tarmil_pick`). */
   tarmilPick?: boolean;
+  /**
+   * Disclosed merchant tier, derived from `tarmilPick` / `paidPlacement` at
+   * read time. The sanctioned field for UI badges and ranking.
+   */
+  placementTier?: PlacementTier;
   /** Friends' past visits, season+year+duration only. Default empty. */
   friendVisits?: FriendVisit[];
   /** Public phone number for direct contact. Optional. */

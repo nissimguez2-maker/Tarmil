@@ -70,6 +70,18 @@ const COMMENTS: Record<PlaceCategory, string[]> = {
     'Line moves fast, they spoke Hebrew with us, recommendations were gold.',
     'They bake on site, smell of grandma\'s kitchen without breaking down.',
   ],
+  synagogue: [
+    'Beautiful old shul, caught Kabbalat Shabbat with travelers from everywhere.',
+    'Visitors welcome, security was chill once we showed our passports.',
+    'Quiet weekday minyan, the gabbai sorted us with tefillin and tips.',
+    'Stunning inside, stayed for services and got invited to a Shabbat meal.',
+  ],
+  mikveh: [
+    'Spotless and private, booked a slot over WhatsApp the day before.',
+    'Well-kept and calm, the attendant walked us through everything.',
+    'Exactly what you need on the road, call ahead for evening hours.',
+    'Clean, quiet, no fuss — grateful it existed this far from home.',
+  ],
   landmark: [
     'Must-see once, snapped a photo and moved on relaxed.',
     'Worth the walk, the vibe actually hits harder in the evening.',

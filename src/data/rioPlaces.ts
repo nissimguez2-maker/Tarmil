@@ -840,4 +840,69 @@ export const rioPlaces: Place[] = [
     rating: 4.4,
     friendsKnow: 4,
   },
+
+  // ─── Kosher & Jewish-friendly (merchant tiers) ──────────────────────────
+  {
+    id: 'rio-kosher-grill',
+    destinationId: 'rio-de-janeiro',
+    hebrewName: 'Carioca Kosher Grill',
+    englishName: 'Carioca Kosher Grill',
+    category: 'kosher',
+    lat: -22.9694,
+    lng: -43.1858,
+    hebrewDescription:
+      'Glatt grill two blocks off Copacabana. Badatz-certified, books up on Thursdays.',
+    englishDescription:
+      'Glatt grill two blocks off Copacabana. Badatz-certified, books up on Thursdays.',
+    rating: 4.6,
+    friendsKnow: 7,
+    paidPlacement: true,
+    reservationUrl: 'https://wa.me/5521999990000',
+  },
+  {
+    id: 'rio-shtetl-bakery',
+    destinationId: 'rio-de-janeiro',
+    hebrewName: 'Shtetl Bakery',
+    englishName: 'Shtetl Bakery',
+    category: 'kosher',
+    lat: -22.9831,
+    lng: -43.2049,
+    hebrewDescription:
+      'Tiny Ipanema bakery. Fresh challah on Fridays, queue starts before noon.',
+    englishDescription:
+      'Tiny Ipanema bakery. Fresh challah on Fridays, queue starts before noon.',
+    rating: 4.9,
+    friendsKnow: 9,
+    tarmilPick: true,
+  },
+  {
+    id: 'rio-beit-yaakov-synagogue',
+    destinationId: 'rio-de-janeiro',
+    hebrewName: 'Beit Yaakov Synagogue',
+    englishName: 'Beit Yaakov Synagogue',
+    category: 'synagogue',
+    lat: -22.9726,
+    lng: -43.1889,
+    hebrewDescription:
+      'Welcoming Copacabana shul. Shabbat services posted at the door, visitors fine.',
+    englishDescription:
+      'Welcoming Copacabana shul. Shabbat services posted at the door, visitors fine.',
+    rating: 4.7,
+    friendsKnow: 3,
+  },
+  {
+    id: 'rio-mikveh-copacabana',
+    destinationId: 'rio-de-janeiro',
+    hebrewName: 'Copacabana Mikveh',
+    englishName: 'Copacabana Mikveh',
+    category: 'mikveh',
+    lat: -22.9741,
+    lng: -43.1903,
+    hebrewDescription:
+      'Clean, well-kept mikveh by appointment. Call ahead for evening hours.',
+    englishDescription:
+      'Clean, well-kept mikveh by appointment. Call ahead for evening hours.',
+    rating: 4.5,
+    friendsKnow: 2,
+  },
 ];

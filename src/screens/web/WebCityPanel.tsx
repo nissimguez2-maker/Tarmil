@@ -11,6 +11,7 @@ import {
   Users,
 } from 'lucide-react';
 import { Button } from '../../components/Button';
+import { PlacementBadge } from '../../components/PlacementBadge';
 import type { PlannedStop } from '../../data/plannedStops';
 import type { FriendVisit, Place, PlaceCategory } from '../../data/places';
 import { cityDescription, CITY_DESCRIPTIONS } from './cityCopy';
@@ -65,7 +66,11 @@ const TABS: { id: TabId; label: string; categories: PlaceCategory[] }[] = [
   { id: 'eat', label: 'Eat', categories: ['restaurant', 'cafe'] },
   { id: 'drink', label: 'Drink', categories: ['bar', 'club'] },
   { id: 'see', label: 'See', categories: ['landmark', 'beach'] },
-  { id: 'religious', label: 'Religious', categories: ['chabad', 'kosher'] },
+  {
+    id: 'religious',
+    label: 'Religious',
+    categories: ['chabad', 'synagogue', 'mikveh', 'kosher'],
+  },
 ];
 
 const SUB_FILTERS: Record<TabId, SubFilter[]> = {
@@ -89,6 +94,8 @@ const SUB_FILTERS: Record<TabId, SubFilter[]> = {
   religious: [
     { label: 'All', category: 'all' },
     { label: 'Chabad', category: 'chabad' },
+    { label: 'Synagogues', category: 'synagogue' },
+    { label: 'Mikvaot', category: 'mikveh' },
     { label: 'Kosher', category: 'kosher' },
   ],
 };
@@ -719,11 +726,7 @@ function PlaceCard({
             <span className="text-meta uppercase text-charcoal-55">
               {place.category}
             </span>
-            {place.tarmilPick && (
-              <span className="text-meta uppercase font-medium text-amber">
-                Tarmil Pick
-              </span>
-            )}
+            <PlacementBadge tier={place.placementTier} />
           </div>
         </div>
       </div>

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import clsx from 'clsx';
 import { ChevronDown, ChevronLeft, X, Star } from 'lucide-react';
 import { Button } from '../../Button';
+import { PlacementBadge } from '../../PlacementBadge';
 import type { PlannedStop } from '../../../data/plannedStops';
 import type { Place } from '../../../data/places';
 import type { FriendOverlap } from '../../../data/myTrip';
@@ -217,9 +218,7 @@ function PlaceRow({
       <div className="flex flex-col">
         <div className="flex items-baseline gap-2">
           <span className="text-body text-charcoal">{place.hebrewName}</span>
-          {place.tarmilPick && (
-            <span className="meta-caps text-amber">Pick</span>
-          )}
+          <PlacementBadge tier={place.placementTier} />
         </div>
         <span className="inline-flex items-center gap-2 text-small text-charcoal-55">
           <span>{categoryLabel(place.category)}</span>

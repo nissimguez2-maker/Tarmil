@@ -1245,4 +1245,37 @@ export const globalPlaces: Place[] = [
     rating: 4.5,
     friendsKnow: 2,
   },
+
+  // ─── Buenos Aires · kosher & Jewish-friendly (merchant tiers) ───────────
+  {
+    id: 'ba-once-parrilla',
+    destinationId: 'buenos-aires',
+    hebrewName: 'Parrilla Once Kosher',
+    englishName: 'Parrilla Once Kosher',
+    category: 'kosher',
+    lat: -34.6093,
+    lng: -58.4083,
+    hebrewDescription:
+      'Proper kosher asado in Once. Order the bife de chorizo, thank me later.',
+    englishDescription:
+      'Proper kosher asado in Once. Order the bife de chorizo, thank me later.',
+    rating: 4.8,
+    friendsKnow: 11,
+    tarmilPick: true,
+  },
+  {
+    id: 'ba-gran-templo-paso',
+    destinationId: 'buenos-aires',
+    hebrewName: 'Gran Templo Paso',
+    englishName: 'Gran Templo Paso',
+    category: 'synagogue',
+    lat: -34.6086,
+    lng: -58.4012,
+    hebrewDescription:
+      'Historic Once synagogue. Worth a visit; bring ID for the security desk.',
+    englishDescription:
+      'Historic Once synagogue. Worth a visit; bring ID for the security desk.',
+    rating: 4.7,
+    friendsKnow: 4,
+  },
 ];
