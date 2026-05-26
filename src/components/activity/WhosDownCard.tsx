@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Send } from 'lucide-react';
+import { Send, SmilePlus } from 'lucide-react';
 import type { ActivityPost, Poll } from '../../data/activityPosts';
 import type { FriendOverlap } from '../../data/myTrip';
 import type { Reaction } from '../../data/reactions';
@@ -102,7 +102,15 @@ export function WhosDownCard({
             />
           ))}
           {grouped.length === 0 && (
-            <ReactionPill emoji="🔥" count={0} onClick={() => onReact('🔥')} />
+            <button
+              type="button"
+              onClick={() => onReact('🔥')}
+              aria-label="React"
+              className="inline-flex h-7 items-center gap-1 rounded-full bg-charcoal-08 ps-2 pe-2.5 text-small text-charcoal-70 transition-colors duration-instant ease-out-quart hover:bg-charcoal-15 hover:text-charcoal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-1 focus-visible:ring-offset-cream"
+            >
+              <SmilePlus className="h-3.5 w-3.5" strokeWidth={1.8} aria-hidden />
+              React
+            </button>
           )}
         </div>
         <button

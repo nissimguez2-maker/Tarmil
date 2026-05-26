@@ -102,6 +102,11 @@ type ContextValue = {
 
 const Context = createContext<ContextValue | null>(null);
 
+// Dev-only offline mode: load TripData from in-repo seed arrays instead of
+// Supabase (for local screenshots when the Supabase host is blocked). Unset
+// in real builds, so this is always false in prod.
+const USE_LOCAL_SEED = import.meta.env.VITE_USE_LOCAL_SEED === 'true';
+
 // Supabase throws PostgrestError-shaped objects that aren't `instanceof Error`,
 // so the obvious `new Error(String(e))` stringifies them as "[object Object]"
 // and the screen swallows the real cause. Keep the original Error when we have
@@ -442,6 +447,14 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     let cancelled = false;
     async function load() {
+      if (USE_LOCAL_SEED) {
+        const { buildLocalSeed } = await import('./localSeed');
+        if (!cancelled) {
+          setData(buildLocalSeed());
+          setLoading(false);
+        }
+        return;
+      }
       try {
         const [
           placesRes,
@@ -526,6 +539,7 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
 
   // Realtime — one channel per surface so cleanup stays simple.
   useEffect(() => {
+    if (USE_LOCAL_SEED) return;
     const channel = supabase
       .channel('planned_stops_changes')
       .on(
@@ -542,6 +556,7 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
   }, [refetchStops]);
 
   useEffect(() => {
+    if (USE_LOCAL_SEED) return;
     const channel = supabase
       .channel('forum_thread_replies_changes')
       .on(
@@ -558,6 +573,7 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
   }, [refetchForumReplies]);
 
   useEffect(() => {
+    if (USE_LOCAL_SEED) return;
     const channel = supabase
       .channel('activity_posts_changes')
       .on(
@@ -574,6 +590,7 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
   }, [refetchActivity]);
 
   useEffect(() => {
+    if (USE_LOCAL_SEED) return;
     const channel = supabase
       .channel('reactions_changes')
       .on(
@@ -590,6 +607,7 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
   }, [refetchReactions]);
 
   useEffect(() => {
+    if (USE_LOCAL_SEED) return;
     const channel = supabase
       .channel('pings_changes')
       .on(
@@ -606,6 +624,7 @@ export function SupabaseDataProvider({ children }: { children: ReactNode }) {
   }, [refetchPings]);
 
   useEffect(() => {
+    if (USE_LOCAL_SEED) return;
     const channel = supabase
       .channel('place_saves_changes')
       .on(

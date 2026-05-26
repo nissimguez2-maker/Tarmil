@@ -4,6 +4,8 @@ import { Send, Check } from 'lucide-react';
 type Props = {
   pinged: boolean;
   onPing: () => void;
+  /** Stretch to fill the container (e.g. stacked layouts). */
+  fullWidth?: boolean;
 };
 
 /**
@@ -12,7 +14,7 @@ type Props = {
  * when a new co-presence event surfaces (different city, or the same city
  * after a clean separation). Mirrors brief §04 Ping rules.
  */
-export function PingButton({ pinged, onPing }: Props) {
+export function PingButton({ pinged, onPing, fullWidth }: Props) {
   return (
     <button
       type="button"
@@ -21,6 +23,7 @@ export function PingButton({ pinged, onPing }: Props) {
       aria-label={pinged ? 'Pinged' : 'Ping'}
       className={clsx(
         'inline-flex h-9 shrink-0 items-center gap-1 rounded-full ps-3 pe-4 font-sans text-small font-medium leading-none',
+        fullWidth && 'w-full justify-center',
         'transition-[transform,background-color,color] duration-instant ease-out-quart motion-reduce:transition-none',
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream',
         'disabled:active:scale-100',

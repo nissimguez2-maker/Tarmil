@@ -221,25 +221,28 @@ function RightNowStrip({
           const pinged = hasPinged(friend.id);
           return (
             <li key={friend.id} className="shrink-0">
-              <article className="flex w-[220px] items-center gap-sm rounded-2xl bg-cream shadow-card p-sm">
-                <Avatar
-                  photoUrl={friend.photoUrl}
-                  initial={friend.friendInitial}
-                  name={friend.friendName}
-                  size="md"
-                  statusDot
-                />
-                <div className="flex min-w-0 flex-1 flex-col leading-tight">
-                  <span className="truncate font-serif text-body italic text-charcoal">
-                    {friend.friendName}
-                  </span>
-                  <span className="truncate text-small text-charcoal-55">
-                    {friend.zoneLabel}
-                  </span>
+              <article className="flex w-[208px] flex-col gap-sm rounded-2xl bg-cream shadow-card p-sm">
+                <div className="flex items-center gap-sm">
+                  <Avatar
+                    photoUrl={friend.photoUrl}
+                    initial={friend.friendInitial}
+                    name={friend.friendName}
+                    size="md"
+                    statusDot
+                  />
+                  <div className="flex min-w-0 flex-1 flex-col leading-tight">
+                    <span className="truncate font-serif text-body italic text-charcoal">
+                      {friend.friendName}
+                    </span>
+                    <span className="truncate text-small text-charcoal-55">
+                      {friend.zoneLabel}
+                    </span>
+                  </div>
                 </div>
                 <PingButton
                   pinged={pinged}
                   onPing={() => onPing(friend.id)}
+                  fullWidth
                 />
               </article>
             </li>

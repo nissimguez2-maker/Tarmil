@@ -1,8 +1,10 @@
 import type { ActivityPost } from '../../data/activityPosts';
 import type { FriendOverlap } from '../../data/myTrip';
 import type { Reaction } from '../../data/reactions';
+import { useState } from 'react';
+import { SmilePlus } from 'lucide-react';
 import { Avatar } from '../shared/Avatar';
-import { TripMapPreview } from './TripMapPreview';
+import { cityPhotos } from '../../screens/web/cityPhotos';
 import { ReactionPill } from './ReactionPill';
 import { groupReactions } from './reactionUtils';
 
@@ -22,6 +24,8 @@ type Props = {
  */
 export function TripDeclarationCard({ post, author, reactions, onReact }: Props) {
   const grouped = groupReactions(reactions);
+  const photo = post.destinationId ? cityPhotos(post.destinationId)[0] : undefined;
+  const [imgOk, setImgOk] = useState(true);
   return (
     <article className="flex flex-col gap-sm rounded-2xl bg-cream shadow-card p-md">
       <header className="flex items-center gap-sm">
@@ -41,15 +45,22 @@ export function TripDeclarationCard({ post, author, reactions, onReact }: Props)
 
       <p className="text-body text-charcoal-70">{post.bodyHe}</p>
 
-      <div className="overflow-hidden rounded-xl ring-1 ring-charcoal-08">
-        <TripMapPreview
-          destinationId={post.destinationId}
-          ariaLabel={
-            author
-              ? `${author.friendName}'s trip preview map`
-              : 'Trip preview map'
-          }
-        />
+      <div className="relative h-28 w-full overflow-hidden rounded-xl bg-gradient-to-br from-sand to-linen ring-1 ring-charcoal-08">
+        {photo && imgOk && (
+          <>
+            <img
+              src={photo}
+              alt=""
+              loading="lazy"
+              onError={() => setImgOk(false)}
+              className="h-full w-full object-cover"
+            />
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-0 bg-gradient-to-t from-charcoal/40 to-transparent"
+            />
+          </>
+        )}
       </div>
 
       <div className="flex flex-wrap items-center gap-2">
@@ -63,7 +74,15 @@ export function TripDeclarationCard({ post, author, reactions, onReact }: Props)
           />
         ))}
         {grouped.length === 0 && (
-          <ReactionPill emoji="🔥" count={0} onClick={() => onReact('🔥')} />
+          <button
+            type="button"
+            onClick={() => onReact('🔥')}
+            aria-label="React"
+            className="inline-flex h-7 items-center gap-1 rounded-full bg-charcoal-08 ps-2 pe-2.5 text-small text-charcoal-70 transition-colors duration-instant ease-out-quart hover:bg-charcoal-15 hover:text-charcoal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-1 focus-visible:ring-offset-cream"
+          >
+            <SmilePlus className="h-3.5 w-3.5" strokeWidth={1.8} aria-hidden />
+            React
+          </button>
         )}
       </div>
     </article>
