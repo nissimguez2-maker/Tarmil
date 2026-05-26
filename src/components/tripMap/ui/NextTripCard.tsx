@@ -4,6 +4,7 @@ import { Plus, MapPin, ChevronUp } from 'lucide-react';
 import type { PlannedStop } from '../../../data/plannedStops';
 import { formatDateChip } from '../utils/formatDateRange';
 import { daysUntil } from '../utils/daysUntil';
+import { cityPhotos } from '../../../screens/web/cityPhotos';
 
 type Props = {
   /** All planned stops in arrival order. Empty = empty-state CTA. */
@@ -30,6 +31,7 @@ type Props = {
  */
 export function NextTripCard({ stops, onTap, onAdd }: Props) {
   const [collapsed, setCollapsed] = useState(false);
+  const [imgOk, setImgOk] = useState(true);
 
   if (stops.length === 0) {
     return <EmptyState onAdd={onAdd} />;
@@ -39,6 +41,7 @@ export function NextTripCard({ stops, onTap, onAdd }: Props) {
   const span = formatTripSpan(stops);
   const totalNights = stops.reduce((acc, s) => acc + s.nights, 0);
   const days = daysUntil(stops[0].arrivalDate);
+  const photo = cityPhotos(stops[0].destinationId)[0];
 
   if (collapsed) {
     return (
@@ -72,10 +75,23 @@ export function NextTripCard({ stops, onTap, onAdd }: Props) {
       )}
     >
       <div className="flex items-stretch">
+        <div className="flex shrink-0 items-center ps-md py-md">
+          <span className="h-16 w-16 overflow-hidden rounded-xl bg-gradient-to-br from-clay to-sand shadow-card">
+            {photo && imgOk && (
+              <img
+                src={photo}
+                alt=""
+                loading="lazy"
+                onError={() => setImgOk(false)}
+                className="h-full w-full object-cover"
+              />
+            )}
+          </span>
+        </div>
         <button
           type="button"
           onClick={onTap}
-          className="flex-1 flex-col gap-1 px-md pb-sm pt-md text-start transition-colors duration-instant ease-out-quart hover:bg-sand/80 active:bg-clay/40 focus-visible:outline-none focus-visible:bg-sand/80"
+          className="flex-1 flex-col gap-1 ps-sm pe-md pb-sm pt-md text-start transition-colors duration-instant ease-out-quart hover:bg-sand/80 active:bg-clay/40 focus-visible:outline-none focus-visible:bg-sand/80"
         >
           <span className="meta-caps text-amber">Next trip</span>
 
