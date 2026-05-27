@@ -50,6 +50,10 @@
   --amber-85: #c6803dd9;
   --amber-70: #c6803db3;
 
+  /* Cool functional accent — a muted sea/teal pop on the warm palette (DA v0.4) */
+  --sea: #3f6f66;
+  --sea-rgb: 63 111 102;
+
   /* device frame surface (page background when the iPhone frame is shown) */
   --page-bg: var(--charcoal-15);
 

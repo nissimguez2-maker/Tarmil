@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import clsx from 'clsx';
 import {
+  Bookmark,
   Check,
   Cloud,
   CloudRain,
@@ -155,7 +156,7 @@ export function WebCityPanel({ stop, places }: Props) {
                 'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream',
                 activeTab === tab.id
                   ? 'bg-charcoal text-cream border-charcoal'
-                  : 'bg-cream text-charcoal-70 border-charcoal-15 hover:border-charcoal hover:text-charcoal',
+                  : 'bg-charcoal-8 text-charcoal-70 border-transparent hover:bg-charcoal-15 hover:text-charcoal',
               )}
             >
               {tab.label}
@@ -174,7 +175,7 @@ export function WebCityPanel({ stop, places }: Props) {
                   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream',
                   activeSub === sub.category
                     ? 'bg-amber text-cream border-amber'
-                    : 'bg-cream text-charcoal-70 border-charcoal-15 hover:border-amber hover:text-amber',
+                    : 'bg-charcoal-8 text-charcoal-70 border-transparent hover:text-amber',
                 )}
               >
                 {sub.label}
@@ -469,10 +470,10 @@ function WeatherDayCard({
   return (
     <div
       className={clsx(
-        'shrink-0 w-14 flex flex-col items-center gap-xs rounded-xl py-sm border',
+        'shrink-0 w-14 flex flex-col items-center gap-xs rounded-xl py-sm border transition-colors',
         highlighted
-          ? 'bg-cream border-amber'
-          : 'bg-transparent border-transparent opacity-50',
+          ? 'bg-cream border-amber shadow-card'
+          : 'bg-linen/60 border-transparent',
       )}
     >
       <p
@@ -494,7 +495,7 @@ function WeatherDayCard({
       <Icon
         size={20}
         strokeWidth={1.5}
-        className={highlighted ? 'text-charcoal-70' : 'text-charcoal-30'}
+        className={highlighted ? 'text-charcoal-70' : 'text-charcoal-55'}
       />
       <div className="flex flex-col items-center leading-none">
         <p
@@ -705,7 +706,7 @@ function PlaceCard({
   };
 
   return (
-    <article className="bg-sand border border-charcoal-15 rounded-2xl p-sm flex flex-col gap-sm">
+    <article className="bg-cream rounded-2xl p-sm flex flex-col gap-sm shadow-card ring-1 ring-charcoal-08 transition-[transform,box-shadow] duration-instant ease-out-quart motion-reduce:transition-none hover:shadow-fab hover:-translate-y-px">
       <div className="flex gap-sm">
         <PlaceThumbnail src={place.imageUrl} name={place.englishName} />
         <div className="flex-1 min-w-0 flex flex-col gap-xs">
@@ -732,26 +733,21 @@ function PlaceCard({
       </div>
       <DescriptionWithMore text={place.englishDescription} />
       <div className="flex justify-end gap-sm">
-        <Button
-          variant={status === 'saved' ? 'primary' : 'ghost'}
-          size="sm"
-          onClick={onSave}
-        >
+        <Button variant="ghost" size="sm" onClick={onSave}>
           {status === 'saved' ? (
             <>
-              <Check size={12} strokeWidth={2} />
+              <Check size={12} strokeWidth={2} className="text-sea" />
               Saved
             </>
           ) : (
-            'Save'
+            <>
+              <Bookmark size={12} strokeWidth={2} />
+              Save
+            </>
           )}
         </Button>
         {reservable && (
-          <Button
-            variant={status === 'reserved' ? 'accent' : 'ghost'}
-            size="sm"
-            onClick={onReserve}
-          >
+          <Button variant="sea" size="sm" onClick={onReserve}>
             {status === 'reserved' ? (
               <>
                 <Check size={12} strokeWidth={2} />

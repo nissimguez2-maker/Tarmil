@@ -29,6 +29,7 @@ export default {
         85: 'var(--amber-85)',
         70: 'var(--amber-70)',
       },
+      sea: 'rgb(var(--sea-rgb) / <alpha-value>)',
     },
     fontFamily: {
       // Aesop-style clean grotesque (Suisse Int'l look-alike) for ALL text.
