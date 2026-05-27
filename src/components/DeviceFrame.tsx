@@ -20,13 +20,26 @@ export function DeviceFrame({ children }: Props) {
     <div
       className={clsx(
         // mobile: full-bleed ivory
-        'h-dvh w-full bg-cream',
-        // desktop: warm stage so the cream phone pops (it fills the wall when
-        // the app is demoed on a projector)
+        'relative h-dvh w-full bg-cream',
+        // desktop: a light warm stage so the cream phone pops without the
+        // muddy heavy-brown backdrop (it's projected on a wall during the demo)
         'md:flex md:h-dvh md:items-center md:justify-center md:p-md',
-        'md:bg-gradient-to-br md:from-clay md:to-umber',
+        'md:bg-gradient-to-br md:from-linen md:to-clay',
       )}
     >
+      {/* Brand lockup — fills the otherwise-empty stage margins with the
+          product name during a projected demo. Desktop stage only. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute start-lg top-lg hidden flex-col gap-px text-charcoal md:flex"
+      >
+        <span className="font-serif text-sub font-bold leading-none tracking-tight">
+          Tarmil
+        </span>
+        <span className="text-small text-charcoal-70">
+          Travel for Israelis abroad
+        </span>
+      </div>
       <div
         className={clsx(
           'relative h-full w-full bg-cream overflow-hidden',

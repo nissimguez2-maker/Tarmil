@@ -70,11 +70,12 @@
     -webkit-touch-callout: default;
   }
 
-  /* mid-titles per DA: italic Fraunces 500 sentence case */
+  /* mid-titles: upright Hanken 600, sentence case. Italic is reserved for a
+     few genuine editorial moments (taglines, quotes), not every label —
+     upright reads better at distance and matches the web planner's headings. */
   .mid-title {
     font-family: 'Hanken Grotesk', system-ui, sans-serif;
-    font-weight: 500;
-    font-style: italic;
+    font-weight: 600;
     color: var(--charcoal);
   }
 

@@ -34,8 +34,11 @@
   /* Charcoal Brown — primary text, structure, primary CTA fills */
   --charcoal: #2e2417;
   --charcoal-rgb: 46 36 23;
-  --charcoal-70: #2e2417b3;
-  --charcoal-55: #2e24178c;
+  /* Secondary/caption ink sits a touch more opaque than the token names imply,
+     for legibility when the app is projected on a wall (DA "working set, easy
+     to nudge"). 70 ≈ 0.76, 55 ≈ 0.65. */
+  --charcoal-70: #2e2417c2;
+  --charcoal-55: #2e2417a6;
   --charcoal-30: #2e24174d;
   --charcoal-15: #2e241726;
   --charcoal-08: #2e241714;
