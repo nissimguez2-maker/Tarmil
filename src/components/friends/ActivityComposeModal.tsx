@@ -64,7 +64,7 @@ export function ActivityComposeModal({ open, onClose, stops, onSubmit }: Props) 
         onClose();
       }}
       eyebrow="New post"
-      title="What's on your mind?"
+      title="What's the move?"
       footer={
         <div className="flex gap-sm">
           <Button

@@ -28,14 +28,54 @@ type State = { items: WishItem[] };
 
 const STORAGE_KEY = 'tarmil:wishlist';
 
+// Offline demo only: pre-fill a believable per-stop wishlist so the web
+// itinerary reads as a planned trip (saved counts + expandable lists) instead
+// of empty stops. Never seeds a real build — the flag is unset in production.
+const USE_LOCAL_SEED = import.meta.env.VITE_USE_LOCAL_SEED === 'true';
+
 let state: State = loadInitial();
 const listeners = new Set<() => void>();
+
+function seedItems(): WishItem[] {
+  const base = Date.now();
+  let i = 0;
+  const place = (
+    stopId: string,
+    pid: string,
+    placeName: string,
+    category: string,
+    status: 'saved' | 'reserved',
+  ): PlaceItem => ({
+    kind: 'place',
+    id: `${stopId}::${pid}`,
+    placeId: pid,
+    stopId,
+    placeName,
+    category,
+    status,
+    addedAt: base + i++,
+  });
+  return [
+    place('buzios', 'buzios-geriba-hostel', 'Geribá Beach Hostel', 'hostel', 'reserved'),
+    place('buzios', 'buzios-geriba-beach', 'Praia de Geribá', 'beach', 'saved'),
+    place('buzios', 'buzios-ferradura', 'Praia da Ferradura', 'beach', 'saved'),
+    place('sao-paulo', 'soul-hostel', 'Soul Hostel', 'hostel', 'reserved'),
+    place('sao-paulo', 'sova-rest', 'Sová Comida Judaica', 'restaurant', 'saved'),
+    place('sao-paulo', 'beit-cafe', 'Beit Café', 'cafe', 'saved'),
+    place('jericoacoara', 'jeri-hostel', 'Hostel Jericoacoara', 'hostel', 'reserved'),
+    place('jericoacoara', 'jeri-main-beach', 'Praia de Jericoacoara', 'beach', 'saved'),
+    place('jericoacoara', 'duna-por-do-sol', 'Duna do Pôr do Sol', 'landmark', 'saved'),
+    place('buenos-aires', 'iaacob-house', 'Iaacob House Hostel', 'hostel', 'reserved'),
+    place('buenos-aires', 'obelisco-ba', 'Obelisco de Buenos Aires', 'landmark', 'saved'),
+    place('buenos-aires', 'san-telmo-market', 'San Telmo Market', 'landmark', 'saved'),
+  ];
+}
 
 function loadInitial(): State {
   if (typeof window === 'undefined') return { items: [] };
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return { items: [] };
+    if (!raw) return { items: USE_LOCAL_SEED ? seedItems() : [] };
     const parsed = JSON.parse(raw);
     if (parsed && Array.isArray(parsed.items)) {
       return { items: parsed.items as WishItem[] };
@@ -43,7 +83,7 @@ function loadInitial(): State {
   } catch {
     // ignore parse errors
   }
-  return { items: [] };
+  return { items: USE_LOCAL_SEED ? seedItems() : [] };
 }
 
 let persistTimer: ReturnType<typeof setTimeout> | null = null;

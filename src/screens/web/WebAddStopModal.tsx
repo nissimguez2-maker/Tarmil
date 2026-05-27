@@ -76,7 +76,7 @@ export function WebAddStopModal({ open, onClose, onAdd, existingStopIds }: Props
             Search any city
           </h2>
           <p className="text-small text-charcoal-70">
-            Type a city name. We resolve it via OpenStreetMap.
+            Type any city in the world to add it to your trip.
           </p>
         </div>
         <label className="flex items-center gap-sm rounded-full bg-sand border border-charcoal-15 px-sm h-10 focus-within:border-amber transition-[border-color] duration-instant ease-out-quart motion-reduce:transition-none">

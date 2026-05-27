@@ -135,8 +135,10 @@ export const TripMap = forwardRef<TripMapHandle, Props>(function TripMap(
       map.setView(focusCoords[0], 4);
     } else {
       map.fitBounds(L.latLngBounds(focusCoords), {
-        paddingTopLeft: [60, 80],
-        paddingBottomRight: [60, 60],
+        // Stop labels float to the right of each bubble, so reserve extra
+        // room on that edge — otherwise the easternmost label clips off-screen.
+        paddingTopLeft: [70, 80],
+        paddingBottomRight: [150, 70],
         maxZoom: 4,
       });
     }

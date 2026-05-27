@@ -303,7 +303,9 @@ function DiscoverSearchButton({ onOpen }: { onOpen: () => void }) {
       <span className="flex-1 truncate text-body text-charcoal-55 group-hover:text-charcoal">
         Find a place to save
       </span>
-      <span className="meta-caps shrink-0 text-amber">Discover</span>
+      <span className="shrink-0 rounded-full bg-charcoal px-sm py-1 text-meta uppercase tracking-wide text-cream">
+        Discover
+      </span>
     </button>
   );
 }

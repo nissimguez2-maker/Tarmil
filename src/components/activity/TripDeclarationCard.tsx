@@ -45,23 +45,21 @@ export function TripDeclarationCard({ post, author, reactions, onReact }: Props)
 
       <p className="text-body text-charcoal-70">{post.bodyHe}</p>
 
-      <div className="relative h-28 w-full overflow-hidden rounded-xl bg-gradient-to-br from-sand to-linen ring-1 ring-charcoal-08">
-        {photo && imgOk && (
-          <>
-            <img
-              src={photo}
-              alt=""
-              loading="lazy"
-              onError={() => setImgOk(false)}
-              className="h-full w-full object-cover"
-            />
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-0 bg-gradient-to-t from-charcoal/40 to-transparent"
-            />
-          </>
-        )}
-      </div>
+      {photo && imgOk && (
+        <div className="relative h-28 w-full overflow-hidden rounded-xl bg-gradient-to-br from-sand to-linen ring-1 ring-charcoal-08">
+          <img
+            src={photo}
+            alt=""
+            loading="lazy"
+            onError={() => setImgOk(false)}
+            className="h-full w-full object-cover"
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 bg-gradient-to-t from-charcoal/40 to-transparent"
+          />
+        </div>
+      )}
 
       <div className="flex flex-wrap items-center gap-2">
         {grouped.map((g) => (
