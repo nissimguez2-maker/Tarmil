@@ -286,7 +286,7 @@ function OfferCard({
           <button
             type="button"
             onClick={onRemove}
-            className="inline-flex items-center gap-xs text-meta uppercase font-medium text-amber hover:text-charcoal transition-colors duration-instant ease-out-quart motion-reduce:transition-none focus-visible:outline-none focus-visible:underline rounded-sm"
+            className="inline-flex items-center gap-xs text-meta uppercase font-medium text-umber hover:text-charcoal transition-colors duration-instant ease-out-quart motion-reduce:transition-none focus-visible:outline-none focus-visible:underline rounded-sm"
           >
             <Check size={12} strokeWidth={2} />
             Booked · Remove

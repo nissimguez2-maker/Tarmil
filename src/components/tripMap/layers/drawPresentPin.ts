@@ -12,6 +12,9 @@ export function drawPresentPin(map: L.Map, latlng: LatLng): () => void {
     icon,
     zIndexOffset: 1000,
     interactive: false,
+    keyboard: false,
+    title: 'You are here',
+    alt: 'You are here',
   }).addTo(map);
 
   return () => {

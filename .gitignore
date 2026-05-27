@@ -37,5 +37,6 @@ lerna-debug.log*
 # misc
 .netlify
 
-# local screenshot harness (throwaway dev tooling)
+# local screenshot / a11y harness (throwaway dev tooling)
 /shoot.mjs
+/a11y.mjs

@@ -37,7 +37,7 @@ export function WebHeader({ stops }: Props) {
         </button>
         <Link
           to="/trip"
-          className="text-small text-amber hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream rounded-sm"
+          className="text-small text-umber hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream rounded-sm"
         >
           Switch to App
         </Link>

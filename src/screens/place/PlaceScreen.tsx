@@ -329,7 +329,7 @@ function ReviewCard({
     <article className="flex flex-col gap-xs rounded-2xl bg-sand shadow-card p-md">
       <div className="flex items-center justify-between gap-sm">
         <span className="text-small font-medium text-charcoal">{reviewer}</span>
-        <span aria-label={`${stars} stars`} className="flex shrink-0 gap-0.5">
+        <span role="img" aria-label={`${stars} stars`} className="flex shrink-0 gap-0.5">
           {Array.from({ length: 5 }).map((_, i) => (
             <Star
               key={i}
