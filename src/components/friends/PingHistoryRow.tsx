@@ -29,7 +29,7 @@ export function PingHistoryRow({ direction, friend, zoneLabel, at }: Props) {
         statusDot={direction === 'received'}
       />
       <div className="flex min-w-0 flex-1 flex-col leading-tight">
-        <span className="truncate font-serif text-lede italic text-charcoal">
+        <span className="truncate font-serif text-lede text-charcoal">
           {headline}
         </span>
         <span className="text-small text-charcoal-55">

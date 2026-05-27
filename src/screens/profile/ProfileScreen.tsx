@@ -129,7 +129,7 @@ export function ProfileScreen() {
               className="flex items-center justify-between gap-sm rounded-2xl bg-sand shadow-card p-md transition-colors duration-instant ease-out-quart hover:bg-sand/70 active:bg-sand focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
             >
               <span className="flex min-w-0 flex-1 flex-col gap-px">
-                <span className="truncate font-serif text-lede italic text-charcoal">
+                <span className="truncate font-serif text-lede text-charcoal">
                   Your route
                 </span>
                 <span className="text-small text-charcoal-70">
@@ -216,7 +216,7 @@ export function ProfileScreen() {
                     )}
                   >
                     <div className="flex items-baseline justify-between gap-sm">
-                      <span className="font-serif text-body italic text-charcoal">
+                      <span className="font-serif text-body text-charcoal">
                         {stop.nameEn}
                       </span>
                       <span className="text-small text-charcoal-55">
@@ -276,7 +276,7 @@ function OffGridCard({
           <EyeOff className="h-5 w-5" strokeWidth={1.8} aria-hidden />
         </span>
         <div className="flex flex-col leading-tight">
-          <span className="font-serif text-lede italic text-charcoal">
+          <span className="font-serif text-lede text-charcoal">
             Off-grid mode
           </span>
           <span className="text-small text-charcoal-70">

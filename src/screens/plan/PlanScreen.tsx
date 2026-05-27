@@ -207,7 +207,7 @@ function StopBlock({
     <section className="flex flex-col gap-sm">
       <header className="flex items-baseline justify-between gap-sm">
         <div className="flex min-w-0 flex-col">
-          <span className="font-serif text-lede italic leading-tight text-charcoal">
+          <span className="font-serif text-lede leading-tight text-charcoal">
             {stop.nameEn}
           </span>
           <span className="text-small text-charcoal-55">
@@ -412,7 +412,7 @@ function SaveGrid({
 function EmptyAll({ onDiscover }: { onDiscover: () => void }) {
   return (
     <div className="flex flex-col gap-sm rounded-2xl bg-sand p-md shadow-card">
-      <h3 className="font-serif text-lede italic text-charcoal">
+      <h3 className="font-serif text-lede text-charcoal">
         Nothing saved yet.
       </h3>
       <p className="text-small leading-snug text-charcoal-70">

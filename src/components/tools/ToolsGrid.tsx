@@ -57,7 +57,7 @@ export function ToolsGrid() {
                 <Icon className="h-5 w-5" strokeWidth={1.5} aria-hidden />
               </span>
               <span className="flex flex-col gap-px">
-                <span className="font-serif text-body italic leading-tight text-charcoal">
+                <span className="font-serif text-body leading-tight text-charcoal">
                   {name}
                 </span>
                 <span className="text-small leading-tight text-charcoal-55">

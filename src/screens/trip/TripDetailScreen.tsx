@@ -62,7 +62,7 @@ export function TripDetailScreen() {
 
         {friends.length > 0 && (
           <section className="flex flex-col gap-sm">
-            <h2 className="font-serif text-lede italic text-charcoal">
+            <h2 className="font-serif text-lede text-charcoal">
               Friends who'll be there
             </h2>
             <ul className="flex flex-col gap-sm">
@@ -80,7 +80,7 @@ export function TripDetailScreen() {
                       statusDot={f.status === 'present'}
                     />
                     <span className="flex min-w-0 flex-1 flex-col gap-px">
-                      <span className="truncate font-serif text-lede italic text-charcoal">
+                      <span className="truncate font-serif text-lede text-charcoal">
                         {f.friendName}
                       </span>
                       <span className="text-small text-charcoal-70">
@@ -96,7 +96,7 @@ export function TripDetailScreen() {
 
         {forum && threads.length > 0 && (
           <section className="flex flex-col gap-sm">
-            <h2 className="font-serif text-lede italic text-charcoal">
+            <h2 className="font-serif text-lede text-charcoal">
               {forum.nameHe} · What people are talking about
             </h2>
             <ul className="flex flex-col gap-sm">
@@ -106,7 +106,7 @@ export function TripDetailScreen() {
                     to={`/forums/${forum.id}/${t.id}`}
                     className="flex flex-col gap-px rounded-2xl bg-cream shadow-card p-md transition-colors duration-instant ease-out-quart hover:bg-sand/40 active:bg-sand/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
                   >
-                    <span className="font-serif text-lede italic text-charcoal">
+                    <span className="font-serif text-lede text-charcoal">
                       {t.title}
                     </span>
                     <span className="line-clamp-2 text-small text-charcoal-70">
@@ -120,7 +120,7 @@ export function TripDetailScreen() {
         )}
 
         <section className="flex flex-col gap-sm">
-          <h2 className="font-serif text-lede italic text-charcoal">Tools for this stop</h2>
+          <h2 className="font-serif text-lede text-charcoal">Tools for this stop</h2>
           <div className="grid grid-cols-3 gap-sm">
             {['Currency converter', 'eSIM', 'Voice translation'].map((tool) => (
               <div

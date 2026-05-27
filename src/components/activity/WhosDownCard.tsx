@@ -71,7 +71,7 @@ export function WhosDownCard({
           size="md"
         />
         <div className="flex min-w-0 flex-1 flex-col leading-tight">
-          <span className="truncate font-serif text-lede italic text-charcoal">
+          <span className="truncate font-serif text-lede text-charcoal">
             {author?.friendName ?? 'User'}
           </span>
           <span className="text-small text-charcoal-55">
@@ -139,7 +139,7 @@ export function WhosDownCard({
                   size="sm"
                 />
                 <div className="flex min-w-0 flex-1 flex-col leading-tight">
-                  <span className="font-serif text-body italic text-charcoal">
+                  <span className="font-serif text-body text-charcoal">
                     {replyAuthor?.friendName ?? 'You'}
                   </span>
                   <span className="text-small text-charcoal-70">{reply.bodyHe}</span>

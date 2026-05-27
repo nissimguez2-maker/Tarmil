@@ -30,7 +30,7 @@ export function PastTripCard({ destinationHe, metaLine, countryCode }: Props) {
         />
       )}
       <div className="flex min-w-0 flex-1 flex-col gap-px">
-        <span className="font-serif text-lede italic text-charcoal">
+        <span className="font-serif text-lede text-charcoal">
           {destinationHe}
         </span>
         <span className="text-small text-charcoal-55">{metaLine}</span>

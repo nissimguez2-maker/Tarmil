@@ -117,7 +117,7 @@ export function BusinessCard({
                 </>
               )}
             </span>
-            <h3 className="font-serif text-lede italic leading-tight text-charcoal">
+            <h3 className="font-serif text-lede leading-tight text-charcoal">
               {place.englishName}
             </h3>
             <p className="line-clamp-2 text-small text-charcoal-70">

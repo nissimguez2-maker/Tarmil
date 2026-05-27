@@ -276,7 +276,7 @@ function CityPicker({
         )}
       >
         <span className="flex min-w-0 items-baseline gap-2">
-          <span className="font-serif text-body italic">
+          <span className="font-serif text-body">
             {selected.nameEn}
           </span>
           <span className="text-small text-cream/60">
@@ -317,7 +317,7 @@ function CityPicker({
                   <span className="flex flex-col">
                     <span
                       className={clsx(
-                        'font-serif text-body italic leading-tight',
+                        'font-serif text-body leading-tight',
                         isActive ? 'text-charcoal' : 'text-charcoal-70',
                       )}
                     >

@@ -112,7 +112,7 @@ export function CityForumGroup({
       >
         <CityThumb destinationId={forums[0]?.destinationId} />
         <div className="flex min-w-0 flex-1 flex-col gap-px">
-          <span className="font-serif text-lede italic leading-tight text-charcoal">
+          <span className="font-serif text-lede leading-tight text-charcoal">
             {cityLabel}
           </span>
           <span className="text-small text-charcoal-55">
@@ -177,7 +177,7 @@ function SubjectPill({ forum, previewTitle, tabbable }: SubjectPillProps) {
         <Icon className="h-4 w-4" strokeWidth={1.7} aria-hidden />
       </span>
       <div className="flex min-w-0 flex-1 flex-col gap-px">
-        <span className="font-serif text-body italic leading-tight text-charcoal">
+        <span className="font-serif text-body leading-tight text-charcoal">
           {label}
         </span>
         {previewTitle && (
@@ -214,7 +214,7 @@ export function RecommendedForumRow({ forum, onJoin }: RecommendedForumRowProps)
       <CityThumb destinationId={forum.destinationId} />
       <div className="flex min-w-0 flex-1 flex-col gap-px">
         <div className="flex flex-wrap items-baseline gap-2">
-          <span className="font-serif text-lede italic text-charcoal">
+          <span className="font-serif text-lede text-charcoal">
             {forum.cityLabel ?? forum.nameEn}
           </span>
           <span className="text-small text-charcoal-55">

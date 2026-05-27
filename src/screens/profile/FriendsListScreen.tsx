@@ -52,7 +52,7 @@ export function FriendsListScreen() {
 
         <section className="flex items-center justify-between gap-sm rounded-2xl bg-sand p-md">
           <div className="flex min-w-0 flex-1 flex-col leading-tight">
-            <span className="font-serif text-body italic text-charcoal">
+            <span className="font-serif text-body text-charcoal">
               2 friend requests
             </span>
             <span className="text-small text-charcoal-55">

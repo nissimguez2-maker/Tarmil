@@ -95,7 +95,7 @@ export function FriendProfileScreen() {
         </header>
 
         <section className="flex flex-col gap-sm">
-          <h2 className="font-serif text-lede italic text-charcoal">Past routes</h2>
+          <h2 className="font-serif text-lede text-charcoal">Past routes</h2>
           <p className="text-small text-charcoal-55">
             Dates always at season + year resolution — Tarmil never exposes
             a friend's exact dates.

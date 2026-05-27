@@ -44,7 +44,7 @@ export function OverlapNotificationCard({
           statusDot
         />
         <div className="flex min-w-0 flex-1 flex-col gap-px leading-tight">
-          <span className="truncate font-serif text-lede italic text-charcoal">
+          <span className="truncate font-serif text-lede text-charcoal">
             {friend?.friendName ?? 'Friend'}
           </span>
           <span className="meta-caps text-amber">
@@ -55,7 +55,7 @@ export function OverlapNotificationCard({
         </div>
       </header>
 
-      <p className="font-serif text-lede italic leading-snug text-charcoal">
+      <p className="font-serif text-lede leading-snug text-charcoal">
         {post.bodyHe}
       </p>
 

@@ -91,7 +91,7 @@ export function ForumThreadScreen() {
               name={author?.friendName ?? SELF_NAME}
               size="md"
             />
-            <span className="min-w-0 flex-1 truncate font-serif text-lede italic text-charcoal">
+            <span className="min-w-0 flex-1 truncate font-serif text-lede text-charcoal">
               {author?.friendName ?? SELF_NAME}
             </span>
           </header>
@@ -153,7 +153,7 @@ export function ForumThreadScreen() {
                 <div className="flex min-w-0 flex-1 flex-col gap-px">
                   <span
                     className={clsx(
-                      'truncate font-serif text-body italic',
+                      'truncate font-serif text-body',
                       isAnonymous ? 'text-charcoal-55' : 'text-charcoal',
                     )}
                   >

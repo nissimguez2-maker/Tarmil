@@ -36,7 +36,7 @@ export function TripDeclarationCard({ post, author, reactions, onReact }: Props)
           size="md"
         />
         <div className="flex min-w-0 flex-1 flex-col gap-px leading-tight">
-          <span className="truncate font-serif text-lede italic text-charcoal">
+          <span className="truncate font-serif text-lede text-charcoal">
             {author?.friendName ?? 'User'}
           </span>
           <span className="meta-caps text-charcoal-55">Trip declaration</span>

@@ -54,7 +54,7 @@ export function NextTripCard({ stops, onTap, onAdd }: Props) {
       >
         <div className="flex items-center gap-sm px-md py-2">
           <span className="meta-caps shrink-0 text-amber">Trip</span>
-          <span className="line-clamp-1 flex-1 font-serif text-body italic text-charcoal">
+          <span className="line-clamp-1 flex-1 font-serif text-body text-charcoal">
             {title}
           </span>
           <ChevronUp
@@ -147,7 +147,7 @@ function EmptyState({ onAdd }: { onAdd: () => void }) {
         </span>
         <div className="flex flex-1 flex-col gap-px">
           <span className="meta-caps text-amber">Your trip</span>
-          <h2 className="font-serif text-lede italic leading-tight text-charcoal">
+          <h2 className="font-serif text-lede leading-tight text-charcoal">
             Where will you be? · When?
           </h2>
         </div>

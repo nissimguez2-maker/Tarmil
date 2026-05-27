@@ -71,7 +71,7 @@ export function ForumScreen() {
                       size="sm"
                     />
                     <div className="flex min-w-0 flex-1 flex-col gap-px">
-                      <span className="font-serif text-lede italic text-charcoal">
+                      <span className="font-serif text-lede text-charcoal">
                         {t.title}
                       </span>
                       <span className="line-clamp-2 text-small text-charcoal-70">

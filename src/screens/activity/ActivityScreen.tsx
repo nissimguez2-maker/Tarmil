@@ -231,7 +231,7 @@ function RightNowStrip({
                     statusDot
                   />
                   <div className="flex min-w-0 flex-1 flex-col leading-tight">
-                    <span className="truncate font-serif text-body italic text-charcoal">
+                    <span className="truncate font-serif text-body text-charcoal">
                       {friend.friendName}
                     </span>
                     <span className="truncate text-small text-charcoal-55">

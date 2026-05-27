@@ -257,7 +257,7 @@ function VoiceTranslator() {
 
       <div className="rounded-2xl bg-sand shadow-card p-md">
         <span className="meta-caps text-charcoal-55">Last example</span>
-        <p className="mt-xs font-serif text-lede italic text-charcoal">
+        <p className="mt-xs font-serif text-lede text-charcoal">
           Where can I get a taxi?
         </p>
         <p className="mt-xs text-body text-charcoal-70 ltr">
@@ -356,7 +356,7 @@ function SignScanner() {
 
       <div className="rounded-2xl bg-sand shadow-card p-md">
         <span className="meta-caps text-charcoal-55">Last example</span>
-        <p className="mt-xs font-serif text-lede italic text-charcoal ltr">
+        <p className="mt-xs font-serif text-lede text-charcoal ltr">
           Cuidado: piso molhado
         </p>
         <p className="mt-xs text-body text-charcoal-70">Caution: wet floor</p>
@@ -402,7 +402,7 @@ function FriendBalances() {
               )}
             >
               <div className="flex min-w-0 flex-1 flex-col">
-                <span className="font-serif text-lede italic text-charcoal">
+                <span className="font-serif text-lede text-charcoal">
                   {b.friend.friendName}
                 </span>
                 <span className="text-small text-charcoal-55">
@@ -506,7 +506,7 @@ function EsimPlans() {
       {trip ? (
         <div className="rounded-2xl bg-sand shadow-card p-md">
           <span className="meta-caps text-amber">Your trip</span>
-          <p className="mt-xs font-serif text-lede italic leading-tight text-charcoal">
+          <p className="mt-xs font-serif text-lede leading-tight text-charcoal">
             {trip.region.label}
           </p>
           <p className="mt-xs text-small text-charcoal-70">
