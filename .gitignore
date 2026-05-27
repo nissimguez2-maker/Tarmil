@@ -42,3 +42,4 @@ lerna-debug.log*
 /a11y.mjs
 /desktop.mjs
 /a11y-desk.mjs
+/webpanel.mjs
