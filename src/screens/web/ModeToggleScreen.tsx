@@ -10,7 +10,7 @@ export function ModeToggleScreen() {
           <h1 className="font-serif text-display text-charcoal mt-sm">
             Choose your view
           </h1>
-          <p className="font-sans text-body text-charcoal-55 mt-sm max-w-md mx-auto">
+          <p className="font-sans text-body text-charcoal-70 mt-sm max-w-md mx-auto">
             The same trip, two ways to plan it.
           </p>
         </div>
@@ -51,7 +51,7 @@ function ModeCard({ to, icon, eyebrow, title, description }: ModeCardProps) {
     >
       <div className="text-amber">{icon}</div>
       <div className="flex flex-col gap-xs">
-        <p className="meta-caps text-charcoal-55">{eyebrow}</p>
+        <p className="meta-caps text-charcoal-70">{eyebrow}</p>
         <h2 className="font-serif text-sub text-charcoal">{title}</h2>
         <p className="font-sans text-body text-charcoal-70">{description}</p>
       </div>

@@ -174,7 +174,7 @@ export function WebCityPanel({ stop, places }: Props) {
                   'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream',
                   activeSub === sub.category
                     ? 'bg-amber text-cream border-amber'
-                    : 'bg-cream text-charcoal-55 border-charcoal-15 hover:border-amber hover:text-amber',
+                    : 'bg-cream text-charcoal-70 border-charcoal-15 hover:border-amber hover:text-amber',
                 )}
               >
                 {sub.label}
@@ -242,12 +242,12 @@ function CityHeader({ stop }: { stop: PlannedStop }) {
       <h2 className="font-serif text-sub text-charcoal leading-tight">
         {stop.nameEn}
       </h2>
-      <p className="text-small text-charcoal-55">
+      <p className="text-small text-charcoal-70">
         {formatStopRange(stop.arrivalDate, stop.departureDate)} ·{' '}
         {stop.nights} {stop.nights === 1 ? 'night' : 'nights'}
       </p>
       {(flag || meta) && (
-        <p className="text-small text-charcoal-55 inline-flex items-center gap-xs">
+        <p className="text-small text-charcoal-70 inline-flex items-center gap-xs">
           {flag && <span aria-hidden="true">{flag}</span>}
           {meta && <span className="tnum">{meta}</span>}
         </p>
@@ -411,7 +411,7 @@ function WeatherStrip({ stop }: { stop: PlannedStop }) {
   if (loading) {
     return (
       <div className="bg-sand border border-charcoal-15 rounded-2xl p-md min-h-[120px] flex items-center justify-center">
-        <p className="text-small text-charcoal-55 italic">Loading forecast…</p>
+        <p className="text-small text-charcoal-70 italic">Loading forecast…</p>
       </div>
     );
   }
@@ -423,8 +423,8 @@ function WeatherStrip({ stop }: { stop: PlannedStop }) {
   return (
     <div className="bg-sand border border-charcoal-15 rounded-2xl p-md flex flex-col gap-sm">
       <div className="flex items-center justify-between">
-        <p className="meta-caps text-charcoal-55">Forecast</p>
-        <p className="text-meta italic text-charcoal-55">
+        <p className="meta-caps text-charcoal-70">Forecast</p>
+        <p className="text-meta italic text-charcoal-70">
           ± 2 days · trip days highlighted
         </p>
       </div>
@@ -441,7 +441,7 @@ function WeatherStrip({ stop }: { stop: PlannedStop }) {
           );
         })}
       </div>
-      <p className="text-meta italic text-charcoal-55 text-center">
+      <p className="text-meta italic text-charcoal-70 text-center">
         {sourceLabel(source)}
       </p>
     </div>
@@ -478,7 +478,7 @@ function WeatherDayCard({
       <p
         className={clsx(
           'text-meta uppercase tracking-wider',
-          highlighted ? 'text-amber' : 'text-charcoal-55',
+          highlighted ? 'text-amber' : 'text-charcoal-70',
         )}
       >
         {dayLabel}
@@ -486,7 +486,7 @@ function WeatherDayCard({
       <p
         className={clsx(
           'text-small font-serif tnum',
-          highlighted ? 'text-charcoal' : 'text-charcoal-55',
+          highlighted ? 'text-charcoal' : 'text-charcoal-70',
         )}
       >
         {dateNum}
@@ -500,12 +500,12 @@ function WeatherDayCard({
         <p
           className={clsx(
             'text-small font-serif tnum',
-            highlighted ? 'text-charcoal' : 'text-charcoal-55',
+            highlighted ? 'text-charcoal' : 'text-charcoal-70',
           )}
         >
           {day.tempHighC}°
         </p>
-        <p className="text-meta tnum text-charcoal-55">{day.tempLowC}°</p>
+        <p className="text-meta tnum text-charcoal-70">{day.tempLowC}°</p>
       </div>
     </div>
   );
@@ -536,7 +536,7 @@ function PlacesList({
             <p className="font-serif text-lede text-charcoal">
               Tarmil curators are working on this one
             </p>
-            <p className="text-small text-charcoal-55 mt-xs">
+            <p className="text-small text-charcoal-70 mt-xs">
               New {emptyLabel} places will land here soon.
             </p>
           </div>
@@ -585,7 +585,7 @@ function NearbyOsmList({
   if (loading) {
     return (
       <div className="flex flex-col gap-sm">
-        <p className="meta-caps text-charcoal-55">Nearby</p>
+        <p className="meta-caps text-charcoal-70">Nearby</p>
         <div className="h-10 rounded-xl bg-sand animate-pulse" />
         <div className="h-10 rounded-xl bg-sand animate-pulse" />
       </div>
@@ -594,7 +594,7 @@ function NearbyOsmList({
   if (items.length === 0) {
     if (curatedCount === 0) {
       return (
-        <p className="text-small text-charcoal-55 text-center py-xl">
+        <p className="text-small text-charcoal-70 text-center py-xl">
           No nearby spots indexed for this area yet.
         </p>
       );
@@ -604,7 +604,7 @@ function NearbyOsmList({
 
   return (
     <div className="flex flex-col gap-sm">
-      <p className="meta-caps text-charcoal-55">Nearby</p>
+      <p className="meta-caps text-charcoal-70">Nearby</p>
       {items.map((item) => (
         <NearbyOsmRow key={item.id} item={item} />
       ))}
@@ -627,7 +627,7 @@ function NearbyOsmRow({ item }: { item: OsmPlace }) {
     >
       <div className="flex-1 min-w-0">
         <p className="font-sans text-body text-charcoal truncate">{item.name}</p>
-        <p className="text-meta uppercase text-charcoal-55">
+        <p className="text-meta uppercase text-charcoal-70">
           {distance}
           {item.cuisine && <> · {item.cuisine.replace(/_/g, ' ')}</>}
         </p>
@@ -635,7 +635,7 @@ function NearbyOsmRow({ item }: { item: OsmPlace }) {
       <ExternalLink
         size={12}
         strokeWidth={2}
-        className="shrink-0 text-charcoal-55 group-hover:text-amber"
+        className="shrink-0 text-charcoal-70 group-hover:text-amber"
       />
     </a>
   );
@@ -723,7 +723,7 @@ function PlaceCard({
                 visits={place.friendVisits}
               />
             )}
-            <span className="text-meta uppercase text-charcoal-55">
+            <span className="text-meta uppercase text-charcoal-70">
               {place.category}
             </span>
             <PlacementBadge tier={place.placementTier} />
@@ -776,7 +776,7 @@ function FriendCluster({
 }) {
   const initials = (visits ?? []).slice(0, 3);
   return (
-    <span className="inline-flex items-center gap-xs text-small text-charcoal-55">
+    <span className="inline-flex items-center gap-xs text-small text-charcoal-70">
       {initials.length > 0 ? (
         <span className="flex items-center -space-x-2">
           {initials.map((v, i) => (
@@ -811,7 +811,7 @@ function PlaceThumbnail({ src, name }: { src?: string; name: string }) {
   return (
     <div
       aria-hidden="true"
-      className="h-16 w-16 rounded-xl shrink-0 flex items-center justify-center bg-gradient-to-br from-clay to-sand text-charcoal-55 font-serif text-sub"
+      className="h-16 w-16 rounded-xl shrink-0 flex items-center justify-center bg-gradient-to-br from-clay to-sand text-charcoal-70 font-serif text-sub"
     >
       {name.charAt(0)}
     </div>

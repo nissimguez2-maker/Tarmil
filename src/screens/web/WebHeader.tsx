@@ -20,10 +20,10 @@ export function WebHeader({ stops }: Props) {
     <header className="h-14 shrink-0 bg-cream border-b border-charcoal-15 flex items-center px-md gap-md">
       <span className="font-serif text-lede text-charcoal">Tarmil</span>
       <div className="flex-1 flex flex-col items-center leading-tight">
-        <span className="meta-caps text-charcoal-55">Planned trip</span>
+        <span className="meta-caps text-charcoal-70">Planned trip</span>
         <span className="font-serif text-lede text-charcoal">
           {TRIP_TITLE_REGION}
-          {range && <span className="text-charcoal-55"> · {range}</span>}
+          {range && <span className="text-charcoal-70"> · {range}</span>}
         </span>
       </div>
       <div className="flex items-center gap-md">
@@ -42,7 +42,7 @@ export function WebHeader({ stops }: Props) {
           Switch to App
         </Link>
         <div className="flex items-center gap-xs">
-          <span className="text-small text-charcoal-55">Yotam</span>
+          <span className="text-small text-charcoal-70">Yotam</span>
           <span
             aria-hidden="true"
             className="h-8 w-8 rounded-full bg-charcoal text-cream font-serif text-small flex items-center justify-center"

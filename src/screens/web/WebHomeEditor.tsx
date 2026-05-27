@@ -58,45 +58,45 @@ export function WebHomeEditor({ open, onClose, onPick, currentName }: Props) {
           type="button"
           onClick={onClose}
           aria-label="Close"
-          className="absolute top-sm end-sm h-8 w-8 rounded-full flex items-center justify-center text-charcoal-55 hover:text-charcoal hover:bg-charcoal-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
+          className="absolute top-sm end-sm h-8 w-8 rounded-full flex items-center justify-center text-charcoal-70 hover:text-charcoal hover:bg-charcoal-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
         >
           <X size={16} strokeWidth={2} />
         </button>
         <div className="flex flex-col gap-xs pe-12">
-          <p className="meta-caps text-charcoal-55">Home</p>
+          <p className="meta-caps text-charcoal-70">Home</p>
           <h2 className="font-serif text-sub text-charcoal leading-tight">
             Where do you fly from?
           </h2>
-          <p className="text-small text-charcoal-55">
+          <p className="text-small text-charcoal-70">
             Currently {currentName}. The trip starts and ends here.
           </p>
         </div>
         <label className="flex items-center gap-sm rounded-full bg-sand border border-charcoal-15 px-sm h-10 focus-within:border-amber transition-[border-color] duration-instant ease-out-quart motion-reduce:transition-none">
-          <Search size={14} strokeWidth={2} className="text-charcoal-55 shrink-0" />
+          <Search size={14} strokeWidth={2} className="text-charcoal-70 shrink-0" />
           <input
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Tel Aviv, New York, London…"
             autoFocus
-            className="flex-1 bg-transparent outline-none text-body text-charcoal placeholder:text-charcoal-55"
+            className="flex-1 bg-transparent outline-none text-body text-charcoal placeholder:text-charcoal-70"
           />
           {loading && (
             <Loader2
               size={14}
               strokeWidth={2}
-              className="text-charcoal-55 animate-spin"
+              className="text-charcoal-70 animate-spin"
             />
           )}
         </label>
         <div className="flex flex-col gap-sm overflow-y-auto min-h-0">
           {query.trim().length < 2 && (
-            <p className="text-small text-charcoal-55 text-center py-md">
+            <p className="text-small text-charcoal-70 text-center py-md">
               Search any city to set as your home base.
             </p>
           )}
           {query.trim().length >= 2 && !loading && results.length === 0 && (
-            <p className="text-small text-charcoal-55 text-center py-md">
+            <p className="text-small text-charcoal-70 text-center py-md">
               No matches. Try a different spelling.
             </p>
           )}
@@ -157,13 +157,13 @@ function ResultRow({
         aria-hidden="true"
         className="shrink-0 h-12 w-12 rounded-xl bg-sand flex items-center justify-center text-display"
       >
-        {flag || <Home size={20} strokeWidth={2} className="text-charcoal-55" />}
+        {flag || <Home size={20} strokeWidth={2} className="text-charcoal-70" />}
       </span>
       <div className="flex-1 min-w-0 flex flex-col gap-xs">
         <h3 className="font-serif text-lede text-charcoal leading-tight truncate">
           {result.name}
         </h3>
-        <p className="text-small text-charcoal-55 truncate">{subtitle}</p>
+        <p className="text-small text-charcoal-70 truncate">{subtitle}</p>
       </div>
       <span className="text-meta uppercase text-amber">Set as home</span>
     </button>

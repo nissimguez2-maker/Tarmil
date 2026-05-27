@@ -42,16 +42,16 @@ export function WebBookingModal({ target, onClose }: Props) {
           type="button"
           onClick={onClose}
           aria-label="Close"
-          className="absolute top-sm end-sm h-8 w-8 rounded-full flex items-center justify-center text-charcoal-55 hover:text-charcoal hover:bg-charcoal-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
+          className="absolute top-sm end-sm h-8 w-8 rounded-full flex items-center justify-center text-charcoal-70 hover:text-charcoal hover:bg-charcoal-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
         >
           <X size={16} strokeWidth={2} />
         </button>
         <div className="flex flex-col gap-xs pe-12">
-          <p className="meta-caps text-charcoal-55">Book</p>
+          <p className="meta-caps text-charcoal-70">Book</p>
           <h2 className="font-serif text-sub text-charcoal leading-tight">
             {title}
           </h2>
-          <p className="text-small text-charcoal-55">{subtitle}</p>
+          <p className="text-small text-charcoal-70">{subtitle}</p>
         </div>
         <div className="flex flex-col gap-sm">
           {PROVIDERS.map((p) => (
@@ -61,7 +61,7 @@ export function WebBookingModal({ target, onClose }: Props) {
             </Button>
           ))}
         </div>
-        <p className="text-meta italic text-charcoal-55 text-center">
+        <p className="text-meta italic text-charcoal-70 text-center">
           Booking partner integrations coming soon
         </p>
       </div>

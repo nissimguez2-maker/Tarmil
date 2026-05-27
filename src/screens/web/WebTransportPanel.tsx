@@ -117,16 +117,16 @@ export function WebTransportPanel({ fromStop, toStop, travelDate }: Props) {
         <div className="flex flex-col gap-xs">
           <div className="flex items-center gap-xs font-serif text-sub text-charcoal leading-tight">
             <span>{fromStop.nameEn}</span>
-            <ArrowRight size={16} strokeWidth={2} className="text-charcoal-55" />
+            <ArrowRight size={16} strokeWidth={2} className="text-charcoal-70" />
             <span>{toStop.nameEn}</span>
           </div>
-          <p className="text-small text-charcoal-55">
+          <p className="text-small text-charcoal-70">
             {formatLongDate(leg.travelDate)}
           </p>
         </div>
         {availableModes.size > 1 && (
           <div className="flex flex-col gap-xs">
-            <p className="meta-caps text-charcoal-55">Travel modes</p>
+            <p className="meta-caps text-charcoal-70">Travel modes</p>
             <div className="flex gap-xs flex-wrap">
               {MODE_META.filter((m) => availableModes.has(m.mode)).map(
                 ({ mode, label, Icon }) => {
@@ -142,7 +142,7 @@ export function WebTransportPanel({ fromStop, toStop, travelDate }: Props) {
                         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream',
                         on
                           ? 'bg-charcoal text-cream border-charcoal'
-                          : 'bg-cream text-charcoal-55 border-charcoal-15 opacity-50 hover:opacity-100 hover:border-charcoal',
+                          : 'bg-cream text-charcoal-70 border-charcoal-15 opacity-50 hover:opacity-100 hover:border-charcoal',
                       )}
                     >
                       <Icon size={12} strokeWidth={2} />
@@ -176,7 +176,7 @@ export function WebTransportPanel({ fromStop, toStop, travelDate }: Props) {
 function EmptyOffers() {
   return (
     <div className="bg-sand border border-charcoal-15 rounded-2xl p-md text-center">
-      <p className="text-small text-charcoal-55">
+      <p className="text-small text-charcoal-70">
         No offers match the selected modes. Toggle a mode back on.
       </p>
     </div>
@@ -244,14 +244,14 @@ function OfferCard({
           {!isDrive ? (
             <p className="text-small text-charcoal-70 inline-flex items-center gap-xs">
               <span className="tnum">{offer.departureTime}</span>
-              <ArrowRight size={12} strokeWidth={2} className="text-charcoal-55" />
+              <ArrowRight size={12} strokeWidth={2} className="text-charcoal-70" />
               <span className="tnum">{offer.arrivalTime}</span>
-              <span className="text-charcoal-55">· {offer.durationLabel}</span>
+              <span className="text-charcoal-70">· {offer.durationLabel}</span>
             </p>
           ) : (
             <p className="text-small text-charcoal-70">{offer.durationLabel}</p>
           )}
-          <p className="text-small text-charcoal-55">
+          <p className="text-small text-charcoal-70">
             {isDrive
               ? 'Direct'
               : offer.stops === 0

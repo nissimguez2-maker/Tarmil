@@ -124,7 +124,7 @@ export function WebPlannerScreen() {
         </div>
       </div>
       <div className="flex lg:hidden h-dvh flex-col items-center justify-center p-xl text-center gap-md bg-cream">
-        <p className="font-serif text-sub text-charcoal-55">
+        <p className="font-serif text-sub text-charcoal-70">
           Open on desktop (≥ 1024 px) to use the planner.
         </p>
         <Link

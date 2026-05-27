@@ -185,7 +185,7 @@ export function WebStopList({
     <aside className="w-96 shrink-0 border-e border-charcoal-15 bg-cream overflow-y-auto min-h-0 py-md flex flex-col gap-md">
       <TripOverviewCard stops={stops} home={home} />
       <div>
-        <p className="meta-caps text-charcoal-55 px-md mb-md">Itinerary</p>
+        <p className="meta-caps text-charcoal-70 px-md mb-md">Itinerary</p>
         <div className="flex flex-col px-md">
           <HomeRow
             home={home}
@@ -352,7 +352,7 @@ function HomeRow({
       <div className="flex-1 min-w-0 rounded-2xl px-md py-sm group-hover:bg-charcoal-8 transition-[background-color] duration-instant ease-out-quart motion-reduce:transition-none">
         <div className="flex items-start gap-sm">
           <div className="flex-1 min-w-0">
-            <p className="meta-caps text-charcoal-55">
+            <p className="meta-caps text-charcoal-70">
               {variant === 'departure' ? 'Departure' : 'Return'}
             </p>
             <h3 className="font-serif text-lede text-charcoal leading-tight truncate">
@@ -364,7 +364,7 @@ function HomeRow({
             onClick={onEdit}
             aria-label="Change home"
             title="Change home"
-            className="opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity duration-instant ease-out-quart h-6 w-6 rounded-full flex items-center justify-center text-charcoal-55 hover:text-amber hover:bg-charcoal-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
+            className="opacity-0 group-hover:opacity-100 focus:opacity-100 transition-opacity duration-instant ease-out-quart h-6 w-6 rounded-full flex items-center justify-center text-charcoal-70 hover:text-amber hover:bg-charcoal-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
           >
             <Pencil size={12} strokeWidth={2} />
           </button>
@@ -395,12 +395,12 @@ function TripOverviewCard({
 
   return (
     <article className="mx-md bg-sand border border-charcoal-15 rounded-2xl p-md flex flex-col gap-sm">
-      <p className="meta-caps text-charcoal-55">Trip overview</p>
+      <p className="meta-caps text-charcoal-70">Trip overview</p>
       <h2 className="font-serif text-lede text-charcoal">
         {dateSpan}
-        {year && <span className="text-charcoal-55">, {year}</span>}
+        {year && <span className="text-charcoal-70">, {year}</span>}
       </h2>
-      <p className="text-small text-charcoal-55">
+      <p className="text-small text-charcoal-70">
         From {home.nameEn} → back to {home.nameEn}
       </p>
       <dl className="grid grid-cols-3 gap-sm pt-sm border-t border-charcoal-15">
@@ -418,7 +418,7 @@ function Stat({ label, value }: { label: string; value: number }) {
       <dd className="font-serif text-sub text-charcoal tnum leading-none">
         {value}
       </dd>
-      <dt className="text-small text-charcoal-55">{label}</dt>
+      <dt className="text-small text-charcoal-70">{label}</dt>
     </div>
   );
 }
@@ -540,7 +540,7 @@ function StopRow({
             </h3>
             {!editing && (
               <div className="flex items-center gap-sm mt-xs flex-wrap">
-                <p className="text-small text-charcoal-55 tnum">
+                <p className="text-small text-charcoal-70 tnum">
                   {formatStopRange(stop.arrivalDate, stop.departureDate)}
                   <span className="text-charcoal-30"> · </span>
                   {stop.nights} {stop.nights === 1 ? 'night' : 'nights'}
@@ -612,7 +612,7 @@ function StopRow({
           </div>
         )}
         {expanded && savedCount === 0 && (
-          <p className="mt-sm pt-sm border-t border-charcoal-08 text-small text-charcoal-55 italic">
+          <p className="mt-sm pt-sm border-t border-charcoal-08 text-small text-charcoal-70 italic">
             No saved places yet for {stop.nameEn}.
           </p>
         )}
@@ -644,7 +644,7 @@ function WishlistRow({
   const Icon = wishlistIcon(item.category);
   return (
     <div className="group/wish flex items-center gap-sm py-xs px-xs rounded-xl hover:bg-charcoal-8 transition-[background-color] duration-instant ease-out-quart motion-reduce:transition-none">
-      <span className="shrink-0 text-charcoal-55">
+      <span className="shrink-0 text-charcoal-70">
         <Icon size={12} strokeWidth={2} />
       </span>
       <span className="flex-1 min-w-0 text-small text-charcoal truncate">
@@ -664,7 +664,7 @@ function WishlistRow({
         type="button"
         onClick={onRemove}
         aria-label={`Remove ${item.placeName}`}
-        className="shrink-0 h-5 w-5 rounded-full flex items-center justify-center text-charcoal-55 hover:text-amber hover:bg-charcoal-8 opacity-0 group-hover/wish:opacity-100 focus-visible:opacity-100 transition-opacity duration-instant ease-out-quart focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
+        className="shrink-0 h-5 w-5 rounded-full flex items-center justify-center text-charcoal-70 hover:text-amber hover:bg-charcoal-8 opacity-0 group-hover/wish:opacity-100 focus-visible:opacity-100 transition-opacity duration-instant ease-out-quart focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
       >
         <X size={10} strokeWidth={2} />
       </button>
@@ -690,7 +690,7 @@ function IconButton({
       aria-label={label}
       title={label}
       className={clsx(
-        'h-6 w-6 rounded-full flex items-center justify-center text-charcoal-55 hover:text-amber hover:bg-charcoal-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream',
+        'h-6 w-6 rounded-full flex items-center justify-center text-charcoal-70 hover:text-amber hover:bg-charcoal-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream',
         persistent && 'shrink-0',
       )}
     >
@@ -729,7 +729,7 @@ function DateEditor({
       <p
         className={clsx(
           'text-small tnum',
-          valid ? 'text-charcoal-55' : 'text-amber',
+          valid ? 'text-charcoal-70' : 'text-amber',
         )}
       >
         {valid
@@ -763,7 +763,7 @@ function DateField({
 }) {
   return (
     <label className="flex-1 flex flex-col gap-xs">
-      <span className="meta-caps text-charcoal-55">{label}</span>
+      <span className="meta-caps text-charcoal-70">{label}</span>
       <input
         type="date"
         value={value}
@@ -816,7 +816,7 @@ function LegRow({ from, to, selected, onClick }: LegRowProps) {
             'h-6 w-6 rounded-full bg-cream border flex items-center justify-center shrink-0 transition-[border-color,color] duration-instant ease-out-quart motion-reduce:transition-none',
             selected
               ? 'border-amber text-amber'
-              : 'border-charcoal-15 text-charcoal-55 group-hover:border-amber group-hover:text-amber',
+              : 'border-charcoal-15 text-charcoal-70 group-hover:border-amber group-hover:text-amber',
           )}
         >
           <Icon size={12} strokeWidth={2} />
@@ -835,7 +835,7 @@ function LegRow({ from, to, selected, onClick }: LegRowProps) {
               'meta-caps transition-colors duration-instant ease-out-quart motion-reduce:transition-none',
               selected
                 ? 'text-amber'
-                : 'text-charcoal-55 group-hover:text-amber',
+                : 'text-charcoal-70 group-hover:text-amber',
             )}
           >
             Transport
@@ -883,7 +883,7 @@ function TransitBookingRow({ item }: { item: TransitItem }) {
         <p className="text-small font-medium text-charcoal truncate">
           {offer.provider}
         </p>
-        <p className="text-meta text-charcoal-55 tnum truncate">
+        <p className="text-meta text-charcoal-70 tnum truncate">
           {offer.mode !== 'drive' && (
             <>
               {offer.departureTime} → {offer.arrivalTime}
@@ -897,7 +897,7 @@ function TransitBookingRow({ item }: { item: TransitItem }) {
         type="button"
         onClick={onRemove}
         aria-label={`Remove ${offer.provider} booking`}
-        className="shrink-0 h-5 w-5 rounded-full flex items-center justify-center text-charcoal-55 hover:text-amber hover:bg-cream opacity-0 group-hover/booking:opacity-100 focus-visible:opacity-100 transition-opacity duration-instant ease-out-quart focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
+        className="shrink-0 h-5 w-5 rounded-full flex items-center justify-center text-charcoal-70 hover:text-amber hover:bg-cream opacity-0 group-hover/booking:opacity-100 focus-visible:opacity-100 transition-opacity duration-instant ease-out-quart focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
       >
         <X size={10} strokeWidth={2} />
       </button>

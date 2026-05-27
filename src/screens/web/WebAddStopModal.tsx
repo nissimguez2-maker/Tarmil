@@ -66,41 +66,41 @@ export function WebAddStopModal({ open, onClose, onAdd, existingStopIds }: Props
           type="button"
           onClick={onClose}
           aria-label="Close"
-          className="absolute top-sm end-sm h-8 w-8 rounded-full flex items-center justify-center text-charcoal-55 hover:text-charcoal hover:bg-charcoal-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
+          className="absolute top-sm end-sm h-8 w-8 rounded-full flex items-center justify-center text-charcoal-70 hover:text-charcoal hover:bg-charcoal-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
         >
           <X size={16} strokeWidth={2} />
         </button>
         <div className="flex flex-col gap-xs pe-12">
-          <p className="meta-caps text-charcoal-55">Add stop</p>
+          <p className="meta-caps text-charcoal-70">Add stop</p>
           <h2 className="font-serif text-sub text-charcoal leading-tight">
             Search any city
           </h2>
-          <p className="text-small text-charcoal-55">
+          <p className="text-small text-charcoal-70">
             Type a city name. We resolve it via OpenStreetMap.
           </p>
         </div>
         <label className="flex items-center gap-sm rounded-full bg-sand border border-charcoal-15 px-sm h-10 focus-within:border-amber transition-[border-color] duration-instant ease-out-quart motion-reduce:transition-none">
-          <Search size={14} strokeWidth={2} className="text-charcoal-55 shrink-0" />
+          <Search size={14} strokeWidth={2} className="text-charcoal-70 shrink-0" />
           <input
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Tokyo, Lisbon, Cape Town…"
             autoFocus
-            className="flex-1 bg-transparent outline-none text-body text-charcoal placeholder:text-charcoal-55"
+            className="flex-1 bg-transparent outline-none text-body text-charcoal placeholder:text-charcoal-70"
           />
           {loading && (
             <Loader2
               size={14}
               strokeWidth={2}
-              className="text-charcoal-55 animate-spin"
+              className="text-charcoal-70 animate-spin"
             />
           )}
         </label>
         <div className="flex flex-col gap-sm overflow-y-auto min-h-0">
           {!showResults && (
             <>
-              <p className="meta-caps text-charcoal-55">Suggested</p>
+              <p className="meta-caps text-charcoal-70">Suggested</p>
               {ADDABLE_CITIES.map((city) => (
                 <SuggestedRow
                   key={city.id}
@@ -115,13 +115,13 @@ export function WebAddStopModal({ open, onClose, onAdd, existingStopIds }: Props
             </>
           )}
           {showResults && !loading && results.length === 0 && (
-            <p className="text-small text-charcoal-55 text-center py-md">
+            <p className="text-small text-charcoal-70 text-center py-md">
               No matches. Try a different spelling or add the country.
             </p>
           )}
           {showResults && results.length > 0 && (
             <>
-              <p className="meta-caps text-charcoal-55">Results</p>
+              <p className="meta-caps text-charcoal-70">Results</p>
               {results.map((r, i) => {
                 const id = slugifyId(`${r.name}-${r.countryCode || i}`);
                 const disabled = existingStopIds.includes(id);
@@ -193,7 +193,7 @@ function SuggestedRow({
             {city.blurb}
           </p>
         )}
-        <p className="text-meta uppercase text-charcoal-55">
+        <p className="text-meta uppercase text-charcoal-70">
           {disabled ? 'Already in trip' : `${city.defaultNights} night default`}
         </p>
       </div>
@@ -236,13 +236,13 @@ function NominatimRow({
         aria-hidden="true"
         className="shrink-0 h-12 w-12 rounded-xl bg-sand flex items-center justify-center text-display"
       >
-        {flag || <MapPin size={20} strokeWidth={2} className="text-charcoal-55" />}
+        {flag || <MapPin size={20} strokeWidth={2} className="text-charcoal-70" />}
       </span>
       <div className="flex-1 min-w-0 flex flex-col gap-xs">
         <h3 className="font-serif text-lede text-charcoal leading-tight truncate">
           {result.name}
         </h3>
-        <p className="text-small text-charcoal-55 truncate">{subtitle}</p>
+        <p className="text-small text-charcoal-70 truncate">{subtitle}</p>
       </div>
       <span className="text-meta uppercase text-amber">
         {disabled ? 'Added' : 'Add'}

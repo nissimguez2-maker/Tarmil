@@ -57,7 +57,7 @@ export function WebBubble({
           type="button"
           onClick={onClose}
           aria-label="Close"
-          className="absolute top-sm end-sm h-8 w-8 rounded-full flex items-center justify-center text-charcoal-55 hover:text-charcoal hover:bg-charcoal-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream z-10"
+          className="absolute top-sm end-sm h-8 w-8 rounded-full flex items-center justify-center text-charcoal-70 hover:text-charcoal hover:bg-charcoal-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream z-10"
         >
           <X size={16} strokeWidth={2} />
         </button>

@@ -44,7 +44,7 @@ export function WebRemoveStopConfirm({
           type="button"
           onClick={onCancel}
           aria-label="Close"
-          className="absolute top-sm end-sm h-8 w-8 rounded-full flex items-center justify-center text-charcoal-55 hover:text-charcoal hover:bg-charcoal-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
+          className="absolute top-sm end-sm h-8 w-8 rounded-full flex items-center justify-center text-charcoal-70 hover:text-charcoal hover:bg-charcoal-8 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
         >
           <X size={16} strokeWidth={2} />
         </button>
