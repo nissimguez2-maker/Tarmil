@@ -17,6 +17,7 @@ import { drawPlannedStops } from './layers/drawPlannedStops';
 import { drawDensityHeat } from './layers/drawDensityHeat';
 import { DENSITY_POINTS } from '../../data/densityCities';
 import type { SheetState } from './tripReducer';
+import { getBasemap } from '../../lib/basemap';
 
 export type TripMapHandle = {
   /** Current map center as [lat, lng]. Returns null before init. */
@@ -99,29 +100,13 @@ export const TripMap = forwardRef<TripMapHandle, Props>(function TripMap(
       worldCopyJump: false,
     });
 
-    // Same env var as the web planner (WebMapCanvas) + .env.example. Was
-    // VITE_TOMTOM_API_KEY, which never matched, so mobile always fell back.
-    const tomtomKey = import.meta.env.VITE_TOMTOM_KEY;
-    if (tomtomKey) {
-      L.tileLayer(
-        `https://api.tomtom.com/map/1/tile/basic/main/{z}/{x}/{y}.png?key=${tomtomKey}&tileSize=512`,
-        {
-          attribution: '© TomTom',
-          maxZoom: 19,
-          tileSize: 512,
-          zoomOffset: -1,
-        },
-      ).addTo(map);
-    } else {
-      // Build-time fallback so a deploy without VITE_TOMTOM_API_KEY still ships a map.
-      L.tileLayer(
-        'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
-        {
-          attribution: '© OpenStreetMap contributors © CARTO',
-          subdomains: 'abcd',
-          maxZoom: 19,
-        },
-      ).addTo(map);
+    // Premium basemap: Mapbox (brand-tinted) → TomTom → CARTO. See
+    // src/lib/basemap.ts. The warm tint is applied via the
+    // `.tarmil-basemap--mapbox` class below.
+    const basemap = getBasemap();
+    L.tileLayer(basemap.url, basemap.options).addTo(map);
+    if (basemap.provider === 'mapbox' && containerRef.current) {
+      containerRef.current.classList.add('tarmil-basemap--mapbox');
     }
 
     // v0.3: bounds derive from the social canvas (present + planned stops),

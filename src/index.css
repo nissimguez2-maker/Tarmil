@@ -133,3 +133,9 @@
     animation: none;
   }
 }
+
+/* Mapbox light basemap, warmed toward the cream / charcoal brand so the map
+   reads as designed rather than generic. Tune the filter to taste. */
+.tarmil-basemap--mapbox .leaflet-tile-pane {
+  filter: sepia(0.16) saturate(1.12) brightness(1.02) hue-rotate(-8deg);
+}

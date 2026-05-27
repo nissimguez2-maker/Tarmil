@@ -11,6 +11,7 @@ import 'leaflet/dist/leaflet.css';
 import type { PlannedStop } from '../../data/plannedStops';
 import type { HomeCity } from './homeCity';
 import type { Selection } from './types';
+import { getBasemap } from '../../lib/basemap';
 
 type LatLng = [number, number];
 
@@ -21,14 +22,7 @@ type Props = {
   onSelect: (s: Selection) => void;
 };
 
-const TOMTOM_KEY = import.meta.env.VITE_TOMTOM_KEY as string | undefined;
-
-function tomtomTileUrl(): string {
-  if (TOMTOM_KEY) {
-    return `https://api.tomtom.com/map/1/tile/basic/main/{z}/{x}/{y}.png?key=${TOMTOM_KEY}`;
-  }
-  return 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-}
+const basemap = getBasemap();
 
 function pinIcon(
   index: number,
@@ -43,7 +37,7 @@ function pinIcon(
         margin-top:4px;
         background-color:var(--cream);
         color:var(--charcoal);
-        font-family:Heebo,sans-serif;
+        font-family:'Hanken Grotesk',sans-serif;
         font-weight:600;
         font-size:11px;
         line-height:1;
@@ -63,7 +57,7 @@ function pinIcon(
         width:32px;height:32px;border-radius:9999px;
         background-color:var(--amber);
         display:flex;align-items:center;justify-content:center;
-        color:white;font-family:Fraunces,serif;font-weight:600;font-size:14px;
+        color:white;font-family:'Hanken Grotesk',sans-serif;font-weight:600;font-size:14px;
         ${ring}
       ">${index + 1}</div>
       ${labelHtml}
@@ -216,10 +210,10 @@ export function WebMapCanvas({ stops, home, selection, onSelect }: Props) {
         zoom={4}
         scrollWheelZoom
         style={{ height: '100%', width: '100%' }}
-        className="h-full w-full"
+        className={`h-full w-full${basemap.provider === 'mapbox' ? ' tarmil-basemap--mapbox' : ''}`}
         attributionControl={false}
       >
-        <TileLayer url={tomtomTileUrl()} />
+        <TileLayer url={basemap.url} {...basemap.options} />
 
         {departureLeg && (
           <Polyline
