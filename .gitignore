@@ -40,3 +40,5 @@ lerna-debug.log*
 # local screenshot / a11y harness (throwaway dev tooling)
 /shoot.mjs
 /a11y.mjs
+/desktop.mjs
+/a11y-desk.mjs
