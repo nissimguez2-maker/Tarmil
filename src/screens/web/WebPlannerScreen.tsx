@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSupabaseData } from '../../lib/SupabaseDataProvider';
 import { ErrorPanel } from '../../components/DataState';
+import { DemoGuide } from '../../components/DemoGuide';
 import type { PlannedStop } from '../../data/plannedStops';
 import { WebHeader } from './WebHeader';
 import { WebStopList } from './WebStopList';
@@ -92,7 +93,7 @@ export function WebPlannerScreen() {
 
   return (
     <>
-      <div className="hidden lg:flex h-dvh flex-col bg-cream">
+      <div className="relative hidden lg:flex h-dvh flex-col bg-cream">
         <WebHeader stops={stops} />
         <div className="flex-1 flex min-h-0">
           <WebStopList
@@ -122,6 +123,7 @@ export function WebPlannerScreen() {
             />
           </div>
         </div>
+        <DemoGuide surface="web" />
       </div>
       <div className="flex lg:hidden h-dvh flex-col items-center justify-center p-xl text-center gap-md bg-cream">
         <p className="font-serif text-sub text-charcoal-70">

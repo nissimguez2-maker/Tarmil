@@ -1,6 +1,7 @@
 import { Outlet, useLocation } from 'react-router-dom';
 import { DeviceFrame } from '../components/DeviceFrame';
 import { TabBar } from '../components/TabBar';
+import { DemoGuide } from '../components/DemoGuide';
 
 /**
  * Routes that hide the floating tab capsule. Used for drill-downs where the
@@ -20,6 +21,7 @@ export function AppLayout() {
     <DeviceFrame>
       <Outlet />
       {showTab && <TabBar />}
+      <DemoGuide />
     </DeviceFrame>
   );
 }

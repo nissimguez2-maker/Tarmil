@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom';
-import { Smartphone, Monitor, ArrowRight } from 'lucide-react';
+import { Smartphone, Monitor, ArrowRight, Users, EyeOff, Compass } from 'lucide-react';
 
 export function ModeToggleScreen() {
   return (
-    <div className="h-dvh w-full bg-cream flex items-center justify-center p-xl">
+    <div className="min-h-dvh w-full bg-cream flex items-center justify-center p-xl">
       <div className="w-full max-w-3xl flex flex-col items-center gap-xl">
         <div className="text-center">
           <p className="meta-caps text-amber">Tarmil</p>
@@ -13,6 +13,23 @@ export function ModeToggleScreen() {
           <p className="font-sans text-body text-charcoal-70 mt-sm max-w-md mx-auto">
             The same trip, two ways to plan it.
           </p>
+        </div>
+        <div className="grid w-full max-w-2xl grid-cols-1 gap-md sm:grid-cols-3">
+          <ValueProp
+            icon={<Users size={22} strokeWidth={1.6} />}
+            title="Find your people"
+            text="Friends in your city, right now. One tap to Ping."
+          />
+          <ValueProp
+            icon={<EyeOff size={22} strokeWidth={1.6} />}
+            title="Private by design"
+            text="Off-grid in one tap. Dates as season, never the exact day."
+          />
+          <ValueProp
+            icon={<Compass size={22} strokeWidth={1.6} />}
+            title="Curated for you"
+            text="Worldwide spots, including kosher & Jewish-friendly."
+          />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-md w-full">
           <ModeCard
@@ -60,5 +77,23 @@ function ModeCard({ to, icon, eyebrow, title, description }: ModeCardProps) {
         <ArrowRight size={14} strokeWidth={2} />
       </div>
     </Link>
+  );
+}
+
+function ValueProp({
+  icon,
+  title,
+  text,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  text: string;
+}) {
+  return (
+    <div className="flex flex-col items-center gap-xs text-center">
+      <div className="text-amber">{icon}</div>
+      <p className="font-serif text-lede font-semibold text-charcoal">{title}</p>
+      <p className="font-sans text-small text-charcoal-70">{text}</p>
+    </div>
   );
 }
