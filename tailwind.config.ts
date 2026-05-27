@@ -31,15 +31,11 @@ export default {
       },
     },
     fontFamily: {
-      serif: ['Fraunces', 'Frank Ruhl Libre', 'Times New Roman', 'serif'],
-      sans: [
-        'Heebo',
-        'Google Sans Text',
-        'Roboto Flex',
-        'Inter',
-        'system-ui',
-        'sans-serif',
-      ],
+      // Aesop-style clean grotesque (Suisse Int'l look-alike) for ALL text.
+      // The `serif` alias is kept so existing `font-serif` usages still resolve;
+      // headlines are now the same grotesque at larger sizes/weights.
+      serif: ['Hanken Grotesk', 'system-ui', 'sans-serif'],
+      sans: ['Hanken Grotesk', 'system-ui', 'sans-serif'],
     },
     fontSize: {
       meta: ['8pt', { lineHeight: '1.5', letterSpacing: '0.18em' }],
