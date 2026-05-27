@@ -116,7 +116,7 @@ export function ActivityScreen() {
       )}
 
       <ul className="flex flex-col gap-sm p-md pb-32">
-        {topLevel.map((post) => {
+        {topLevel.map((post, i) => {
           const author = post.authorFriendId
             ? authorById.get(post.authorFriendId)
             : undefined;
@@ -131,7 +131,11 @@ export function ActivityScreen() {
 
           if (post.kind === 'whos_down') {
             return (
-              <li key={post.id}>
+              <li
+              key={post.id}
+              className="rise-in"
+              style={{ animationDelay: `${Math.min(i, 8) * 40}ms` }}
+            >
                 <WhosDownCard
                   post={post}
                   author={author}
@@ -153,7 +157,11 @@ export function ActivityScreen() {
           }
 
           return (
-            <li key={post.id}>
+            <li
+              key={post.id}
+              className="rise-in"
+              style={{ animationDelay: `${Math.min(i, 8) * 40}ms` }}
+            >
               <TripDeclarationCard
                 post={post}
                 author={author}
@@ -206,7 +214,7 @@ function RightNowStrip({
 }) {
   return (
     <section
-      className="border-b border-charcoal-08 bg-sand/40 px-md py-sm"
+      className="rise-in border-b border-charcoal-08 bg-sand/40 px-md py-sm"
       aria-label="Friends in your city right now"
     >
       <div className="flex items-baseline justify-between">
