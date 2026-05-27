@@ -20,6 +20,7 @@ import { CSS } from '@dnd-kit/utilities';
 import {
   Bed,
   Bus,
+  Car,
   ChevronDown,
   ChevronRight as ChevronRightIcon,
   Coffee,
@@ -545,8 +546,10 @@ function StopRow({
       </div>
       <div
         className={clsx(
-          'flex-1 min-w-0 rounded-2xl px-md py-sm transition-[background-color] duration-instant ease-out-quart motion-reduce:transition-none',
-          selected ? 'bg-sand' : 'group-hover:bg-charcoal-8',
+          'flex-1 min-w-0 rounded-2xl border px-md py-sm transition-[background-color,border-color] duration-instant ease-out-quart motion-reduce:transition-none',
+          selected
+            ? 'border-amber bg-sand'
+            : 'border-charcoal-15 bg-sand/70 group-hover:border-charcoal-30 group-hover:bg-sand',
         )}
       >
         <div className="flex items-start gap-sm">
@@ -815,7 +818,20 @@ function LegRow({ from, to, selected, onClick }: LegRowProps) {
         ? Train
         : dominantMode === 'ferry'
           ? Ship
-          : Bus;
+          : dominantMode === 'drive'
+            ? Car
+            : Bus;
+  const modeLabel =
+    dominantMode === 'flight'
+      ? 'Flight'
+      : dominantMode === 'train'
+        ? 'Train'
+        : dominantMode === 'ferry'
+          ? 'Ferry'
+          : dominantMode === 'drive'
+            ? 'Drive'
+            : 'Bus';
+  const isGround = dominantMode === 'drive' || dominantMode === 'bus';
   const [driveMinutes, setDriveMinutes] = useState<number | null>(null);
   useEffect(() => {
     let cancelled = false;
@@ -854,18 +870,15 @@ function LegRow({ from, to, selected, onClick }: LegRowProps) {
         >
           <span
             className={clsx(
-              'meta-caps transition-colors duration-instant ease-out-quart motion-reduce:transition-none',
+              'inline-flex items-center rounded-full border px-2 py-0.5 text-meta uppercase tracking-wide leading-none transition-colors duration-instant ease-out-quart motion-reduce:transition-none',
               selected
-                ? 'text-amber'
-                : 'text-charcoal-70 group-hover:text-amber',
+                ? 'border-amber bg-amber/10 text-amber'
+                : 'border-charcoal-15 bg-cream text-charcoal-70 group-hover:border-amber group-hover:text-amber',
             )}
           >
-            Transport
-            {driveMinutes !== null && (
-              <span className="text-charcoal-30 normal-case tracking-normal ms-xs">
-                · {formatDriveDuration(driveMinutes)}
-              </span>
-            )}
+            {isGround && driveMinutes !== null
+              ? formatDriveDuration(driveMinutes)
+              : modeLabel}
           </span>
         </button>
         {bookings.length > 0 && (
