@@ -28,6 +28,7 @@ import {
   Home,
   Landmark,
   MapPin,
+  Maximize2,
   Music,
   Pencil,
   Plane,
@@ -60,6 +61,7 @@ import {
 } from './wishlist';
 import { showToast } from './WebToast';
 import { WebRemoveStopConfirm } from './WebRemoveStopConfirm';
+import { WebItineraryOverlay } from './WebItineraryOverlay';
 import type { Selection } from './types';
 
 type Props = {
@@ -86,6 +88,7 @@ export function WebStopList({
   onEditHome,
 }: Props) {
   useWishlist();
+  const [detailOpen, setDetailOpen] = useState(false);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
@@ -187,7 +190,17 @@ export function WebStopList({
     <aside className="w-96 shrink-0 border-e border-charcoal-15 bg-cream overflow-y-auto min-h-0 py-md flex flex-col gap-md">
       <TripOverviewCard stops={stops} home={home} />
       <div>
-        <p className="meta-caps text-charcoal-70 px-md mb-md">Itinerary</p>
+        <div className="flex items-center justify-between px-md mb-md">
+          <p className="meta-caps text-charcoal-70">Itinerary</p>
+          <button
+            type="button"
+            onClick={() => setDetailOpen(true)}
+            className="inline-flex items-center gap-1 rounded-full bg-charcoal-8 px-sm py-1 text-meta uppercase tracking-wide text-charcoal-70 transition-colors duration-instant ease-out-quart motion-reduce:transition-none hover:bg-charcoal-15 hover:text-charcoal focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
+          >
+            <Maximize2 size={11} strokeWidth={2} aria-hidden />
+            Full view
+          </button>
+        </div>
         <div className="flex flex-col px-md">
           <HomeRow
             home={home}
@@ -307,6 +320,12 @@ export function WebStopList({
         transitCount={pendingRemove?.transitCount ?? 0}
         onConfirm={confirmRemove}
         onCancel={() => setPendingRemove(null)}
+      />
+      <WebItineraryOverlay
+        open={detailOpen}
+        onClose={() => setDetailOpen(false)}
+        stops={stops}
+        home={home}
       />
     </aside>
   );
@@ -478,7 +497,7 @@ function StopThumb({ stopId }: { stopId: string }) {
   const [ok, setOk] = useState(true);
   const photo = cityPhotos(stopId)[0];
   return (
-    <span className="shrink-0 h-12 w-12 overflow-hidden rounded-xl bg-gradient-to-br from-clay to-sand ring-1 ring-charcoal-08">
+    <span className="shrink-0 h-11 w-11 overflow-hidden rounded-xl bg-gradient-to-br from-clay to-sand ring-1 ring-charcoal-08">
       {photo && ok && (
         <img
           src={photo}
