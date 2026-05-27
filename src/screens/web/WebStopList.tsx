@@ -47,6 +47,7 @@ import type { HomeCity } from './homeCity';
 import { generateLeg } from './transportGenerator';
 import { fetchDrivingMinutes, formatDriveDuration } from './osrmApi';
 import { formatShortDate, formatStopRange } from './dateUtils';
+import { cityPhotos } from './cityPhotos';
 import {
   placesForStop,
   removePlace,
@@ -470,6 +471,26 @@ function SortableStopRow(props: SortableStopRowProps) {
   );
 }
 
+/** City photo thumbnail for a timeline stop. Real photo in prod; warm
+    gradient fallback when the image is unavailable. */
+function StopThumb({ stopId }: { stopId: string }) {
+  const [ok, setOk] = useState(true);
+  const photo = cityPhotos(stopId)[0];
+  return (
+    <span className="shrink-0 h-12 w-12 overflow-hidden rounded-xl bg-gradient-to-br from-clay to-sand ring-1 ring-charcoal-08">
+      {photo && ok && (
+        <img
+          src={photo}
+          alt=""
+          loading="lazy"
+          onError={() => setOk(false)}
+          className="h-full w-full object-cover"
+        />
+      )}
+    </span>
+  );
+}
+
 type StopRowProps = SortableStopRowProps & {
   dragAttributes: React.HTMLAttributes<HTMLButtonElement>;
   dragListeners: SyntheticListenerMap | undefined;
@@ -529,6 +550,7 @@ function StopRow({
         )}
       >
         <div className="flex items-start gap-sm">
+          <StopThumb stopId={stop.id} />
           <button
             type="button"
             onClick={onClick}
