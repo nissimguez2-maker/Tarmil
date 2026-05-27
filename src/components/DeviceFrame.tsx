@@ -21,8 +21,10 @@ export function DeviceFrame({ children }: Props) {
       className={clsx(
         // mobile: full-bleed ivory
         'h-dvh w-full bg-cream',
-        // desktop: cream-shadow stage
-        'md:flex md:h-dvh md:items-center md:justify-center md:bg-charcoal-15 md:p-md',
+        // desktop: warm stage so the cream phone pops (it fills the wall when
+        // the app is demoed on a projector)
+        'md:flex md:h-dvh md:items-center md:justify-center md:p-md',
+        'md:bg-gradient-to-br md:from-clay md:to-umber',
       )}
     >
       <div
