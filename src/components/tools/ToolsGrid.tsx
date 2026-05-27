@@ -45,22 +45,24 @@ export function ToolsGrid() {
 
   return (
     <>
-      <ul className="grid grid-cols-2 gap-sm">
+      <ul className="grid grid-cols-2 items-start gap-sm">
         {TOOLS.map(({ id, name, meta, Icon }) => (
           <li key={id}>
             <button
               type="button"
               onClick={() => setOpenTool(id)}
-              className="flex h-full w-full flex-col items-start gap-xs rounded-2xl bg-sand shadow-card p-md text-start transition-colors duration-instant ease-out-quart hover:bg-sand/80 active:bg-clay/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
+              className="flex w-full flex-col items-start gap-sm rounded-2xl bg-sand shadow-card p-md text-start transition-[transform,background-color] duration-instant ease-out-quart motion-reduce:transition-none hover:bg-sand/80 active:scale-[0.98] active:bg-clay/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
             >
               <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-charcoal text-cream">
                 <Icon className="h-5 w-5" strokeWidth={1.5} aria-hidden />
               </span>
-              <span className="font-serif text-body italic leading-tight text-charcoal">
-                {name}
-              </span>
-              <span className="text-small leading-tight text-charcoal-55">
-                {meta}
+              <span className="flex flex-col gap-px">
+                <span className="font-serif text-body italic leading-tight text-charcoal">
+                  {name}
+                </span>
+                <span className="text-small leading-tight text-charcoal-55">
+                  {meta}
+                </span>
               </span>
             </button>
           </li>

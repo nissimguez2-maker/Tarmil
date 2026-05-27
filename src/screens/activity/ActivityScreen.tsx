@@ -221,7 +221,7 @@ function RightNowStrip({
           const pinged = hasPinged(friend.id);
           return (
             <li key={friend.id} className="shrink-0">
-              <article className="flex w-[208px] flex-col gap-sm rounded-2xl bg-cream shadow-card p-sm">
+              <article className="flex w-[232px] flex-col gap-sm rounded-2xl bg-cream shadow-card p-sm">
                 <div className="flex items-center gap-sm">
                   <Avatar
                     photoUrl={friend.photoUrl}
