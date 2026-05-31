@@ -1,9 +1,10 @@
 /*
- * Tarmil-styled overrides for Leaflet.
+ * Tarmil-styled overrides for the Mapbox GL trip map.
  *
- * Tiles are now TomTom raster ("basic / main") which already render clean and
- * legible — no client-side tinting. Markers and overlays are full-saturation
- * so the brand cocoa / copper still pop against the neutral cartography.
+ * The basemap is an Apple-Maps-like vector style (see appleMapStyle.ts) — soft
+ * light-blue water, warm near-white land, clean labels. The markers and
+ * overlays below are HTML elements (mapboxgl.Marker) reusing the brand cocoa /
+ * copper so they pop against the calm cartography.
  */
 
 .tarmil-map {
@@ -11,9 +12,16 @@
   font-family: 'Heebo', 'Google Sans Text', system-ui, sans-serif;
 }
 
-/* hide default Leaflet attribution flag (we set attributionControl:false) */
-.tarmil-map .leaflet-control-attribution {
-  display: none;
+/* Mapbox attribution + logo are kept (required by ToS) but understated so they
+ * sit quietly under the warm UI rather than competing with it. */
+.tarmil-map .mapboxgl-ctrl-bottom-right,
+.tarmil-map .mapboxgl-ctrl-bottom-left {
+  opacity: 0.55;
+}
+
+.tarmil-map .mapboxgl-ctrl-attrib {
+  font-size: 9px;
+  background: rgba(250, 245, 236, 0.7);
 }
 
 /* ─── Place markers ──────────────────────────────────────────────────── */
@@ -73,12 +81,6 @@
 .tarmil-cluster-dot:hover,
 .tarmil-cluster-dot:active {
   transform: scale(1.08);
-}
-
-/* override leaflet.markercluster's default animation styles to keep our look */
-.leaflet-cluster-anim .leaflet-marker-icon,
-.leaflet-cluster-anim .leaflet-marker-shadow {
-  transition: transform 0.3s ease-out, opacity 0.3s ease-in;
 }
 
 /* ─── Friend overlap bubbles ─────────────────────────────────────────── */

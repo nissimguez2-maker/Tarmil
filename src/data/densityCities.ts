@@ -10,7 +10,7 @@ export type DensityPoint = {
   nameHe: string;
   lat: number;
   lng: number;
-  /** 0–1 relative weight; leaflet.heat normalizes against `max`. */
+  /** 0–1 relative weight; the Mapbox heatmap layer scales colour by this. */
   intensity: number;
 };
 

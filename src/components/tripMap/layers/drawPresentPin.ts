@@ -1,23 +1,25 @@
-import L from 'leaflet';
+import mapboxgl from 'mapbox-gl';
 import type { LatLng } from '../../../data/myTrip';
 
-export function drawPresentPin(map: L.Map, latlng: LatLng): () => void {
-  const icon = L.divIcon({
-    className: 'tarmil-present-pin',
-    html: '<div class="tarmil-present-ring"></div><div class="tarmil-present-dot"></div>',
-    iconSize: [40, 40],
-    iconAnchor: [20, 20],
-  });
-  const marker = L.marker(latlng, {
-    icon,
-    zIndexOffset: 1000,
-    interactive: false,
-    keyboard: false,
-    title: 'You are here',
-    alt: 'You are here',
-  }).addTo(map);
+export function drawPresentPin(map: mapboxgl.Map, latlng: LatLng): () => void {
+  const el = document.createElement('div');
+  el.className = 'tarmil-present-pin';
+  // Explicit box so the absolutely-positioned ring/dot centre on the point.
+  el.style.width = '40px';
+  el.style.height = '40px';
+  el.style.position = 'relative';
+  el.style.pointerEvents = 'none';
+  el.style.zIndex = '1000';
+  el.setAttribute('aria-label', 'You are here');
+  el.title = 'You are here';
+  el.innerHTML =
+    '<div class="tarmil-present-ring"></div><div class="tarmil-present-dot"></div>';
+
+  const marker = new mapboxgl.Marker({ element: el, anchor: 'center' })
+    .setLngLat([latlng[1], latlng[0]])
+    .addTo(map);
 
   return () => {
-    map.removeLayer(marker);
+    marker.remove();
   };
 }

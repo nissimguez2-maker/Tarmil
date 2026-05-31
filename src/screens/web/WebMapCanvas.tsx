@@ -1,18 +1,17 @@
-import { useEffect, useMemo, useState } from 'react';
-import L from 'leaflet';
-import {
-  MapContainer,
-  Marker,
-  Polyline,
-  TileLayer,
-  useMap,
-} from 'react-leaflet';
-import 'leaflet/dist/leaflet.css';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import mapboxgl from 'mapbox-gl';
+import 'mapbox-gl/dist/mapbox-gl.css';
 import type { PlannedStop } from '../../data/plannedStops';
 import type { HomeCity } from './homeCity';
 import type { Selection } from './types';
+import {
+  MAPBOX_TOKEN,
+  hasMapboxToken,
+  buildAppleMapStyle,
+} from '../../components/tripMap/appleMapStyle';
+import { MapTokenNotice } from '../../components/tripMap/ui/MapTokenNotice';
 
-type LatLng = [number, number];
+mapboxgl.accessToken = MAPBOX_TOKEN;
 
 type Props = {
   stops: PlannedStop[];
@@ -21,349 +20,313 @@ type Props = {
   onSelect: (s: Selection) => void;
 };
 
-const TOMTOM_KEY = import.meta.env.VITE_TOMTOM_KEY as string | undefined;
+type LngLat = [number, number];
 
-function tomtomTileUrl(): string {
-  if (TOMTOM_KEY) {
-    return `https://api.tomtom.com/map/1/tile/basic/main/{z}/{x}/{y}.png?key=${TOMTOM_KEY}`;
+type Leg = {
+  id: number;
+  fromId: string;
+  toId: string;
+  from: LngLat;
+  to: LngLat;
+};
+
+/** Ordered legs: home → first stop → … → last stop → home. [lng, lat] order. */
+function buildLegs(stops: PlannedStop[], home: HomeCity): Leg[] {
+  if (stops.length === 0) return [];
+  const H: LngLat = [home.lng, home.lat];
+  const legs: Leg[] = [
+    { id: 0, fromId: 'home', toId: stops[0].id, from: H, to: [stops[0].lng, stops[0].lat] },
+  ];
+  for (let i = 0; i < stops.length - 1; i++) {
+    legs.push({
+      id: i + 1,
+      fromId: stops[i].id,
+      toId: stops[i + 1].id,
+      from: [stops[i].lng, stops[i].lat],
+      to: [stops[i + 1].lng, stops[i + 1].lat],
+    });
   }
-  return 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+  const last = stops[stops.length - 1];
+  legs.push({
+    id: stops.length,
+    fromId: last.id,
+    toId: 'home',
+    from: [last.lng, last.lat],
+    to: H,
+  });
+  return legs;
 }
 
-function pinIcon(
-  index: number,
-  selected: boolean,
-  label?: string,
-): L.DivIcon {
+function legsToGeoJSON(legs: Leg[]): GeoJSON.FeatureCollection {
+  return {
+    type: 'FeatureCollection',
+    features: legs.map((l) => ({
+      type: 'Feature',
+      id: l.id,
+      properties: { fromId: l.fromId, toId: l.toId },
+      geometry: { type: 'LineString', coordinates: [l.from, l.to] },
+    })),
+  };
+}
+
+/** Read a brand token as a concrete colour Mapbox can parse (no CSS vars on canvas). */
+function cssVar(name: string): string {
+  return getComputedStyle(document.documentElement)
+    .getPropertyValue(name)
+    .trim();
+}
+
+function makeStopEl(index: number, selected: boolean, label?: string): HTMLDivElement {
+  const el = document.createElement('div');
   const ring = selected
-    ? 'box-shadow: 0 0 0 2px var(--cream), 0 0 0 5px var(--amber), 0 2px 6px rgba(0,0,0,0.18);'
-    : 'box-shadow: 0 2px 6px rgba(0,0,0,0.18);';
-  const labelHtml = label
-    ? `<div style="
-        margin-top:4px;
-        background-color:var(--cream);
-        color:var(--charcoal);
-        font-family:Heebo,sans-serif;
-        font-weight:600;
-        font-size:11px;
-        line-height:1;
-        padding:3px 7px;
-        border-radius:9999px;
-        box-shadow:0 1px 3px rgba(0,0,0,0.18);
-        white-space:nowrap;
-        pointer-events:none;
-      ">${label}</div>`
-    : '';
-  return L.divIcon({
-    className: '',
-    iconSize: [32, 32],
-    iconAnchor: [16, 16],
-    html: `<div style="display:flex;flex-direction:column;align-items:center;">
-      <div style="
-        width:32px;height:32px;border-radius:9999px;
-        background-color:var(--amber);
-        display:flex;align-items:center;justify-content:center;
-        color:white;font-family:Fraunces,serif;font-weight:600;font-size:14px;
-        ${ring}
-      ">${index + 1}</div>
-      ${labelHtml}
-    </div>`,
-  });
+    ? '0 0 0 2px var(--cream), 0 0 0 5px var(--amber), 0 2px 6px rgba(0,0,0,0.18)'
+    : '0 2px 6px rgba(0,0,0,0.18)';
+  el.style.cssText = `position:relative;width:32px;height:32px;border-radius:9999px;background-color:var(--amber);display:flex;align-items:center;justify-content:center;color:white;font-family:Fraunces,serif;font-weight:600;font-size:14px;cursor:pointer;box-shadow:${ring};`;
+  el.textContent = String(index + 1);
+  if (label) {
+    const l = document.createElement('div');
+    l.style.cssText =
+      'position:absolute;top:calc(100% + 4px);left:50%;transform:translateX(-50%);background-color:var(--cream);color:var(--charcoal);font-family:Heebo,sans-serif;font-weight:600;font-size:11px;line-height:1;padding:3px 7px;border-radius:9999px;box-shadow:0 1px 3px rgba(0,0,0,0.18);white-space:nowrap;pointer-events:none;';
+    l.textContent = label;
+    el.appendChild(l);
+  }
+  return el;
 }
 
-function homeIcon(): L.DivIcon {
-  return L.divIcon({
-    className: '',
-    iconSize: [28, 28],
-    iconAnchor: [14, 14],
-    html: `<div style="
-      width:28px;height:28px;border-radius:9999px;
-      background-color:var(--charcoal);
-      display:flex;align-items:center;justify-content:center;
-      color:white;
-      box-shadow:0 0 0 2px var(--cream), 0 0 0 4px var(--charcoal), 0 2px 6px rgba(0,0,0,0.18);
-    ">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2v-4a2 2 0 0 0-2-2h-0a2 2 0 0 0-2 2v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-      </svg>
-    </div>`,
-  });
-}
-
-function FitBounds({
-  stops,
-  home,
-}: {
-  stops: PlannedStop[];
-  home: HomeCity;
-}) {
-  const map = useMap();
-  useEffect(() => {
-    const points: LatLng[] = [
-      [home.lat, home.lng],
-      ...stops.map((s): LatLng => [s.lat, s.lng]),
-    ];
-    if (points.length === 0) return;
-    const bounds = L.latLngBounds(points);
-    map.fitBounds(bounds, { padding: [60, 60] });
-  }, [map, stops, home]);
-  return null;
-}
-
-function FlyToSelection({
-  stops,
-  home,
-  selection,
-}: {
-  stops: PlannedStop[];
-  home: HomeCity;
-  selection: Selection;
-}) {
-  const map = useMap();
-  useEffect(() => {
-    if (selection.type === 'stop') {
-      const stop = stops.find((s) => s.id === selection.stopId);
-      if (stop) {
-        map.flyTo([stop.lat, stop.lng], 9, { duration: 1.4 });
-      }
-    } else if (selection.type === 'leg') {
-      const from =
-        selection.fromStopId === 'home'
-          ? { lat: home.lat, lng: home.lng }
-          : stops.find((s) => s.id === selection.fromStopId);
-      const to =
-        selection.toStopId === 'home'
-          ? { lat: home.lat, lng: home.lng }
-          : stops.find((s) => s.id === selection.toStopId);
-      if (from && to) {
-        const bounds = L.latLngBounds([
-          [from.lat, from.lng],
-          [to.lat, to.lng],
-        ]);
-        map.flyToBounds(bounds, { padding: [80, 80], duration: 1.4 });
-      }
-    }
-  }, [map, stops, home, selection]);
-  return null;
-}
-
-function MapClickDismiss({ onDismiss }: { onDismiss: () => void }) {
-  const map = useMap();
-  useEffect(() => {
-    const handler = () => onDismiss();
-    map.on('click', handler);
-    return () => {
-      map.off('click', handler);
-    };
-  }, [map, onDismiss]);
-  return null;
-}
-
-function ZoomWatcher({ onZoom }: { onZoom: (z: number) => void }) {
-  const map = useMap();
-  useEffect(() => {
-    onZoom(map.getZoom());
-    const handler = () => onZoom(map.getZoom());
-    map.on('zoomend', handler);
-    return () => {
-      map.off('zoomend', handler);
-    };
-  }, [map, onZoom]);
-  return null;
+function makeHomeEl(): HTMLDivElement {
+  const el = document.createElement('div');
+  el.style.cssText =
+    'width:28px;height:28px;border-radius:9999px;background-color:var(--charcoal);display:flex;align-items:center;justify-content:center;color:white;box-shadow:0 0 0 2px var(--cream), 0 0 0 4px var(--charcoal), 0 2px 6px rgba(0,0,0,0.18);';
+  el.innerHTML =
+    '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2v-4a2 2 0 0 0-2-2h-0a2 2 0 0 0-2 2v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>';
+  return el;
 }
 
 export function WebMapCanvas({ stops, home, selection, onSelect }: Props) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const mapRef = useRef<mapboxgl.Map | null>(null);
+  const [styleLoaded, setStyleLoaded] = useState(false);
   const [zoom, setZoom] = useState(4);
   const showLabels = zoom >= 6;
-  const initialCenter = useMemo<LatLng>(() => {
-    if (!stops.length) return [home.lat, home.lng];
-    return [stops[0].lat, stops[0].lng];
-  }, [stops, home]);
-  const selectedStopId = selection.type === 'stop' ? selection.stopId : null;
-  const selectedLeg =
-    selection.type === 'leg'
-      ? { from: selection.fromStopId, to: selection.toStopId }
-      : null;
 
-  const departureLeg: [LatLng, LatLng] | null =
-    stops.length > 0
-      ? [
-          [home.lat, home.lng],
-          [stops[0].lat, stops[0].lng],
-        ]
-      : null;
-  const returnLeg: [LatLng, LatLng] | null =
-    stops.length > 0
-      ? [
-          [stops[stops.length - 1].lat, stops[stops.length - 1].lng],
-          [home.lat, home.lng],
-        ]
-      : null;
+  const onSelectRef = useRef(onSelect);
+  useEffect(() => {
+    onSelectRef.current = onSelect;
+  });
 
-  const isDepartureSelected =
-    selectedLeg?.from === 'home' &&
-    stops.length > 0 &&
-    selectedLeg?.to === stops[0].id;
-  const isReturnSelected =
-    selectedLeg?.to === 'home' &&
-    stops.length > 0 &&
-    selectedLeg?.from === stops[stops.length - 1].id;
+  const markersRef = useRef<mapboxgl.Marker[]>([]);
+  const hoveredRef = useRef<number | null>(null);
+
+  const legs = useMemo(() => buildLegs(stops, home), [stops, home]);
+
+  // One-time map init.
+  useEffect(() => {
+    if (!containerRef.current || mapRef.current || !hasMapboxToken) return;
+    const initialCenter: LngLat = stops.length
+      ? [stops[0].lng, stops[0].lat]
+      : [home.lng, home.lat];
+
+    const map = new mapboxgl.Map({
+      container: containerRef.current,
+      style: buildAppleMapStyle(),
+      center: initialCenter,
+      zoom: 4,
+      attributionControl: false,
+      dragRotate: false,
+      pitchWithRotate: false,
+      touchPitch: false,
+      renderWorldCopies: false,
+    });
+    map.touchZoomRotate.disableRotation();
+    map.addControl(
+      new mapboxgl.AttributionControl({ compact: true }),
+      'bottom-right',
+    );
+
+    const handleZoom = () => setZoom(map.getZoom());
+    map.on('zoomend', handleZoom);
+
+    const handleClick = (e: mapboxgl.MapMouseEvent) => {
+      const features = map.getLayer('legs-line')
+        ? map.queryRenderedFeatures(e.point, { layers: ['legs-line'] })
+        : [];
+      if (features.length) {
+        const p = features[0].properties as { fromId: string; toId: string };
+        onSelectRef.current({
+          type: 'leg',
+          fromStopId: p.fromId,
+          toStopId: p.toId,
+        });
+      } else {
+        onSelectRef.current({ type: 'none' });
+      }
+    };
+    map.on('click', handleClick);
+
+    // Delegated hover listeners activate once the layer exists.
+    map.on('mousemove', 'legs-line', (e) => {
+      map.getCanvas().style.cursor = 'pointer';
+      const f = e.features?.[0];
+      if (!f || f.id == null) return;
+      if (hoveredRef.current !== null) {
+        map.setFeatureState(
+          { source: 'legs', id: hoveredRef.current },
+          { hover: false },
+        );
+      }
+      hoveredRef.current = f.id as number;
+      map.setFeatureState({ source: 'legs', id: f.id as number }, { hover: true });
+    });
+    map.on('mouseleave', 'legs-line', () => {
+      map.getCanvas().style.cursor = '';
+      if (hoveredRef.current !== null) {
+        map.setFeatureState(
+          { source: 'legs', id: hoveredRef.current },
+          { hover: false },
+        );
+      }
+      hoveredRef.current = null;
+    });
+
+    map.on('load', () => {
+      const amber = cssVar('--amber');
+      const idle = cssVar('--charcoal-30');
+      map.addSource('legs', { type: 'geojson', data: legsToGeoJSON([]) });
+      map.addLayer({
+        id: 'legs-line',
+        type: 'line',
+        source: 'legs',
+        layout: { 'line-cap': 'round', 'line-join': 'round' },
+        paint: {
+          'line-color': [
+            'case',
+            ['boolean', ['feature-state', 'selected'], false],
+            amber,
+            ['boolean', ['feature-state', 'hover'], false],
+            amber,
+            idle,
+          ],
+          'line-width': [
+            'case',
+            ['boolean', ['feature-state', 'selected'], false],
+            3,
+            ['boolean', ['feature-state', 'hover'], false],
+            3,
+            2,
+          ],
+          'line-dasharray': [2, 1.6],
+        },
+      } as mapboxgl.LayerSpecification);
+      setStyleLoaded(true);
+    });
+
+    mapRef.current = map;
+    return () => {
+      map.remove();
+      mapRef.current = null;
+      setStyleLoaded(false);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Keep the leg geometry in sync.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !styleLoaded) return;
+    const src = map.getSource('legs') as mapboxgl.GeoJSONSource | undefined;
+    src?.setData(legsToGeoJSON(legs));
+  }, [legs, styleLoaded]);
+
+  // Selection → leg highlight (feature-state) + camera move.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !styleLoaded) return;
+    legs.forEach((l) => {
+      const isSel =
+        selection.type === 'leg' &&
+        selection.fromStopId === l.fromId &&
+        selection.toStopId === l.toId;
+      map.setFeatureState({ source: 'legs', id: l.id }, { selected: isSel });
+    });
+
+    if (selection.type === 'stop') {
+      const s = stops.find((x) => x.id === selection.stopId);
+      if (s) map.flyTo({ center: [s.lng, s.lat], zoom: 9, duration: 1400 });
+    } else if (selection.type === 'leg') {
+      const from =
+        selection.fromStopId === 'home'
+          ? home
+          : stops.find((x) => x.id === selection.fromStopId);
+      const to =
+        selection.toStopId === 'home'
+          ? home
+          : stops.find((x) => x.id === selection.toStopId);
+      if (from && to) {
+        const b = new mapboxgl.LngLatBounds();
+        b.extend([from.lng, from.lat]);
+        b.extend([to.lng, to.lat]);
+        map.fitBounds(b, { padding: 80, duration: 1400 });
+      }
+    }
+  }, [selection, legs, stops, home, styleLoaded]);
+
+  // Reframe to fit home + all stops when the route changes.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !styleLoaded) return;
+    const b = new mapboxgl.LngLatBounds();
+    b.extend([home.lng, home.lat]);
+    stops.forEach((s) => b.extend([s.lng, s.lat]));
+    map.fitBounds(b, { padding: 60, duration: 0 });
+  }, [stops, home, styleLoaded]);
+
+  // Markers (HTML overlays — don't require the style to be loaded).
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+    markersRef.current.forEach((m) => m.remove());
+    markersRef.current = [];
+
+    const homeEl = makeHomeEl();
+    homeEl.title = `Home · ${home.nameEn}`;
+    markersRef.current.push(
+      new mapboxgl.Marker({ element: homeEl, anchor: 'center' })
+        .setLngLat([home.lng, home.lat])
+        .addTo(map),
+    );
+
+    stops.forEach((s, i) => {
+      const selected = selection.type === 'stop' && selection.stopId === s.id;
+      const el = makeStopEl(i, selected, showLabels ? s.nameEn : undefined);
+      el.title = s.nameEn;
+      el.addEventListener('click', (e) => {
+        e.stopPropagation();
+        onSelectRef.current({ type: 'stop', stopId: s.id });
+      });
+      markersRef.current.push(
+        new mapboxgl.Marker({ element: el, anchor: 'center' })
+          .setLngLat([s.lng, s.lat])
+          .addTo(map),
+      );
+    });
+
+    return () => {
+      markersRef.current.forEach((m) => m.remove());
+      markersRef.current = [];
+    };
+  }, [stops, home, selection, showLabels]);
+
+  if (!hasMapboxToken) {
+    return (
+      <div className="absolute inset-0">
+        <MapTokenNotice />
+      </div>
+    );
+  }
 
   return (
     <div className="absolute inset-0 isolate">
-      <MapContainer
-        center={initialCenter}
-        zoom={4}
-        scrollWheelZoom
-        style={{ height: '100%', width: '100%' }}
-        className="h-full w-full"
-        attributionControl={false}
-      >
-        <TileLayer url={tomtomTileUrl()} />
-
-        {departureLeg && (
-          <Polyline
-            key={`dep-${isDepartureSelected ? 'sel' : 'idle'}`}
-            positions={departureLeg}
-            pathOptions={{
-              color: isDepartureSelected ? 'var(--amber)' : 'var(--charcoal-30)',
-              weight: isDepartureSelected ? 3 : 2,
-              dashArray: '6 4',
-            }}
-            eventHandlers={{
-              click: () => {
-                if (stops.length > 0) {
-                  onSelect({
-                    type: 'leg',
-                    fromStopId: 'home',
-                    toStopId: stops[0].id,
-                  });
-                }
-              },
-              mouseover: (e) => {
-                if (!isDepartureSelected) {
-                  e.target.setStyle({ color: 'var(--amber)', weight: 3 });
-                }
-              },
-              mouseout: (e) => {
-                if (!isDepartureSelected) {
-                  e.target.setStyle({
-                    color: 'var(--charcoal-30)',
-                    weight: 2,
-                  });
-                }
-              },
-            }}
-          />
-        )}
-
-        {stops.slice(0, -1).map((s, i) => {
-          const next = stops[i + 1];
-          const isSelected =
-            selectedLeg?.from === s.id && selectedLeg?.to === next.id;
-          return (
-            <Polyline
-              key={`${s.id}-${next.id}-${isSelected ? 'sel' : 'idle'}`}
-              positions={[
-                [s.lat, s.lng] as LatLng,
-                [next.lat, next.lng] as LatLng,
-              ]}
-              pathOptions={{
-                color: isSelected ? 'var(--amber)' : 'var(--charcoal-30)',
-                weight: isSelected ? 3 : 2,
-                dashArray: '6 4',
-              }}
-              eventHandlers={{
-                click: () =>
-                  onSelect({
-                    type: 'leg',
-                    fromStopId: s.id,
-                    toStopId: next.id,
-                  }),
-                mouseover: (e) => {
-                  if (!isSelected) {
-                    e.target.setStyle({
-                      color: 'var(--amber)',
-                      weight: 3,
-                    });
-                  }
-                },
-                mouseout: (e) => {
-                  if (!isSelected) {
-                    e.target.setStyle({
-                      color: 'var(--charcoal-30)',
-                      weight: 2,
-                    });
-                  }
-                },
-              }}
-            />
-          );
-        })}
-
-        {returnLeg && (
-          <Polyline
-            key={`ret-${isReturnSelected ? 'sel' : 'idle'}`}
-            positions={returnLeg}
-            pathOptions={{
-              color: isReturnSelected ? 'var(--amber)' : 'var(--charcoal-30)',
-              weight: isReturnSelected ? 3 : 2,
-              dashArray: '6 4',
-            }}
-            eventHandlers={{
-              click: () => {
-                if (stops.length > 0) {
-                  onSelect({
-                    type: 'leg',
-                    fromStopId: stops[stops.length - 1].id,
-                    toStopId: 'home',
-                  });
-                }
-              },
-              mouseover: (e) => {
-                if (!isReturnSelected) {
-                  e.target.setStyle({ color: 'var(--amber)', weight: 3 });
-                }
-              },
-              mouseout: (e) => {
-                if (!isReturnSelected) {
-                  e.target.setStyle({
-                    color: 'var(--charcoal-30)',
-                    weight: 2,
-                  });
-                }
-              },
-            }}
-          />
-        )}
-
-        <Marker
-          key={`home-${home.lat}-${home.lng}`}
-          position={[home.lat, home.lng]}
-          icon={homeIcon()}
-          title={`Home · ${home.nameEn}`}
-        />
-
-        {stops.map((s, i) => {
-          const isSelected = selectedStopId === s.id;
-          return (
-            <Marker
-              key={`${s.id}-${isSelected ? 'sel' : 'idle'}-${showLabels ? 'lbl' : 'no'}`}
-              position={[s.lat, s.lng]}
-              icon={pinIcon(i, isSelected, showLabels ? s.nameEn : undefined)}
-              title={s.nameEn}
-              eventHandlers={{
-                click: () => onSelect({ type: 'stop', stopId: s.id }),
-              }}
-            />
-          );
-        })}
-
-        <FitBounds stops={stops} home={home} />
-        <FlyToSelection stops={stops} home={home} selection={selection} />
-        <MapClickDismiss onDismiss={() => onSelect({ type: 'none' })} />
-        <ZoomWatcher onZoom={setZoom} />
-      </MapContainer>
+      <div ref={containerRef} className="h-full w-full" />
     </div>
   );
 }

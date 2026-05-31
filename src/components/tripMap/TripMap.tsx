@@ -3,10 +3,10 @@ import {
   useEffect,
   useImperativeHandle,
   useRef,
+  useState,
 } from 'react';
-import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
-import 'leaflet.markercluster/dist/MarkerCluster.css';
+import mapboxgl from 'mapbox-gl';
+import 'mapbox-gl/dist/mapbox-gl.css';
 import './TripMap.css';
 
 import type { FriendOverlap, LatLng } from '../../data/myTrip';
@@ -16,7 +16,15 @@ import { drawPresentPin } from './layers/drawPresentPin';
 import { drawPlannedStops } from './layers/drawPlannedStops';
 import { drawDensityHeat } from './layers/drawDensityHeat';
 import { DENSITY_POINTS } from '../../data/densityCities';
+import {
+  MAPBOX_TOKEN,
+  hasMapboxToken,
+  buildAppleMapStyle,
+} from './appleMapStyle';
+import { MapTokenNotice } from './ui/MapTokenNotice';
 import type { SheetState } from './tripReducer';
+
+mapboxgl.accessToken = MAPBOX_TOKEN;
 
 export type TripMapHandle = {
   /** Current map center as [lat, lng]. Returns null before init. */
@@ -48,6 +56,11 @@ type Props = {
  * Trip map — pure controlled component. All state and data lives in TripScreen
  * and arrives through props. Sheets and floaters are siblings rendered by the
  * parent, not by this component.
+ *
+ * Renders an Apple-Maps-like Mapbox GL vector basemap (see appleMapStyle). The
+ * brand overlays (friend bubbles, planned stays, present pin, density heat)
+ * are drawn as HTML markers / a native heatmap layer so they stay pixel-
+ * identical to the previous Leaflet implementation.
  */
 export const TripMap = forwardRef<TripMapHandle, Props>(function TripMap(
   {
@@ -64,7 +77,8 @@ export const TripMap = forwardRef<TripMapHandle, Props>(function TripMap(
   ref,
 ) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const mapRef = useRef<L.Map | null>(null);
+  const mapRef = useRef<mapboxgl.Map | null>(null);
+  const [styleLoaded, setStyleLoaded] = useState(false);
   const handlersRef = useRef({ onOpenSheet, onCloseSheet });
 
   useEffect(() => {
@@ -86,80 +100,69 @@ export const TripMap = forwardRef<TripMapHandle, Props>(function TripMap(
   // — subsequent stop add/remove won't auto-refit, by design (jarring on a
   // shared real-time demo).
   useEffect(() => {
-    if (!containerRef.current || mapRef.current) return;
+    if (!containerRef.current || mapRef.current || !hasMapboxToken) return;
 
-    const map = L.map(containerRef.current, {
+    const map = new mapboxgl.Map({
+      container: containerRef.current,
+      style: buildAppleMapStyle(),
       minZoom: 2,
       maxZoom: 17,
-      zoomControl: false,
       attributionControl: false,
       doubleClickZoom: false,
-      boxZoom: false,
-      keyboard: false,
-      worldCopyJump: false,
+      dragRotate: false,
+      pitchWithRotate: false,
+      touchPitch: false,
+      renderWorldCopies: false,
     });
-
-    // Same env var as the web planner (WebMapCanvas) + .env.example. Was
-    // VITE_TOMTOM_API_KEY, which never matched, so mobile always fell back.
-    const tomtomKey = import.meta.env.VITE_TOMTOM_KEY;
-    if (tomtomKey) {
-      L.tileLayer(
-        `https://api.tomtom.com/map/1/tile/basic/main/{z}/{x}/{y}.png?key=${tomtomKey}&tileSize=512`,
-        {
-          attribution: '© TomTom',
-          maxZoom: 19,
-          tileSize: 512,
-          zoomOffset: -1,
-        },
-      ).addTo(map);
-    } else {
-      // Build-time fallback so a deploy without VITE_TOMTOM_API_KEY still ships a map.
-      L.tileLayer(
-        'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
-        {
-          attribution: '© OpenStreetMap contributors © CARTO',
-          subdomains: 'abcd',
-          maxZoom: 19,
-        },
-      ).addTo(map);
-    }
+    map.touchZoomRotate.disableRotation();
+    // Mapbox attribution is required by ToS; keep it compact + unobtrusive.
+    map.addControl(
+      new mapboxgl.AttributionControl({ compact: true }),
+      'bottom-right',
+    );
 
     // v0.3: bounds derive from the social canvas (present + planned stops),
     // not the past polyline (which v0.3 stopped rendering). Falls back to
-    // present-only when there are no planned stops yet.
-    const focusCoords: [number, number][] = [
+    // present-only when there are no planned stops yet. NB: Mapbox is [lng,lat].
+    const focusCoords: LatLng[] = [
       presentLocation,
-      ...plannedStops.map((s): [number, number] => [s.lat, s.lng]),
+      ...plannedStops.map((s): LatLng => [s.lat, s.lng]),
     ];
     if (focusCoords.length === 1) {
-      map.setView(focusCoords[0], 4);
+      map.setCenter([focusCoords[0][1], focusCoords[0][0]]);
+      map.setZoom(4);
     } else {
-      map.fitBounds(L.latLngBounds(focusCoords), {
-        paddingTopLeft: [60, 80],
-        paddingBottomRight: [60, 60],
+      const bounds = new mapboxgl.LngLatBounds();
+      focusCoords.forEach(([lat, lng]) => bounds.extend([lng, lat]));
+      map.fitBounds(bounds, {
+        padding: { top: 80, left: 60, right: 60, bottom: 60 },
         maxZoom: 4,
+        duration: 0,
       });
     }
 
     const handleMapClick = () => handlersRef.current.onCloseSheet();
     map.on('click', handleMapClick);
+    map.on('load', () => setStyleLoaded(true));
     mapRef.current = map;
 
     return () => {
       map.off('click', handleMapClick);
       map.remove();
       mapRef.current = null;
+      setStyleLoaded(false);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Re-run draw layers when state or data changes. Density-heat mode replaces
-  // the regular layers wholesale — we don't draw the trip line, planned stops,
-  // places, friends, or present pin while heat is on. Max zoom is also clamped
+  // Re-run draw layers when state or data changes. Gated on styleLoaded so
+  // source/layer ops (the heatmap) never race the async style load. Density-
+  // heat mode replaces the regular layers wholesale — we don't draw planned
+  // stops, friends, or the present pin while heat is on. Max zoom is clamped
   // to 5 so the gradient doesn't magnify into giant blobs at street-level.
   useEffect(() => {
-    if (!mapRef.current) return;
     const map = mapRef.current;
+    if (!map || !styleLoaded) return;
     const cleanups: Array<() => void> = [];
 
     if (heatmapEnabled) {
@@ -220,7 +223,10 @@ export const TripMap = forwardRef<TripMapHandle, Props>(function TripMap(
     plannedStops,
     activeStopId,
     heatmapEnabled,
+    styleLoaded,
   ]);
+
+  if (!hasMapboxToken) return <MapTokenNotice />;
 
   return <div ref={containerRef} className="tarmil-map h-full w-full" />;
 });
