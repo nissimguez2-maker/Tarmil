@@ -5,12 +5,13 @@ import {
   Bus,
   Car,
   Check,
+  ChevronRight,
   CircleDollarSign,
   Plane,
   Ship,
   Train,
 } from 'lucide-react';
-import { Button } from '../../components/Button';
+import { OperatorMark } from '../../components/OperatorMark';
 import type { PlannedStop } from '../../data/plannedStops';
 import type { TransportOffer } from '../../data/mockTransport';
 import { generateLeg } from './transportGenerator';
@@ -20,13 +21,8 @@ import {
   formatDriveDuration,
   formatDriveKm,
 } from './osrmApi';
-import {
-  addTransit,
-  findTransit,
-  removeTransit,
-  useWishlist,
-} from './wishlist';
-import { showToast } from './WebToast';
+import { findTransit, useWishlist } from './wishlist';
+import { openBookingSheet } from './WebBookingSheet';
 
 type Props = {
   fromStop: PlannedStop;
@@ -183,14 +179,6 @@ function EmptyOffers() {
   );
 }
 
-function modeIcon(mode: Mode) {
-  if (mode === 'flight') return Plane;
-  if (mode === 'train') return Train;
-  if (mode === 'bus') return Bus;
-  if (mode === 'ferry') return Ship;
-  return Car;
-}
-
 function badgeColor(badge: NonNullable<TransportOffer['badge']>): string {
   if (badge === 'cheapest') return 'bg-clay text-cream';
   if (badge === 'fastest') return 'bg-charcoal text-cream';
@@ -208,50 +196,58 @@ function OfferCard({
   toStop: PlannedStop;
 }) {
   const booked = !!findTransit(fromStop.id, toStop.id, offer.id);
-  const Icon = modeIcon(offer.mode);
   const isDrive = offer.mode === 'drive';
 
-  const onBook = () => {
-    if (booked) return;
-    addTransit({ fromStopId: fromStop.id, toStopId: toStop.id, offer });
-    showToast(`${offer.provider} booked`, () => {
-      removeTransit(fromStop.id, toStop.id, offer.id);
-    });
-  };
-  const onRemove = () => {
-    if (!booked) return;
-    removeTransit(fromStop.id, toStop.id, offer.id);
-    showToast(`${offer.provider} removed`, () => {
-      addTransit({ fromStopId: fromStop.id, toStopId: toStop.id, offer });
-    });
-  };
+  // Two-step: the card is a calm summary; tapping opens the detail + booking
+  // sheet where the partner handoff lives (intent before commerce).
+  const open = () =>
+    openBookingSheet({ kind: 'transport', offer, fromStop, toStop });
 
   return (
-    <article
+    <button
+      type="button"
+      onClick={open}
       className={clsx(
-        'rounded-2xl p-sm border flex flex-col gap-sm transition-[border-color,background-color] duration-instant ease-out-quart motion-reduce:transition-none',
-        booked ? 'bg-sand border-amber' : 'bg-sand border-charcoal-15',
+        'w-full text-start rounded-2xl p-sm border flex flex-col gap-sm shadow-card transition-[border-color,box-shadow,transform] duration-instant ease-out-quart motion-reduce:transition-none',
+        'hover:-translate-y-px hover:shadow-panel focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream',
+        booked
+          ? 'bg-sand border-amber'
+          : 'bg-sand border-charcoal-15 hover:border-charcoal-30',
       )}
     >
       <div className="flex items-start gap-sm">
-        <span className="shrink-0 h-9 w-9 rounded-full bg-cream border border-charcoal-15 flex items-center justify-center text-charcoal">
-          <Icon size={16} strokeWidth={2} />
-        </span>
+        <OperatorMark size="md" provider={offer.provider} mode={offer.mode} />
         <div className="flex-1 min-w-0">
-          <p className="font-sans font-semibold text-lede text-charcoal">
-            {offer.provider}
-          </p>
+          <div className="flex items-start gap-sm">
+            <p className="flex-1 min-w-0 truncate font-sans font-semibold text-lede text-charcoal">
+              {offer.provider}
+            </p>
+            {offer.badge && (
+              <span
+                className={clsx(
+                  'shrink-0 rounded-full px-sm py-xs text-meta uppercase font-medium tracking-wide',
+                  badgeColor(offer.badge),
+                )}
+              >
+                {offer.badge}
+              </span>
+            )}
+          </div>
           {!isDrive ? (
-            <p className="text-small text-charcoal-70 inline-flex items-center gap-xs">
+            <p className="mt-px text-small text-charcoal-70 flex flex-wrap items-center gap-x-xs">
               <span className="tnum">{offer.departureTime}</span>
               <ArrowRight size={12} strokeWidth={2} className="text-charcoal-70" />
               <span className="tnum">{offer.arrivalTime}</span>
-              <span className="text-charcoal-70">· {offer.durationLabel}</span>
+              <span className="text-charcoal-55 whitespace-nowrap">
+                · {offer.durationLabel}
+              </span>
             </p>
           ) : (
-            <p className="text-small text-charcoal-70">{offer.durationLabel}</p>
+            <p className="mt-px text-small text-charcoal-70">
+              {offer.durationLabel}
+            </p>
           )}
-          <p className="text-small text-charcoal-70">
+          <p className="text-small text-charcoal-55">
             {isDrive
               ? 'Direct'
               : offer.stops === 0
@@ -260,19 +256,9 @@ function OfferCard({
             {offer.note && <> · {offer.note}</>}
           </p>
         </div>
-        {offer.badge && (
-          <span
-            className={clsx(
-              'shrink-0 rounded-full px-sm py-xs text-meta uppercase font-medium',
-              badgeColor(offer.badge),
-            )}
-          >
-            {offer.badge}
-          </span>
-        )}
       </div>
-      <div className="flex items-end justify-between gap-sm">
-        <p className="font-serif text-sub text-amber inline-flex items-baseline gap-xs">
+      <div className="flex items-center justify-between gap-sm border-t border-charcoal-15 pt-sm">
+        <p className="font-serif text-sub text-amber inline-flex items-baseline gap-xs whitespace-nowrap">
           {isDrive && (
             <CircleDollarSign
               size={14}
@@ -283,20 +269,17 @@ function OfferCard({
           {offer.currency} {offer.price}
         </p>
         {booked ? (
-          <button
-            type="button"
-            onClick={onRemove}
-            className="inline-flex items-center gap-xs text-meta uppercase font-medium text-umber hover:text-charcoal transition-colors duration-instant ease-out-quart motion-reduce:transition-none focus-visible:outline-none focus-visible:underline rounded-sm"
-          >
+          <span className="inline-flex items-center gap-xs text-meta uppercase font-medium text-sea">
             <Check size={12} strokeWidth={2} />
-            Booked · Remove
-          </button>
+            In your trip
+          </span>
         ) : (
-          <Button variant="accent" size="sm" onClick={onBook}>
-            Book
-          </Button>
+          <span className="inline-flex items-center gap-xs text-meta uppercase font-medium text-charcoal-70">
+            View
+            <ChevronRight size={14} strokeWidth={2} />
+          </span>
         )}
       </div>
-    </article>
+    </button>
   );
 }

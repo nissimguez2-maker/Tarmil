@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
 import clsx from 'clsx';
 import {
+  BedDouble,
   Bookmark,
   Check,
+  ChevronRight,
   Cloud,
   CloudRain,
   CloudSun,
@@ -31,6 +33,7 @@ import {
   type OsmPlace,
 } from './overpassApi';
 import { openLightbox } from './WebPhotoLightbox';
+import { openBookingSheet } from './WebBookingSheet';
 import {
   addPlace,
   findPlace,
@@ -140,6 +143,7 @@ export function WebCityPanel({ stop, places }: Props) {
   return (
     <div className="flex flex-col h-full min-h-0">
       <CityHeader stop={stop} />
+      <StayStrip stop={stop} />
 
       <nav className="shrink-0 px-md pt-sm border-b border-charcoal-15 flex flex-col gap-sm">
         <div className="flex gap-xs overflow-x-auto -mx-md px-md pb-xs">
@@ -254,6 +258,41 @@ function CityHeader({ stop }: { stop: PlannedStop }) {
         </p>
       )}
     </header>
+  );
+}
+
+/**
+ * Per-stop accommodation hero — the set-apart monetizer. Pinned under the city
+ * header (above the browse tabs) so every stop opens with a clear, calm "sort
+ * your stay" step. Tapping opens the two-step booking sheet (Booking.com /
+ * Airbnb / Hostelworld), prefilled with this stop's dates.
+ */
+function StayStrip({ stop }: { stop: PlannedStop }) {
+  return (
+    <div className="shrink-0 px-md pt-sm">
+      <button
+        type="button"
+        onClick={() => openBookingSheet({ kind: 'stay', stop })}
+        className="group w-full text-start flex items-center gap-sm rounded-2xl border border-charcoal-15 bg-sand ps-sm pe-sm py-sm shadow-card transition-[border-color,box-shadow,transform] duration-instant ease-out-quart motion-reduce:transition-none hover:-translate-y-px hover:shadow-panel hover:border-charcoal-30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
+      >
+        <span className="shrink-0 h-10 w-10 rounded-xl bg-cream border border-charcoal-15 flex items-center justify-center text-charcoal">
+          <BedDouble size={18} strokeWidth={1.75} />
+        </span>
+        <span className="flex-1 min-w-0">
+          <span className="block font-serif text-lede text-charcoal leading-tight">
+            Where you're staying
+          </span>
+          <span className="block text-small text-charcoal-70">
+            {stop.nights} {stop.nights === 1 ? 'night' : 'nights'} · find a
+            place for your dates
+          </span>
+        </span>
+        <span className="shrink-0 inline-flex items-center gap-xs rounded-full bg-charcoal text-cream text-small px-sm py-xs group-hover:bg-charcoal-70 transition-colors duration-instant ease-out-quart motion-reduce:transition-none">
+          Find a stay
+          <ChevronRight size={14} strokeWidth={2} />
+        </span>
+      </button>
+    </div>
   );
 }
 

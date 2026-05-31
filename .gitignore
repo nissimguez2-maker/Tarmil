@@ -45,4 +45,11 @@ lerna-debug.log*
 /webpanel.mjs
 /itinerary.mjs
 /screenshot-verify.cjs
+/screenshot-transport.cjs
 /verify-map.html
+/verify-transport.html
+/verify-transport.tsx
+
+/verify-booking.html
+/verify-booking.tsx
+/screenshot-booking.cjs
