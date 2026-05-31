@@ -1,51 +1,121 @@
-import L from 'leaflet';
-import 'leaflet.heat';
+import type { Map as MapboxMap, LayerSpecification } from 'mapbox-gl';
 import type { DensityPoint } from '../../../data/densityCities';
 
+const SOURCE_ID = 'tarmil-density';
+const LAYER_ID = 'tarmil-density-heat';
+
 /**
- * Global Tarmil-user density heat layer.
+ * Global Tarmil-user density heat layer (native Mapbox GL heatmap).
  *
- * 13-stop green→red gradient. Green = 0 backpackers, red = peak (~10k+).
- * Even a single backpacker in a city tints the area — wide radius +
- * generous blur make the colors bleed across regions instead of dotting
- * the map with discrete hotspots.
+ * 13-stop green→red ramp. Green = sparse, red = peak (~10k+). Generous,
+ * zoom-scaled radius makes the colour bleed across regions instead of
+ * dotting the map with discrete hotspots. Inserted beneath the country
+ * labels so place names stay readable through the gradient.
  */
 export function drawDensityHeat(
-  map: L.Map,
+  map: MapboxMap,
   points: DensityPoint[],
 ): () => void {
-  // leaflet.heat doesn't ship TS types out of the box; cast through the
-  // augmented L namespace.
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const heatLayer: L.Layer = (L as any).heatLayer(
-    points.map((p) => [p.lat, p.lng, p.intensity]),
+  const data: GeoJSON.FeatureCollection = {
+    type: 'FeatureCollection',
+    features: points.map((p) => ({
+      type: 'Feature',
+      properties: { weight: p.intensity },
+      geometry: { type: 'Point', coordinates: [p.lng, p.lat] },
+    })),
+  };
+
+  map.addSource(SOURCE_ID, { type: 'geojson', data });
+
+  const beforeId = map.getLayer('label-country') ? 'label-country' : undefined;
+
+  map.addLayer(
     {
-      radius: 58,
-      blur: 48,
-      maxZoom: 8,
-      minOpacity: 0.42,
-      max: 1.0,
-      gradient: {
-        0.0: '#0d6e2e', // deep green — no presence
-        0.08: '#2c8a3d',
-        0.17: '#5fa53e',
-        0.25: '#8fbb3a',
-        0.33: '#b8c734',
-        0.42: '#d6c92e', // yellow
-        0.5: '#ddb725',
-        0.58: '#dfa01f',
-        0.67: '#db811a',
-        0.75: '#d36316',
-        0.83: '#c44b14',
-        0.92: '#b1361c',
-        1.0: '#8e2018', // red — peak density
+      id: LAYER_ID,
+      type: 'heatmap',
+      source: SOURCE_ID,
+      maxzoom: 8,
+      paint: {
+        'heatmap-weight': [
+          'interpolate',
+          ['linear'],
+          ['get', 'weight'],
+          0,
+          0,
+          1,
+          1,
+        ],
+        'heatmap-intensity': [
+          'interpolate',
+          ['linear'],
+          ['zoom'],
+          0,
+          0.7,
+          5,
+          1.3,
+          8,
+          1.6,
+        ],
+        'heatmap-radius': [
+          'interpolate',
+          ['linear'],
+          ['zoom'],
+          0,
+          14,
+          2,
+          26,
+          4,
+          46,
+          6,
+          70,
+        ],
+        'heatmap-opacity': [
+          'interpolate',
+          ['linear'],
+          ['zoom'],
+          6,
+          0.82,
+          8,
+          0.5,
+        ],
+        'heatmap-color': [
+          'interpolate',
+          ['linear'],
+          ['heatmap-density'],
+          0,
+          'rgba(13,110,46,0)',
+          0.08,
+          '#0d6e2e',
+          0.17,
+          '#2c8a3d',
+          0.25,
+          '#8fbb3a',
+          0.33,
+          '#b8c734',
+          0.42,
+          '#d6c92e',
+          0.5,
+          '#ddb725',
+          0.58,
+          '#dfa01f',
+          0.67,
+          '#db811a',
+          0.75,
+          '#d36316',
+          0.83,
+          '#c44b14',
+          0.92,
+          '#b1361c',
+          1,
+          '#8e2018',
+        ],
       },
-    },
+    } as LayerSpecification,
+    beforeId,
   );
 
-  heatLayer.addTo(map);
-
   return () => {
-    map.removeLayer(heatLayer);
+    if (map.getLayer(LAYER_ID)) map.removeLayer(LAYER_ID);
+    if (map.getSource(SOURCE_ID)) map.removeSource(SOURCE_ID);
   };
 }

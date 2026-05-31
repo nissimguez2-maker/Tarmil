@@ -1,6 +1,7 @@
-import L from 'leaflet';
+import mapboxgl from 'mapbox-gl';
 import type { FriendOverlap } from '../../../data/myTrip';
 import type { FriendRelationship } from '../utils/relateFriend';
+import { escapeHtml } from '../utils/escapeHtml';
 
 /**
  * Friend bubbles at neighborhood / city centroids. Soft halo (in CSS)
@@ -16,12 +17,12 @@ import type { FriendRelationship } from '../utils/relateFriend';
  * map or per-friend computation without this layer re-deriving it.
  */
 export function drawFriendBubbles(
-  map: L.Map,
+  map: mapboxgl.Map,
   friends: FriendOverlap[],
   getRelationship: (friend: FriendOverlap) => FriendRelationship,
   onClickFriend: (friend: FriendOverlap) => void,
 ): () => void {
-  const markers: L.Marker[] = [];
+  const markers: mapboxgl.Marker[] = [];
   friends.forEach((friend) => {
     const kind = getRelationship(friend).kind;
     const stateClass =
@@ -30,27 +31,32 @@ export function drawFriendBubbles(
         : kind === 'future_overlap'
           ? 'is-overlap'
           : 'is-traveling';
-    const iconSize: [number, number] =
-      kind === 'traveling' ? [44, 44] : [56, 56];
-    const iconAnchor: [number, number] =
-      kind === 'traveling' ? [22, 22] : [28, 28];
+    // Box mirrors the old Leaflet iconSize so the CSS margins centre the
+    // circle; Mapbox then anchors the box centre on the coordinate.
+    const box = kind === 'traveling' ? 44 : 56;
 
-    const icon = L.divIcon({
-      className: 'tarmil-friend-bubble',
-      html: `<div class="tarmil-friend-circle ${stateClass}">${friend.friendInitial}</div>`,
-      iconSize,
-      iconAnchor,
+    const el = document.createElement('div');
+    el.className = 'tarmil-friend-bubble';
+    el.style.width = `${box}px`;
+    el.style.height = `${box}px`;
+    el.style.boxSizing = 'border-box';
+    el.style.zIndex = kind === 'traveling' ? '300' : '500';
+    el.title = friend.friendName;
+    el.innerHTML = `<div class="tarmil-friend-circle ${stateClass}">${escapeHtml(
+      friend.friendInitial,
+    )}</div>`;
+    el.addEventListener('click', (e) => {
+      e.stopPropagation();
+      onClickFriend(friend);
     });
-    const marker = L.marker([friend.lat, friend.lng], {
-      icon,
-      title: friend.friendName,
-      zIndexOffset: kind === 'traveling' ? 300 : 500,
-    }).addTo(map);
-    marker.on('click', () => onClickFriend(friend));
+
+    const marker = new mapboxgl.Marker({ element: el, anchor: 'center' })
+      .setLngLat([friend.lng, friend.lat])
+      .addTo(map);
     markers.push(marker);
   });
 
   return () => {
-    markers.forEach((marker) => map.removeLayer(marker));
+    markers.forEach((marker) => marker.remove());
   };
 }

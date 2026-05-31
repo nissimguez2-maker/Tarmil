@@ -1,7 +1,8 @@
-import L from 'leaflet';
+import mapboxgl from 'mapbox-gl';
 import type { LatLng } from '../../../data/myTrip';
 import type { PlannedStop } from '../../../data/plannedStops';
 import { formatDateRange } from '../utils/formatDateRange';
+import { escapeHtml } from '../utils/escapeHtml';
 
 /**
  * Stay-bubbles for the user's planned stops. Each bubble is the copper
@@ -17,49 +18,44 @@ import { formatDateRange } from '../utils/formatDateRange';
  * Returns a cleanup that removes the markers from the map.
  */
 export function drawPlannedStops(
-  map: L.Map,
+  map: mapboxgl.Map,
   _present: LatLng,
   stops: PlannedStop[],
   activeStopId: string | undefined,
   onClickStop: (stop: PlannedStop) => void,
 ): () => void {
-  const layers: L.Layer[] = [];
+  const markers: mapboxgl.Marker[] = [];
 
   stops.forEach((stop) => {
     const isActive = stop.id === activeStopId;
     const dates = formatDateRange(stop.arrivalDate, stop.departureDate);
 
-    const icon = L.divIcon({
-      className: 'tarmil-planned-marker',
-      html: `
-        <div class="tarmil-planned-circle${isActive ? ' is-active' : ''}"></div>
-        <div class="tarmil-planned-label">
-          <span class="tarmil-planned-label-name">${escapeHtml(stop.nameEn)}</span>
-          <span class="tarmil-planned-label-dates">${escapeHtml(dates)}</span>
-        </div>
-      `,
-      iconSize: [40, 40],
-      iconAnchor: [20, 20],
+    const el = document.createElement('div');
+    el.className = 'tarmil-planned-marker';
+    el.style.width = '40px';
+    el.style.height = '40px';
+    el.style.boxSizing = 'border-box';
+    el.style.zIndex = '400';
+    el.title = stop.nameEn;
+    el.innerHTML = `
+      <div class="tarmil-planned-circle${isActive ? ' is-active' : ''}"></div>
+      <div class="tarmil-planned-label">
+        <span class="tarmil-planned-label-name">${escapeHtml(stop.nameEn)}</span>
+        <span class="tarmil-planned-label-dates">${escapeHtml(dates)}</span>
+      </div>
+    `;
+    el.addEventListener('click', (e) => {
+      e.stopPropagation();
+      onClickStop(stop);
     });
-    const marker = L.marker([stop.lat, stop.lng], {
-      icon,
-      title: stop.nameEn,
-      zIndexOffset: 400,
-    }).addTo(map);
-    marker.on('click', () => onClickStop(stop));
-    layers.push(marker);
+
+    const marker = new mapboxgl.Marker({ element: el, anchor: 'center' })
+      .setLngLat([stop.lng, stop.lat])
+      .addTo(map);
+    markers.push(marker);
   });
 
   return () => {
-    layers.forEach((layer) => map.removeLayer(layer));
+    markers.forEach((marker) => marker.remove());
   };
-}
-
-function escapeHtml(s: string): string {
-  return s
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
 }
