@@ -9,15 +9,18 @@ type Zone = 'south-america' | 'europe' | 'north-america' | 'asia' | 'mena' | 'oc
 
 const TRAIN_FRIENDLY_ZONES: Set<Zone> = new Set(['europe', 'asia']);
 
+// Carriers are curated to operators that ship a brand mark in
+// `operatorBrand.ts` (simple-icons), so every flight row renders a real logo.
+// Region lists lean on carriers that genuinely serve the zone.
 const FLIGHT_PROVIDERS: Record<Zone, string[]> = {
-  'south-america': ['LATAM', 'Gol', 'Azul', 'JetSmart', 'Sky', 'Aerolíneas Argentinas', 'Flybondi', 'Copa'],
-  europe: ['Lufthansa', 'Air France', 'KLM', 'British Airways', 'Iberia', 'ITA Airways', 'TAP Portugal', 'Vueling', 'EasyJet', 'Ryanair'],
-  'north-america': ['Delta', 'American Airlines', 'United', 'Alaska Airlines', 'JetBlue', 'Air Canada', 'WestJet'],
-  asia: ['ANA', 'JAL', 'Singapore Airlines', 'Cathay Pacific', 'Korean Air', 'Thai Airways', 'EVA Air'],
-  mena: ['Emirates', 'Qatar Airways', 'Turkish Airlines', 'EgyptAir', 'Royal Jordanian', 'Saudia'],
-  oceania: ['Qantas', 'Virgin Australia', 'Air New Zealand', 'Jetstar'],
-  africa: ['Ethiopian Airlines', 'Kenya Airways', 'South African Airways', 'Royal Air Maroc'],
-  global: ['Air France', 'British Airways', 'Lufthansa', 'KLM', 'Iberia', 'Emirates', 'Qatar Airways', 'Turkish Airlines', 'Delta', 'United'],
+  'south-america': ['Copa Airlines', 'Avianca', 'Aeroméxico', 'American Airlines', 'United', 'Delta'],
+  europe: ['Lufthansa', 'Air France', 'KLM', 'British Airways', 'Iberia', 'Ryanair', 'EasyJet', 'Wizz Air', 'Norwegian'],
+  'north-america': ['Delta', 'American Airlines', 'United', 'JetBlue', 'Air Canada'],
+  asia: ['ANA', 'JAL', 'Singapore Airlines', 'Air China', 'Air India', 'IndiGo', 'AirAsia'],
+  mena: ['Emirates', 'Qatar Airways', 'Turkish Airlines', 'Saudia'],
+  oceania: ['Qantas', 'Singapore Airlines', 'Emirates', 'AirAsia'],
+  africa: ['Ethiopian Airlines', 'Qatar Airways', 'Turkish Airlines', 'Emirates'],
+  global: ['Air France', 'British Airways', 'Lufthansa', 'KLM', 'Iberia', 'Emirates', 'Qatar Airways', 'Turkish Airlines', 'Delta', 'United', 'Singapore Airlines'],
 };
 
 const BUS_PROVIDERS: Record<Zone, string[]> = {
@@ -31,15 +34,18 @@ const BUS_PROVIDERS: Record<Zone, string[]> = {
   global: ['FlixBus', 'BlaBlaBus'],
 };
 
+// European rail leans on the three operators with brand marks (Deutsche
+// Bahn, SNCF, ÖBB). Other zones keep descriptive names — they fall back to a
+// clean rail-glyph tile, still paired with a booking-platform button.
 const TRAIN_PROVIDERS: Record<Zone, string[]> = {
   'south-america': [],
-  europe: ['Renfe AVE', 'SNCF TGV', 'Deutsche Bahn ICE', 'Trenitalia Frecciarossa', 'Italo', 'Eurostar', 'Thalys', 'NS Hispeed', 'ÖBB Nightjet'],
+  europe: ['Deutsche Bahn', 'SNCF', 'ÖBB'],
   'north-america': ['Amtrak', 'VIA Rail'],
   asia: ['JR Shinkansen', 'China Railway G', 'KTX', 'Taiwan HSR'],
   mena: ['Egyptian National Railways', 'Turkish State Railways'],
   oceania: ['NSW TrainLink', 'KiwiRail'],
   africa: ['ONCF Al Boraq', 'South African Railways'],
-  global: ['Eurostar', 'Thalys'],
+  global: ['Deutsche Bahn', 'SNCF'],
 };
 
 const FERRY_PROVIDERS: Record<Zone, string[]> = {
@@ -174,14 +180,9 @@ function generateMode(
     const layoverMin = stops * (90 + Math.floor(jitter * 90));
     const durationMin = flightMin + layoverMin;
     const price = Math.round(distanceKm * 0.13 + 75 + jitter * 120);
-    return {
-      mode,
-      provider,
-      durationMin,
-      price,
-      stops,
-      note: stops === 0 ? undefined : stops === 1 ? '1 stop' : `${stops} stops`,
-    };
+    // `stops` is rendered on its own in the card; don't echo it into `note`
+    // too (that produced "1 stop · 1 stop").
+    return { mode, provider, durationMin, price, stops };
   }
   if (mode === 'bus') {
     const providers = BUS_PROVIDERS[zone].length
@@ -196,7 +197,9 @@ function generateMode(
     const providers = TRAIN_PROVIDERS[zone];
     if (providers.length === 0) return null;
     const provider = seededPick(providers, baseSeed, 3);
-    const speed = provider.toLowerCase().includes('shinkansen') || provider.toLowerCase().includes('tgv') || provider.toLowerCase().includes('ave') || provider.toLowerCase().includes('ice') ? 200 : 100;
+    const p = provider.toLowerCase();
+    const highSpeed = ['shinkansen', 'tgv', 'ave', 'ice', 'sncf', 'deutsche bahn', 'hsr', 'ktx', 'al boraq', 'freccia', 'italo'];
+    const speed = highSpeed.some((k) => p.includes(k)) ? 200 : 100;
     const durationMin = (distanceKm / speed) * 60 + 20;
     const price = Math.round(distanceKm * 0.10 + 20 + jitter * 40);
     return { mode, provider, durationMin, price, stops: 0 };

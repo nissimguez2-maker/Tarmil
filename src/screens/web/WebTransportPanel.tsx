@@ -12,6 +12,10 @@ import {
 } from 'lucide-react';
 import { Button } from '../../components/Button';
 import { OperatorMark } from '../../components/OperatorMark';
+import {
+  bookingPlatformForOffer,
+  type BookingPlatform,
+} from '../../data/bookingPlatform';
 import type { PlannedStop } from '../../data/plannedStops';
 import type { TransportOffer } from '../../data/mockTransport';
 import { generateLeg } from './transportGenerator';
@@ -202,6 +206,7 @@ function OfferCard({
 }) {
   const booked = !!findTransit(fromStop.id, toStop.id, offer.id);
   const isDrive = offer.mode === 'drive';
+  const platform = bookingPlatformForOffer(offer);
 
   const onBook = () => {
     if (booked) return;
@@ -234,11 +239,13 @@ function OfferCard({
             {offer.provider}
           </p>
           {!isDrive ? (
-            <p className="text-small text-charcoal-70 inline-flex items-center gap-xs">
+            <p className="text-small text-charcoal-70 inline-flex flex-wrap items-center gap-x-xs">
               <span className="tnum">{offer.departureTime}</span>
               <ArrowRight size={12} strokeWidth={2} className="text-charcoal-70" />
               <span className="tnum">{offer.arrivalTime}</span>
-              <span className="text-charcoal-70">· {offer.durationLabel}</span>
+              <span className="text-charcoal-70 whitespace-nowrap">
+                · {offer.durationLabel}
+              </span>
             </p>
           ) : (
             <p className="text-small text-charcoal-70">{offer.durationLabel}</p>
@@ -263,32 +270,57 @@ function OfferCard({
           </span>
         )}
       </div>
-      <div className="flex items-end justify-between gap-sm">
-        <p className="font-serif text-sub text-amber inline-flex items-baseline gap-xs">
-          {isDrive && (
-            <CircleDollarSign
-              size={14}
-              strokeWidth={2}
-              className="text-charcoal-30"
-            />
+      <div className="flex flex-col gap-sm border-t border-charcoal-15 pt-sm">
+        <div className="flex items-center justify-between gap-sm">
+          <p className="font-serif text-sub text-amber inline-flex items-baseline gap-xs whitespace-nowrap">
+            {isDrive && (
+              <CircleDollarSign
+                size={14}
+                strokeWidth={2}
+                className="text-charcoal-30"
+              />
+            )}
+            {offer.currency} {offer.price}
+          </p>
+          {booked && (
+            <button
+              type="button"
+              onClick={onRemove}
+              className="inline-flex items-center gap-xs text-meta uppercase font-medium text-umber hover:text-charcoal transition-colors duration-instant ease-out-quart motion-reduce:transition-none focus-visible:outline-none focus-visible:underline rounded-sm"
+            >
+              <Check size={12} strokeWidth={2} />
+              Booked · Remove
+            </button>
           )}
-          {offer.currency} {offer.price}
-        </p>
-        {booked ? (
-          <button
-            type="button"
-            onClick={onRemove}
-            className="inline-flex items-center gap-xs text-meta uppercase font-medium text-umber hover:text-charcoal transition-colors duration-instant ease-out-quart motion-reduce:transition-none focus-visible:outline-none focus-visible:underline rounded-sm"
+        </div>
+        {!booked && (
+          <Button
+            variant="accent"
+            size="sm"
+            fullWidth
+            onClick={onBook}
+            className="whitespace-nowrap"
           >
-            <Check size={12} strokeWidth={2} />
-            Booked · Remove
-          </button>
-        ) : (
-          <Button variant="accent" size="sm" onClick={onBook}>
-            Book
+            <PlatformLogoChip platform={platform} />
+            {platform.verb} {platform.name}
           </Button>
         )}
       </div>
     </article>
+  );
+}
+
+/**
+ * The booking site's mark on a small cream tile, sized to sit inside the
+ * umber "Book on …" button. The cream backing is what lets dark-navy marks
+ * (Expedia, Booking.com) stay visible against the umber fill.
+ */
+function PlatformLogoChip({ platform }: { platform: BookingPlatform }) {
+  return (
+    <span className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-cream">
+      <svg viewBox="0 0 24 24" className="h-3 w-3" aria-hidden>
+        <path d={platform.path} fill={platform.hex} />
+      </svg>
+    </span>
   );
 }
