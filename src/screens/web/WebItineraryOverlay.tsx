@@ -20,21 +20,15 @@ import type { HomeCity } from './homeCity';
 import { generateLeg } from './transportGenerator';
 import { cityPhotos } from './cityPhotos';
 import {
-  addStay,
-  addTransit,
   findStay,
   placesForStop,
   transitForLeg,
   useWishlist,
 } from './wishlist';
 import { formatStopRange, formatShortDate } from './dateUtils';
-import {
-  legsForTrip,
-  tripReadiness,
-  type LegRef,
-} from './readiness';
+import { legsForTrip, tripReadiness } from './readiness';
+import { planRemainingGaps } from './aiPlanner';
 import { openBookingSheet } from './WebBookingSheet';
-import { showToast } from './WebToast';
 
 type Props = {
   open: boolean;
@@ -98,43 +92,7 @@ export function WebItineraryOverlay({ open, onClose, stops, home }: Props) {
   const readiness = tripReadiness(stops, legs);
   const hasGaps =
     readiness.openStays.length + readiness.openLegs.length > 0;
-
-  // Cosmetic AI fill: closes every gap with the recommended option, staggered
-  // so it reads as the assistant doing the work. This is the seam the real
-  // AI layer plugs into later — replace the loop body with model output.
-  const planTheRest = () => {
-    const stopFor = (id: string): PlannedStop | undefined =>
-      id === 'home' ? hs : stops.find((s) => s.id === id);
-    const total = readiness.openStays.length + readiness.openLegs.length;
-    let step = 0;
-    readiness.openStays.forEach((stopId) => {
-      setTimeout(() => addStay({ stopId }), step * 110);
-      step++;
-    });
-    readiness.openLegs.forEach((leg: LegRef) => {
-      setTimeout(() => {
-        const from = stopFor(leg.fromId);
-        const to = stopFor(leg.toId);
-        if (!from || !to) return;
-        const generated = generateLeg(from, to, from.departureDate);
-        const offer =
-          generated.offers.find((o) => o.badge === 'recommended') ??
-          generated.offers[0];
-        if (offer) {
-          addTransit({
-            fromStopId: leg.fromId,
-            toStopId: leg.toId,
-            offer,
-          });
-        }
-      }, step * 110);
-      step++;
-    });
-    setTimeout(
-      () => showToast(`Trip planned · ${total} gaps closed`),
-      step * 110 + 220,
-    );
-  };
+  const planTheRest = () => planRemainingGaps(stops, home);
 
   return (
     <div

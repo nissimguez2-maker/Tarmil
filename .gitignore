@@ -65,3 +65,7 @@ lerna-debug.log*
 /verify-itin.html
 /verify-itin.tsx
 /screenshot-itin.cjs
+
+/verify-entry.html
+/verify-entry.tsx
+/screenshot-entry.cjs

@@ -1,21 +1,31 @@
 import { Link } from 'react-router-dom';
-import { Share2 } from 'lucide-react';
+import { Share2, Sparkles } from 'lucide-react';
+import { Button } from '../../components/Button';
 import type { PlannedStop } from '../../data/plannedStops';
 import { formatTripMonthRange } from './dateUtils';
+import type { HomeCity } from './homeCity';
+import { legsForTrip, tripReadiness } from './readiness';
+import { useWishlist } from './wishlist';
+import { planRemainingGaps } from './aiPlanner';
 
 const TRIP_TITLE_REGION = 'Brazil & Argentina';
 
 type Props = {
   stops: PlannedStop[];
+  home: HomeCity;
 };
 
-export function WebHeader({ stops }: Props) {
+export function WebHeader({ stops, home }: Props) {
+  useWishlist();
   const range = stops.length
     ? formatTripMonthRange(
         stops[0].arrivalDate,
         stops[stops.length - 1].departureDate,
       )
     : '';
+  const readiness = tripReadiness(stops, legsForTrip(stops));
+  const hasGaps =
+    readiness.openStays.length + readiness.openLegs.length > 0;
   return (
     <header className="h-14 shrink-0 bg-cream border-b border-charcoal-15 flex items-center px-md gap-md">
       <span className="font-serif text-lede text-charcoal">Tarmil</span>
@@ -27,6 +37,16 @@ export function WebHeader({ stops }: Props) {
         </span>
       </div>
       <div className="flex items-center gap-md">
+        {hasGaps && (
+          <Button
+            variant="accent"
+            size="sm"
+            onClick={() => planRemainingGaps(stops, home)}
+          >
+            <Sparkles size={14} strokeWidth={2} />
+            Plan with AI
+          </Button>
+        )}
         <button
           type="button"
           onClick={() => window.alert('Share link copied (mock)')}

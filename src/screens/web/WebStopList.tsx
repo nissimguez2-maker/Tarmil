@@ -246,7 +246,11 @@ export function WebStopList({
                   selection.fromStopId === stop.id &&
                   selection.toStopId === next.id;
                 return (
-                  <li key={stop.id} className="flex flex-col">
+                  <li
+                    key={stop.id}
+                    className="flex flex-col tarmil-stop-enter"
+                    style={{ animationDelay: `${i * 70}ms` }}
+                  >
                     <SortableStopRow
                       stop={stop}
                       index={i + 1}

@@ -94,7 +94,7 @@ export function WebPlannerScreen() {
   return (
     <>
       <div className="hidden lg:flex h-dvh flex-col bg-cream">
-        <WebHeader stops={stops} />
+        <WebHeader stops={stops} home={home} />
         <div className="flex-1 flex min-h-0">
           <WebStopList
             stops={stops}
