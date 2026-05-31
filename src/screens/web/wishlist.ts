@@ -22,7 +22,17 @@ export type TransitItem = {
   addedAt: number;
 };
 
-export type WishItem = PlaceItem | TransitItem;
+/** A sorted stay for a stop — the accommodation side of trip readiness. */
+export type StayItem = {
+  kind: 'stay';
+  id: string;
+  stopId: string;
+  /** Partner the user chose, when they picked one (cosmetic). */
+  partner?: string;
+  addedAt: number;
+};
+
+export type WishItem = PlaceItem | TransitItem | StayItem;
 
 type State = { items: WishItem[] };
 
@@ -92,6 +102,10 @@ function transitId(fromStopId: string, toStopId: string, offerId: string): strin
   return `${fromStopId}::${toStopId}::${offerId}`;
 }
 
+function stayId(stopId: string): string {
+  return `stay::${stopId}`;
+}
+
 export function findPlace(stopId: string, placeKey: string): PlaceItem | undefined {
   const id = placeId(stopId, placeKey);
   return state.items.find(
@@ -114,6 +128,38 @@ export function placesForStop(stopId: string): PlaceItem[] {
   return state.items.filter(
     (i): i is PlaceItem => i.kind === 'place' && i.stopId === stopId,
   );
+}
+
+export function findStay(stopId: string): StayItem | undefined {
+  const id = stayId(stopId);
+  return state.items.find(
+    (i): i is StayItem => i.kind === 'stay' && i.id === id,
+  );
+}
+
+export function addStay(input: { stopId: string; partner?: string }): StayItem {
+  const id = stayId(input.stopId);
+  const existingIndex = state.items.findIndex((i) => i.id === id);
+  const item: StayItem = {
+    kind: 'stay',
+    id,
+    stopId: input.stopId,
+    partner: input.partner,
+    addedAt: Date.now(),
+  };
+  if (existingIndex >= 0) state.items[existingIndex] = item;
+  else state.items.push(item);
+  emit();
+  return item;
+}
+
+export function removeStay(stopId: string): void {
+  const id = stayId(stopId);
+  const next = state.items.filter((i) => i.id !== id);
+  if (next.length !== state.items.length) {
+    state.items = next;
+    emit();
+  }
 }
 
 export function transitForLeg(
@@ -215,6 +261,10 @@ export function removeForStop(stopId: string): {
   let transit = 0;
   const next = state.items.filter((i) => {
     if (i.kind === 'place' && i.stopId === stopId) {
+      places++;
+      return false;
+    }
+    if (i.kind === 'stay' && i.stopId === stopId) {
       places++;
       return false;
     }

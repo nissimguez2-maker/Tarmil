@@ -53,3 +53,7 @@ lerna-debug.log*
 /verify-booking.html
 /verify-booking.tsx
 /screenshot-booking.cjs
+
+/verify-readiness.html
+/verify-readiness.tsx
+/screenshot-readiness.cjs

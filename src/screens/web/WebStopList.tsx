@@ -51,6 +51,7 @@ import { fetchDrivingMinutes, formatDriveDuration } from './osrmApi';
 import { formatShortDate, formatStopRange } from './dateUtils';
 import { cityPhotos } from './cityPhotos';
 import {
+  findStay,
   placesForStop,
   removePlace,
   removeTransit,
@@ -60,6 +61,8 @@ import {
   type TransitItem,
 } from './wishlist';
 import { showToast } from './WebToast';
+import { openBookingSheet } from './WebBookingSheet';
+import { legsForTrip, tripReadiness } from './readiness';
 import { WebRemoveStopConfirm } from './WebRemoveStopConfirm';
 import { WebItineraryOverlay } from './WebItineraryOverlay';
 import type { Selection } from './types';
@@ -402,7 +405,9 @@ function TripOverviewCard({
   stops: PlannedStop[];
   home: HomeCity;
 }) {
-  const legs = stops.length > 0 ? stops.length - 1 : 0;
+  // All transport segments, including the home departure + return the rail
+  // draws — keeps the stat consistent with the readiness count below.
+  const legs = legsForTrip(stops).length;
   const nights = stops.reduce((sum, s) => sum + s.nights, 0);
   const first = stops[0];
   const last = stops[stops.length - 1];
@@ -429,7 +434,53 @@ function TripOverviewCard({
         <Stat label="Legs" value={legs} />
         <Stat label="Nights" value={nights} />
       </dl>
+      <ReadinessBar stops={stops} />
     </article>
+  );
+}
+
+/**
+ * Trip-readiness cue: how much of the plan is booked (stays + transport).
+ * Surfaces the user's "is my trip complete?" and the business's booking gaps
+ * in one quiet bar. Reads wishlist state (parent subscribes via useWishlist).
+ */
+function ReadinessBar({ stops }: { stops: PlannedStop[] }) {
+  const r = tripReadiness(stops, legsForTrip(stops));
+  if (r.stopsTotal === 0) return null;
+  const done = r.pct === 100;
+  const staysLeft = r.stopsTotal - r.staysSorted;
+  const legsLeft = r.legsTotal - r.legsBooked;
+  const parts = [
+    staysLeft > 0 ? `${staysLeft} ${staysLeft === 1 ? 'stay' : 'stays'}` : null,
+    legsLeft > 0 ? `${legsLeft} ${legsLeft === 1 ? 'leg' : 'legs'}` : null,
+  ].filter(Boolean);
+
+  return (
+    <div className="pt-sm border-t border-charcoal-15 flex flex-col gap-xs">
+      <div className="flex items-center justify-between">
+        <p className="meta-caps text-charcoal-70">Trip readiness</p>
+        <p className="text-small tnum text-charcoal">{r.pct}%</p>
+      </div>
+      <div
+        className="h-1.5 w-full rounded-full bg-charcoal-15 overflow-hidden"
+        role="progressbar"
+        aria-valuenow={r.pct}
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-label="Trip readiness"
+      >
+        <div
+          className={clsx(
+            'h-full rounded-full transition-[width] duration-considered ease-out-quart motion-reduce:transition-none',
+            done ? 'bg-sea' : 'bg-charcoal',
+          )}
+          style={{ width: `${r.pct}%` }}
+        />
+      </div>
+      <p className="text-small text-charcoal-70">
+        {done ? 'Everything is booked.' : `${parts.join(' · ')} left to sort.`}
+      </p>
+    </div>
   );
 }
 
@@ -630,6 +681,7 @@ function StopRow({
             </div>
           </div>
         </div>
+        {!editing && <StayChip stop={stop} />}
         {editing && (
           <DateEditor
             arrivalIso={stop.arrivalDate}
@@ -662,6 +714,36 @@ function StopRow({
         )}
       </div>
     </div>
+  );
+}
+
+/**
+ * Per-stop accommodation gap. Solid sea check when the stay is sorted; a
+ * dashed "Add stay" prompt (the gap) otherwise, opening the stay sheet right
+ * from the rail. Surfaces the booking step at the moment of planning the city.
+ */
+function StayChip({ stop }: { stop: PlannedStop }) {
+  const sorted = !!findStay(stop.id);
+  if (sorted) {
+    return (
+      <div className="mt-sm inline-flex items-center gap-xs text-meta uppercase font-medium text-sea">
+        <Bed size={12} strokeWidth={2} />
+        Stay sorted
+      </div>
+    );
+  }
+  return (
+    <button
+      type="button"
+      onClick={(e) => {
+        e.stopPropagation();
+        openBookingSheet({ kind: 'stay', stop });
+      }}
+      className="mt-sm inline-flex items-center gap-xs rounded-full border border-dashed border-charcoal-30 ps-sm pe-sm py-px text-meta uppercase font-medium text-charcoal-70 transition-colors duration-instant ease-out-quart motion-reduce:transition-none hover:border-amber hover:text-amber focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
+    >
+      <Bed size={12} strokeWidth={2} />
+      Add stay
+    </button>
   );
 }
 
@@ -900,11 +982,22 @@ function LegRow({ from, to, selected, onClick }: LegRowProps) {
               : modeLabel}
           </span>
         </button>
-        {bookings.length > 0 && (
+        {bookings.length > 0 ? (
           <div className="flex flex-col gap-xs px-sm min-w-0">
             {bookings.map((b) => (
               <TransitBookingRow key={b.id} item={b} />
             ))}
+          </div>
+        ) : (
+          <div className="px-sm">
+            <button
+              type="button"
+              onClick={onClick}
+              className="inline-flex items-center gap-xs rounded-full border border-dashed border-charcoal-30 ps-sm pe-sm py-px text-meta uppercase font-medium text-charcoal-70 transition-colors duration-instant ease-out-quart motion-reduce:transition-none hover:border-amber hover:text-amber focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream"
+            >
+              <Plus size={11} strokeWidth={2} />
+              Add transport
+            </button>
           </div>
         )}
       </div>

@@ -11,8 +11,11 @@ import type { PlannedStop } from '../../data/plannedStops';
 import type { TransportOffer } from '../../data/mockTransport';
 import { formatStopRange } from './dateUtils';
 import {
+  addStay,
   addTransit,
+  findStay,
   findTransit,
+  removeStay,
   removeTransit,
   useWishlist,
 } from './wishlist';
@@ -109,6 +112,19 @@ export function WebBookingSheet() {
 }
 
 function StayBody({ stop }: { stop: PlannedStop }) {
+  useWishlist();
+  const sorted = !!findStay(stop.id);
+
+  const onToggle = () => {
+    if (sorted) {
+      removeStay(stop.id);
+      showToast(`${stop.nameEn} stay cleared`);
+    } else {
+      addStay({ stopId: stop.id });
+      showToast(`Stay sorted for ${stop.nameEn}`);
+    }
+  };
+
   return (
     <div className="flex flex-col min-h-0">
       <header className="shrink-0 px-md pt-md pb-sm flex flex-col gap-xs pe-12">
@@ -128,6 +144,16 @@ function StayBody({ stop }: { stop: PlannedStop }) {
         {STAY_PARTNERS.map((p) => (
           <PartnerRow key={p.id} partner={p} />
         ))}
+        <Button variant="primary" fullWidth onClick={onToggle}>
+          {sorted ? (
+            <>
+              <Check size={14} strokeWidth={2} />
+              Stay sorted
+            </>
+          ) : (
+            'Mark stay as sorted'
+          )}
+        </Button>
         <Disclosure />
       </div>
     </div>
