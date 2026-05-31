@@ -5,17 +5,13 @@ import {
   Bus,
   Car,
   Check,
+  ChevronRight,
   CircleDollarSign,
   Plane,
   Ship,
   Train,
 } from 'lucide-react';
-import { Button } from '../../components/Button';
 import { OperatorMark } from '../../components/OperatorMark';
-import {
-  bookingPlatformForOffer,
-  type BookingPlatform,
-} from '../../data/bookingPlatform';
 import type { PlannedStop } from '../../data/plannedStops';
 import type { TransportOffer } from '../../data/mockTransport';
 import { generateLeg } from './transportGenerator';
@@ -25,13 +21,8 @@ import {
   formatDriveDuration,
   formatDriveKm,
 } from './osrmApi';
-import {
-  addTransit,
-  findTransit,
-  removeTransit,
-  useWishlist,
-} from './wishlist';
-import { showToast } from './WebToast';
+import { findTransit, useWishlist } from './wishlist';
+import { openBookingSheet } from './WebBookingSheet';
 
 type Props = {
   fromStop: PlannedStop;
@@ -206,30 +197,22 @@ function OfferCard({
 }) {
   const booked = !!findTransit(fromStop.id, toStop.id, offer.id);
   const isDrive = offer.mode === 'drive';
-  const platform = bookingPlatformForOffer(offer);
 
-  const onBook = () => {
-    if (booked) return;
-    addTransit({ fromStopId: fromStop.id, toStopId: toStop.id, offer });
-    showToast(`${offer.provider} booked`, () => {
-      removeTransit(fromStop.id, toStop.id, offer.id);
-    });
-  };
-  const onRemove = () => {
-    if (!booked) return;
-    removeTransit(fromStop.id, toStop.id, offer.id);
-    showToast(`${offer.provider} removed`, () => {
-      addTransit({ fromStopId: fromStop.id, toStopId: toStop.id, offer });
-    });
-  };
+  // Two-step: the card is a calm summary; tapping opens the detail + booking
+  // sheet where the partner handoff lives (intent before commerce).
+  const open = () =>
+    openBookingSheet({ kind: 'transport', offer, fromStop, toStop });
 
   return (
-    <article
+    <button
+      type="button"
+      onClick={open}
       className={clsx(
-        'rounded-2xl p-sm border flex flex-col gap-sm shadow-card transition-[border-color,box-shadow] duration-instant ease-out-quart motion-reduce:transition-none',
+        'w-full text-start rounded-2xl p-sm border flex flex-col gap-sm shadow-card transition-[border-color,box-shadow,transform] duration-instant ease-out-quart motion-reduce:transition-none',
+        'hover:-translate-y-px hover:shadow-panel focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber focus-visible:ring-offset-2 focus-visible:ring-offset-cream',
         booked
           ? 'bg-sand border-amber'
-          : 'bg-sand border-charcoal-15 hover:border-charcoal-30 hover:shadow-panel',
+          : 'bg-sand border-charcoal-15 hover:border-charcoal-30',
       )}
     >
       <div className="flex items-start gap-sm">
@@ -274,57 +257,29 @@ function OfferCard({
           </p>
         </div>
       </div>
-      <div className="flex flex-col gap-sm border-t border-charcoal-15 pt-sm">
-        <div className="flex items-center justify-between gap-sm">
-          <p className="font-serif text-sub text-amber inline-flex items-baseline gap-xs whitespace-nowrap">
-            {isDrive && (
-              <CircleDollarSign
-                size={14}
-                strokeWidth={2}
-                className="text-charcoal-30"
-              />
-            )}
-            {offer.currency} {offer.price}
-          </p>
-          {booked && (
-            <button
-              type="button"
-              onClick={onRemove}
-              className="inline-flex items-center gap-xs text-meta uppercase font-medium text-umber hover:text-charcoal transition-colors duration-instant ease-out-quart motion-reduce:transition-none focus-visible:outline-none focus-visible:underline rounded-sm"
-            >
-              <Check size={12} strokeWidth={2} />
-              Booked · Remove
-            </button>
+      <div className="flex items-center justify-between gap-sm border-t border-charcoal-15 pt-sm">
+        <p className="font-serif text-sub text-amber inline-flex items-baseline gap-xs whitespace-nowrap">
+          {isDrive && (
+            <CircleDollarSign
+              size={14}
+              strokeWidth={2}
+              className="text-charcoal-30"
+            />
           )}
-        </div>
-        {!booked && (
-          <Button
-            variant="accent"
-            size="sm"
-            fullWidth
-            onClick={onBook}
-            className="whitespace-nowrap"
-          >
-            <PlatformLogoChip platform={platform} />
-            {platform.verb} {platform.name}
-          </Button>
+          {offer.currency} {offer.price}
+        </p>
+        {booked ? (
+          <span className="inline-flex items-center gap-xs text-meta uppercase font-medium text-sea">
+            <Check size={12} strokeWidth={2} />
+            In your trip
+          </span>
+        ) : (
+          <span className="inline-flex items-center gap-xs text-meta uppercase font-medium text-charcoal-70">
+            View
+            <ChevronRight size={14} strokeWidth={2} />
+          </span>
         )}
       </div>
-    </article>
-  );
-}
-
-/**
- * The booking site's mark on a small cream tile, sized to sit inside the
- * umber "Book on …" button. The cream backing is what lets dark-navy marks
- * (Expedia, Booking.com) stay visible against the umber fill.
- */
-function PlatformLogoChip({ platform }: { platform: BookingPlatform }) {
-  return (
-    <span className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-cream">
-      <svg viewBox="0 0 24 24" className="h-3 w-3" aria-hidden>
-        <path d={platform.path} fill={platform.hex} />
-      </svg>
-    </span>
+    </button>
   );
 }

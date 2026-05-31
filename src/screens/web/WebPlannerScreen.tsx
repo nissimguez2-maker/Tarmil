@@ -12,6 +12,7 @@ import { WebHomeEditor } from './WebHomeEditor';
 import { WebPlannerSkeleton } from './WebPlannerSkeleton';
 import { WebToastLayer } from './WebToast';
 import { WebPhotoLightbox } from './WebPhotoLightbox';
+import { WebBookingSheet } from './WebBookingSheet';
 import { DEFAULT_HOME, loadHome, saveHome, type HomeCity } from './homeCity';
 import {
   addStop as addStopMut,
@@ -147,6 +148,7 @@ export function WebPlannerScreen() {
         currentName={home.nameEn}
       />
       <WebPhotoLightbox />
+      <WebBookingSheet />
       <WebToastLayer />
     </>
   );

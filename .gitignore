@@ -49,3 +49,7 @@ lerna-debug.log*
 /verify-map.html
 /verify-transport.html
 /verify-transport.tsx
+
+/verify-booking.html
+/verify-booking.tsx
+/screenshot-booking.cjs

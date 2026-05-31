@@ -72,10 +72,14 @@ export function DiscoverModal({ open, onClose, initialDestinationId }: Props) {
     // Disclosed ranking: Tarmil Selection, then Sponsored, then public coverage.
     const rank = (p: (typeof data.places)[number]) =>
       p.placementTier === 'selection' ? 0 : p.placementTier === 'sponsored' ? 1 : 2;
-    return [...data.places].sort((a, b) => {
-      if (rank(a) !== rank(b)) return rank(a) - rank(b);
-      return a.englishName.localeCompare(b.englishName);
-    });
+    // Accommodation has its own per-stop "Where you're staying" surface — keep
+    // lodging out of the general city-things discovery.
+    return [...data.places]
+      .filter((p) => p.category !== 'hostel')
+      .sort((a, b) => {
+        if (rank(a) !== rank(b)) return rank(a) - rank(b);
+        return a.englishName.localeCompare(b.englishName);
+      });
   }, [data]);
 
   const savedPlaceIds = useMemo(() => {
