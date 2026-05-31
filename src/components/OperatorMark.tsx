@@ -1,7 +1,8 @@
+import { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { Bus, Car, Plane, Ship, Train } from 'lucide-react';
 import type { TransportOffer } from '../data/mockTransport';
-import { resolveOperatorBrand } from '../data/operatorBrand';
+import { airlineLogoUrl, resolveOperatorBrand } from '../data/operatorBrand';
 
 type Props = {
   provider: string;
@@ -10,21 +11,21 @@ type Props = {
 };
 
 /**
- * Renders an operator's brand wordmark (LATAM red, Copa blue, Lufthansa
- * yellow, …) on a cream tile when we have the slug registered in
- * `operatorBrand.ts`. Falls through to a tasteful generic mode glyph
- * (Plane / Bus / Ferry / Train / Car) on the same tile when we don't
- * — so unknown operators still read as polished booking rows.
+ * The operator's brand mark on a white tile, three layers deep so it always
+ * lands well:
+ *   1. full-colour airline logo from the CDN (`airlineLogoUrl`),
+ *   2. on load failure → the monochrome simple-icons mark in brand colour,
+ *   3. with neither → a generic mode glyph (Plane / Bus / Ferry / Train / Car).
  *
- * Stamped square chip rather than a free-standing wordmark: a Skyscanner
- * / Hopper / Polarsteps-style frame normalises visual weight across
- * logos with very different aspect ratios.
+ * The white rounded tile is the booking-app convention (Skyscanner / Hopper /
+ * Polarsteps) — it normalises logos of wildly different aspect ratios into one
+ * calm, consistent frame.
  */
 
 const SIZES = {
-  sm: { box: 'h-7 w-7', svg: 'h-4 w-4', icon: 14 },
-  md: { box: 'h-9 w-9', svg: 'h-5 w-5', icon: 18 },
-  lg: { box: 'h-11 w-11', svg: 'h-6 w-6', icon: 22 },
+  sm: { box: 'h-8 w-8', pad: 'p-1', svg: 'h-4 w-4', icon: 15 },
+  md: { box: 'h-10 w-10', pad: 'p-1.5', svg: 'h-5 w-5', icon: 18 },
+  lg: { box: 'h-12 w-12', pad: 'p-2', svg: 'h-6 w-6', icon: 22 },
 } as const;
 
 function modeIcon(mode: TransportOffer['mode']) {
@@ -37,38 +38,52 @@ function modeIcon(mode: TransportOffer['mode']) {
 
 export function OperatorMark({ provider, mode, size = 'md' }: Props) {
   const brand = resolveOperatorBrand(provider);
-  const { box, svg, icon } = SIZES[size];
+  const { box, pad, svg, icon } = SIZES[size];
 
-  if (brand) {
+  // Reset the CDN attempt whenever the operator changes (the component is
+  // reused across legs by list position).
+  const [imgFailed, setImgFailed] = useState(false);
+  useEffect(() => {
+    setImgFailed(false);
+  }, [brand?.iata]);
+
+  const tile = clsx(
+    'shrink-0 inline-flex items-center justify-center overflow-hidden rounded-xl bg-cream border border-charcoal-15',
+    box,
+  );
+
+  // 1 — full-colour airline logo.
+  if (brand?.iata && !imgFailed) {
     return (
-      <span
-        className={clsx(
-          'shrink-0 inline-flex items-center justify-center rounded-xl bg-cream border border-charcoal-15',
-          box,
-        )}
-        aria-hidden
-      >
-        <svg
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-          className={svg}
-        >
+      <span className={tile}>
+        <img
+          src={airlineLogoUrl(brand.iata)}
+          alt={`${brand.title} logo`}
+          className={clsx('h-full w-full object-contain', pad)}
+          loading="lazy"
+          decoding="async"
+          onError={() => setImgFailed(true)}
+        />
+      </span>
+    );
+  }
+
+  // 2 — monochrome brand mark.
+  if (brand?.mono) {
+    return (
+      <span className={tile} aria-hidden>
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className={svg}>
           <title>{brand.title}</title>
-          <path d={brand.path} fill={brand.hex} />
+          <path d={brand.mono.path} fill={brand.mono.hex} />
         </svg>
       </span>
     );
   }
 
+  // 3 — generic mode glyph.
   const Icon = modeIcon(mode);
   return (
-    <span
-      className={clsx(
-        'shrink-0 inline-flex items-center justify-center rounded-xl bg-cream border border-charcoal-15 text-charcoal-70',
-        box,
-      )}
-      aria-hidden
-    >
+    <span className={clsx(tile, 'text-charcoal-70')} aria-hidden>
       <Icon size={icon} strokeWidth={1.75} />
     </span>
   );

@@ -235,22 +235,36 @@ function OfferCard({
       <div className="flex items-start gap-sm">
         <OperatorMark size="md" provider={offer.provider} mode={offer.mode} />
         <div className="flex-1 min-w-0">
-          <p className="font-sans font-semibold text-lede text-charcoal">
-            {offer.provider}
-          </p>
+          <div className="flex items-start gap-sm">
+            <p className="flex-1 min-w-0 truncate font-sans font-semibold text-lede text-charcoal">
+              {offer.provider}
+            </p>
+            {offer.badge && (
+              <span
+                className={clsx(
+                  'shrink-0 rounded-full px-sm py-xs text-meta uppercase font-medium tracking-wide',
+                  badgeColor(offer.badge),
+                )}
+              >
+                {offer.badge}
+              </span>
+            )}
+          </div>
           {!isDrive ? (
-            <p className="text-small text-charcoal-70 inline-flex flex-wrap items-center gap-x-xs">
+            <p className="mt-px text-small text-charcoal-70 flex flex-wrap items-center gap-x-xs">
               <span className="tnum">{offer.departureTime}</span>
               <ArrowRight size={12} strokeWidth={2} className="text-charcoal-70" />
               <span className="tnum">{offer.arrivalTime}</span>
-              <span className="text-charcoal-70 whitespace-nowrap">
+              <span className="text-charcoal-55 whitespace-nowrap">
                 · {offer.durationLabel}
               </span>
             </p>
           ) : (
-            <p className="text-small text-charcoal-70">{offer.durationLabel}</p>
+            <p className="mt-px text-small text-charcoal-70">
+              {offer.durationLabel}
+            </p>
           )}
-          <p className="text-small text-charcoal-70">
+          <p className="text-small text-charcoal-55">
             {isDrive
               ? 'Direct'
               : offer.stops === 0
@@ -259,16 +273,6 @@ function OfferCard({
             {offer.note && <> · {offer.note}</>}
           </p>
         </div>
-        {offer.badge && (
-          <span
-            className={clsx(
-              'shrink-0 rounded-full px-sm py-xs text-meta uppercase font-medium',
-              badgeColor(offer.badge),
-            )}
-          >
-            {offer.badge}
-          </span>
-        )}
       </div>
       <div className="flex flex-col gap-sm border-t border-charcoal-15 pt-sm">
         <div className="flex items-center justify-between gap-sm">
