@@ -11,6 +11,7 @@ import {
   Train,
 } from 'lucide-react';
 import { Button } from '../../components/Button';
+import { OperatorMark } from '../../components/OperatorMark';
 import type { PlannedStop } from '../../data/plannedStops';
 import type { TransportOffer } from '../../data/mockTransport';
 import { generateLeg } from './transportGenerator';
@@ -183,14 +184,6 @@ function EmptyOffers() {
   );
 }
 
-function modeIcon(mode: Mode) {
-  if (mode === 'flight') return Plane;
-  if (mode === 'train') return Train;
-  if (mode === 'bus') return Bus;
-  if (mode === 'ferry') return Ship;
-  return Car;
-}
-
 function badgeColor(badge: NonNullable<TransportOffer['badge']>): string {
   if (badge === 'cheapest') return 'bg-clay text-cream';
   if (badge === 'fastest') return 'bg-charcoal text-cream';
@@ -208,7 +201,6 @@ function OfferCard({
   toStop: PlannedStop;
 }) {
   const booked = !!findTransit(fromStop.id, toStop.id, offer.id);
-  const Icon = modeIcon(offer.mode);
   const isDrive = offer.mode === 'drive';
 
   const onBook = () => {
@@ -229,14 +221,14 @@ function OfferCard({
   return (
     <article
       className={clsx(
-        'rounded-2xl p-sm border flex flex-col gap-sm transition-[border-color,background-color] duration-instant ease-out-quart motion-reduce:transition-none',
-        booked ? 'bg-sand border-amber' : 'bg-sand border-charcoal-15',
+        'rounded-2xl p-sm border flex flex-col gap-sm shadow-card transition-[border-color,box-shadow] duration-instant ease-out-quart motion-reduce:transition-none',
+        booked
+          ? 'bg-sand border-amber'
+          : 'bg-sand border-charcoal-15 hover:border-charcoal-30 hover:shadow-panel',
       )}
     >
       <div className="flex items-start gap-sm">
-        <span className="shrink-0 h-9 w-9 rounded-full bg-cream border border-charcoal-15 flex items-center justify-center text-charcoal">
-          <Icon size={16} strokeWidth={2} />
-        </span>
+        <OperatorMark size="md" provider={offer.provider} mode={offer.mode} />
         <div className="flex-1 min-w-0">
           <p className="font-sans font-semibold text-lede text-charcoal">
             {offer.provider}
