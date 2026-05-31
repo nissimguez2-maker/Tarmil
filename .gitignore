@@ -57,3 +57,7 @@ lerna-debug.log*
 /verify-readiness.html
 /verify-readiness.tsx
 /screenshot-readiness.cjs
+
+/verify-dock.html
+/verify-dock.tsx
+/screenshot-dock.cjs

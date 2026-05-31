@@ -249,9 +249,19 @@ export function WebMapCanvas({ stops, home, selection, onSelect }: Props) {
       map.setFeatureState({ source: 'legs', id: l.id }, { selected: isSel });
     });
 
+    // Offset the focal point left of the right-docked planning panel so the
+    // selected feature stays visible beside it (not hidden underneath).
+    const panelPad = { top: 60, bottom: 60, left: 60, right: 480 };
+
     if (selection.type === 'stop') {
       const s = stops.find((x) => x.id === selection.stopId);
-      if (s) map.flyTo({ center: [s.lng, s.lat], zoom: 9, duration: 1400 });
+      if (s)
+        map.flyTo({
+          center: [s.lng, s.lat],
+          zoom: 9,
+          duration: 1400,
+          padding: panelPad,
+        });
     } else if (selection.type === 'leg') {
       const from =
         selection.fromStopId === 'home'
@@ -265,7 +275,7 @@ export function WebMapCanvas({ stops, home, selection, onSelect }: Props) {
         const b = new mapboxgl.LngLatBounds();
         b.extend([from.lng, from.lat]);
         b.extend([to.lng, to.lat]);
-        map.fitBounds(b, { padding: 80, duration: 1400 });
+        map.fitBounds(b, { padding: panelPad, duration: 1400 });
       }
     }
   }, [selection, legs, stops, home, styleLoaded]);

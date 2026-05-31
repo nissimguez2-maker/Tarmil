@@ -39,18 +39,17 @@ export function WebBubble({
 
   return (
     <div
-      className="absolute inset-0 flex items-center justify-center p-md pointer-events-none z-[1000]"
+      className="absolute inset-y-0 end-0 p-md pointer-events-none z-[1000]"
       aria-hidden={false}
     >
       <div
         role="dialog"
         aria-modal="false"
-        style={{ width: '440px', maxHeight: '100%' }}
+        style={{ width: '440px' }}
         className={clsx(
-          'bg-cream border border-charcoal-15 rounded-3xl shadow-panel flex flex-col pointer-events-auto relative overflow-hidden',
+          'h-full bg-cream border border-charcoal-15 rounded-3xl shadow-panel flex flex-col pointer-events-auto relative overflow-hidden',
           'transition-[opacity,transform] duration-considered ease-out-quart motion-reduce:transition-none',
-          'origin-center',
-          animateIn ? 'opacity-100 scale-100' : 'opacity-0 scale-95',
+          animateIn ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-6',
         )}
       >
         <button
